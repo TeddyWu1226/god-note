@@ -1,5 +1,5 @@
 import {useStorage} from "@vueuse/core";
-import {operationStatusEnum} from "../enums/enums";
+import {operationStatusEnum} from "@/enums/enums";
 
 interface OperationStorageType {
 	current: operationStatusEnum

@@ -8,7 +8,10 @@
     "lib": [
       "DOM",
       "ES2020"
-    ]
+    ],
+    "moduleResolution": "bundler",
+    // 通常如果使用 Vite，module 也會被設定為 ESNext
+    "module": "ESNext"
   },
   "exclude": [
     "node_modules",

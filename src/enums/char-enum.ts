@@ -1,8 +1,6 @@
-import {Enum} from "./enums";
-
-export const CharEnum: Enum = {
-	Beginner: {
-		value: 'Beginner',
-		label: '冒險者'
-	}
+export const CharEnum = {
+    Beginner: {
+        value: 'Beginner',
+        label: '冒險者'
+    }
 }
