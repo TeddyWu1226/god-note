@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PropType, ref} from 'vue'; // 引入 ref 和 computed
+import {computed, PropType, ref} from 'vue'; // 引入 ref 和 computed
 import {MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
 
@@ -16,6 +16,8 @@ const handleClick = () => {
 const isShaking = ref(false);
 // 設置動畫持續時間 (需與 CSS @keyframes shake 的時間匹配)
 const SHAKE_DURATION = 500;
+
+const isDead = computed(() => props.info.hp === 0)
 
 /**
  * 外部調用：啟動卡片抖動動畫
@@ -34,6 +36,7 @@ const shake = () => {
 defineExpose({
   shake
 });
+
 </script>
 
 <template>
@@ -47,7 +50,18 @@ defineExpose({
         <p>{{ props.info.name }}</p>
         <p>{{ props.info.description }}</p>
       </template>
-      <el-row style="width: 100%" justify="center">
+      <el-row v-if="isDead" style="width: 100%" justify="center">
+        <el-col style="text-align: center;font-size: 2rem" :span="24">
+          <span>🪦</span>
+        </el-col>
+        <el-col style="text-align: center;" :span="24">
+          <span>{{ props.info.name }}</span>
+        </el-col>
+        <el-col style="text-align: center;font-size: 20px;color:var(--el-color-danger)" :span="24">
+          <span>死亡</span>
+        </el-col>
+      </el-row>
+      <el-row v-else style="width: 100%" justify="center">
         <el-col style="text-align: center;font-size: 2rem" :span="24">
           <span>{{ props.info.icon }}</span>
         </el-col>

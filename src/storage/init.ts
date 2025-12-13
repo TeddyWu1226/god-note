@@ -7,9 +7,9 @@ import {createTrapezoidDataWithWeights, Floor} from "@/storage/floor-storage";
  */
 export const initAll = async () => {
     // 初始化角色
-    UserInfo.value = DEFAULT_USER_INFO
+    UserInfo.value = {...DEFAULT_USER_INFO}
     // 初始化階層
-    Floor.value = DEFAULT_FLOOR
+    Floor.value = {...DEFAULT_FLOOR}
     Floor.value.currentStageRooms = createTrapezoidDataWithWeights(DEFAULT_ROOM_WEIGHTS, 19, 17)
     // 初始化操作
 

@@ -126,13 +126,14 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
 }
 
 // 範例：在造成傷害時使用
-export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement: HTMLElement) {
-    let messageText = 'MISS'
+export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement?: HTMLElement) {
+    let messageText = targetElement ? '受到了 ' : '你受到了'
     if (damageOutCome.isKilled) {
-        messageText = `💀 ${damageOutCome.totalDamage}`
+        messageText += `💀${damageOutCome.totalDamage}`
     } else if (damageOutCome.isHit) {
-        messageText = damageOutCome.isCrit ? `💥 ${damageOutCome.totalDamage}` : `${damageOutCome.totalDamage}`;
+        messageText += damageOutCome.isCrit ? `💥${damageOutCome.totalDamage}` : `${damageOutCome.totalDamage}`;
     }
+    messageText += ' 傷害'
     useFloatingMessage(
         messageText,
         targetElement,
