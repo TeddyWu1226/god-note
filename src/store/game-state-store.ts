@@ -218,8 +218,8 @@ export function getNextAvailableRooms(): RoomCoordinateTuple[] {
 
     // --- 3. 確定連接範圍：根據層數切換邏輯 ---
 
-    let loopStart;
-    let loopEnd;
+    let loopStart: number;
+    let loopEnd: number;
 
     // 判斷是否已進入固定寬度層 (第 9 層及之後)
     if (layer < 9) {

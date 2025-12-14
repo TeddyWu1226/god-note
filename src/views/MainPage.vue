@@ -6,10 +6,12 @@ import {OperationLayout} from "@/components/OperationLayout";
 import {FloorInfoLayout} from "@/components/FloorInfoLayout";
 import {useGameStateStore} from "@/store/game-state-store";
 import {GameState} from "@/enums/enums";
-import {initAll} from "@/storage/init";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
+import {UserInfo} from "@/storage/userinfo-storage";
+import {DEFAULT_USER_INFO} from "@/assets/default-const";
 
+const gameStateStore = useGameStateStore()
 const isDead = ref(false)
 const cardConfig = ref({
   shadow: 'never',
@@ -18,7 +20,16 @@ const buttonConfig = ref({
   autoInsertSpace: true,
 })
 
-const gameStateStore = useGameStateStore()
+const initAll = async () => {
+  // 初始化角色
+  UserInfo.value = {...DEFAULT_USER_INFO}
+  // 初始化
+  gameStateStore.init()
+  // 前往第一層
+  gameStateStore.setRoom(gameStateStore.getCurrentRoom)
+}
+
+
 const startGame = async () => {
   await initAll()
 
@@ -34,6 +45,10 @@ const restartGame = async () => {
 const EnemyLayoutRef = ref()
 const onAttack = () => {
   EnemyLayoutRef.value?.onAttack()
+}
+
+const onRest = () => {
+  EnemyLayoutRef.value?.onRest()
 }
 
 
@@ -58,7 +73,9 @@ const onPlayerDead = (dead: boolean) => {
           🪦你死了....🪦
         </h1>
         <h1 style="color:var(--el-color-danger)">
-          死在第 {{ gameStateStore.getCurrentStage }} 階段 - {{ getEnumColumn(StageEnum, gameStateStore.getCurrentStage) }} 的旅途上
+          死在第 {{ gameStateStore.getCurrentStage }} 階段 - {{
+            getEnumColumn(StageEnum, gameStateStore.getCurrentStage)
+          }} 的旅途上
         </h1>
         <el-button type="danger" style="width: 8rem;height: 5rem" @click="restartGame">
           重新開始
@@ -87,7 +104,7 @@ const onPlayerDead = (dead: boolean) => {
               class="enemy-layout"
               @player-dead="onPlayerDead"
           />
-          <OperationLayout class="operation-layout" @attack="onAttack"/>
+          <OperationLayout class="operation-layout" @attack="onAttack" @rest="onRest"/>
           <UserLayout class="user-layout"/>
         </el-main>
       </el-container>

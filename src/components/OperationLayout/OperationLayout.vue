@@ -4,13 +4,19 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {RoomEnum} from "@/enums/room-enum";
 import NextOperation from "@/components/OperationLayout/comps/NextOperation.vue";
 import {GameState} from "@/enums/enums";
+import RestOperation from "@/components/OperationLayout/comps/RestOperation.vue";
 
 
-const emit = defineEmits(['attack']);
+const emit = defineEmits(['attack','rest']);
 const gameStateStore = useGameStateStore()
 /**戰鬥相關操作**/
 const onAttack = () => {
   emit('attack')
+}
+
+/**復原相關操作**/
+const onRest = () => {
+  emit('rest')
 }
 
 </script>
@@ -20,6 +26,11 @@ const onAttack = () => {
       v-if="gameStateStore.roomIs([RoomEnum.Fight.value,RoomEnum.EliteFight.value]) &&
       gameStateStore.stateIs(GameState.EVENT_PHASE)"
       @attack="onAttack"
+  />
+  <RestOperation
+      v-else-if="gameStateStore.roomIs(RoomEnum.Rest.value) &&
+      gameStateStore.stateIs(GameState.EVENT_PHASE)"
+      @rest="onRest"
   />
   <NextOperation v-else-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
 </template>

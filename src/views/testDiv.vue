@@ -6,7 +6,9 @@ const gameStateStore = useGameStateStore()
 
 <template>
 <el-card class="test">
-  {{gameStateStore.$state}}
+  <p v-for="key in Object.keys(gameStateStore.$state)">
+    {{key}}:  {{gameStateStore.$state[key]}}
+  </p>
 </el-card>
 </template>
 
@@ -15,5 +17,6 @@ const gameStateStore = useGameStateStore()
   position: absolute;
   right: 50px;
   z-index: 6000;
+  width: 400px;
 }
 </style>

@@ -110,11 +110,24 @@ const onAttack = () => {
   }
 }
 
+const isRested = ref<boolean>(false)
+const onRest = () => {
+  isRested.value = true
+  if (UserInfo.value.hp < UserInfo.value.hpLimit) {
+    UserInfo.value.hp = UserInfo.value.hpLimit
+  }
+  if (UserInfo.value.sp < UserInfo.value.spLimit) {
+    UserInfo.value.sp = UserInfo.value.spLimit
+  }
+  gameStateStore.transitionToNextState()
+}
+
 defineExpose({
-  onAttack
+  onAttack,
+  onRest
 })
 /**
- * 追蹤變化
+ * 追蹤房間變化
  */
 watch(() => gameStateStore.getCurrentRoom,
     (val) => {
@@ -131,6 +144,10 @@ watch(() => gameStateStore.getCurrentRoom,
           genMonster(val[0])
           genMonster(val[0])
           break
+        case RoomEnum.Rest.value:
+          isRested.value = false
+
+
       }
     },
     {
@@ -164,6 +181,17 @@ watch(() => gameStateStore.getCurrentRoom,
         <span>你獲得了 100 G!</span>
       </div>
     </div>
+    <div class="rest"
+         v-if="currentRoomValue === RoomEnum.Rest.value"
+    >
+      <div>這邊好像很適合休息💤...</div>
+      <div v-if="isRested" style="color: var(--el-color-success)">
+        休息了一會,你的HP跟SP完全恢復了!
+      </div>
+      <div v-else>
+        你選擇...?
+      </div>
+    </div>
   </el-card>
 </template>
 
@@ -180,6 +208,16 @@ watch(() => gameStateStore.getCurrentRoom,
   padding: 2rem;
   display: flex;
   justify-content: space-around;
+}
+
+.rest {
+  height: auto;
+  font-size: 2rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .victory-container {
