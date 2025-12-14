@@ -33,6 +33,14 @@ export const useGameStateStore = defineStore('game-state', {
         stateIs: (state) => (stateToCheck: GameState): boolean => {
             return state.currentState === stateToCheck;
         },
+        roomIs: (state) => (roomValue: number | number[]): boolean => {
+            if (Array.isArray(roomValue)) {
+                return roomValue.includes(state.currentRoomValue)
+            } else {
+                return state.currentRoomValue === roomValue;
+            }
+
+        },
     },
 
     // ----------------------------------------------------
@@ -56,14 +64,10 @@ export const useGameStateStore = defineStore('game-state', {
         setRoomValue(roomValue: number): number {
             this.currentRoomValue = roomValue;
 
-            // 如果切換到戰鬥以外的房間，重置勝利狀態
-            if (roomValue !== RoomEnum.Fight.value &&
-                roomValue !== RoomEnum.EliteFight.value &&
-                roomValue !== RoomEnum.Boss.value) {
-
-                this.isBattleWon = false;
-            }
+            // 重置勝利狀態
+            this.isBattleWon = false;
             console.log(`回合類型配置為: ${roomValue}`);
+            this.transitionToNextState()
             return this.currentRoomValue;
         },
         /**

@@ -17,7 +17,7 @@ const emit = defineEmits(['playerDead'])
 const gameStateStore = useGameStateStore()
 
 const currentRoomValue = computed(() => {
-      return gameStateStore.setRoomValue(getRoomValue(Floor.value.currentRoom))
+      return gameStateStore.currentRoomValue
     }
 )
 const monsterCardRefs = ref<MonsterCardExposed[]>([]);
@@ -27,7 +27,7 @@ const monsters = ref<MonsterType[]>([])
  */
 const genMonster = (layer: number) => {
   // 緩存召喚的怪物
-  gameStateStore.setCurrentEnemy(['Slime'])
+  // gameStateStore.setCurrentEnemy(['Slime'])
   monsters.value.push(createMonster(Monster.Slime))
 }
 const selectedMonsterIndex = ref<number | null>(null);
@@ -66,7 +66,6 @@ const monsterMove = (selectedMonster: MonsterType) => {
 /**
  * 玩家行動
  */
-const isVictory = ref(false)
 // 攻擊
 const onAttack = () => {
 
@@ -97,8 +96,8 @@ const onAttack = () => {
     selectedMonsterIndex.value = null;
   }
   // 怪物全部死亡
-  if (monsters.value.length <= 0) {
-
+  if (monsters.value.length === 0) {
+    gameStateStore.setBattleWon(true)
   }
 
   // 怪物行動
@@ -163,9 +162,10 @@ watch(() => Floor.value.currentRoom,
 </template>
 
 <style scoped>
-:root{
-  --delay:0.3s
+:root {
+  --delay: 0.3s
 }
+
 .title {
   font-size: 1.2rem;
 }
@@ -181,7 +181,7 @@ watch(() => Floor.value.currentRoom,
   display: flex;
   justify-content: center;
   align-items: center;
-
+  flex-direction: column;
   margin-top: 50px;
   /* 設置高度，確保跳躍不會影響周圍元素 */
   height: 100px;

@@ -48,7 +48,7 @@ const activeName = ref('status')
             <el-col :span="12">
               <el-form-item label="🛡️">
             <span class="level">
-              {{ UserInfo.ad }}
+              {{ UserInfo.adDefend }}
             </span>
               </el-form-item>
             </el-col>

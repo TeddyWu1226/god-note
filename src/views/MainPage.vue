@@ -23,13 +23,13 @@ const buttonConfig = ref({
 const gameStateStore = useGameStateStore()
 const startGame = async () => {
   await initAll()
-  gameStateStore.transitionToNextState()
+
 }
 
 const restartGame = async () => {
   isDead.value = false
   await initAll()
-  gameStateStore.init()
+
 }
 
 /** 觸發 **/

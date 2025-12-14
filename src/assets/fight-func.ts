@@ -130,7 +130,10 @@ export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement?
     let messageText = targetElement ? '受到了 ' : '你受到了'
     if (damageOutCome.isKilled) {
         messageText += `💀${damageOutCome.totalDamage}`
-    } else if (damageOutCome.isHit) {
+    } else if(damageOutCome.totalDamage === 0){
+        messageText = '⚔️格檔⚔️'
+    }
+    else if (damageOutCome.isHit) {
         messageText += damageOutCome.isCrit ? `💥${damageOutCome.totalDamage}` : `${damageOutCome.totalDamage}`;
     }
     messageText += ' 傷害'

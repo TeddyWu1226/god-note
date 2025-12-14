@@ -1,42 +1,27 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {operationStatusEnum} from "@/enums/enums";
-import {Operation} from "@/storage/operation-storage";
+import FightOperation from "@/components/OperationLayout/comps/FightOperation.vue";
+import {useGameStateStore} from "@/store/game-state-store";
+import {RoomEnum} from "@/enums/room-enum";
+import NextOperation from "@/components/OperationLayout/comps/NextOperation.vue";
+import {GameState} from "@/enums/enums";
 
 
 const emit = defineEmits(['attack']);
-/**狀態紀錄**/
-const isDisabled = ref<boolean>(false)
-const changeStatus = (value: operationStatusEnum = operationStatusEnum.Default): void => {
-  Operation.value.current = value
+const gameStateStore = useGameStateStore()
+/**戰鬥相關操作**/
+const onAttack = () => {
+  emit('attack')
 }
+
 </script>
 
 <template>
-  <div v-if="Operation.current===operationStatusEnum.Skill" class="flex">
-    <el-button type="info" plain :disabled="isDisabled" @click="changeStatus">
-      返回
-    </el-button>
-  </div>
-  <div v-else-if="Operation.current===operationStatusEnum.Package" class="flex">
-    <el-button type="info" plain :disabled="isDisabled" @click="changeStatus">
-      返回
-    </el-button>
-  </div>
-  <div v-else class="flex">
-    <el-button type="primary" @click="emit('attack',true)">
-      攻擊
-    </el-button>
-    <el-button type="primary" :disabled="isDisabled" @click="changeStatus(operationStatusEnum.Skill)">
-      技能
-    </el-button>
-    <el-button type="info" :disabled="isDisabled" @click="changeStatus(operationStatusEnum.Package)">
-      背包
-    </el-button>
-    <el-button type="danger" :disabled="isDisabled">
-      逃跑
-    </el-button>
-  </div>
+  <FightOperation
+      v-if="gameStateStore.roomIs([RoomEnum.Fight.value,RoomEnum.EliteFight.value]) &&
+      gameStateStore.stateIs(GameState.EVENT_PHASE)"
+      @attack="onAttack"
+  />
+  <NextOperation v-else-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
 </template>
 
 <style scoped>
