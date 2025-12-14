@@ -7,8 +7,6 @@ import {FloorInfoLayout} from "@/components/FloorInfoLayout";
 import {useGameStateStore} from "@/store/game-state-store";
 import {GameState} from "@/enums/enums";
 import {initAll} from "@/storage/init";
-import {ElMessage} from "element-plus";
-import {Floor} from "@/storage/floor-storage";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
 
@@ -60,7 +58,7 @@ const onPlayerDead = (dead: boolean) => {
           🪦你死了....🪦
         </h1>
         <h1 style="color:var(--el-color-danger)">
-          死在第 {{ Floor.currentStage }} 階段 - {{ getEnumColumn(StageEnum, Floor.currentStage) }} 的旅途上
+          死在第 {{ gameStateStore.getCurrentStage }} 階段 - {{ getEnumColumn(StageEnum, gameStateStore.getCurrentStage) }} 的旅途上
         </h1>
         <el-button type="danger" style="width: 8rem;height: 5rem" @click="restartGame">
           重新開始

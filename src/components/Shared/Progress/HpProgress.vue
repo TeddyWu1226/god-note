@@ -11,12 +11,17 @@ const props = defineProps({
 
 const color = computed(() => {
   const per = calculatePercentageAsNumber(props.currentValue, props.totalValue)
-  if (per > 50) {
+  const yellowLine = 75
+  const redLine = 25
+  const deadLine = 5
+  if (per > yellowLine) {
     return 'var(--el-color-success)'
-  } else if (per < 50 && per > 20) {
+  } else if (per <= yellowLine && per > redLine) {
     return 'var(--el-color-warning)'
-  } else {
+  } else if (per <= redLine && per > deadLine) {
     return 'var(--el-color-danger)'
+  }else {
+    return 'red'
   }
 })
 </script>

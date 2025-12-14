@@ -1,11 +1,11 @@
 // 人物初始值
 import {CharEnum} from "@/enums/char-enum";
-import {FloorStorageType, RoomWeights, UserType} from "@/types";
+import {RoomWeights, UserType} from "@/types";
 import {WorldDefault} from "@/assets/const";
 
 export const DEFAULT_USER_INFO: UserType = {
-    name:'玩家',
-    icon:'👤',
+    name: '玩家',
+    icon: '👤',
     ad: 10,
     adDefend: 0,
     critIncrease: WorldDefault.critIncrease,
@@ -28,9 +28,3 @@ export const DEFAULT_ROOM_WEIGHTS: RoomWeights = {
     3: 5, // 特殊事件
     4: 5, // 商店
 };
-
-export const DEFAULT_FLOOR: FloorStorageType = {
-    currentStage: 1,
-    currentRoom: [1, 0],
-    currentStageRooms: []
-}

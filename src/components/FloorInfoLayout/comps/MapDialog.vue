@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {computed, nextTick, ref, watch} from 'vue'; // 引入 ref, watch, nextTick
-import {Floor} from "@/storage/floor-storage";
+import {nextTick, ref, watch} from 'vue';
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
+import {useGameStateStore} from "@/store/game-state-store";
 
 const model = defineModel({type: Boolean, default: false});
-
+const gameStateStore = useGameStateStore();
 // 1. 定義一個 ref 陣列來存儲所有 room-cell 的 DOM 實例
 // 由於房間是巢狀迴圈生成的，我們需要一個二維陣列來存儲 refs
 const roomRefs = ref<HTMLElement[][]>([]);
@@ -27,7 +27,7 @@ const setRoomRef = (el: any, layerIndex: number, roomIndex: number) => {
 watch(model, (isOpened) => {
   if (isOpened) {
     nextTick(() => {
-      const [layer, index] = Floor.value.currentRoom;
+      const [layer, index] = gameStateStore.getCurrentRoom;
       const targetLayerIndex = layer - 1;
       let targetRoomInstance = roomRefs.value[targetLayerIndex]?.[index];
       let finalElement: HTMLElement | undefined;
@@ -73,7 +73,7 @@ watch(model, (isOpened) => {
 }, {immediate: true});
 
 const isDisabled = (layerIndex: number) => {
-  return layerIndex < Floor.value.currentRoom[0]
+  return layerIndex < gameStateStore.getCurrentRoom[0]
 }
 
 /** 操作 **/
@@ -81,7 +81,7 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
   console.log(`選擇房間: 第 ${layerIndex + 1} 層 (0-based: ${layerIndex}), 索引 ${roomIndex}, 數值 ${value}`);
 
   // 更新當前房間位置 (這裡假設您會將 roomIndex 存儲為 0-based)
-  Floor.value.currentRoom = [layerIndex + 1, roomIndex];
+  gameStateStore.setRoom([layerIndex + 1, roomIndex])
 };
 </script>
 
@@ -90,7 +90,7 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
     <el-scrollbar max-height="60vh" style="width: 100%; overflow-x: auto;">
       <div class="trapezoid-container">
         <div
-            v-for="(layer, layerIndex) in Floor.currentStageRooms"
+            v-for="(layer, layerIndex) in gameStateStore.getCurrentStageRooms"
             :key="layerIndex"
             class="grid-layer"
         >

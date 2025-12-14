@@ -125,25 +125,59 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
     return outcome;
 }
 
-// 範例：在造成傷害時使用
+/**
+ * 根據戰鬥結果 (BattleOutcome) 觸發傷害浮動訊息。
+ *
+ * @param damageOutCome 戰鬥結算物件，包含傷害、是否暴擊/死亡等資訊。
+ * @param targetElement 顯示浮動訊息的目標 HTML 元素 (可選)。
+ */
 export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement?: HTMLElement) {
-    let messageText = targetElement ? '受到了 ' : '你受到了'
+
+    // --- 1. 定義基礎變數 ---
+    const isPlayer = !targetElement; // 判斷是否為玩家自身
+    const prefixText = isPlayer ? '你受到了' : '受到了';
+
+    let messageText = '';
+    let messageColor = '#E0E0E0'; // 預設顏色
+    let messageClass = '';
+
+    // --- 2. 核心邏輯：根據結果決定訊息和樣式 ---
+
     if (damageOutCome.isKilled) {
-        messageText += `💀${damageOutCome.totalDamage}`
-    } else if(damageOutCome.totalDamage === 0){
-        messageText = '⚔️格檔⚔️'
+        // 💀 死亡：顯示總傷害並加上死亡符號
+        messageText = `${prefixText} 💀${damageOutCome.totalDamage} 傷害`;
+
+    } else if (damageOutCome.totalDamage === 0 && damageOutCome.isHit === true) {
+        // 🛡️ 完全格檔或閃避：無傷害
+        messageText = '🛡️格檔🛡️';
+        messageColor = '#B0C4DE'; // 淺藍色，強調防禦
+
+    } else if (damageOutCome.isHit) {
+        // 命中，且總傷害 > 0
+
+        if (damageOutCome.isCrit) {
+            // 💥 暴擊：使用金色和暴擊樣式
+            messageText = `${prefixText} 💥${damageOutCome.totalDamage} 傷害`;
+            messageColor = '#ff0000'; // 金色
+            messageClass = 'crit-font';
+        } else {
+            // 普通命中
+            messageText = `${prefixText} ${damageOutCome.totalDamage} 傷害`;
+        }
+    } else {
+        // 處理未命中 (例如：Miss) 或其他未捕捉到的狀態
+        messageText = isPlayer ? '閃避' : 'MISS';
+        messageColor = '#83d1ea'; // 淺藍色
     }
-    else if (damageOutCome.isHit) {
-        messageText += damageOutCome.isCrit ? `💥${damageOutCome.totalDamage}` : `${damageOutCome.totalDamage}`;
-    }
-    messageText += ' 傷害'
+
+    // --- 3. 觸發浮動訊息 ---
     useFloatingMessage(
         messageText,
         targetElement,
         {
-            duration: 800, // 800ms 動畫
-            color: damageOutCome.isCrit && !damageOutCome.isKilled ? '#FFD700' : '#E0E0E0', // 暴擊用金色
-            messageClass: damageOutCome.isCrit ? 'crit-font' : '' // 額外的暴擊字體樣式
+            duration: 800, // 動畫時間保持不變
+            color: messageColor,
+            messageClass: messageClass
         }
     );
 }

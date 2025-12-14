@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch, onMounted} from 'vue';
+import {ref, onMounted} from 'vue';
 
 const props = defineProps({
   // 要顯示的文字內容
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const isVisible = ref(false);
-let timer: number | null = null;
+let timer: any = null;
 
 const show = () => {
   isVisible.value = true;
@@ -50,7 +50,7 @@ onMounted(() => {
 
 // 根據 props.color 設置樣式
 const messageStyle = {
-  '--message-color': props.color,
+  'color': props.color,
   // 動畫時長應與 CSS @keyframes 中定義的時長匹配
   '--message-duration': `${props.duration}ms`,
 };
@@ -68,8 +68,8 @@ const messageStyle = {
 
 <style scoped>
 :root {
-  --message-duration: 0.5s;
-  --x-offest:2rem
+  --message-duration: 1500ms;
+  --x-offest: 2rem
 }
 
 .floating-message-container {
@@ -81,7 +81,7 @@ const messageStyle = {
 }
 
 .floating-message {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
   padding: 0.5em 1em;
   color: var(#ffffff);

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import {Floor, getNextAvailableRooms, getRoomValue} from "@/storage/floor-storage";
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {computed, Reactive, ref, watch} from "vue";
@@ -22,8 +21,13 @@ const currentRoomValue = computed(() => {
 )
 const monsterCardRefs = ref<MonsterCardExposed[]>([]);
 const monsters = ref<MonsterType[]>([])
-/** 生成對應怪物
- *
+
+const clearMonsters = () => {
+  monsters.value = [];
+  gameStateStore.setCurrentEnemy([])
+}
+/**
+ * 生成對應怪物
  */
 const genMonster = (layer: number) => {
   // 緩存召喚的怪物
@@ -112,11 +116,13 @@ defineExpose({
 /**
  * 追蹤變化
  */
-watch(() => Floor.value.currentRoom,
+watch(() => gameStateStore.getCurrentRoom,
     (val) => {
       console.log('偵測切換房間', val)
-      monsters.value = []; // ⭐️ 切換房間時清空怪物列表
-      selectedMonsterIndex.value = null; // ⭐️ 切換房間時，清除選中狀態
+      // 切換房間時清空怪物列表
+      clearMonsters();
+      // 切換房間時，清除選中狀態
+      selectedMonsterIndex.value = null;
       switch (currentRoomValue.value) {
         case RoomEnum.Fight.value:
           genMonster(val[0])
