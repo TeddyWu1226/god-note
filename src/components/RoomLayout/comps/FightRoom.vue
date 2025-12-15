@@ -7,7 +7,7 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {computed, onMounted, Reactive, ref} from "vue";
 import {MonsterType} from "@/types";
 import {createMonster, Monster} from "@/assets/monster-info";
-import {applyDamage, triggerDamageEffect} from "@/assets/fight-func";
+import {applyDamage, applyRandomFloatAndRound, triggerDamageEffect} from "@/assets/fight-func";
 import {UserInfo} from "@/storage/userinfo-storage";
 import {ElMessage} from "element-plus";
 
@@ -20,7 +20,7 @@ const currentRoomValue = computed(() => {
 )
 const monsterCardRefs = ref<MonsterCardExposed[]>([]);
 const monsters = ref<MonsterType[]>([])
-
+const monsterDropGold = ref(0)
 const clearMonsters = () => {
   monsters.value = [];
   gameStateStore.setCurrentEnemy([])
@@ -100,10 +100,12 @@ const onAttack = () => {
   // 怪物全部死亡
   if (monsters.value.length === 0) {
     gameStateStore.setBattleWon(true)
+    UserInfo.value.gold += monsterDropGold.value
   }
 
   // 怪物行動
   if (!damageOutput.isKilled) {
+    monsterDropGold.value += applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
     monsterMove(selectedMonster)
   }
 }
@@ -131,7 +133,7 @@ const init = () => {
   }
 }
 init()
-onMounted(()=>{
+onMounted(() => {
   console.log('u偶喔')
 })
 </script>
@@ -149,9 +151,9 @@ onMounted(()=>{
         :is-selected="selectedMonsterIndex === index"
         @select="handleMonsterSelect(index)"
     />
-    <div CLASS="victory-container" v-if="monsters?.length === 0">
+    <div CLASS="victory-container" v-if="gameStateStore.isWon">
       <span class="victory-message">勝利!</span>
-      <span>你獲得了 100 G!</span>
+      <span v-if="monsterDropGold">你獲得了 {{ monsterDropGold }} G!</span>
     </div>
   </div>
 </template>

@@ -46,5 +46,6 @@ export const Monster = {
         hp: 20,
         hpLimit: 20,
         level: 1,
+        dropGold:5
     } as MonsterType
 }
