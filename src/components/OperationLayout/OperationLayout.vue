@@ -7,7 +7,7 @@ import {GameState} from "@/enums/enums";
 import RestOperation from "@/components/OperationLayout/comps/RestOperation.vue";
 
 
-const emit = defineEmits(['attack','rest']);
+const emit = defineEmits(['attack', 'rest','cancel']);
 const gameStateStore = useGameStateStore()
 /**戰鬥相關操作**/
 const onAttack = () => {
@@ -17,6 +17,10 @@ const onAttack = () => {
 /**復原相關操作**/
 const onRest = () => {
   emit('rest')
+}
+
+const onCancel = () => {
+  emit('cancel')
 }
 
 </script>
@@ -31,6 +35,7 @@ const onRest = () => {
       v-else-if="gameStateStore.roomIs(RoomEnum.Rest.value) &&
       gameStateStore.stateIs(GameState.EVENT_PHASE)"
       @rest="onRest"
+      @cancel="onCancel"
   />
   <NextOperation v-else-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
 </template>

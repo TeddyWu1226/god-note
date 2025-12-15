@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {GameState} from "@/enums/enums";
+import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
 import {Monster} from "@/assets/monster-info";
 import {RoomCoordinateTuple, TrapezoidData} from "@/types";
@@ -24,7 +24,9 @@ export const useGameStateStore = defineStore('game-state', {
 		currentState: GameState.INITIAL as GameState,
 		// 戰鬥勝利狀態 (isBattleWon)
 		isBattleWon: false as boolean,
-		currentEnemy: [] as string[] // 怪物標籤key
+		currentEnemy: [] as string[], // 怪物標籤key
+		// 當前特殊事件標籤
+		currentEventType: SpecialEventEnum.None as SpecialEventEnum
 	}),
 
 	// ----------------------------------------------------
@@ -41,6 +43,7 @@ export const useGameStateStore = defineStore('game-state', {
 		getCurrentState: (state) => state.currentState,
 		isWon: (state) => state.isBattleWon,
 		getCurrentEnemy: (state) => state.currentEnemy,
+		getCurrentEventType: (state) => state.currentEventType,
 		/**
 		 * 檢查當前狀態是否為指定的狀態。
 		 * */
@@ -148,7 +151,13 @@ export const useGameStateStore = defineStore('game-state', {
 			// 更新 state，觸發響應性
 			this.currentState = nextState;
 			return this.currentState;
-		}
+		},
+		/**
+		 * 設置特殊事件。
+		 */
+		setEvent(event: SpecialEventEnum = SpecialEventEnum.None) {
+			this.currentEventType = event
+		},
 	},
 });
 

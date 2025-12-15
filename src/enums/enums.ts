@@ -28,3 +28,15 @@ export interface EnumItem {
 export interface Enum {
 	[key: string]: EnumItem;
 }
+
+/**
+ * 特殊事件
+ */
+export enum SpecialEventEnum {
+	None = 'None',
+	JobChange = 'JOB_CHANGE',
+	Gamble = 'GAMBLE',
+	AngelBlessing = 'ANGEL_BLESSING',
+	DemonBlessing = 'DEMON_BLESSING',
+	// ... 其他事件
+}

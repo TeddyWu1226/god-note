@@ -31,9 +31,20 @@ const onRest = () => {
   RestRoomRef.value?.onRest()
 }
 
+
+/** 綜合取消 **/
+const onCancel = () => {
+  switch (currentRoomValue.value) {
+    case RoomEnum.Rest.value:
+      gameStateStore.transitionToNextState()
+      break;
+  }
+}
+
 defineExpose({
   onAttack,
-  onRest
+  onRest,
+  onCancel
 })
 
 /** 初始化刷新 **/

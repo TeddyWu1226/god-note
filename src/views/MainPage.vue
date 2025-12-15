@@ -42,15 +42,18 @@ const restartGame = async () => {
 }
 
 /** 觸發 **/
-const EnemyLayoutRef = ref()
+const RoomLayoutRef = ref()
 const onAttack = () => {
-  EnemyLayoutRef.value?.onAttack()
+  RoomLayoutRef.value?.onAttack()
 }
 
 const onRest = () => {
-  EnemyLayoutRef.value?.onRest()
+  RoomLayoutRef.value?.onRest()
 }
 
+const onCancel = () => {
+  RoomLayoutRef.value?.onCancel()
+}
 
 const onPlayerDead = (dead: boolean) => {
   if (!dead) {
@@ -103,11 +106,16 @@ const onPlayerDead = (dead: boolean) => {
         <el-main>
           <FloorInfoLayout/>
           <RoomLayout
-              ref="EnemyLayoutRef"
+              ref="RoomLayoutRef"
               class="enemy-layout"
               @player-dead="onPlayerDead"
           />
-          <OperationLayout class="operation-layout" @attack="onAttack" @rest="onRest"/>
+          <OperationLayout
+              class="operation-layout"
+              @attack="onAttack"
+              @rest="onRest"
+              @cancel="onCancel"
+          />
           <UserLayout class="user-layout"/>
         </el-main>
       </el-container>

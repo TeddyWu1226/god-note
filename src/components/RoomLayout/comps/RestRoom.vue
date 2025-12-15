@@ -3,6 +3,7 @@
 import {ref} from "vue";
 import {UserInfo} from "@/storage/userinfo-storage";
 import {useGameStateStore} from "@/store/game-state-store";
+import {GameState} from "@/enums/enums";
 
 const isRested = ref<boolean>(false)
 const gameStateStore = useGameStateStore()
@@ -27,6 +28,9 @@ defineExpose({
     <div>這邊好像很適合休息💤...</div>
     <div v-if="isRested" style="color: var(--el-color-success)">
       休息了一會,你的HP跟SP完全恢復了!
+    </div>
+    <div v-else-if="gameStateStore.getCurrentState === GameState.SELECTION_PHASE">
+      但現在的我不想休息!
     </div>
     <div v-else>
       你選擇...?
