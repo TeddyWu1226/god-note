@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue';
-import {EnemyLayout} from "@/components/EnemyLayout";
+import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
 import {FloorInfoLayout} from "@/components/FloorInfoLayout";
@@ -58,6 +58,10 @@ const onPlayerDead = (dead: boolean) => {
   }
   isDead.value = true
 }
+
+// **【新增】房間唯一 ID/計數器**
+// 每次進入一個「新房間」時，這個值就會增加，無論房間類型是否相同。
+
 </script>
 
 <template>
@@ -67,7 +71,6 @@ const onPlayerDead = (dead: boolean) => {
           v-if="isDead"
           style="padding: 5rem;margin: 2rem"
           body-class="flex items-center justify-center flex-column"
-          aaa
       >
         <h1 style="color:var(--el-color-danger)">
           🪦你死了....🪦
@@ -99,7 +102,7 @@ const onPlayerDead = (dead: boolean) => {
         </el-header>
         <el-main>
           <FloorInfoLayout/>
-          <EnemyLayout
+          <RoomLayout
               ref="EnemyLayoutRef"
               class="enemy-layout"
               @player-dead="onPlayerDead"
