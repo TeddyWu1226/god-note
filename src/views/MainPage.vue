@@ -10,6 +10,7 @@ import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
 import {UserInfo} from "@/storage/userinfo-storage";
 import {DEFAULT_USER_INFO} from "@/assets/default-const";
+import {UserValueLayout} from "@/components/UserValueLayout";
 
 const gameStateStore = useGameStateStore()
 const isDead = ref(false)
@@ -126,6 +127,7 @@ const onRunFailed = () => {
               @rest="onRest"
               @cancel="onCancel"
           />
+          <UserValueLayout/>
           <UserLayout class="user-layout"/>
         </el-main>
       </el-container>
@@ -149,6 +151,13 @@ const onRunFailed = () => {
   margin-bottom: .5rem;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  height: 5vh;
+}
 
 .room-layout {
   height: 40vh;
@@ -160,15 +169,9 @@ const onRunFailed = () => {
 
 
 .user-layout {
-  height: 30vh;
+  height: 20vh;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  font-weight: bold;
-}
 
 .dead {
   height: 82vh;

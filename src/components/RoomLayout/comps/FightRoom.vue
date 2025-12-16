@@ -58,7 +58,6 @@ const handleMonsterSelect = (index: number) => {
 const monsterMove = (selectedMonster: MonsterType) => {
   // 傷害計算
   const damageOutput = applyDamage(selectedMonster, UserInfo.value);
-  triggerDamageEffect(damageOutput)
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
