@@ -10,7 +10,7 @@ import {createMonster, Monster} from "@/assets/monster-info";
 import {applyDamage, applyRandomFloatAndRound, canEscape, triggerDamageEffect} from "@/assets/fight-func";
 import {UserInfo} from "@/storage/userinfo-storage";
 import {ElMessage} from "element-plus";
-import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {LogView} from "@/components/LogView";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -58,6 +58,8 @@ const handleMonsterSelect = (index: number) => {
 const monsterMove = (selectedMonster: MonsterType) => {
   // 傷害計算
   const damageOutput = applyDamage(selectedMonster, UserInfo.value);
+  // 文字
+  // triggerDamageEffect(damageOutput)
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
@@ -82,7 +84,6 @@ const onAttack = () => {
   // 傷害計算
   const damageOutput = applyDamage(UserInfo.value, selectedMonster);
   const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-  console.log('targetElement', targetElement)
   triggerDamageEffect(damageOutput, targetElement.$el)
   if (damageOutput.isHit) {
     targetElement?.shake()
@@ -171,6 +172,7 @@ init()
       <span v-else class="victory-message">勝利!</span>
       <span v-if="monsterDropGold">你獲得了 {{ monsterDropGold }} G!</span>
     </div>
+    <LogView class="log"></LogView>
   </div>
 </template>
 
@@ -179,6 +181,7 @@ init()
   padding: 2rem;
   display: flex;
   justify-content: space-around;
+  position: relative;
 }
 
 
@@ -206,5 +209,14 @@ init()
   font-size: 2rem;
 }
 
+/* ---------------------------------------------------- */
+/* ⭐️ 懸浮日誌視窗樣式 (無背景/邊框) */
+/* ---------------------------------------------------- */
+
+.log {
+  position: absolute;
+  left: 0;
+  bottom: -5rem;
+}
 
 </style>

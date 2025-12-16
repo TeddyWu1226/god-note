@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import {ref, watch, computed} from 'vue';
+import {ref, watch, computed, nextTick} from 'vue';
 import {HpProgress, ValueProgress} from "@/components/Shared/Progress";
 import {UserInfo} from "@/storage/userinfo-storage";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import type {CSSProperties} from 'vue';
-import {ElCard} from "element-plus"; // 引入 CSSProperties 類型
+import {ElCard} from "element-plus";
 
-// 創建一個 Template Ref 來指向 el-card 元素，作為浮動訊息的目標
-const cardRef = ref<typeof ElCard>(null);
+// 創建一個 Template Ref 指向 el-card 實例
+const cardRef = ref<typeof ElCard | null>(null);
+// 控制震動狀態的響應式變數
+const isShaking = ref(false);
 
 // 計算 HP 上限，用於計算大規模傷害或治療的閾值
 const hpLimit = computed(() => UserInfo.value.hpLimit);
+
+// 震動動畫持續時間 (需與 CSS 中的 duration 匹配)
+const SHAKE_DURATION_MS = 500;
 
 watch(
     () => UserInfo.value.hp,
@@ -21,15 +26,13 @@ watch(
       }
 
       const changeAmount = newValue - oldValue;
+      const threshold = hpLimit.value * 0.2; // 定義大規模變化的閾值 (HP 上限的 20%)
 
-      // --- 根據變化量決定訊息、顏色和特效 ---
-
+      // --- 浮動訊息邏輯 ---
       let messageText: string;
       let messageColor: string;
       let messageClass = '';
-      let customStyle: CSSProperties = {};
-
-      const threshold = hpLimit.value * 0.2; // 定義大規模變化的閾值 (HP 上限的 20%)
+      let shouldShake = false; // 新增旗標控制是否震動
 
       if (changeAmount < 0) {
         // HP 減少 (傷害)
@@ -40,7 +43,8 @@ watch(
         if (damage >= threshold) {
           // 大額傷害特效
           messageColor = '#B22222'; // 磚紅色
-          messageClass = 'massive-damage-font'; // 自定義 CSS class，用於額外動畫或陰影
+          messageClass = 'massive-damage-font';
+          shouldShake = true; // 觸發震動
         }
 
       } else {
@@ -55,23 +59,38 @@ watch(
         }
       }
 
+      // --- 震動控制邏輯 ---
+      if (shouldShake) {
+        // 1. 確保先移除，再添加，以觸發動畫重新播放
+        isShaking.value = false;
+        // 使用 nextTick 確保 DOM 已經更新（移除 class）
+        nextTick(() => {
+          isShaking.value = true;
+          // 2. 定時移除震動 class，避免無限震動
+          setTimeout(() => {
+            isShaking.value = false;
+          }, SHAKE_DURATION_MS);
+        });
+      }
+
       // --- 觸發浮動訊息 ---
+      // 注意：對於 Vue 組件 (如 ElCard)，要獲取 DOM 元素需使用 $el
       useFloatingMessage(
           messageText,
           cardRef.value.$el,
           {
-            duration: 1000, // 略微延長動畫時間以強調變化
+            duration: 1000,
             color: messageColor,
             messageClass: messageClass
           }
       );
     },
-    {immediate: false} // 首次渲染不執行
+    {immediate: false}
 );
 </script>
 
 <template>
-  <el-card ref="cardRef">
+  <el-card ref="cardRef" :class="{'shaking': isShaking}">
     <el-form label-width="3rem">
       <el-form-item label="HP">
         <HpProgress

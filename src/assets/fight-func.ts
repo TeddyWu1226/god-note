@@ -1,6 +1,7 @@
 // 常數定義
 import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {useLogStore} from "@/store/log-store";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -121,6 +122,8 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
 		outcome.isKilled ? `💥 已擊敗!` : `剩餘 HP: ${outcome.remainingHP}/${defender.hpLimit}`
 	].join('');
 	console.log(logMessage);
+	const logStore = useLogStore();
+	logStore.logger.add(logMessage);
 
 	return outcome;
 }
