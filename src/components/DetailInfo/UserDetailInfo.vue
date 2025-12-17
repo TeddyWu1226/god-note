@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted, computed} from "vue";
+import {ref, computed} from "vue";
 import {getEnumColumn} from "@/utils/enum";
-import {CharEnum} from "@/enums/char-enum";
 import {QualityEnum} from "@/enums/quilty-enum";
-import {EquipmentPosition} from "@/enums/enums";
+import {EquipmentEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
+import {ItemInfo} from "@/components/Shared/itemInfo";
 
 const fabRef = ref<HTMLElement | null>(null);
 const position = ref({x: 0, y: 100});
@@ -83,15 +83,7 @@ const handleClick = () => {
 // 欄位資訊
 
 const playerStore = usePlayerStore()
-const playerStats = computed(() => playerStore.info);
-const equipmentLayout = [
-  {key: 'head', label: '頭部', icon: '🦲'},
-  {key: 'weapon', label: '武器', icon: '🗡️'},
-  {key: 'body', label: '身體', icon: '👕'},
-  {key: 'offhand', label: '副手', icon: '🛡️'},
-  {key: 'accessory1', label: '飾品 I', icon: '💍'},
-  {key: 'accessory2', label: '飾品 II', icon: '📿'},
-] as const;
+const playerStats = computed(() => playerStore.finalStats);
 
 
 </script>
@@ -125,11 +117,22 @@ const equipmentLayout = [
         <el-divider>當前裝備</el-divider>
         <div class="equipment-slots">
           <div
-              v-for="pos in Object.values(equipmentLayout)"
-              :key="pos.key"
+              v-for="pos in EquipmentEnum"
+              :key="pos.value"
               class="equip-slot"
+              :style="{
+    backgroundColor: `color-mix(in srgb, ${getEnumColumn(QualityEnum,playerStore.info.equips[pos.value]?.quality,'color')}, white 1%)`
+  }"
           >
-            <span class="equip-icon">{{ pos.icon }}</span>
+            <el-tooltip v-if="playerStore.info.equips[pos.value]" effect="light">
+              <template #content>
+                <ItemInfo :item="playerStore.info.equips[pos.value]"></ItemInfo>
+              </template>
+              <span style="font-size: 1.5rem;">
+                {{ playerStore.info.equips[pos.value]?.icon }}
+              </span>
+            </el-tooltip>
+            <span v-else class="equip-icon">{{ pos.icon }}</span>
           </div>
         </div>
       </div>

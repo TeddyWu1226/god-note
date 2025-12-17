@@ -51,3 +51,36 @@ export enum EquipmentPosition {
     OFFHAND = 'offhand',
     ACCESSORIES = 'accessories',
 }
+
+export const EquipmentEnum = {
+    Head: {
+        value: 'head',
+        label: '頭部',
+        icon: '🦲',
+    },
+    Weapon: {
+        value: 'weapon',
+        label: '武器',
+        icon: '🗡️',
+    },
+    Body: {
+        value: 'body',
+        label: '身體',
+        icon: '👕',
+    },
+    Offhand: {
+        value: 'offhand',
+        label: '副手',
+        icon: '🛡️',
+    },
+    Accessory1: {
+        value: 'accessory1',
+        label: '飾品 I',
+        icon: '💍',
+    },
+    Accessory2: {
+        value: 'accessory2',
+        label: '飾品 II',
+        icon: '📿',
+    },
+} as const;

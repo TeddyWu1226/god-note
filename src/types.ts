@@ -85,6 +85,8 @@ export interface Equipment {
     accessory2?: EquipmentType
 }
 
+
+
 export interface UserType extends UnitType {
     sp: number; // 當前法力值
     spLimit: number; // 法力上限
