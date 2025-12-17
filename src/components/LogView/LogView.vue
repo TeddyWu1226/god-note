@@ -1,87 +1,107 @@
 <script setup lang="ts">
-import { useLogStore } from '@/store/log-store'; // 引入 Pinia Store
-import {computed, nextTick, ref, watch} from 'vue';
+import { useLogStore } from '@/store/log-store';
+import { computed } from 'vue';
 
 const logStore = useLogStore();
 
-// 獲取 Log 列表
-const currentLogs = computed(() => logStore.logs);
+// 1. 最新訊息排在最上面
+const currentLogs = computed(() => [...logStore.logs].reverse());
 
-// ------------------------------------------------------------------
-// 讓 Log 列表自動滾動到最底部，以便顯示最新 Log
-// ------------------------------------------------------------------
-const logContentRef = ref<HTMLElement | null>(null);
-
-// 監聽 Log 列表變化，並自動滾動到底部
-watch(currentLogs.value, () => {
-  // 使用 nextTick 確保 DOM 已經更新，再執行滾動
-  nextTick(() => {
-    if (logContentRef.value) {
-      logContentRef.value.scrollTop = logContentRef.value.scrollHeight;
-    }
-  });
-}, { deep: true });
-
-// 透過 defineExpose 暴露清空方法 (可選，但讓組件本身也能控制)
+// 暴露清空方法
 defineExpose({
   clearLog: logStore.logger.clear
 });
-
 </script>
 
 <template>
-  <div class="floating-log-window">
-    <div class="log-content-masked" ref="logContentRef">
-      <p
-          class="log-entry"
+  <div class="log-view-container">
+    <transition-group name="log-list" tag="div" class="log-list-wrapper">
+      <div
+          class="log-item"
           v-for="log in currentLogs"
           :key="log.id"
       >
-        {{ log.message }}
-      </p>
-    </div>
+        <span class="log-text">{{ log.message }}</span>
+      </div>
+    </transition-group>
   </div>
 </template>
 
 <style scoped>
-/* 保持您原有的樣式 */
-.floating-log-window {
-  /* 為了讓自動滾動生效，高度必須固定 */
-  height: 6rem;
-  background: transparent;
-  border: none;
-  overflow: hidden;
-  z-index: 10;
-}
+.log-view-container {
+  /* 定位在畫面左上方，不干擾中央怪物 */
+  position: absolute;
+  bottom: 0;
+  left: 3rem;
 
-.log-content-masked {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  /* ⭐️ 確保滾動條在右側，以便觀察 */
-  overflow-y: auto;
+  /* ⭐️ 限制大小：避免遮住畫面過多空間 */
+  width: 20rem;
+  max-height: 5rem; /* 超過此高度的舊 Log 會被隱藏 */
 
-  color: #fff;
-  font-size: 0.9rem;
+  /* 基礎設定 */
+  pointer-events: none; /* 滑鼠穿透 */
+  overflow: hidden;    /* 確保超過範圍的 Log 不可見 */
+  z-index: 100;
 
-  /* 核心修正：使用 mask-image 實現頂部內容漸變透明 */
+  /* ⭐️ 底部漸變消失：讓 Log 被推下去時自然淡出 */
   -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0%,   /* 頂部隱藏 */
-      rgba(255, 255, 255, 1) 15%,
-      rgba(255, 255, 255, 1) 100%  /* 底部可見 */
+    to bottom,
+    black 70%,
+    transparent 100%
   );
   mask-image: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 1) 15%,
-      rgba(255, 255, 255, 1) 100%
+    to bottom,
+    black 70%,
+    transparent 100%
   );
 }
 
-.log-entry {
-  color: #DDD;
-  margin: 0.2rem 0;
-  line-height: 1.2;
+.log-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.log-item {
+  background: transparent; /* 背景全透明 */
+  padding: 2px 4px;
+  transition: all 0.4s ease;
+}
+
+.log-text {
+  /* ⭐️ 字體顏色調淡 (使用 rgba 更好控制透明度) */
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 400;
+
+  /* ⭐️ 輕微的陰影：既能看清字體，又不會顯得太重 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+/* --- 動畫效果 --- */
+
+/* 入場：從上方滑入並淡入 */
+.log-list-enter-from {
+  opacity: 0;
+  transform: translateY(-15px);
+}
+
+/* 離場：淡出（自動消逝時觸發） */
+.log-list-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* 離開時的定位處理，確保 move 動畫平滑 */
+.log-list-leave-active {
+  position: absolute;
+}
+
+/* ⭐️ 關鍵：當新 Log 加入時，舊 Log 平滑向下移動的動畫 */
+.log-list-move {
+  transition: transform 0.3s ease;
 }
 </style>

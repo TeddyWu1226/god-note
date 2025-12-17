@@ -118,8 +118,7 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
 	const logMessage = [
 		`${attacker.name || '攻擊者'} 攻擊 ${defender.name || '防禦者'}，`,
 		outcome.isCrit ? `🔥 暴擊` : `命中`,
-		`造成 ${damageTaken} 點傷害。`,
-		outcome.isKilled ? `💥 已擊敗!` : `剩餘 HP: ${outcome.remainingHP}/${defender.hpLimit}`
+		`造成 ${damageTaken} 點傷害。`
 	].join('');
 	console.log(logMessage);
 	const logStore = useLogStore();
