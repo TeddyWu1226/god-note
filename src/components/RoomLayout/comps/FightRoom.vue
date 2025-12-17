@@ -216,7 +216,12 @@ init()
 .log {
   position: absolute;
   left: 0;
-  bottom: -5rem;
+  top: 14rem;
+}
+@media (max-width: 767px) {
+  .log {
+  top: 12rem;
+}
 }
 
 </style>

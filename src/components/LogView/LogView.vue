@@ -29,11 +29,6 @@ defineExpose({
 
 <style scoped>
 .log-view-container {
-  /* 定位在畫面左上方，不干擾中央怪物 */
-  position: absolute;
-  bottom: 0;
-  left: 3rem;
-
   /* ⭐️ 限制大小：避免遮住畫面過多空間 */
   width: 20rem;
   max-height: 5rem; /* 超過此高度的舊 Log 會被隱藏 */
@@ -64,7 +59,6 @@ defineExpose({
 
 .log-item {
   background: transparent; /* 背景全透明 */
-  padding: 2px 4px;
   transition: all 0.4s ease;
 }
 
