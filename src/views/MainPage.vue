@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
@@ -11,7 +11,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {UserValueLayout} from "@/components/UserValueLayout";
 import {UserDetailInfo} from "@/components/DetailInfo";
 import {usePlayerStore} from "@/store/player-store";
-import {ElMessageBox} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -40,7 +40,7 @@ const startGame = async () => {
 
 const restartGame = async () => {
   isDead.value = false
-  await initAll()
+  gameStateStore.$reset()
 }
 
 const resetGame = async () => {
@@ -54,7 +54,7 @@ const resetGame = async () => {
       }
   )
       .then(() => {
-        restartGame()
+        gameStateStore.$reset()
       })
       .catch(() => {
       })
@@ -91,7 +91,14 @@ const onRunFailed = () => {
 
 // **【新增】房間唯一 ID/計數器**
 // 每次進入一個「新房間」時，這個值就會增加，無論房間類型是否相同。
-
+const showLoadingSuccess = () => {
+  if (gameStateStore.getCurrentRoom) {
+    ElNotification.success('已讀取緩存數據成功!')
+  }
+}
+onMounted(() => {
+  showLoadingSuccess()
+})
 </script>
 
 <template>

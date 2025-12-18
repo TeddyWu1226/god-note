@@ -1,97 +1,108 @@
-// 🪖 HEAD (頭部) - 防禦與法力
+// 🪖 HEAD (頭部) - 僅提供生命與法力，無防禦力屬性
 import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
 export const Head: Record<string, EquipmentType> = {
+    // --- 混合型 (HP + SP，兩者兼顧但量較少) ---
     ClothHood: {
         name: '布質兜帽',
         description: '簡單的遮風避雨工具。',
-        icon: '🧤',
+        icon: '🍮',
         position: EquipmentPosition.HEAD,
         quality: 0,
-        adDefend: 2
+        hpLimit: 25,
+        spLimit: 25
     },
+    GoldenCrown: {
+        name: '黃金王冠',
+        description: '權力的象徵，平衡的王道。',
+        icon: '👑',
+        position: EquipmentPosition.HEAD,
+        quality: 4,
+        hpLimit: 300,
+        spLimit: 300
+    },
+
+    // --- 純 SP 型 (專注於能量儲備) ---
     LeatherCap: {
-        name: '皮製軟帽',
-        description: '輕便且具有基本防護。',
-        icon: '🧢',
+        name: '法力系帶',
+        description: '輕便且增加專注力。',
+        icon: '🎀',
         position: EquipmentPosition.HEAD,
-        quality: 1,
-        adDefend: 5,
-        dodge: 2
-    },
-    IronHelmet: {
-        name: '鐵製頭盔',
-        description: '扎實的物理防護。',
-        icon: '🪖',
-        position: EquipmentPosition.HEAD,
-        quality: 1,
-        adDefend: 12,
-        hpLimit: 30
+        quality: 0,
+        spLimit: 50
     },
     SageCirclet: {
         name: '賢者頭飾',
         description: '提升思維的清晰度。',
-        icon: '👑',
+        icon: '🫂',
+        position: EquipmentPosition.HEAD,
+        quality: 1,
+        spLimit: 100
+    },
+    PumpkinHead: {
+        name: '南瓜頭',
+        description: '有益智力發展的食品，戴在頭上也不錯。',
+        icon: '🎃',
         position: EquipmentPosition.HEAD,
         quality: 2,
-        adDefend: 4,
-        spLimit: 50
+        spLimit: 150
     },
-    ShadowVeil: {
-        name: '暗影面紗',
-        description: '讓你消失在敵人的視線中。',
-        icon: '🌑',
+    MagicHat: {
+        name: '魔術帽',
+        description: '有效提高大量法力，但帽子太高挺顯眼的。',
+        icon: '🎩',
         position: EquipmentPosition.HEAD,
         quality: 3,
-        adDefend: 6,
-        dodge: 15
+        spLimit: 200
     },
-    GoldenCrown: {
-        name: '黃金王冠',
-        description: '權力的象徵，帶有神聖加持。',
-        icon: '👑',
+    ArchmageHood: {
+        name: '大法師兜帽',
+        description: '編織進了無數咒語的絲綢，法力震盪。',
+        icon: '🧙',
         position: EquipmentPosition.HEAD,
         quality: 4,
-        adDefend: 15,
-        hpLimit: 100,
-        spLimit: 100
+        spLimit: 300
+    },
+    // --- 純 HP 型 (專注於生存厚度) ---
+    StrawHat: {
+        name: '草帽',
+        description: '雖然簡陋，但多少能擋住烈日。',
+        icon: '👒',
+        position: EquipmentPosition.HEAD,
+        quality: 0,
+        hpLimit: 50
+    },
+    IronHelmet: {
+        name: '鐵製頭盔',
+        description: '厚重的金屬外殼。',
+        icon: '🪖',
+        position: EquipmentPosition.HEAD,
+        quality: 1,
+        hpLimit: 100
+    },
+    VikingHelmet: {
+        name: '維京頭盔',
+        description: '帶有雙角的勇士之冠，強化生命力。',
+        icon: '𖤍',
+        position: EquipmentPosition.HEAD,
+        quality: 2,
+        hpLimit: 150
+    },
+    SkullHelmet: {
+        name: '骷髏頭盔',
+        description: '用堅硬的骷髏打造的頭盔,掌握死者的生命力。',
+        icon: '💀',
+        position: EquipmentPosition.HEAD,
+        quality: 3,
+        hpLimit: 200,
     },
     DragonScaleHelm: {
         name: '龍鱗頭盔',
-        description: '由巨龍鱗片打造。',
-        icon: '🦎',
+        description: '由巨龍鱗片打造,彷彿千年的力量都湧現上來。',
+        icon: '🐲',
         position: EquipmentPosition.HEAD,
         quality: 4,
-        adDefend: 35,
-        hpLimit: 150
-    },
-    TitanHelmet: {
-        name: '泰坦神盔',
-        description: '如山嶽般沉重的防禦。',
-        icon: '🏛️',
-        position: EquipmentPosition.HEAD,
-        quality: 4,
-        adDefend: 50,
         hpLimit: 300
-    },
-    MadKingsMask: {
-        name: '瘋王面具',
-        description: '聽得見瘋狂的低語。',
-        icon: '🤡',
-        position: EquipmentPosition.HEAD,
-        quality: 5,
-        ad: 30,
-        adDefend: -20,
-        spLimit: 200
-    },
-    SkullGaze: {
-        name: '死亡凝視',
-        description: '直視深淵的代價。',
-        icon: '💀',
-        position: EquipmentPosition.HEAD,
-        quality: 5,
-        critRate: 15,
-        hpLimit: -50
     }
 };

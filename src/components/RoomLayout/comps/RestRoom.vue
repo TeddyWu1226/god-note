@@ -29,7 +29,7 @@ defineExpose({
   <div class="rest">
     <div style="padding-bottom: 1rem;">這邊好像很適合休息💤...</div>
     <div v-if="isRested" style="color: var(--el-color-success);text-align: center">
-      休息了一會,<br/>你的HP跟MP完全恢復了!
+      休息了一會,<br/>你的HP跟SP完全恢復了!
     </div>
     <div v-else-if="gameStateStore.getCurrentState === GameState.SELECTION_PHASE">
       但現在的我不想休息!

@@ -112,12 +112,7 @@ export const useGameStateStore = defineStore('game-state', {
     },
 
     // 4. 開啟持久化
-    // persist: {
-    //     key: 'game-state-data',
-    //     storage: localStorage,
-    //     // 可以選擇只持久化必要的欄位
-    //     // paths: ['currentRoom', 'currentStage', 'currentStageRooms', 'currentEnemy', 'currentState']
-    // }
+    persist: true
 });
 
 

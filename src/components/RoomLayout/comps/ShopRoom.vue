@@ -12,6 +12,7 @@ import {ElMessage} from "element-plus";
 import {getEnumColumn} from "@/utils/enum";
 import {Potions} from "@/constants/potion-info";
 import {usePlayerStore} from "@/store/player-store";
+import {GameState} from "@/enums/enums";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -94,7 +95,9 @@ const buyItem = () => {
 // 進入房間時初始化
 onMounted(() => {
   init();
-  gameStateStore.transitionToNextState()
+  if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
+    gameStateStore.transitionToNextState()
+  }
 });
 </script>
 
@@ -276,6 +279,7 @@ onMounted(() => {
 .stat-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 4px 10px;
   background: rgba(255, 255, 255, 0.05);
   margin-bottom: 4px;

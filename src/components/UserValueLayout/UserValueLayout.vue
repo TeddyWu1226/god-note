@@ -101,7 +101,7 @@ watch(
             :total-value="playerStore.finalStats.hpLimit"
         />
       </el-form-item>
-      <el-form-item label="MP">
+      <el-form-item label="SP">
         <ValueProgress
             class="value-progress"
             :current-value="playerStore.finalStats.sp"

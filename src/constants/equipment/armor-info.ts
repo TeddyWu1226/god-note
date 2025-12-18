@@ -1,95 +1,93 @@
-// 👕 BODY (身體) - 高生命與高防禦
+// 👕 BODY (身體) - 分為「高防禦」與「高閃避」兩大系列
 import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
 export const Armor: Record<string, EquipmentType> = {
-    TatteredRags: {
-        name: '破爛衣衫',
-        description: '幾乎沒有防禦力。',
-        icon: '👕',
+    // ==========================================
+    // 🛡️ 高防禦系列 (High Defense) - 數值已調低至 33%
+    // ==========================================
+    PaddedArmor: {
+        name: '填充棉甲',
+        description: '雖然厚實，但防禦效果有限。',
+        icon: '🧥',
         position: EquipmentPosition.BODY,
         quality: 0,
-        adDefend: 1
-    },
-    TravellerTunic: {
-        name: '旅人長袍',
-        description: '耐磨且通風。',
-        icon: '🥋',
-        position: EquipmentPosition.BODY,
-        quality: 1,
-        adDefend: 8,
-        dodge: 3
+        adDefend: 3
     },
     ChainMail: {
         name: '鎖子甲',
-        description: '有效抵禦揮砍。',
+        description: '基礎的鐵環編織，提供基本防護。',
         icon: '⛓️',
         position: EquipmentPosition.BODY,
         quality: 1,
-        adDefend: 20,
-        hpLimit: 50
+        adDefend: 10
     },
     SilverBreastplate: {
         name: '白銀胸甲',
-        description: '華麗且堅固。',
+        description: '經過洗禮的金屬，具備不俗的防禦力。',
         icon: '🛡️',
         position: EquipmentPosition.BODY,
         quality: 2,
-        adDefend: 35,
-        hpLimit: 100
-    },
-    RuneRobe: {
-        name: '符文長袍',
-        description: '刻滿了防護咒語。',
-        icon: '👗',
-        position: EquipmentPosition.BODY,
-        quality: 2,
-        adDefend: 15,
-        spLimit: 200
+        adDefend: 15
     },
     PaladinArmor: {
         name: '聖騎士重鎧',
-        description: '為了守護而存在的防具。',
+        description: '為了守護而設計的標準重鎧。',
         icon: '🧱',
         position: EquipmentPosition.BODY,
         quality: 3,
-        adDefend: 50,
-        hpLimit: 200
+        adDefend: 30
     },
     GuardianPlate: {
         name: '守護者全身甲',
-        description: '戰場上的移動堡壘。',
+        description: '精良的全身鍛造甲，防禦力達到了物理極限。',
         icon: '🏰',
         position: EquipmentPosition.BODY,
         quality: 4,
-        adDefend: 70,
-        hpLimit: 400
+        adDefend: 50
     },
-    PhoenixVest: {
-        name: '鳳凰羽衣',
-        description: '擁有強大的生命力。',
-        icon: '🔥',
+
+    // ==========================================
+    // 💨 高閃避系列 (High Evasion)
+    // ==========================================
+    TatteredRags: {
+        name: '破爛衣衫',
+        description: '輕盈到幾乎沒有重量，便於躲避。',
+        icon: '👕',
         position: EquipmentPosition.BODY,
-        quality: 4,
-        adDefend: 30,
-        hpLimit: 500
+        quality: 0,
+        dodge: 5
+    },
+    TravellerTunic: {
+        name: '旅人長袍',
+        description: '通風且修身，適合靈活反應。',
+        icon: '🥋',
+        position: EquipmentPosition.BODY,
+        quality: 1,
+        dodge: 10
+    },
+    RogueLeather: {
+        name: '盜賊皮甲',
+        description: '暗殺者的標配，提升肢體活動空間。',
+        icon: '🍂',
+        position: EquipmentPosition.BODY,
+        quality: 2,
+        dodge: 15
+    },
+    MistCloak: {
+        name: '薄霧斗篷',
+        description: '布料在空氣中律動，讓敵人難以捉摸。',
+        icon: '🌫️',
+        position: EquipmentPosition.BODY,
+        quality: 3,
+        dodge: 30
     },
     WraithArmor: {
         name: '幽魂鎧甲',
-        description: '觸摸不到的虛擬防衛。',
+        description: '半透明的虛體狀態，大幅無視物理接觸。',
         icon: '👻',
         position: EquipmentPosition.BODY,
-        quality: 5,
-        dodge: 50,
-        hpLimit: -200
-    },
-    VoidCarapace: {
-        name: '虛空甲殼',
-        description: '吞噬一切光芒。',
-        icon: '🕳️',
-        position: EquipmentPosition.BODY,
-        quality: 5,
-        adDefend: 120,
-        spLimit: -100
+        quality: 4,
+        dodge: 60
     }
 };

@@ -73,16 +73,21 @@ const messageStyle = {
 
 /* 確保容器可以被定位到目標位置 */
 .floating-message-container {
-  /* 這裡的定位方式取決於父層如何渲染它。
-     如果它是放在 body 級別，建議使用 fixed 或 absolute。
-     但為了 RWD，我們主要調整字體大小。
-  */
+  /* ⭐️ 核心修正：使用 fixed 定位，並確保容器本身不佔空間 */
+  position: fixed;
   top: 50%;
   left: 50%;
+  width: 0;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 確保動畫超出時不顯示捲軸 */
+  overflow: visible;
   z-index: 5000;
   pointer-events: none;
 }
-
 .floating-message {
   /* ⭐️ 預設字體大小 (桌面/大螢幕) */
   font-size: 2rem;
