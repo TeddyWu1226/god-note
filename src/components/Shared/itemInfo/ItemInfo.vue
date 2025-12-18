@@ -21,7 +21,7 @@ const props = defineProps({
 
     <p class="detail-desc">{{ props.item.description }}</p>
 
-    <el-divider content-position="left">屬性</el-divider>
+    <el-divider content-position="left"></el-divider>
 
     <div class="detail-stats">
       <template v-for="(val, key) in props.item" :key="key">

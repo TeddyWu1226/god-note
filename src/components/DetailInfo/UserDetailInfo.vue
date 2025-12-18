@@ -86,6 +86,13 @@ const playerStore = usePlayerStore()
 const playerStats = computed(() => playerStore.finalStats);
 
 
+// 淡色底
+const getBackgroundColor = (value: string) => {
+  if (!playerStore.info?.equips) {
+    return `color-mix(in srgb, #fffff, white 1%)`
+  }
+  return `color-mix(in srgb, ${getEnumColumn(QualityEnum, playerStore.info?.equips[value]?.quality, 'color')}, white 1%)`
+}
 </script>
 
 <template>
@@ -120,16 +127,14 @@ const playerStats = computed(() => playerStore.finalStats);
               v-for="pos in EquipmentEnum"
               :key="pos.value"
               class="equip-slot"
-              :style="{
-    backgroundColor: `color-mix(in srgb, ${getEnumColumn(QualityEnum,playerStore.info.equips[pos.value]?.quality,'color')}, white 1%)`
-  }"
+              :style="{backgroundColor: getBackgroundColor(pos.value)}"
           >
-            <el-tooltip v-if="playerStore.info.equips[pos.value]" effect="light">
+            <el-tooltip v-if="playerStore.info.equips?.[pos.value]" effect="light">
               <template #content>
-                <ItemInfo :item="playerStore.info.equips[pos.value]"></ItemInfo>
+                <ItemInfo :item="playerStore.info.equips?.[pos.value]"></ItemInfo>
               </template>
               <span style="font-size: 1.5rem;">
-                {{ playerStore.info.equips[pos.value]?.icon }}
+                {{ playerStore.info.equips?.[pos.value]?.icon }}
               </span>
             </el-tooltip>
             <span v-else class="equip-icon">{{ pos.icon }}</span>
