@@ -17,7 +17,7 @@ const isShaking = ref(false);
 // 設置動畫持續時間 (需與 CSS @keyframes shake 的時間匹配)
 const SHAKE_DURATION = 500;
 
-const isDead = computed(() => props.info.hp === 0)
+const isDead = computed(() => props.info?.hp === 0)
 
 /**
  * 外部調用：啟動卡片抖動動畫

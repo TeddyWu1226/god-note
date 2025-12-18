@@ -1,143 +1,187 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
+import {ref, computed, onBeforeUnmount} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quilty-enum";
 import {EquipmentEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
 import {ItemInfo} from "@/components/Shared/itemInfo";
 
+// --- 狀態控制 ---
 const fabRef = ref<HTMLElement | null>(null);
 const position = ref({x: 0, y: 100});
 const isDragging = ref(false);
 const isShowStats = ref(false);
+const isSnapping = ref(false);
 
+// --- 內部變數 (不需要響應式) ---
+let startTime = 0;
+let startX = 0;
+let startY = 0;
+
+const playerStore = usePlayerStore();
+const playerStats = computed(() => playerStore.finalStats);
+
+/**
+ * 核心：開始拖拽/點擊
+ */
 const onDragStart = (e: MouseEvent | TouchEvent) => {
   if (!fabRef.value) return;
 
-  // 取得父層組件的資訊
   const parent = fabRef.value.offsetParent as HTMLElement;
   if (!parent) return;
 
+  // 1. 初始化狀態
+  isSnapping.value = false;
   isDragging.value = false;
+  startTime = Date.now();
+
   const parentRect = parent.getBoundingClientRect();
   const fabRect = fabRef.value.getBoundingClientRect();
 
-  const startX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-  const startY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
+  // 取得初始座標
+  const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+  const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY;
 
-  // 點擊位置相對於 Icon 內部的偏移
-  const offsetX = startX - fabRect.left;
-  const offsetY = startY - fabRect.top;
+  startX = clientX;
+  startY = clientY;
+
+  // 計算手指在 Icon 內的相對位置偏移
+  const offsetX = clientX - fabRect.left;
+  const offsetY = clientY - fabRect.top;
 
   const onMouseMove = (moveEvent: MouseEvent | TouchEvent) => {
-    isDragging.value = true;
-    const currentX = moveEvent instanceof MouseEvent ? moveEvent.clientX : moveEvent.touches[0].clientX;
-    const currentY = moveEvent instanceof MouseEvent ? moveEvent.clientY : moveEvent.touches[0].clientY;
+    const curX = moveEvent instanceof MouseEvent ? moveEvent.clientX : moveEvent.touches[0].clientX;
+    const curY = moveEvent instanceof MouseEvent ? moveEvent.clientY : moveEvent.touches[0].clientY;
 
-    // 計算相對於父層內部的座標
-    let newX = currentX - parentRect.left - offsetX;
-    let newY = currentY - parentRect.top - offsetY;
+    // 🚩 判定閾值：位移超過 5px 才算拖拽
+    const distance = Math.sqrt(Math.pow(curX - startX, 2) + Math.pow(curY - startY, 2));
+    if (!isDragging.value && distance > 5) {
+      isDragging.value = true;
+    }
 
-    // 🚩 限制在父層範圍內
-    const maxX = parent.clientWidth - fabRef.value!.clientWidth;
-    const maxY = parent.clientHeight - fabRef.value!.clientHeight;
+    if (isDragging.value) {
+      // 拖拽中阻止捲動
+      if (moveEvent.cancelable) moveEvent.preventDefault();
 
-    newX = Math.max(0, Math.min(newX, maxX));
-    newY = Math.max(0, Math.min(newY, maxY));
+      let newX = curX - parentRect.left - offsetX;
+      let newY = curY - parentRect.top - offsetY;
 
-    position.value.x = newX;
-    position.value.y = newY;
+      // 邊界限制
+      const maxX = parent.clientWidth - fabRef.value!.clientWidth;
+      const maxY = parent.clientHeight - fabRef.value!.clientHeight;
+
+      position.value.x = Math.max(0, Math.min(newX, maxX));
+      position.value.y = Math.max(0, Math.min(newY, maxY));
+    }
   };
 
   const onMouseUp = () => {
-    // 🚩 自動貼邊邏輯
-    const parentWidth = parent.clientWidth;
-    const fabWidth = fabRef.value?.clientWidth || 0;
+    const duration = Date.now() - startTime;
 
-    if (position.value.x + fabWidth / 2 < parentWidth / 2) {
-      position.value.x = 5; // 貼左邊
-    } else {
-      position.value.x = parentWidth - fabWidth - 5; // 貼右邊
+    // 🚩 核心：手動判定點擊
+    // 如果位移極小 (!isDragging) 且 按壓時間短，視為點擊
+    if (!isDragging.value && duration < 250) {
+      isShowStats.value = true;
+    } else if (isDragging.value) {
+      // 執行貼邊動畫
+      isSnapping.value = true;
+      const parentWidth = parent.clientWidth;
+      const fabWidth = fabRef.value?.clientWidth || 0;
+      // 貼靠最近的左右邊緣
+      position.value.x = (position.value.x + fabWidth / 2 < parentWidth / 2) ? 5 : (parentWidth - fabWidth - 5);
     }
 
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", onMouseUp);
-    window.removeEventListener("touchmove", onMouseMove);
-    window.removeEventListener("touchend", onMouseUp);
+    removeEvents(onMouseMove, onMouseUp);
   };
 
+  // 綁定全域監聽
   window.addEventListener("mousemove", onMouseMove);
   window.addEventListener("mouseup", onMouseUp);
   window.addEventListener("touchmove", onMouseMove, {passive: false});
   window.addEventListener("touchend", onMouseUp);
 };
 
-// 處理點擊 (防止拖曳結束觸發點擊)
-const handleClick = () => {
-  if (!isDragging.value) {
-    isShowStats.value = true;
-  }
+// 移除監聽函數
+const removeEvents = (moveFn: any, upFn: any) => {
+  window.removeEventListener("mousemove", moveFn);
+  window.removeEventListener("mouseup", upFn);
+  window.removeEventListener("touchmove", moveFn);
+  window.removeEventListener("touchend", upFn);
 };
 
-
-// 欄位資訊
-
-const playerStore = usePlayerStore()
-const playerStats = computed(() => playerStore.finalStats);
-
-
-// 淡色底
-const getBackgroundColor = (value: string) => {
-  if (!playerStore.info?.equips) {
-    return `color-mix(in srgb, #fffff, white 1%)`
+/**
+ * 裝備背景顏色計算 (統一調淡)
+ */
+const getBackgroundColor = (slotKey: string) => {
+  const equips = playerStore.info?.equips;
+  if (!equips || !equips[slotKey as keyof typeof equips]) {
+    return "rgba(255, 255, 255, 0.05)";
   }
-  return `color-mix(in srgb, ${getEnumColumn(QualityEnum, playerStore.info?.equips[value]?.quality, 'color')}, white 1%)`
-}
+  const quality = equips[slotKey as keyof typeof equips]?.quality;
+  const qColor = getEnumColumn(QualityEnum, quality, 'color', '#ffffff');
+  // 混入 80% 白色達成淡化效果
+  return `color-mix(in srgb, ${qColor}, white 80%)`;
+};
+
+// 元件卸載前清理
+onBeforeUnmount(() => {
+  // 確保沒有殘留的監聽
+});
 </script>
 
 <template>
   <div
       ref="fabRef"
       class="floating-bag"
+      :class="{ 'is-snapping': isSnapping }"
       :style="{
       left: `${position.x}px`,
       top: `${position.y}px`
     }"
-      @mousedown.prevent="onDragStart"
-      @touchstart.prevent="onDragStart"
-      @click="handleClick"
+      @mousedown.stop="onDragStart"
+      @touchstart.stop="onDragStart"
   >
     <div class="icon-inner">{{ playerStore.info.icon }}</div>
 
-    <el-dialog v-model="isShowStats" title="角色狀態" width="350px" append-to-body>
+    <el-dialog
+        v-model="isShowStats"
+        title="角色狀態"
+        class="user-detail"
+        append-to-body
+    >
       <div class="stats-container">
         <div class="stats-grid">
           <div class="stat-item">❤️ 生命: {{ playerStats.hp }} / {{ playerStats.hpLimit }}</div>
           <div class="stat-item">✨ 法力: {{ playerStats.sp }} / {{ playerStats.spLimit }}</div>
           <div class="stat-item">⚔️ 攻擊: {{ playerStats.ad }}</div>
           <div class="stat-item">🛡️ 防禦: {{ playerStats.adDefend }}</div>
-          <div class="stat-item">💥 爆擊率: {{ playerStats.critRate }}%</div>
-          <div class="stat-item">💢 爆擊傷害: {{ playerStats.critIncrease }}%</div>
-          <div class="stat-item">🎯 命中值: {{ playerStats.hit }}</div>
-          <div class="stat-item">💨 閃避值: {{ playerStats.dodge }}</div>
+          <div class="stat-item">💥 爆擊: {{ playerStats.critRate }}%</div>
+          <div class="stat-item">💢 爆傷: {{ playerStats.critIncrease }}%</div>
+          <div class="stat-item">🎯 命中: {{ playerStats.hit }}</div>
+          <div class="stat-item">💨 閃避: {{ playerStats.dodge }}</div>
         </div>
+
         <el-divider>當前裝備</el-divider>
+
         <div class="equipment-slots">
           <div
               v-for="pos in EquipmentEnum"
               :key="pos.value"
               class="equip-slot"
-              :style="{backgroundColor: getBackgroundColor(pos.value)}"
+              :style="{ backgroundColor: getBackgroundColor(pos.value) }"
           >
-            <el-tooltip v-if="playerStore.info.equips?.[pos.value]" effect="light">
+            <el-tooltip
+                v-if="playerStore.info.equips?.[pos.value as keyof typeof playerStore.info.equips]"
+                effect="light"
+            >
               <template #content>
-                <ItemInfo :item="playerStore.info.equips?.[pos.value]"></ItemInfo>
+                <ItemInfo :item="playerStore.info.equips[pos.value as keyof typeof playerStore.info.equips]"/>
               </template>
-              <span style="font-size: 1.5rem;">
-                {{ playerStore.info.equips?.[pos.value]?.icon }}
+              <span class="equip-item-icon">
+                {{ playerStore.info.equips[pos.value as keyof typeof playerStore.info.equips]?.icon }}
               </span>
             </el-tooltip>
-            <span v-else class="equip-icon">{{ pos.icon }}</span>
+            <span v-else class="equip-placeholder-icon">{{ pos.icon }}</span>
           </div>
         </div>
       </div>
@@ -147,9 +191,9 @@ const getBackgroundColor = (value: string) => {
 
 <style scoped>
 .floating-bag {
-  position: absolute; /* 核心：相對於最近的 relative 父層 */
-  width: 50px;
-  height: 50px;
+  position: absolute;
+  width: 54px;
+  height: 54px;
   background: #2c3e50;
   border: 2px solid #e6a23c;
   border-radius: 50%;
@@ -157,33 +201,40 @@ const getBackgroundColor = (value: string) => {
   justify-content: center;
   align-items: center;
   cursor: grab;
-  z-index: 1000;
+  z-index: 2000;
   user-select: none;
-  /* 增加過渡動畫，僅限於貼邊時生效 */
-  transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1), top 0.1s linear;
+  /* 重要：禁用預設觸控行為，解決 Intervention 報錯 */
+  touch-action: none;
+  transition: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 🚩 只有在貼邊狀態時才啟用平滑動畫 */
+.floating-bag.is-snapping {
+  transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .floating-bag:active {
   cursor: grabbing;
-  transition: none; /* 拖曳時必須關閉 transition */
 }
 
 .icon-inner {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 
-/* 彈窗內樣式 */
+/* 彈窗樣式 */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
 }
 
 .stat-item {
-  padding: 8px;
-  border-radius: 4px;
-  font-weight: bold;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  border-left: 3px solid #e6a23c;
 }
 
 .equipment-slots {
@@ -191,25 +242,42 @@ const getBackgroundColor = (value: string) => {
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   justify-items: center;
+  margin-top: 10px;
 }
 
 .equip-slot {
-  width: 60px;
-  height: 60px;
-  background: var(--el-card-bg-color);
-  border: 2px solid #ccc;
-  border-radius: 8px;
+  width: 65px;
+  height: 65px;
+  background: #1a1a1a;
+  border: 2px solid #444;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  transition: transform 0.2s;
 }
 
-.equip-icon {
-  font-size: 1.5rem;
-  opacity: 0.3;
+.equip-item-icon {
+  font-size: 1.8rem;
+}
 
+.equip-placeholder-icon {
+  font-size: 1.6rem;
+  opacity: 0.2;
 }
 
 
+</style>
+<style>
+/* 針對移動端 dialog 寬度優化 */
+.user-detail {
+  --el-dialog-width: 32rem;
+}
+
+@media (max-width: 768px) {
+  .user-detail {
+    --el-dialog-width: 95%;
+  }
+}
 </style>

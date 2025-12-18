@@ -11,6 +11,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {UserValueLayout} from "@/components/UserValueLayout";
 import {UserDetailInfo} from "@/components/DetailInfo";
 import {usePlayerStore} from "@/store/player-store";
+import {ElMessageBox} from "element-plus";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -40,7 +41,23 @@ const startGame = async () => {
 const restartGame = async () => {
   isDead.value = false
   await initAll()
+}
 
+const resetGame = async () => {
+  ElMessageBox.confirm(
+      '確定要重新開始?',
+      '再次確認',
+      {
+        confirmButtonText: '放棄這次旅程',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        restartGame()
+      })
+      .catch(() => {
+      })
 }
 
 /** 觸發 **/
@@ -103,7 +120,7 @@ const onRunFailed = () => {
           body-class="flex items-center justify-center flex-column"
       >
         <h1>🏛️ 神之塔 🏛️</h1>
-        <span>~不斷挑戰神的無限旅途~</span>
+        <span>~聳立於大陸中央的巨塔,無盡的冒險正在等你開始~</span>
         <el-button style="width: 8rem;height: 5rem;margin-top: 1rem" @click="startGame">
           開始遊戲
         </el-button>
@@ -111,6 +128,7 @@ const onRunFailed = () => {
       <el-container v-else>
         <el-header class="header">
           <span>🏛️ 神之塔 🏛️</span>
+          <el-button type="danger" style="height: 2rem" size="small" @click="resetGame">重新開始</el-button>
         </el-header>
         <el-main>
           <FloorInfoLayout/>
@@ -157,6 +175,7 @@ const onRunFailed = () => {
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-size: 16px;
   font-weight: bold;
   height: 5vh;

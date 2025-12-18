@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import {computed, watch, onMounted, defineAsyncComponent} from 'vue';
+import {computed, onMounted} from 'vue';
 import {useGameStateStore} from "@/store/game-state-store";
 import {eventComponentMap} from "@/components/RoomLayout/event/useEventRoom";
 import {SpecialEventEnum} from "@/enums/enums";
-import {RoomEnum} from "@/enums/room-enum";
-import {getEnumColumn} from "@/utils/enum";
-import RestRoom from "@/components/RoomLayout/comps/RestRoom.vue";
-import FightRoom from "@/components/RoomLayout/comps/FightRoom.vue";
+
 
 // 假設您的 Store 中有一個屬性 currentEventType 決定當前事件
 const gameStateStore = useGameStateStore();
