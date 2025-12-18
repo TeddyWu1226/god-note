@@ -33,7 +33,20 @@ const selectRoom = (roomXY: RoomCoordinateTuple) => {
           {{ getEnumColumn(RoomEnum, getRoomValue(room)) }}
         </el-col>
       </el-row>
-
+    </el-button>
+    <el-button
+        v-if="nextRooms.length === 0"
+        :color="getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0]+1,0]),'color')"
+        :disabled="props.disabled"
+        @click="selectRoom([gameStateStore.currentRoom[0]+1,0])"
+    >
+      <el-row>
+        <el-col :xl="10">前往:</el-col>
+        <el-col :xl="14">
+          {{ getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0] + 1, 0]), 'icon') }}
+          {{ getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0] + 1, 0])) }}
+        </el-col>
+      </el-row>
     </el-button>
   </div>
 </template>

@@ -120,7 +120,7 @@ const getBackgroundColor = (slotKey: string) => {
   const quality = equips[slotKey as keyof typeof equips]?.quality;
   const qColor = getEnumColumn(QualityEnum, quality, 'color', '#ffffff');
   // 混入 80% 白色達成淡化效果
-  return `color-mix(in srgb, ${qColor}, white 80%)`;
+  return `color-mix(in srgb, ${qColor}, white 1%)`;
 };
 
 // 元件卸載前清理

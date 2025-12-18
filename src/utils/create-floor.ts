@@ -1,4 +1,5 @@
 import {RoomWeights, TrapezoidData} from "@/types";
+import {RoomEnum} from "@/enums/room-enum";
 
 /**
  * 根據自定義權重物件，隨機返回一個標記值 (0, 1, 2, 3, 4, ...)
@@ -47,7 +48,7 @@ function getRandomLabelByWeight(weights: RoomWeights): number {
  */
 export function createTrapezoidDataWithWeights(
     weights: RoomWeights,
-    maxLayers: number = 19,
+    maxLayers: number = 18,
     maxRooms: number = 17,
 ): TrapezoidData {
 
@@ -74,6 +75,10 @@ export function createTrapezoidDataWithWeights(
 
         result.push(layer);
     }
+    // 第19層都是休息
+    result.push([RoomEnum.Rest.value]);
+    // 第20層都是BOSS
+    result.push([RoomEnum.Boss.value]);
 
     return result;
 }
