@@ -2,6 +2,7 @@
 import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
+import {usePlayerStore} from "@/store/player-store";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -84,6 +85,7 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
  */
 export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutcome {
     const logStore = useLogStore();
+    const playerStore = usePlayerStore();
     // 1. 執行傷害計算
     const damageOutput: DamageResult = calculateDamage(attacker, defender);
 
@@ -102,11 +104,18 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
     }
 
     // 2. 更新生命值 (核心邏輯)
-    const damageTaken = outcome.totalDamage;
-    const newHP = defender.hp - damageTaken;
+    const damageTaken = damageOutput.totalDamage
+    if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
+        // 直接修改 Store 裡的原始數據 info.hp
+        const newHP = playerStore.info.hp - damageTaken;
+        playerStore.info.hp = Math.max(0, newHP);
 
-    // 將被攻擊者的 HP 更新為新的值，確保 HP 不會低於 0
-    defender.hp = Math.max(0, newHP);
+        // 更新同步 (讓 defender 變數也拿到最新值用於回傳 outcome)
+        defender.hp = playerStore.info.hp;
+    } else {
+        // 普通怪物的邏輯 (假設怪物是普通的 reactive 物件)
+        defender.hp = Math.max(0, defender.hp - damageTaken);
+    }
 
     // 3. 判斷是否擊敗
     if (defender.hp <= 0) {

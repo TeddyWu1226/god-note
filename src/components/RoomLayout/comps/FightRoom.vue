@@ -59,7 +59,7 @@ const handleMonsterSelect = (index: number) => {
 
 const monsterMove = (selectedMonster: MonsterType) => {
   // 傷害計算
-  const damageOutput = applyDamage(selectedMonster, playerStore.info);
+  const damageOutput = applyDamage(selectedMonster, playerStore.finalStats);
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
@@ -82,7 +82,7 @@ const onAttack = () => {
     return
   }
   // 傷害計算
-  const damageOutput = applyDamage(playerStore.info, selectedMonster);
+  const damageOutput = applyDamage(playerStore.finalStats, selectedMonster);
   const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
   triggerDamageEffect(damageOutput, targetElement.$el)
   if (damageOutput.isHit) {

@@ -97,15 +97,15 @@ watch(
       <el-form-item label="HP">
         <HpProgress
             class="value-progress"
-            :current-value="playerStore.info.hp"
-            :total-value="playerStore.info.hpLimit"
+            :current-value="playerStore.finalStats.hp"
+            :total-value="playerStore.finalStats.hpLimit"
         />
       </el-form-item>
       <el-form-item label="MP">
         <ValueProgress
             class="value-progress"
-            :current-value="playerStore.info.sp"
-            :total-value="playerStore.info.spLimit"
+            :current-value="playerStore.finalStats.sp"
+            :total-value="playerStore.finalStats.spLimit"
         />
       </el-form-item>
       <el-form-item label="狀態">
