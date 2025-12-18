@@ -142,7 +142,7 @@ export const Monster = {
     FierceWolf: {
         icon: '🐺',
         name: '森林守衛狼',
-        description: '初始之森的巡邏者，結實的肌肉使其極具威脅',
+        description: '森林的巡邏者,極具威脅,遇到了建議跑',
         ad: 22,
         critIncrease: WorldDefault.critIncrease,
         critRate: 10,

@@ -11,11 +11,11 @@ const gameStateStore = useGameStateStore()
 const isRested = ref<boolean>(false)
 const onRest = () => {
   isRested.value = true
-  if (playerStore.info.hp < playerStore.info.hpLimit) {
-    playerStore.info.hp = playerStore.info.hpLimit
+  if (playerStore.info.hp < playerStore.finalStats.hpLimit) {
+    playerStore.info.hp = playerStore.finalStats.hpLimit
   }
-  if (playerStore.info.sp < playerStore.info.spLimit) {
-    playerStore.info.sp = playerStore.info.spLimit
+  if (playerStore.info.sp < playerStore.finalStats.spLimit) {
+    playerStore.info.sp = playerStore.finalStats.spLimit
   }
   gameStateStore.transitionToNextState()
 }

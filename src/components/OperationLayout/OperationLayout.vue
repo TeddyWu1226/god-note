@@ -55,7 +55,7 @@ defineExpose({
 
 <template>
   <FightOperation
-      v-if="gameStateStore.roomIs([RoomEnum.Fight.value,RoomEnum.EliteFight.value]) &&
+      v-if="gameStateStore.roomIs([RoomEnum.Fight.value,RoomEnum.EliteFight.value,RoomEnum.Boss.value]) &&
       gameStateStore.stateIs(GameState.EVENT_PHASE)"
       ref="FightOperationRef"
       @attack="onAttack"

@@ -86,7 +86,9 @@ watch(() => gameStateStore.currentRoom,
     </div>
     <FightRoom
         ref="FightRoomRef"
-        v-if="currentRoomValue === RoomEnum.Fight.value ||currentRoomValue === RoomEnum.EliteFight.value"
+        v-if="currentRoomValue === RoomEnum.Fight.value ||
+        currentRoomValue === RoomEnum.EliteFight.value ||
+        currentRoomValue === RoomEnum.Boss.value"
         @player-dead="onPlayerDead"
         @run-failed="onRunFailed"
         :key="roomKeyCounter"

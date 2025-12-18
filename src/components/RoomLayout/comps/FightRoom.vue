@@ -4,7 +4,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import {computed, Reactive, ref} from "vue";
+import {computed, ref} from "vue";
 import {MonsterType} from "@/types";
 import {Monster} from "@/constants/monster-info";
 import {applyDamage, applyRandomFloatAndRound, canEscape, triggerDamageEffect} from "@/constants/fight-func";
@@ -14,6 +14,7 @@ import {create} from "@/utils/create";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {BeginForestWeights} from "@/constants/stage-monster-weights";
+import {Boss} from "@/constants/boss-info";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -25,10 +26,6 @@ const currentRoomValue = computed(() => {
 const monsterCardRefs = ref<MonsterCardExposed[]>([]);
 const monsters = ref<MonsterType[]>([])
 const monsterDropGold = ref(0)
-const clearMonsters = () => {
-  monsters.value = [];
-  gameStateStore.setCurrentEnemy([])
-}
 
 /**
  * 根據權重隨機獲取一個怪物
@@ -89,9 +86,6 @@ const spawnMonsters = (count: number, weight: Record<string, number>, eliteBoost
 }
 
 
-/**
- * 根據當前階層取得權重 (封裝重複代碼)
- */
 const getWeightByStage = () => {
   switch (gameStateStore.currentStage) {
     case StageEnum.BeginForest.value:
@@ -101,9 +95,7 @@ const getWeightByStage = () => {
   }
 }
 
-/**
- * 生成菁英戰鬥
- */
+//生成菁英戰鬥
 const genEliteMonster = (layer: number) => {
   const useWeight = getWeightByStage();
   if (!useWeight) return;
@@ -116,6 +108,21 @@ const genEliteMonster = (layer: number) => {
   } else {
     spawnMonsters(1, useWeight, true);
   }
+}
+
+// 生成BOSS
+const createBoss = () => {
+  let newMonsters: MonsterType[] = [];
+  switch (gameStateStore.currentStage) {
+    case StageEnum.BeginForest.value:
+      newMonsters = [create(Boss.BigBear)]
+      break
+    default:
+      newMonsters = [create(Monster.Error)];
+  }
+  monsters.value = newMonsters;
+  // 同步到 Store 做持久化緩存
+  gameStateStore.setCurrentEnemy(newMonsters);
 }
 
 /**
@@ -235,19 +242,20 @@ const init = () => {
     case RoomEnum.EliteFight.value:
       genEliteMonster(layer);
       break;
+    case RoomEnum.Boss.value:
+      createBoss()
+      break
+
   }
 }
 
-if(!gameStateStore.isWon){
+if (!gameStateStore.isWon) {
   init()
 }
 </script>
 
 <template>
-  <div
-      class="fight"
-      v-if="currentRoomValue === RoomEnum.Fight.value ||currentRoomValue === RoomEnum.EliteFight.value"
-  >
+  <div class="fight">
     <MonsterCard
         :ref="(el) => { if (el) monsterCardRefs[index] = el as MonsterCardExposed }"
         v-for="(monster,index) in monsters"
