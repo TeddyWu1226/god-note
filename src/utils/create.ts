@@ -64,3 +64,35 @@ export const getRandomItemsByQuality = (
 
     return shuffled.slice(0, finalCount);
 };
+
+/**
+ * 從指定的 Enum 中隨機取出一個值，並支援排除清單
+ * @param enumObj Enum 物件
+ * @param excludeList 想要排除的 Value 陣列 (例如 [SpecialEventEnum.None])
+ * @returns 隨機挑選出的 Enum Value
+ */
+export function getRandomEnumValue<T extends object>(
+    enumObj: T,
+    excludeList?: T[keyof T][]
+): T[keyof T] {
+    // 1. 取得所有的 Enum Values
+    const allValues = Object.values(enumObj) as T[keyof T][];
+
+    // 2. 過濾掉排除清單中的值
+    let filteredValues: T[keyof T][] = [];
+    if (excludeList && excludeList.length > 0) {
+        filteredValues = allValues.filter(value => !excludeList.includes(value));
+    } else {
+        filteredValues = allValues;
+    }
+    // 3. 安全檢查：如果過濾後沒東西了，回傳原始列表的第一個或 undefined
+    if (filteredValues.length === 0) {
+        console.warn("getRandomEnumValue: 過濾後沒有可選的值");
+        return allValues[0];
+    }
+
+    // 4. 隨機產生索引並回傳
+    const randomIndex = Math.floor(Math.random() * filteredValues.length);
+    return filteredValues[randomIndex];
+}
+

@@ -33,12 +33,16 @@ export interface Enum {
  * 特殊事件
  */
 export enum SpecialEventEnum {
+    // 無事件
     None = 'None',
-    JobChange = 'JOB_CHANGE',
+    // 賭博
     Gamble = 'GAMBLE',
-    AngelBlessing = 'ANGEL_BLESSING',
-    DemonBlessing = 'DEMON_BLESSING',
-    // ... 其他事件
+    // // 轉職
+    // JobChange = 'JOB_CHANGE',
+    // // 天使祝福
+    // AngelBlessing = 'ANGEL_BLESSING',
+    // // 惡魔祝福
+    // DemonBlessing = 'DEMON_BLESSING',
 }
 
 /**

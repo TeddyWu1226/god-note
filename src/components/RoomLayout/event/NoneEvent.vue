@@ -9,7 +9,7 @@ gameStateStore.transitionToNextState()
 
 <template>
   <EventTemplate class="weird" title="一個空空如也的地方...">
-    <div class="event-room-without-btn none-event">
+    <div class="event-room-without-btn gamble-event">
       你來到一個空無一物的地方<br/>
       但這裡不詳的氣息讓你不想在這多留...
     </div>
@@ -20,7 +20,7 @@ gameStateStore.transitionToNextState()
 /* ==================================== */
 /* 1. 靜態基底樣式 (Base Style)       */
 /* ==================================== */
-.none-event {
+.gamble-event {
   padding: 2rem;
   display: flex;
   align-items: center;

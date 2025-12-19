@@ -28,6 +28,6 @@ const isClose = ref(true);
   position: absolute;
   right: 50px;
   z-index: 6000;
-  max-width: 50%
+  max-width: 30%
 }
 </style>

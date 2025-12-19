@@ -35,9 +35,9 @@ const escapeRate = computed((): number => escapePercent(playerStore.finalStats, 
     <el-button type="primary" @click="emit('attack',true)">
       攻擊
     </el-button>
-    <el-button type="success" :disabled="props.disabled" @click="changeStatus(operationStatusEnum.Skill)">
-      技能
-    </el-button>
+<!--    <el-button type="success" :disabled="props.disabled" @click="changeStatus(operationStatusEnum.Skill)">-->
+    <!--      技能-->
+    <!--    </el-button>-->
     <el-button type="danger" :disabled="props.disabled" @click="emit('run',true)">
       逃跑({{ escapeRate}}%)
     </el-button>

@@ -59,7 +59,7 @@ export const useGameStateStore = defineStore('game-state', {
             this.currentRoom = room;
             this.currentRoomValue = getRoomValue(room) ?? RoomEnum.Rest.value;
             this.isBattleWon = false;
-            this.transitionToNextState();
+            this.currentState = GameState.EVENT_PHASE;
             return this.currentRoomValue;
         },
 
@@ -89,6 +89,7 @@ export const useGameStateStore = defineStore('game-state', {
         },
 
         transitionToNextState(): GameState {
+            console.log('執行了!')
             let nextState: GameState;
             switch (this.currentState) {
                 case GameState.INITIAL:

@@ -15,11 +15,21 @@ const props = defineProps({
     </div>
     <slot name="default"></slot>
   </el-card>
-  <slot name="button"></slot>
+  <div v-if="$slots.button" class="flex operation-layout">
+    <slot name="button"></slot>
+  </div>
 </template>
 
 <style scoped>
 .title {
   font-size: 1.2rem;
+}
+
+.flex > * {
+  flex: 1;
+}
+
+.operation-layout {
+  height: 5vh
 }
 </style>
