@@ -1,14 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import MapDialog from "@/components/FloorInfoLayout/comps/MapDialog.vue";
 import {ref} from "vue";
-import {getEnumColumn} from "@/utils/enum.ts";
-import {StageEnum} from "@/enums/stage-enum.ts";
-import {useGameStateStore} from "@/store/game-state-store.ts";
-import {UserInfo} from "@/storage/userinfo-storage.js";
+import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
+import {getEnumColumn} from "@/utils/enum";
+import {StageEnum} from "@/enums/stage-enum";
+
+
+const gameStateStore = useGameStateStore();
+const playerStore = usePlayerStore();
 
 const isShowMapDialog = ref(false);
 
-const gameStateStore = useGameStateStore();
 
 </script>
 
@@ -18,7 +21,7 @@ const gameStateStore = useGameStateStore();
         gameStateStore.getCurrentStage
       }} 階段 - {{ getEnumColumn(StageEnum, gameStateStore.getCurrentStage) }}</span>
     <div class="flex items-center">
-      <span class="gold">{{ UserInfo.gold }}💰</span>
+      <span class="gold">{{ playerStore.info.gold }}💰</span>
       <el-button @click="()=>{isShowMapDialog = true}">地圖</el-button>
     </div>
   </el-card>

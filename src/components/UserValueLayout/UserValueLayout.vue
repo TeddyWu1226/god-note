@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {ref, watch, computed, nextTick} from 'vue';
 import {HpProgress, ValueProgress} from "@/components/Shared/Progress";
-import {UserInfo} from "@/storage/userinfo-storage";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import type {CSSProperties} from 'vue';
 import {ElCard} from "element-plus";
+import {usePlayerStore} from "@/store/player-store";
+
+const playerStore = usePlayerStore();
+
 
 // 創建一個 Template Ref 指向 el-card 實例
 const cardRef = ref<typeof ElCard | null>(null);
@@ -12,13 +14,13 @@ const cardRef = ref<typeof ElCard | null>(null);
 const isShaking = ref(false);
 
 // 計算 HP 上限，用於計算大規模傷害或治療的閾值
-const hpLimit = computed(() => UserInfo.value.hpLimit);
+const hpLimit = computed(() => playerStore.info.hpLimit);
 
 // 震動動畫持續時間 (需與 CSS 中的 duration 匹配)
 const SHAKE_DURATION_MS = 500;
 
 watch(
-    () => UserInfo.value.hp,
+    () => playerStore.info.hp,
     (newValue, oldValue) => {
       // 確保 HP 發生變化，且卡片元素已經掛載
       if (newValue === oldValue || !cardRef.value) {
@@ -95,15 +97,15 @@ watch(
       <el-form-item label="HP">
         <HpProgress
             class="value-progress"
-            :current-value="UserInfo.hp"
-            :total-value="UserInfo.hpLimit"
+            :current-value="playerStore.finalStats.hp"
+            :total-value="playerStore.finalStats.hpLimit"
         />
       </el-form-item>
-      <el-form-item label="MP">
+      <el-form-item label="SP">
         <ValueProgress
             class="value-progress"
-            :current-value="UserInfo.sp"
-            :total-value="UserInfo.spLimit"
+            :current-value="playerStore.finalStats.sp"
+            :total-value="playerStore.finalStats.spLimit"
         />
       </el-form-item>
       <el-form-item label="狀態">

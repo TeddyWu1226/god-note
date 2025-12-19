@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useLogStore } from '@/store/log-store';
-import { computed } from 'vue';
+import {useLogStore} from '@/store/log-store';
+import {computed} from 'vue';
 
 const logStore = useLogStore();
 
@@ -21,7 +21,7 @@ defineExpose({
           v-for="log in currentLogs"
           :key="log.id"
       >
-        <span class="log-text">{{ log.message }}</span>
+        <span class="log-text" v-html="log.message"/>
       </div>
     </transition-group>
   </div>
@@ -29,25 +29,30 @@ defineExpose({
 
 <style scoped>
 .log-view-container {
+  /* 定位在畫面左上方，不干擾中央怪物 */
+  position: absolute;
+  top: 15rem;
+  left: 3rem;
+
   /* ⭐️ 限制大小：避免遮住畫面過多空間 */
   width: 20rem;
   max-height: 5rem; /* 超過此高度的舊 Log 會被隱藏 */
 
   /* 基礎設定 */
   pointer-events: none; /* 滑鼠穿透 */
-  overflow: hidden;    /* 確保超過範圍的 Log 不可見 */
+  overflow: hidden; /* 確保超過範圍的 Log 不可見 */
   z-index: 100;
 
   /* ⭐️ 底部漸變消失：讓 Log 被推下去時自然淡出 */
   -webkit-mask-image: linear-gradient(
-    to bottom,
-    black 70%,
-    transparent 100%
+      to bottom,
+      black 70%,
+      transparent 100%
   );
   mask-image: linear-gradient(
-    to bottom,
-    black 70%,
-    transparent 100%
+      to bottom,
+      black 70%,
+      transparent 100%
   );
 }
 
@@ -59,6 +64,7 @@ defineExpose({
 
 .log-item {
   background: transparent; /* 背景全透明 */
+  padding: 2px 4px;
   transition: all 0.4s ease;
 }
 

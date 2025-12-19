@@ -4,7 +4,7 @@ import TestDiv from "@/views/testDiv.vue";
 </script>
 
 <template>
-<!--  <TestDiv/>-->
+  <TestDiv/>
   <MainPage/>
 
 </template>

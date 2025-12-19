@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
@@ -8,11 +8,13 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {GameState} from "@/enums/enums";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
-import {UserInfo} from "@/storage/userinfo-storage";
-import {DEFAULT_USER_INFO} from "@/assets/default-const";
 import {UserValueLayout} from "@/components/UserValueLayout";
+import {UserDetailInfo} from "@/components/DetailInfo";
+import {usePlayerStore} from "@/store/player-store";
+import {ElMessageBox, ElNotification} from "element-plus";
 
 const gameStateStore = useGameStateStore()
+const playerStore = usePlayerStore()
 const isDead = ref(false)
 const cardConfig = ref({
   shadow: 'never',
@@ -23,7 +25,7 @@ const buttonConfig = ref({
 
 const initAll = async () => {
   // 初始化角色
-  UserInfo.value = {...DEFAULT_USER_INFO}
+  playerStore.init()
   // 初始化
   gameStateStore.init()
   // 前往第一層
@@ -38,8 +40,24 @@ const startGame = async () => {
 
 const restartGame = async () => {
   isDead.value = false
-  await initAll()
+  gameStateStore.$reset()
+}
 
+const resetGame = async () => {
+  ElMessageBox.confirm(
+      '確定要重新開始?',
+      '再次確認',
+      {
+        confirmButtonText: '放棄這次旅程',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        gameStateStore.$reset()
+      })
+      .catch(() => {
+      })
 }
 
 /** 觸發 **/
@@ -73,7 +91,14 @@ const onRunFailed = () => {
 
 // **【新增】房間唯一 ID/計數器**
 // 每次進入一個「新房間」時，這個值就會增加，無論房間類型是否相同。
-
+const showLoadingSuccess = () => {
+  if (gameStateStore.getCurrentRoom) {
+    ElNotification.success('已讀取緩存數據成功!')
+  }
+}
+onMounted(() => {
+  showLoadingSuccess()
+})
 </script>
 
 <template>
@@ -102,7 +127,7 @@ const onRunFailed = () => {
           body-class="flex items-center justify-center flex-column"
       >
         <h1>🏛️ 神之塔 🏛️</h1>
-        <span>~不斷挑戰神的無限旅途~</span>
+        <span>~聳立於大陸中央的巨塔,無盡的冒險正在等你開始~</span>
         <el-button style="width: 8rem;height: 5rem;margin-top: 1rem" @click="startGame">
           開始遊戲
         </el-button>
@@ -110,6 +135,7 @@ const onRunFailed = () => {
       <el-container v-else>
         <el-header class="header">
           <span>🏛️ 神之塔 🏛️</span>
+          <el-button type="danger" style="height: 2rem" size="small" @click="resetGame">重新開始</el-button>
         </el-header>
         <el-main>
           <FloorInfoLayout/>
@@ -131,6 +157,7 @@ const onRunFailed = () => {
           <UserLayout class="user-layout"/>
         </el-main>
       </el-container>
+      <UserDetailInfo v-if="!gameStateStore.stateIs(GameState.INITIAL)"/>
     </div>
   </el-config-provider>
 </template>
@@ -138,6 +165,7 @@ const onRunFailed = () => {
 
 <style scoped>
 .common-layout {
+  position: relative;
   background-color: #303133;
 
 }
@@ -154,6 +182,7 @@ const onRunFailed = () => {
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-size: 16px;
   font-weight: bold;
   height: 5vh;

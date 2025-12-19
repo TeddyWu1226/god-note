@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {nextTick, ref, watch} from 'vue';
+import {computed, nextTick, ref, watch} from 'vue';
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -83,6 +83,14 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
   // 更新當前房間位置 (這裡假設您會將 roomIndex 存儲為 0-based)
   gameStateStore.setRoom([layerIndex + 1, roomIndex])
 };
+
+// 獲取總層數
+const totalLayers = computed(() => gameStateStore.getCurrentStageRooms.length);
+
+// 判斷是否為倒數兩層的邏輯
+const isLastTwoLayers = (layerIndex: number) => {
+  return layerIndex >= totalLayers.value - 2;
+};
 </script>
 
 <template>
@@ -100,6 +108,7 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
               :key="roomIndex"
               :color="getEnumColumn(RoomEnum, roomValue, 'color')"
               class="room-cell"
+              :class="{'full':isLastTwoLayers(layerIndex)}"
               :aria-disabled="true"
               :ref="el => setRoomRef(el, layerIndex, roomIndex)"
               @click="selectRoom(layerIndex,roomIndex,roomValue)"
@@ -111,22 +120,6 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
               </span>
               <span style="font-size: 1.1rem">
                 {{ getEnumColumn(RoomEnum, roomValue, 'label') }}
-              </span>
-            </div>
-          </el-button>
-
-        </div>
-        <div
-            class="grid-layer"
-            :style="{width:`${17 * 5.39}rem`}"
-        >
-          <el-button class="room-cell" style="width: 100%" :color="RoomEnum.Boss.color">
-            <div style="display: flex;flex-direction: column">
-              <span style="font-size: 1.5rem;padding-bottom: 0.5rem">
-                {{ RoomEnum.Boss.icon }}
-              </span>
-              <span style="font-size: 1.1rem">
-                {{ RoomEnum.Boss.label }}
               </span>
             </div>
           </el-button>
@@ -188,5 +181,9 @@ const selectRoom = (layerIndex: number, roomIndex: number, value: number) => {
 
 .room-cell.is-disabled {
   background-color: var(--el-color-info) !important;
+}
+
+.full {
+  width: 91.63rem;
 }
 </style>
