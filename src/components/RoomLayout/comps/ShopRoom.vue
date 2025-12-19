@@ -61,10 +61,10 @@ const init = () => {
 const isShowDetail = ref(false);
 const selectedItem = ref<ItemType | PotionType | EquipmentType | undefined>()
 const onClickItem = (item: ItemType | PotionType | EquipmentType) => {
-  // if (UserInfo.value.gold < (item as any).price) {
-  //   ElMessage.error("錢不夠啊，窮光蛋！");
-  //   return;
-  // }
+  if (playerStore.info.gold < (item as any).price) {
+    ElMessage.error("錢不夠啊，窮光蛋！");
+    return;
+  }
   isShowDetail.value = true;
   selectedItem.value = item
 }
@@ -174,7 +174,7 @@ onMounted(() => {
         </template>
       </el-dialog>
     </template>
-    <span v-else style="font-size: 2rem;text-align: center">因為你刷新了頁面<br/>商人覺得你不想買就跑了...</span>
+    <span v-else style="font-size: 1.5rem;text-align: center">因為你刷新了頁面<br/>商人覺得你不想買就跑了...</span>
   </div>
 </template>
 

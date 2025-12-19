@@ -47,9 +47,9 @@ export const Monster = {
         adDefend: 2,
         dodge: -5,
         hit: 10, // 根部攻擊較難躲避
-        hp: 40,
-        hpLimit: 40,
-        level: 2,
+        hp: 30,
+        hpLimit: 30,
+        level: 1,
         dropGold: 8
     } as MonsterType,
 
@@ -61,12 +61,12 @@ export const Monster = {
         ad: 7,
         critIncrease: WorldDefault.critIncrease,
         critRate: WorldDefault.critRate,
-        adDefend: 1,
-        dodge: 15,
-        hit: 8,
-        hp: 18,
-        hpLimit: 18,
-        level: 2,
+        adDefend: 0,
+        dodge: 20,
+        hit: 3,
+        hp: 20,
+        hpLimit: 20,
+        level: 1,
         dropGold: 10
     } as MonsterType,
 
@@ -75,7 +75,7 @@ export const Monster = {
         icon: '🐇',
         name: '角兔',
         description: '額頭長有小角的兔子，衝撞力驚人',
-        ad: 9,
+        ad: 7,
         critIncrease: WorldDefault.critIncrease,
         critRate: WorldDefault.critRate,
         adDefend: 2,
@@ -83,7 +83,7 @@ export const Monster = {
         hit: 4,
         hp: 30,
         hpLimit: 30,
-        level: 3,
+        level: 2,
         dropGold: 12
     } as MonsterType,
 
@@ -92,14 +92,14 @@ export const Monster = {
         icon: '🐝',
         name: '森林虎頭蜂',
         description: '擁有致命的毒刺，一旦被刺中傷口劇痛不已',
-        ad: 12,
+        ad: 3,
         critIncrease: WorldDefault.critIncrease,
         critRate: WorldDefault.critRate,
         adDefend: 0,
         dodge: 18,
         hit: 12,
-        hp: 12,
-        hpLimit: 12,
+        hp: 20,
+        hpLimit: 20,
         level: 3,
         dropGold: 15
     } as MonsterType,
@@ -117,8 +117,8 @@ export const Monster = {
         hit: 5,
         hp: 65,
         hpLimit: 65,
-        level: 4,
-        dropGold: 20
+        level: 5,
+        dropGold: 100
     } as MonsterType,
 
     // 8. 爬蟲類 - 高攻型
@@ -132,10 +132,10 @@ export const Monster = {
         adDefend: 1,
         dodge: 8,
         hit: 15,
-        hp: 25,
-        hpLimit: 25,
-        level: 4,
-        dropGold: 25
+        hp: 70,
+        hpLimit: 70,
+        level: 5,
+        dropGold: 100
     } as MonsterType,
 
     // 9. 大型獸類 - 精英怪
@@ -143,7 +143,7 @@ export const Monster = {
         icon: '🐺',
         name: '森林守衛狼',
         description: '森林的巡邏者,極具威脅,遇到了建議跑',
-        ad: 22,
+        ad: 20,
         critIncrease: WorldDefault.critIncrease,
         critRate: 10,
         adDefend: 6,
@@ -152,7 +152,7 @@ export const Monster = {
         hp: 85,
         hpLimit: 85,
         level: 5,
-        dropGold: 40
+        dropGold: 100
     } as MonsterType,
 
     // 10. 奇幻植物 - 小 Boss 級別
@@ -168,13 +168,13 @@ export const Monster = {
         hit: 20,
         hp: 120,
         hpLimit: 120,
-        level: 6,
+        level: 5,
         dropGold: 100
     } as MonsterType,
     Error: {
         icon: '⁴⁰⁴་',
         name: '錯誤',
-        description: '當你碰到這個,就是等輸',
+        description: '當你碰到這個,就是等死',
         ad: 999999,
         critIncrease: 1000,
         critRate: 100,

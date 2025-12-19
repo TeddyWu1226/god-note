@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {operationStatusEnum} from "@/enums/enums";
 import {Operation} from "@/storage/operation-storage";
+import {escapePercent} from "@/constants/fight-func";
+import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
 
+const gameStateStore = useGameStateStore()
+const playerStore = usePlayerStore()
 const emit = defineEmits(['attack', 'run']);
 const props = defineProps({
   disabled: Boolean,
@@ -11,6 +16,8 @@ const props = defineProps({
 const changeStatus = (value: operationStatusEnum = operationStatusEnum.Default): void => {
   Operation.value.current = value
 }
+/**逃跑機率**/
+const escapeRate = computed((): number => escapePercent(playerStore.finalStats, gameStateStore.currentEnemy))
 </script>
 
 <template>
@@ -32,7 +39,7 @@ const changeStatus = (value: operationStatusEnum = operationStatusEnum.Default):
       技能
     </el-button>
     <el-button type="danger" :disabled="props.disabled" @click="emit('run',true)">
-      逃跑
+      逃跑({{ escapeRate}}%)
     </el-button>
   </div>
 </template>
