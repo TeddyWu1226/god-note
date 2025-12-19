@@ -92,18 +92,27 @@ export interface UserType extends UnitType {
     char: string; // 職業
     gold?: number // 持有金錢
     equips?: Equipment // 目前裝備
-    items?: ItemType[]
-    equipments?: EquipmentType[]
-    consumeItems?: (ItemType | PotionType)[]
+    items?: ItemType[]  // 雜項
+    equipments?: EquipmentType[] // 裝備
+    consumeItems?: (ItemType | PotionType)[] // 消耗品
 }
 
+
+/**
+ * 掉落項目的封裝
+ * T 繼承自 ItemType，這允許我們傳入 PotionType 或 EquipmentType
+ */
+export interface DropEntry<T extends ItemType = ItemType> {
+    item: T;
+    chance: number; // 0.0 ~ 1.0
+}
 
 /**
  * 怪物相關
  */
 export interface MonsterType extends UnitType {
     description?: string //介紹
-    drop?: ItemType[]
+    drop?: DropEntry[]
     dropGold?: number
 }
 

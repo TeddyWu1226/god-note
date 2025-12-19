@@ -7,7 +7,6 @@ import {EquipmentEnum} from "@/enums/enums";
 import {ItemInfo} from "@/components/Shared/itemInfo";
 import {EquipmentType, PotionType, qualityType, statLabels} from "@/types";
 import {ElMessage} from "element-plus";
-import {Potions} from "@/constants/potion-info";
 
 const playerStore = usePlayerStore()
 const activeName = ref('item')
@@ -39,13 +38,36 @@ const getItemDescriptionLine = (data: Partial<qualityType & PotionType>): string
 // 聚合後的列表
 const aggregatedConsumables = computed(() => {
   const map = new Map<string, { item: PotionType; count: number }>();
-
   playerStore.info.consumeItems.forEach((item) => {
     const key = item.name;
     if (map.has(key)) {
       map.get(key)!.count++;
     } else {
-      map.set(key, { item: { ...item }, count: 1 });
+      map.set(key, {item: {...item}, count: 1});
+    }
+  });
+
+  // 將 Array 轉出後進行排序
+  return Array.from(map.values()).sort((a, b) => {
+    // 1. 優先按品質排序 (高等級在前)
+    if ((b.item.quality || 0) !== (a.item.quality || 0)) {
+      return (b.item.quality || 0) - (a.item.quality || 0);
+    }
+    // 2. 品質相同時，按名稱字母排序
+    return a.item.name.localeCompare(b.item.name);
+  });
+});
+
+// 1. 其他素材
+// 聚合後的列表
+const aggregatedOthers = computed(() => {
+  const map = new Map<string, { item: PotionType; count: number }>();
+  playerStore.info.items.forEach((item) => {
+    const key = item.name;
+    if (map.has(key)) {
+      map.get(key)!.count++;
+    } else {
+      map.set(key, {item: {...item}, count: 1});
     }
   });
 
@@ -86,16 +108,7 @@ const handleEquipmentClick = (item: any, index: number) => {
   ElMessage.success(`${index} 已裝備 ${item.name}!`)
 }
 
-const test = () => {
-  playerStore.gainItem(Potions.DilutedWater)
-  playerStore.gainItem(Potions.SmallHealingPotion)
-  playerStore.gainItem(Potions.DilutedWater)
-  playerStore.gainItem(Potions.DilutedWater)
-  playerStore.gainItem(Potions.SmallHealingPotion)
-  playerStore.gainItem(Potions.SmallHealingPotion)
-  playerStore.gainItem(Potions.SmallHealingPotion)
-}
-test()
+
 </script>
 
 <template>
@@ -127,7 +140,7 @@ test()
 
                 <div class="icon-wrapper" :class="`quality-${entry.item.quality}`">
                   <span class="icon">{{ entry.item.icon }}</span>
-                  <span v-if="entry.item.heal" class="heal-effect" >+{{ entry.item.heal }}</span>
+                  <span v-if="entry.item.heal" class="heal-effect">+{{ entry.item.heal }}</span>
                   <span v-if="entry.item.magic" class="magic-effect">+{{ entry.item.magic }}</span>
                   <div class="item-count">{{ entry.count }}</div>
                 </div>
@@ -176,10 +189,35 @@ test()
 
       <el-tab-pane label="其他" name="other">
         <el-scrollbar height="7rem">
-          <div v-if="playerStore.info.items?.length > 0" class="item-grid">
-            <div v-for="(item, index) in playerStore.info.items" :key="index" class="inventory-item">
-              <span class="item-icon">{{ item.icon }}</span>
-              <span class="item-name">{{ item.name }}</span>
+          <div v-if="playerStore.info.items?.length > 0" class="potion-grid">
+            <div
+                v-for="entry in aggregatedOthers"
+                :key="entry.item.name"
+                class="item-slot"
+            >
+              <el-tooltip
+                  placement="top"
+                  :fallback-placements="['bottom']"
+                  effect="light"
+              >
+                <template #content>
+                  <div class="tooltip-content"  :style="{borderColor:getEnumColumn(QualityEnum,entry.item.quality,'color')}">
+                    <b :class="`text-quality-${entry.item.quality}`"
+                       :style="{color:getEnumColumn(QualityEnum,entry.item.quality,'color')}">
+                      {{ entry.item.name }}
+                    </b>
+                    <p class="desc">{{ entry.item.description }}</p>
+                  </div>
+                </template>
+
+                <div class="icon-wrapper" :class="`quality-${entry.item.quality}`">
+                  <span class="icon">{{ entry.item.icon }}</span>
+                  <span v-if="entry.item.heal" class="heal-effect">+{{ entry.item.heal }}</span>
+                  <span v-if="entry.item.magic" class="magic-effect">+{{ entry.item.magic }}</span>
+                  <div class="item-count">{{ entry.count }}</div>
+                </div>
+              </el-tooltip>
+              <div class="item-name">{{ entry.item.name }}</div>
             </div>
           </div>
           <span v-else class="empty">無任何物品</span>
@@ -305,7 +343,8 @@ test()
   min-width: 18px;
   text-align: center;
 }
-.magic-effect{
+
+.magic-effect {
   position: absolute;
   color: #268cef;
   top: 0;

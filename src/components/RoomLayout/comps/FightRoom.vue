@@ -5,7 +5,7 @@ import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {computed, ref} from "vue";
-import {MonsterType} from "@/types";
+import {ItemType, MonsterType} from "@/types";
 import {Monster} from "@/constants/monster-info";
 import {applyDamage, applyRandomFloatAndRound, canEscape, triggerDamageEffect} from "@/constants/fight-func";
 import {ElMessage} from "element-plus";
@@ -15,6 +15,8 @@ import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {BeginForestWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/boss-info";
+import {getEnumColumn} from "@/utils/enum";
+import {QualityEnum} from "@/enums/quilty-enum";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -26,6 +28,33 @@ const currentRoomValue = computed(() => {
 const monsterCardRefs = ref<MonsterCardExposed[]>([]);
 const monsters = ref<MonsterType[]>([])
 const monsterDropGold = ref(0)
+const monsterDropItems = ref<ItemType[]>([])
+
+/**
+ * 根據掉落表判定最終獲得的道具
+ * @param dropTable 怪物或事件的掉落配置
+ * @returns 判定成功的道具陣列
+ */
+const getLootFromTable = (dropTable: { item: any, chance: number }[]): any[] => {
+  const loot: any[] = [];
+
+  if (!dropTable || dropTable.length === 0) return loot;
+
+  dropTable.forEach(entry => {
+    // 生成 0.0 到 1.0 之間的隨機數
+    const roll = Math.random();
+
+    // 如果隨機數小於等於機率，代表獲得該道具
+    if (roll <= entry.chance) {
+      // 使用深拷貝 (Deep Copy) 確保獲得的是獨立的實例
+      // 避免修改到原始的靜態資料 (如 MATERIAL 內的定義)
+      const newItem = JSON.parse(JSON.stringify(entry.item));
+      loot.push(newItem);
+    }
+  });
+
+  return loot;
+}
 
 /**
  * 根據權重隨機獲取一個怪物
@@ -182,7 +211,17 @@ const onAttack = () => {
     // 怪物行動
     monsterMove(selectedMonster)
   } else {
-    monsterDropGold.value += applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
+    // 掉落金幣
+    const dropMoney = applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
+    playerStore.addGold(dropMoney)
+    monsterDropGold.value += dropMoney
+
+    // 掉落物品
+    const earnedItems = getLootFromTable(selectedMonster.drop);
+    earnedItems.forEach(item => {
+      playerStore.gainItem(item);
+      monsterDropItems.value.push(item)
+    });
     // 移除死亡怪
     monsters.value.splice(selectedMonsterIndex.value, 1);
     gameStateStore.setCurrentEnemy(monsters.value); // 再次同步
@@ -193,10 +232,8 @@ const onAttack = () => {
   }
   // 怪物全部死亡
   if (monsters.value.length === 0) {
-    playerStore.addGold(monsterDropGold.value)
     gameStateStore.setCurrentEnemy([])
     gameStateStore.setBattleWon(true)
-
   }
 }
 const isEscape = ref(false)
@@ -205,7 +242,13 @@ const onRun = () => {
     if (!selectedMonsterIndex.value) {
       selectedMonsterIndex.value = 0
     }
-    const selectedMonster = monsters.value[selectedMonsterIndex.value];
+    let selectedMonster: MonsterType | null = null
+    if (monsters.value.length >= 1) {
+      const randomIndex = Math.floor(Math.random() * monsters.value.length);
+      selectedMonster = monsters.value[randomIndex];
+    } else {
+      selectedMonster = monsters.value[selectedMonsterIndex.value];
+    }
     emit('runFailed', true)
     monsterMove(selectedMonster)
   } else {
@@ -267,7 +310,10 @@ if (!gameStateStore.isWon) {
     <div CLASS="victory-container" v-if="gameStateStore.isWon">
       <span v-if="isEscape" class="run-message">你成功逃跑了!</span>
       <span v-else class="victory-message">勝利!</span>
-      <span v-if="monsterDropGold">你獲得了 {{ monsterDropGold }} G!</span>
+      <span v-if="monsterDropGold">獲得了 {{ monsterDropGold }} G!</span>
+      <span v-for="(item,index) in monsterDropItems" :key="index">
+        獲得了 <strong :style="{color:getEnumColumn(QualityEnum,item.quality,'color')}">{{ item.name }}</strong>
+      </span>
     </div>
     <LogView class="log"></LogView>
   </div>
@@ -315,10 +361,11 @@ if (!gameStateStore.isWon) {
   left: 0;
   top: 14rem;
 }
+
 @media (max-width: 767px) {
   .log {
-  top: 12rem;
-}
+    top: 12rem;
+  }
 }
 
 </style>

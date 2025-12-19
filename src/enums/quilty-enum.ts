@@ -4,7 +4,7 @@
 export const QualityEnum = {
     Tattered: {
         value: 0,
-        label: '破舊的',
+        label: '樸素的',
         color: '#9E9E9E', // 灰色
     },
     Common: {
