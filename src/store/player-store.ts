@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {ref, computed} from 'vue';
+import {ref, computed, nextTick} from 'vue';
 import type {UserType, Equipment, EquipmentType} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
@@ -7,6 +7,7 @@ import {create} from "@/utils/create";
 export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
     const info = ref<UserType>(JSON.parse(JSON.stringify(DEFAULT_USER_INFO)));
+    const stopValueChangeAnimation = ref<boolean>(false);
 
     // --- Getters ---
     const equipBonus = computed(() => {
@@ -79,30 +80,57 @@ export const usePlayerStore = defineStore('player-info', () => {
      */
     const equipItem = (item: EquipmentType, inventoryIndex: number, targetSlot?: keyof Equipment) => {
         if (!info.value.equips) info.value.equips = {};
-
         // 決定位置 (優先使用指定位置，否則使用裝備預設位置)
         const slot = targetSlot || (item.position as keyof Equipment);
 
-        // 1. 如果該位置已有裝備，卸下 (unequipItem 會自動呼叫 gainItem 放回正確背包)
+        // 紀錄更換前的「血量/魔力比例」
+        const oldMaxHp = finalStats.value.hpLimit;
+        const oldMaxSp = finalStats.value.spLimit;
+        const hpRatio = info.value.hp / oldMaxHp;
+        const spRatio = info.value.sp / oldMaxSp;
+
+        // 如果該位置已有裝備，卸下 (unequipItem 會自動呼叫 gainItem 放回正確背包)
+        let oldItem: EquipmentType = undefined
         if (info.value.equips[slot]) {
-            unequipItem(slot);
+            oldItem = unequipItem(slot);
         }
 
-        // 2. 穿上新裝備
+        // 穿上新裝備
         info.value.equips[slot] = item
 
-        // 3. 從「裝備背包」中移除
+        // 從「裝備背包」中移除
         _removeItemFromBag('equipments', inventoryIndex);
+        stopValueChangeAnimation.value = true
 
-        if (info.value.hp > finalStats.value.hpLimit) {
-            info.value.hp = finalStats.value.hpLimit;
-        }
+        // 根據新上限等比縮放現有血量/魔力
+        const newMaxHp = finalStats.value.hpLimit;
+        const newMaxSp = finalStats.value.spLimit;
+
+        // 套用比例並取整，同時確保不低於 1 (除非原本就是 0)
+        info.value.hp = info.value.hp > 0
+            ? Math.max(1, Math.round(newMaxHp * hpRatio))
+            : 0;
+
+        info.value.sp = info.value.sp > 0
+            ? Math.max(1, Math.round(newMaxSp * spRatio))
+            : 0;
+
+        // 額外保險：確保不超過新上限
+        if (info.value.hp > newMaxHp) info.value.hp = newMaxHp;
+        if (info.value.sp > newMaxSp) info.value.sp = newMaxSp;
+
+        nextTick().then(
+            () => {
+                stopValueChangeAnimation.value = false
+            }
+        )
+
     };
 
     /**
      * 卸下裝備 (從 equips 狀態移動到 equipments 背包)
      */
-    const unequipItem = (slot: keyof Equipment) => {
+    const unequipItem = (slot: keyof Equipment): EquipmentType => {
         if (!info.value.equips || !info.value.equips[slot]) return null;
 
         const itemToUnequip = info.value.equips[slot];
@@ -126,6 +154,7 @@ export const usePlayerStore = defineStore('player-info', () => {
 
     return {
         info,
+        stopValueChangeAnimation,
         equipBonus,
         finalStats,
         equipItem,

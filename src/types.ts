@@ -144,3 +144,19 @@ export interface BattleOutcome extends DamageResult {
     isKilled: boolean;       // 被攻擊者是否被擊敗 (HP <= 0)
     remainingHP: number;     // 被攻擊者剩餘的 HP
 }
+
+export interface BonusType extends qualityType{
+    hpChange?: number; // 生命異動
+}
+
+export interface StatusEffect {
+    name: string;        // 顯示名稱
+    icon: string;        // 圖示
+    duration: number;    // 剩餘回合數 (-1 代表永久)
+    description: string;
+    // 屬性加成 (正數為 Buff, 負數為 Debuff)
+    bonus?: BonusType
+    // 每回合觸發的邏輯類型
+    type?: 'damage' | 'heal';
+    value?: number; // 每回合跳血/回血的數值
+}

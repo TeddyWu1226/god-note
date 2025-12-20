@@ -29,6 +29,10 @@ watch(
       if (oldValue > newValue && newValue === hpLimit.value) {
         return;
       }
+      // 如果停止動畫就不顯示
+      if (playerStore.stopValueChangeAnimation) {
+        return;
+      }
 
       const changeAmount = newValue - oldValue;
       const threshold = hpLimit.value * 0.2; // 定義大規模變化的閾值 (HP 上限的 20%)

@@ -36,13 +36,9 @@ export enum SpecialEventEnum {
     // 無事件
     None = 'None',
     // 賭博
-    Gamble = 'GAMBLE',
-    // // 轉職
-    // JobChange = 'JOB_CHANGE',
-    // // 天使祝福
-    // AngelBlessing = 'ANGEL_BLESSING',
-    // // 惡魔祝福
-    // DemonBlessing = 'DEMON_BLESSING',
+    Gamble = 'Gamble',
+    // 祝福或詛咒
+    BlessingOrCurse = 'BlessingOrCurse',
 }
 
 /**
