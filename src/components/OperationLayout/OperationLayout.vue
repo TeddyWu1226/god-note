@@ -7,6 +7,7 @@ import {GameState} from "@/enums/enums";
 import RestOperation from "@/components/OperationLayout/comps/RestOperation.vue";
 import {ref} from "vue";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import LeaveOperation from "@/components/OperationLayout/comps/LeaveOperation.vue";
 
 
 const emit = defineEmits(['attack', 'rest', 'cancel', 'run']);
@@ -68,6 +69,11 @@ defineExpose({
       @cancel="onCancel"
   />
   <NextOperation v-else-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
+  <LeaveOperation
+      v-else-if="gameStateStore.roomIs(RoomEnum.Shop.value) &&
+      gameStateStore.stateIs(GameState.EVENT_PHASE)"
+      @cancel="onCancel"
+  />
 </template>
 
 <style scoped>

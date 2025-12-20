@@ -46,13 +46,8 @@ const ShopRoomRef = ref()
 /** 綜合取消 **/
 const onCancel = () => {
   switch (currentRoomValue.value) {
-    case RoomEnum.Rest.value:
-      gameStateStore.transitionToNextState()
-      break;
-    case RoomEnum.Shop.value:
-      gameStateStore.transitionToNextState()
-      break;
-
+    default:
+      gameStateStore.transitionToNextState();
   }
 }
 

@@ -1,6 +1,5 @@
 import {reactive, Reactive} from "vue";
 import {EquipmentType, PotionType} from "@/types";
-import {Potions} from "@/constants/potion-info";
 
 /**
  * 建立物件
@@ -79,7 +78,7 @@ export function getRandomEnumValue<T extends object>(
     const allValues = Object.values(enumObj) as T[keyof T][];
 
     // 2. 過濾掉排除清單中的值
-    let filteredValues: T[keyof T][] = [];
+    let filteredValues: T[keyof T][]
     if (excludeList && excludeList.length > 0) {
         filteredValues = allValues.filter(value => !excludeList.includes(value));
     } else {
