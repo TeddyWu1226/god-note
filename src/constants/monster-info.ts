@@ -20,8 +20,9 @@ export const Monster = {
         level: 1,
         dropGold: 5,
         drop: [
-            { item: MATERIAL.SlimeGoo, chance: 0.5 }
-        ]
+            {item: MATERIAL.SlimeGoo, chance: 0.5}
+        ],
+        onAttack: 'onSlimeAttack'
     } as MonsterType,
 
     // 2. 昆蟲類 - 高命中/高閃避
@@ -40,7 +41,7 @@ export const Monster = {
         level: 1,
         dropGold: 4,
         drop: [
-            { item: MATERIAL.AntShell, chance: 0.5 }
+            {item: MATERIAL.AntShell, chance: 0.5}
         ]
     } as MonsterType,
 
@@ -59,7 +60,7 @@ export const Monster = {
         level: 1,
         dropGold: 8,
         drop: [
-            { item: MATERIAL.ForestWood, chance: 0.3 }
+            {item: MATERIAL.ForestWood, chance: 0.3}
         ]
     } as MonsterType,
 
@@ -79,7 +80,7 @@ export const Monster = {
         level: 1,
         dropGold: 10,
         drop: [
-            { item: MATERIAL.OwlFeather, chance: 0.5 }
+            {item: MATERIAL.OwlFeather, chance: 0.5}
         ]
     } as MonsterType,
 
@@ -99,7 +100,7 @@ export const Monster = {
         level: 2,
         dropGold: 12,
         drop: [
-            { item: MATERIAL.RabbitHorn, chance: 0.3 }
+            {item: MATERIAL.RabbitHorn, chance: 0.3}
         ]
     } as MonsterType,
 
@@ -119,7 +120,7 @@ export const Monster = {
         level: 3,
         dropGold: 15,
         drop: [
-            { item: MATERIAL.BeeStinger, chance: 0.1 }
+            {item: MATERIAL.BeeStinger, chance: 0.1}
         ]
     } as MonsterType,
 
@@ -155,7 +156,7 @@ export const Monster = {
         level: 5,
         dropGold: 100,
         drop: [
-            { item: MATERIAL.ViperScale, chance: 0.2 }
+            {item: MATERIAL.ViperScale, chance: 0.2}
         ]
     } as MonsterType,
 
@@ -196,7 +197,7 @@ export const Monster = {
         level: 5,
         dropGold: 100,
         drop: [
-            { item: MATERIAL.MandrakeRoot, chance: 0.5 }
+            {item: MATERIAL.MandrakeRoot, chance: 0.5}
         ]
     } as MonsterType,
     Error: {

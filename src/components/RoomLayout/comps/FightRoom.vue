@@ -4,10 +4,16 @@ import {RoomEnum} from "@/enums/room-enum";
 import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {ItemType, MonsterType} from "@/types";
 import {Monster} from "@/constants/monster-info";
-import {applyDamage, applyRandomFloatAndRound, canEscape, triggerDamageEffect} from "@/constants/fight-func";
+import {
+  applyDamage,
+  applyRandomFloatAndRound,
+  canEscape, getLootFromTable,
+  spawnMonsters,
+  triggerDamageEffect
+} from "@/constants/fight-func";
 import {ElMessage} from "element-plus";
 import {LogView} from "@/components/LogView";
 import {create} from "@/utils/create";
@@ -17,10 +23,15 @@ import {BeginForestWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/boss-info";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quilty-enum";
+import {MonsterActions} from "@/constants/monster-attack-effect";
+import {useLogStore} from "@/store/log-store";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {UnitStatus} from "@/constants/status-info";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
+const logStore = useLogStore()
 const currentRoomValue = computed(() => {
       return gameStateStore.currentRoomValue
     }
@@ -30,88 +41,32 @@ const monsters = ref<MonsterType[]>([])
 const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 
-/**
- * 根據掉落表判定最終獲得的道具
- * @param dropTable 怪物或事件的掉落配置
- * @returns 判定成功的道具陣列
- */
-const getLootFromTable = (dropTable: { item: any, chance: number }[]): any[] => {
-  const loot: any[] = [];
 
-  if (!dropTable || dropTable.length === 0) return loot;
-
-  dropTable.forEach(entry => {
-    // 生成 0.0 到 1.0 之間的隨機數
-    const roll = Math.random();
-
-    // 如果隨機數小於等於機率，代表獲得該道具
-    if (roll <= entry.chance) {
-      // 使用深拷貝 (Deep Copy) 確保獲得的是獨立的實例
-      // 避免修改到原始的靜態資料 (如 MATERIAL 內的定義)
-      const newItem = JSON.parse(JSON.stringify(entry.item));
-      loot.push(newItem);
-    }
-  });
-
-  return loot;
-}
-
-/**
- * 根據權重隨機獲取一個怪物
- * @param weightMap 怪物 Key 與權重的對照表 (例如 { Slime: 70, Wolf: 30 })
- * @returns 隨機選出的怪物實例 (深拷貝)
- */
-const getRandomMonsterByWeight = (weightMap: Record<string, number>): MonsterType => {
-  const keys = Object.keys(weightMap);
-
-  // 1. 計算總權重
-  const totalWeight = keys.reduce((sum, key) => sum + weightMap[key], 0);
-
-  // 2. 產生 0 到 總權重 之間的隨機數
-  let randomNum = Math.random() * totalWeight;
-
-  // 3. 尋找隨機數落在哪個區間
-  for (const key of keys) {
-    if (randomNum < weightMap[key]) {
-      // 找到目標，回傳該怪物的深拷貝（避免戰鬥修改到原始設定）
-      const targetMonster = (Monster as any)[key];
-      return create(targetMonster)
-    }
-    randomNum -= weightMap[key];
-  }
-
-  // 兜底方案：萬一出錯回傳第一個
-  return create((Monster as any)[keys[0]]);
-}
-
-/**
- * 核心生成函數
- * @param count 生成數量
- * @param weight 權重表
- * @param eliteBoost 是否進行菁英強化
- */
-const spawnMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
-  const newMonsters: MonsterType[] = [];
-
-  for (let i = 0; i < count; i++) {
-    let m = getRandomMonsterByWeight(weight);
-
-    if (eliteBoost) {
-      // 菁英強化
-      m.name = `【菁英】${m.name}`;
-      m.hpLimit = Math.round(m.hpLimit * 2);
-      m.hp = m.hpLimit;
-      m.ad = Math.round(m.ad * 1.5);
-      m.adDefend = Math.round(m.adDefend * 1.5);
-      m.dropGold = Math.round((m.dropGold || 10) * 3);
-      m.level += 2;
-    }
-
-    newMonsters.push(m);
-  }
+// 怪物生成
+const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
+  const newMonsters = spawnMonsters(count, weight, eliteBoost);
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
+
+  // 額外
+  nextTick().then(() => {
+    monsters.value.forEach((monster, index) => {
+      if (monster.name === Monster.FierceWolf.name) {
+        //效果
+        playerStore.addStatus(UnitStatus.WolfRoarWarning)
+        //動畫
+        useFloatingMessage(
+            '啊嗚~',
+            monsterCardRefs.value[index].$el,
+            {
+              duration: 1500, // 動畫時間保持不變
+              color: 'red'
+            }
+        );
+      }
+    })
+  })
 }
 
 
@@ -133,9 +88,9 @@ const genEliteMonster = (layer: number) => {
   const isDouble = Math.random() > (0.3 + layer * 0.01);
 
   if (isDouble) {
-    spawnMonsters(2, useWeight, false);
+    genMonsters(2, useWeight, false);
   } else {
-    spawnMonsters(1, useWeight, true);
+    genMonsters(1, useWeight, true);
   }
 }
 
@@ -177,6 +132,16 @@ const handleMonsterSelect = (index: number) => {
 const monsterMove = (selectedMonster: MonsterType) => {
   // 傷害計算
   const damageOutput = applyDamage(selectedMonster, playerStore.finalStats);
+  // 特殊效果
+  if (selectedMonster.onAttack && MonsterActions[selectedMonster.onAttack]) {
+    // 執行對應的函式
+    MonsterActions[selectedMonster.onAttack]({
+      monster: selectedMonster,
+      playerStore: playerStore,
+      logStore: logStore,
+      damage: damageOutput,
+    });
+  }
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
@@ -225,7 +190,7 @@ const onAttack = () => {
 
     // 掉落物品
     const earnedItems = getLootFromTable(selectedMonster.drop);
-    earnedItems.forEach(item => {
+    earnedItems.forEach((item) => {
       playerStore.gainItem(item);
       monsterDropItems.value.push(item)
     });
@@ -248,7 +213,7 @@ const onAttack = () => {
 
 const isEscape = ref(false)
 const onRun = () => {
-  if (!canEscape(playerStore.info, monsters.value)) {
+  if (!canEscape(playerStore.finalStats, monsters.value)) {
     if (!selectedMonsterIndex.value) {
       selectedMonsterIndex.value = 0
     }
@@ -292,7 +257,7 @@ const init = () => {
   // 2. 若無緩存，則根據房間類型生成
   switch (currentRoomValue.value) {
     case RoomEnum.Fight.value:
-      spawnMonsters(1, getWeightByStage() || {'Error': 1});
+      genMonsters(1, getWeightByStage() || {'Error': 1});
       break;
     case RoomEnum.EliteFight.value:
       genEliteMonster(layer);

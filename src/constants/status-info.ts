@@ -10,7 +10,16 @@ export const UnitStatus = {
             dodge: -10
         }
     } as StatusEffect,
-
+    WolfRoarWarning: {
+        name: '狼嚎警告',
+        icon: '⚠️',
+        duration: 1,
+        isBuff: true,
+        description: '森林之狼對你怒吼警告,希望你不要做出傻事,要跑趁現在',
+        bonus: {
+            dodge: 1000000000000
+        }
+    } as StatusEffect,
     Poison: {
         name: '中毒',
         icon: '🤢',

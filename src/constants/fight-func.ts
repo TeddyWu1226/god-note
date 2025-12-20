@@ -1,8 +1,10 @@
 // 常數定義
-import {BattleOutcome, DamageResult, UnitType} from "@/types";
+import {BattleOutcome, DamageResult, MonsterType, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
+import {Monster} from "@/constants/monster-info";
+import {create} from "@/utils/create";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -98,7 +100,6 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
     if (!outcome.isHit) {
         // 未命中，不造成傷害，直接返回
         const log = `${defender.name || '防禦者'} 閃避了攻擊。`
-        console.log(log);
         logStore.logger.add(log);
         return outcome;
     }
@@ -125,13 +126,12 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
     // 4. 記錄剩餘生命值
     outcome.remainingHP = defender.hp;
 
-    // 輸出戰鬥日誌 (可選)
+    // 輸出戰鬥日誌
     const logMessage = [
         `${attacker.name || '攻擊者'} 攻擊 ${defender.name || '防禦者'}，`,
         outcome.isCrit ? `🔥 暴擊` : `命中`,
         `造成 ${damageTaken} 點傷害。`
     ].join('');
-    console.log(logMessage);
 
     logStore.logger.add(logMessage);
 
@@ -218,7 +218,6 @@ export function escapePercent(runner: UnitType, chasers: UnitType[]): number {
 
     // 確保追擊方陣列非空
     if (!chasers || chasers.length === 0) {
-        console.warn("追擊方陣列為空，逃跑自動成功。");
         return 100;
     }
 
@@ -274,7 +273,91 @@ export function canEscape(runner: UnitType, chasers: UnitType[]): boolean {
 
     // 生成一個 0 到 100 之間的隨機數
     const roll = Math.random() * 100;
-
+    console.log('roll', roll)
+    console.log('finalChance', finalChance)
     // 判斷是否成功逃跑
     return roll <= finalChance;
+}
+
+
+/**
+ * 根據權重隨機獲取一個怪物
+ * @param weightMap 怪物 Key 與權重的對照表 (例如 { Slime: 70, Wolf: 30 })
+ * @returns 隨機選出的怪物實例 (深拷貝)
+ */
+const getRandomMonsterByWeight = (weightMap: Record<string, number>): MonsterType => {
+    const keys = Object.keys(weightMap);
+
+    // 1. 計算總權重
+    const totalWeight = keys.reduce((sum, key) => sum + weightMap[key], 0);
+
+    // 2. 產生 0 到 總權重 之間的隨機數
+    let randomNum = Math.random() * totalWeight;
+
+    // 3. 尋找隨機數落在哪個區間
+    for (const key of keys) {
+        if (randomNum < weightMap[key]) {
+            // 找到目標，回傳該怪物的深拷貝（避免戰鬥修改到原始設定）
+            const targetMonster = (Monster as any)[key];
+            return create(targetMonster)
+        }
+        randomNum -= weightMap[key];
+    }
+
+    // 兜底方案：萬一出錯回傳第一個
+    return create((Monster as any)[keys[0]]);
+}
+
+/**
+ * 核心生成函數
+ * @param count 生成數量
+ * @param weight 權重表
+ * @param eliteBoost 是否進行菁英強化
+ */
+export const spawnMonsters = (count: number, weight: Record<string, number>, eliteBoost = false): MonsterType[] => {
+    const newMonsters: MonsterType[] = [];
+
+    for (let i = 0; i < count; i++) {
+        let m = getRandomMonsterByWeight(weight);
+
+        if (eliteBoost) {
+            // 菁英強化
+            m.name = `【菁英】${m.name}`;
+            m.hpLimit = Math.round(m.hpLimit * 2);
+            m.hp = m.hpLimit;
+            m.ad = Math.round(m.ad * 1.5);
+            m.adDefend = Math.round(m.adDefend * 1.5);
+            m.dropGold = Math.round((m.dropGold || 10) * 3);
+            m.level += 2;
+        }
+        newMonsters.push(m);
+    }
+    return newMonsters
+}
+
+
+/**
+ * 根據掉落表判定最終獲得的道具
+ * @param dropTable 怪物或事件的掉落配置
+ * @returns 判定成功的道具陣列
+ */
+export const getLootFromTable = (dropTable: { item: any, chance: number }[]): any[] => {
+    const loot: any[] = [];
+
+    if (!dropTable || dropTable.length === 0) return loot;
+
+    dropTable.forEach(entry => {
+        // 生成 0.0 到 1.0 之間的隨機數
+        const roll = Math.random();
+
+        // 如果隨機數小於等於機率，代表獲得該道具
+        if (roll <= entry.chance) {
+            // 使用深拷貝 (Deep Copy) 確保獲得的是獨立的實例
+            // 避免修改到原始的靜態資料 (如 MATERIAL 內的定義)
+            const newItem = JSON.parse(JSON.stringify(entry.item));
+            loot.push(newItem);
+        }
+    });
+
+    return loot;
 }

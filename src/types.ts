@@ -1,4 +1,5 @@
 import {EquipmentPosition} from "@/enums/enums";
+import {MonsterActions} from "@/constants/monster-attack-effect";
 
 /**
  * 物品相關
@@ -110,10 +111,14 @@ export interface DropEntry<T extends ItemType = ItemType> {
 /**
  * 怪物相關
  */
+type MonsterActionType = keyof typeof MonsterActions;
+
 export interface MonsterType extends UnitType {
     description?: string //介紹
     drop?: DropEntry[]
-    dropGold?: number
+    dropGold?: number,
+    onAttack?: MonsterActionType
+    onDead?: MonsterActionType
 }
 
 /**
@@ -145,7 +150,7 @@ export interface BattleOutcome extends DamageResult {
     remainingHP: number;     // 被攻擊者剩餘的 HP
 }
 
-export interface BonusType extends qualityType{
+export interface BonusType extends qualityType {
     hpChange?: number; // 生命異動
 }
 

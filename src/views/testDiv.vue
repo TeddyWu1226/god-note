@@ -9,7 +9,7 @@ const playerStore = usePlayerStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  playerStore.addStatus(UnitStatus.SlimeSlow)
+  // playerStore.addStatus(UnitStatus.SlimeSlow)
 }
 onTest()
 </script>
