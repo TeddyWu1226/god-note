@@ -296,6 +296,11 @@ if (!gameStateStore.isBattleWon) {
     />
     <div CLASS="victory-container" v-if="gameStateStore.isBattleWon">
       <span v-if="isEscape" class="run-message">你成功逃跑了!</span>
+      <span
+          v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
+          class="victory-message">
+        通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage)}}!
+      </span>
       <span v-else class="victory-message">勝利!</span>
       <span v-if="monsterDropGold">獲得了 {{ monsterDropGold }} G!</span>
       <span v-for="(item,index) in monsterDropItems" :key="index">

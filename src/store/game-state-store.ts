@@ -40,18 +40,20 @@ export const useGameStateStore = defineStore('game-state', () => {
     });
 
     // --- Actions (用普通 function 代替) ---
-    function init(): void {
-        currentStage.value = 1;
-        currentRoomValue.value = RoomEnum.Rest.value;
-        currentRoom.value = [1, 0];
-        // 這裡可以呼叫你的生成邏輯
+    function init(stageNum = 1): void {
+        if (stageNum === 1) {
+            currentState.value = GameState.INITIAL;
+            currentRoomValue.value = RoomEnum.Rest.value;
+        }
         currentStageRooms.value = createTrapezoidDataWithWeights(DEFAULT_ROOM_WEIGHTS, 19, 17);
-        currentState.value = GameState.INITIAL;
         isBattleWon.value = false;
         currentEnemy.value = [];
         currentEventType.value = SpecialEventEnum.None;
         eventProcess.value = {} as Record<SpecialEventEnum, number>;
-        console.log('遊戲狀態已重置 (Setup Store)');
+
+        currentStage.value = stageNum;
+        currentRoom.value = [1, 0];
+        console.log('遊戲狀態已重置 (Setup Store):', stageNum);
     }
 
     function setRoom(room: RoomCoordinateTuple): void {

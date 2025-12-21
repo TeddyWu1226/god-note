@@ -14,8 +14,12 @@ const nextRooms = computed(() => {
 })
 const selectRoom = (roomXY: RoomCoordinateTuple) => {
   gameStateStore.setRoom(roomXY)
-
 };
+
+const goNestStage = () => {
+  gameStateStore.init(gameStateStore.currentStage + 1)
+  gameStateStore.setRoom(gameStateStore.currentRoom)
+}
 </script>
 
 <template>
@@ -35,7 +39,15 @@ const selectRoom = (roomXY: RoomCoordinateTuple) => {
       </el-row>
     </el-button>
     <el-button
-        v-if="nextRooms.length === 0"
+        v-if="gameStateStore.isBattleWon && gameStateStore.roomIs(RoomEnum.Boss.value)"
+        color="var(--el-color-success)"
+        :disabled="props.disabled"
+        @click="goNestStage"
+    >
+      前往下一區域🚪
+    </el-button>
+    <el-button
+        v-else-if="nextRooms.length === 0"
         :color="getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0]+1,0]),'color')"
         :disabled="props.disabled"
         @click="selectRoom([gameStateStore.currentRoom[0]+1,0])"
