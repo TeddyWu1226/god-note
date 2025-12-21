@@ -20,7 +20,12 @@ import {LogView} from "@/components/LogView";
 import {create} from "@/utils/create";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
-import {BeginForestWeights} from "@/constants/stage-monster-weights";
+import {
+  AncientRootsWeights,
+  BeginForestWeights, EndlessWeights,
+  FairyBarrierWeights, GuardiansDenWeights,
+  SunkenGroveWeights
+} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/boss-info";
 import {MonsterActions} from "@/constants/monster-attack-effect";
 import {useLogStore} from "@/store/log-store";
@@ -70,12 +75,14 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 
 const getWeightByStage = () => {
-  switch (gameStateStore.currentStage) {
-    case StageEnum.BeginForest.value:
-      return BeginForestWeights;
-    default:
-      return null;
+  const stageMap: Record<number, Record<string, number>> = {
+    1: BeginForestWeights,
+    2: SunkenGroveWeights,
+    3: AncientRootsWeights,
+    4: FairyBarrierWeights,
+    5: GuardiansDenWeights
   }
+  return stageMap[gameStateStore.currentStage] || EndlessWeights;
 }
 
 //生成菁英戰鬥
@@ -101,7 +108,7 @@ const createBoss = () => {
       newMonsters = [create(Boss.BigBear)]
       break
     default:
-      newMonsters = [create(Monster.Error)];
+      newMonsters = [create(Boss.Error)];
   }
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
@@ -299,7 +306,7 @@ if (!gameStateStore.isBattleWon) {
       <span
           v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
           class="victory-message">
-        通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage)}}!
+        通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}!
       </span>
       <span v-else class="victory-message">勝利!</span>
       <span v-if="monsterDropGold">獲得了 {{ monsterDropGold }} G!</span>

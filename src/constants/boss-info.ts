@@ -186,5 +186,20 @@ export const Boss = {
         hpLimit: 5000000,
         level: 100,
         dropGold: 1000000
-    }
+    },
+    Error: {
+        icon: 'TED',
+        name: '作者',
+        description: '當你碰到這個,就是等死',
+        ad: 80000,
+        critIncrease: 200,
+        critRate: 80,
+        adDefend: 5000,
+        dodge: 100,
+        hit: 100,
+        hp: 9999999999,
+        hpLimit: 9999999999,
+        level: 99,
+        dropGold: 999999999
+    } as MonsterType
 };
