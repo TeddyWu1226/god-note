@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, onMounted} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import {EquipmentType, ItemType, PotionType, statLabels} from "@/types";
+import {EquipmentType, ItemType, PotionType} from "@/types";
 import {getRandomItemsByQuality} from "@/utils/create";
 import {QualityEnum} from "@/enums/quilty-enum";
 import {Armor} from "@/constants/equipment/armor-info";
@@ -30,15 +30,42 @@ const calculatePrice = (quality: number) => {
   return Math.floor(basePrice * (0.9 + Math.random() * 0.2));
 };
 
+const activeTab = ref<'buy' | 'sell'>('buy'); // 控制目前是買還是賣
+
+/**
+ * 賣價計算：假設為買價的 40%
+ */
+const getSellPrice = (item: any) => {
+  // 如果物品原本就有 price 屬性則用它計算，否則根據品質估算
+  const base = calculatePrice(item.quality || 0);
+  return Math.floor(base * 0.4);
+};
+
+/**
+ * 販賣邏輯
+ */
+const sellItem = (item: any, index: number, bagType: 'items' | 'equipments' | 'consumeItems') => {
+  const price = getSellPrice(item);
+
+  // 1. 玩家獲得金幣
+  playerStore.addGold(price);
+
+  // 2. 從背包移除 (使用我們之前寫好的方法)
+  // 因為我們有索引，直接用 splice 更精準
+  playerStore.info[bagType].splice(index, 1);
+
+  ElMessage.success(`賣出了 ${item.name}，獲得了 ${price} G`);
+};
+
 const init = () => {
   itemList.value = []
   const randomEquips = getRandomItemsByQuality(
-      4,
+      5,
       QualityEnum.Tattered.value,
       Armor, Head, Offhand, Weapon
   );
   const randomPotion = getRandomItemsByQuality(
-      2,
+      3,
       QualityEnum.Tattered.value,
       Potions
   );
@@ -106,75 +133,67 @@ onMounted(() => {
 <template>
   <div class="shop-room">
     <template v-if="!isRun">
-      <div class="shop-header">
-        <h2>🧌 神秘商人</h2>
-        <p>「我這裡有些好貨，看看吧!」</p>
+      <div>
+        <h2 style="display: flex;align-items: center">
+          🧌 神秘商人
+          <el-radio-group
+              v-model="activeTab"
+              style="padding-left: 1rem"
+              :fill="activeTab === 'sell'?'var(--el-color-danger)':''">
+            <el-radio-button label="buy">購買</el-radio-button>
+            <el-radio-button label="sell">販賣</el-radio-button>
+          </el-radio-group>
+        </h2>
+
       </div>
-      <div class="shop-container">
+
+      <div v-if="activeTab === 'buy'" class="shop-container">
         <div
             v-for="(item, index) in itemList"
-            :key="index"
+            :key="'buy-'+index"
             class="item-card"
-            :style="{
-            borderColor: getEnumColumn(QualityEnum,item?.quality,'color','white'),
-            color:getEnumColumn(QualityEnum,item?.quality,'color','white')
-          }"
+            :style="{ borderColor: getEnumColumn(QualityEnum, item?.quality, 'color', 'white'), color: getEnumColumn(QualityEnum, item?.quality, 'color', 'white') }"
             :class="{ 'is-sold': item.sold }"
             @click="onClickItem(item)"
         >
           <div class="item-icon">{{ item.icon }}</div>
-          <div class="item-info">
-            <div class="item-name">{{ item.name }}</div>
-            <div class="item-desc">{{ item.description }}</div>
-            <div class="item-price" v-if="!item.sold">
-              💰 {{ item.price }} G
-            </div>
-            <div class="item-sold-text" v-else>售出</div>
-          </div>
+          <div class="item-name">{{ item.name }}</div>
+          <div class="item-price" v-if="!item.sold">💰 {{ item.price }} G</div>
+          <div class="item-sold-text" v-else>售出</div>
         </div>
       </div>
-      <el-dialog
-          v-model="isShowDetail"
-          :title="`物品詳情 💰 ${ (selectedItem as any)?.price } G`"
-          align-center
-      >
-        <div v-if="selectedItem" class="detail-container">
-          <div class="detail-icon">{{ selectedItem.icon }}</div>
-          <h3 :style="{ color: getEnumColumn(QualityEnum, selectedItem.quality, 'color', '#fff') }">
-            {{ selectedItem.name }}
-          </h3>
 
-          <p class="detail-desc">{{ selectedItem.description }}</p>
+      <div v-else class="sell-container">
+        <p class="gold-hint">我的金幣: 💰 {{ playerStore.info.gold }}</p>
 
-          <el-divider content-position="left">屬性</el-divider>
-
-          <div class="detail-stats">
-            <template v-for="(val, key) in selectedItem" :key="key">
-              <div v-if="statLabels[key] && val" class="stat-row">
-                <span class="stat-label">{{ statLabels[key] }}</span>
-                <span class="stat-value" :class="{ 'plus': (val as number) > 0, 'minus': (val as number) < 0 }">
-                {{ (val as number) > 0 ? '+' : '' }}{{ val }}
-              </span>
-              </div>
-            </template>
+        <div v-for="bagType in (['consumeItems', 'items', 'equipments'] as const)" :key="bagType" class="bag-section">
+          <h4 v-if="playerStore.info[bagType]?.length">
+            {{ bagType === 'consumeItems' ? '消耗品' : bagType === 'equipments' ? '裝備' : '一般道具' }}</h4>
+          <div class="shop-container">
+            <div
+                v-for="(item, index) in playerStore.info[bagType]"
+                :key="'sell-' + bagType + index"
+                class="item-card sell-card"
+                @click="sellItem(item, index, bagType)"
+            >
+              <div class="item-icon">{{ item.icon }}</div>
+              <div class="item-name">{{ item.name }}</div>
+              <div class="sell-price-tag">回收價: {{ getSellPrice(item) }} G</div>
+              <div class="sell-action-overlay">點擊販賣</div>
+            </div>
           </div>
         </div>
 
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button @click="isShowDetail = false">取消</el-button>
-            <el-button
-                type="warning"
-                :disabled="(selectedItem as any)?.sold"
-                @click="buyItem"
-            >
-              {{ (selectedItem as any)?.sold ? '已售出' : '確認購買' }}
-            </el-button>
-          </div>
-        </template>
-      </el-dialog>
+        <div
+            v-if="!playerStore.info.items?.length && !playerStore.info.equipments?.length && !playerStore.info.consumeItems?.length"
+            class="empty-bag">
+          背包空空如也...
+        </div>
+      </div>
+
     </template>
-    <span v-else style="font-size: 1.5rem;text-align: center">因為你刷新了頁面<br/>商人覺得你不想買就跑了...</span>
+
+    <span v-else class="run-text">因為你刷新了頁面<br/>商人覺得你不想買就跑了...</span>
   </div>
 </template>
 
@@ -186,9 +205,6 @@ onMounted(() => {
   border-radius: 12px;
 }
 
-.shop-header {
-  text-align: center;
-}
 
 .shop-container {
   display: flex;
@@ -280,6 +296,11 @@ onMounted(() => {
   margin-bottom: 1.5rem;
 }
 
+.run-text {
+  font-size: 1.5rem;
+  text-align: center
+}
+
 .stat-row {
   display: flex;
   justify-content: space-between;
@@ -303,18 +324,66 @@ onMounted(() => {
   color: #f56c6c;
 }
 
-.detail-price {
-  font-size: 1.2rem;
-  font-weight: bold;
+.sell-container {
+  width: 100%;
+  max-width: 600px;
 }
 
-.detail-price span {
-  color: #e6a23c;
+.bag-section {
+  margin-bottom: 1.5rem;
 }
 
-.dialog-footer {
+.bag-section h4 {
+  border-left: 4px solid #e6a23c;
+  padding-left: 10px;
+  margin-bottom: 0.5rem;
+  color: #ccc;
+}
+
+.sell-card {
+  position: relative;
+  border-color: #555;
+  overflow: hidden;
+}
+
+.sell-price-tag {
+  color: #67c23a;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* 販賣時的遮罩效果 */
+.sell-action-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(245, 108, 108, 0.9);
+  color: white;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 1rem;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.sell-card:hover .sell-action-overlay {
+  opacity: 1;
+}
+
+.gold-hint {
+  text-align: center;
+  color: #ffca28;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.empty-bag {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
 }
 </style>

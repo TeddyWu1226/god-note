@@ -21,7 +21,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'sacrifice_hp' | 'sacrifice_sp') 
   answer.value = 1;
   switch (type) {
     case 'herb':
-      playerStore.removeItem('稀釋的草藥水')
+      playerStore.removeItem('粗製的草藥水')
       break;
     case 'juice':
       playerStore.removeItem('混濁的果汁')
@@ -112,13 +112,13 @@ const onLeave = () => {
       <template v-if="answer === 0">
         <template v-if="!isAdvanced">
           <el-button
-              v-if="playerStore.hasItem('稀釋的草藥水')"
+              :disabled="playerStore.hasItem('粗製的草藥水')"
               type="success"
               @click="handleChoice('herb')">
-            提供 [稀釋的草藥水]
+            提供 [粗製的草藥水]
           </el-button>
           <el-button
-              v-if="playerStore.hasItem('混濁的果汁')"
+              :disabled="playerStore.hasItem('混濁的果汁')"
               type="warning"
               @click="handleChoice('juice')">
             提供 [混濁的果汁]

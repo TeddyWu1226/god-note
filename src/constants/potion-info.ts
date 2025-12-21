@@ -3,7 +3,7 @@ import {PotionType} from "@/types";
 export const Potions = {
     // --- 品質 0: 破舊的 (Tattered) ---
     DilutedWater: {
-        name: '稀釋的草藥水',
+        name: '粗製的草藥水',
         description: '聞起來像雜草，效果微乎其微。',
         icon: '🍶',
         quality: 0,
