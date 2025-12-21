@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted} from "vue";
+import {ref, onMounted, computed} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {EquipmentType, ItemType, PotionType, statLabels} from "@/types";
 import {getRandomItemsByQuality} from "@/utils/create";
@@ -42,19 +42,68 @@ const getSellPrice = (item: any) => {
 };
 
 /**
- * 販賣邏輯
+ * 定義堆疊物品的型別
  */
-const sellItem = (item: any, index: number, bagType: 'items' | 'equipments' | 'consumeItems') => {
-  const price = getSellPrice(item);
+type StackedItem = (ItemType | PotionType | EquipmentType) & {
+  count: number;
+  originalIndices: number[]; // 紀錄在原陣列中的索引，方便刪除
+  bagType: 'items' | 'equipments' | 'consumeItems';
+};
 
-  // 1. 玩家獲得金幣
+/**
+ * 聚合背包物品
+ */
+const stackedBags = computed(() => {
+  const bags = {
+    items: [] as StackedItem[],
+    equipments: [] as StackedItem[],
+    consumeItems: [] as StackedItem[]
+  };
+
+  const bagTypes = ['items', 'equipments', 'consumeItems'] as const;
+
+  bagTypes.forEach(type => {
+    const rawBag = playerStore.info[type] || [];
+    const map = new Map<string, StackedItem>();
+
+    rawBag.forEach((item, index) => {
+      if (!item) return;
+
+      if (map.has(item.name)) {
+        const existing = map.get(item.name)!;
+        existing.count++;
+        existing.originalIndices.push(index);
+      } else {
+        map.set(item.name, {
+          ...item,
+          count: 1,
+          originalIndices: [index],
+          bagType: type
+        });
+      }
+    });
+    bags[type] = Array.from(map.values());
+  });
+
+  return bags;
+});
+
+/**
+ * 修改販賣邏輯：傳入聚合後的物件
+ */
+const sellStackedItem = (stackedItem: StackedItem) => {
+  const price = getSellPrice(stackedItem);
+
+  // 1. 獲得金幣
   playerStore.addGold(price);
 
-  // 2. 從背包移除 (使用我們之前寫好的方法)
-  // 因為我們有索引，直接用 splice 更精準
-  playerStore.info[bagType].splice(index, 1);
-
-  ElMessage.success(`賣出了 ${item.name}，獲得了 ${price} G`);
+  // 2. 從原陣列移除最後一個符合的物品
+  // 取得該物品在原背包中的真實索引
+  const realIndex = stackedItem.originalIndices.pop();
+  if (realIndex !== undefined) {
+    playerStore.info[stackedItem.bagType].splice(realIndex, 1);
+    ElMessage.success(`賣出了 ${stackedItem.name}，獲得了 ${price} G`);
+  }
 };
 
 const init = () => {
@@ -132,7 +181,7 @@ onMounted(() => {
 
 <template>
   <div class="shop-room">
-    <template v-if="true">
+    <template v-if="!isRun">
       <div>
         <h2 style="display: flex;align-items: center">
           🧌 神秘商人
@@ -166,20 +215,24 @@ onMounted(() => {
       <div v-else class="sell-container">
         <p class="gold-hint">我的金幣: 💰 {{ playerStore.info.gold }}</p>
 
-        <div v-for="bagType in (['items', 'equipments','consumeItems',] as const)" :key="bagType" class="bag-section">
-          <h4 v-if="playerStore.info[bagType]?.length">
-            {{ bagType === 'consumeItems' ? '消耗品' : bagType === 'equipments' ? '裝備' : '一般道具' }}</h4>
+        <div v-for="bagType in (['items', 'equipments', 'consumeItems'] as const)" :key="bagType" class="bag-section">
+          <h4 v-if="stackedBags[bagType].length">
+            {{ bagType === 'consumeItems' ? '消耗品' : bagType === 'equipments' ? '裝備' : '一般道具' }}
+          </h4>
+
           <div class="shop-container">
             <div
-                v-for="(item, index) in playerStore.info[bagType]"
-                :key="'sell-' + bagType + index"
+                v-for="item in stackedBags[bagType]"
+                :key="'sell-' + bagType + item.name"
                 class="item-card sell-card"
-                @dblclick="sellItem(item, index, bagType)"
+                @dblclick="sellStackedItem(item)"
             >
+              <div class="item-badge" v-if="item.count > 1">x{{ item.count }}</div>
+
               <div class="item-icon">{{ item.icon }}</div>
               <div class="item-name">{{ item.name }}</div>
               <div class="sell-price-tag">回收價: {{ getSellPrice(item) }} G</div>
-              <div class="sell-action-overlay">雙擊販賣</div>
+              <div class="sell-action-overlay">雙擊販賣 (1個)</div>
             </div>
           </div>
         </div>
@@ -197,6 +250,7 @@ onMounted(() => {
         v-model="isShowDetail"
         :title="`物品詳情 💰 ${ (selectedItem as any)?.price } G`"
         align-center
+        width="40rem"
     >
       <div v-if="selectedItem" class="detail-container">
         <div class="detail-icon">{{ selectedItem.icon }}</div>
@@ -295,13 +349,6 @@ onMounted(() => {
   margin-bottom: 0.5rem;
 }
 
-.item-desc {
-  font-size: 0.8rem;
-  color: #666;
-  height: 2.5rem;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
 
 .item-price {
   color: #e6a23c;
@@ -385,19 +432,29 @@ onMounted(() => {
   overflow: hidden;
 }
 
+.item-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  border: 1px solid #e6a23c;
+  z-index: 2;
+}
+
+/* 強化雙擊販賣的視覺回饋 */
+.sell-action-overlay {
+  background: rgba(245, 108, 108, 0.95);
+  font-size: 0.9rem;
+}
+
 .sell-price-tag {
   color: #67c23a;
   font-size: 0.85rem;
   margin-top: 5px;
-}
-
-.detail-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.detail-price span {
-  color: #e6a23c;
 }
 
 .dialog-footer {
