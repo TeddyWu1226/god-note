@@ -116,7 +116,7 @@ type MonsterActionType = keyof typeof MonsterActions;
 export interface MonsterType extends UnitType {
     description?: string //介紹
     drop?: DropEntry[]
-    dropGold?: number,
+    dropGold?: number
     onAttack?: MonsterActionType
     onDead?: MonsterActionType
 }

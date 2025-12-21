@@ -107,6 +107,17 @@ const createBoss = () => {
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
+  nextTick().then(() => {
+    // 額外動畫演示
+    useFloatingMessage(
+        '這裡不是你該闖入的地方!',
+        monsterCardRefs.value[0].$el,
+        {
+          duration: 2000, // 動畫時間保持不變
+          color: 'red'
+        }
+    );
+  })
 }
 
 /**
