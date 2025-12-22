@@ -3,6 +3,7 @@ import {computed, nextTick, ref, watch} from 'vue';
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
+import {StageEnum} from "@/enums/stage-enum";
 
 const model = defineModel({type: Boolean, default: false});
 const gameStateStore = useGameStateStore();
@@ -91,10 +92,15 @@ const totalLayers = computed(() => gameStateStore.currentStageRooms.length);
 const isLastTwoLayers = (layerIndex: number) => {
   return layerIndex >= totalLayers.value - 2;
 };
+const title = computed(() => {
+  return `第 ${
+      (gameStateStore.currentStage - 1) * 20 + gameStateStore.currentRoom[0]
+  } 層 - ${getEnumColumn(StageEnum, gameStateStore.currentStage)}`
+})
 </script>
 
 <template>
-  <el-dialog v-model="model" top="5vh" width="90%">
+  <el-dialog v-model="model" top="5vh" width="90%" :title="title">
     <el-scrollbar max-height="60vh" style="width: 100%; overflow-x: auto;">
       <div class="trapezoid-container">
         <div

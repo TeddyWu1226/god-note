@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
@@ -12,6 +12,7 @@ import {UserValueLayout} from "@/components/UserValueLayout";
 import {UserDetailInfo} from "@/components/DetailInfo";
 import {usePlayerStore} from "@/store/player-store";
 import {ElMessageBox, ElNotification} from "element-plus";
+import {StageTransition} from "@/components/StageTransition";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -99,6 +100,17 @@ const showLoadingSuccess = () => {
 onMounted(() => {
   showLoadingSuccess()
 })
+
+const StageTransitionRef = ref()
+watch(
+    () => gameStateStore.currentStage,
+    (val) => {
+      if (val === StageEnum.BeginForest.value) {
+        return
+      }
+      StageTransitionRef.value.playTransition(getEnumColumn(StageEnum, gameStateStore.currentStage));
+    }
+)
 </script>
 
 <template>
@@ -159,6 +171,7 @@ onMounted(() => {
       </el-container>
       <UserDetailInfo v-if="!gameStateStore.stateIs(GameState.INITIAL)"/>
     </div>
+    <StageTransition ref="StageTransitionRef"/>
   </el-config-provider>
 </template>
 

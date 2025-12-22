@@ -21,8 +21,9 @@ const onClick = () => {
 <template>
   <el-card body-class="flex justify-between items-center">
     <span style="font-size: 16px">第 {{
-        gameStateStore.currentStage
-      }} 階段 - {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}</span>
+       (gameStateStore.currentStage - 1) * 20 + gameStateStore.currentRoom[0]
+      }} 層 [{{  getEnumColumn(StageEnum, gameStateStore.currentStage)}}]
+    </span>
     <div class="flex items-center">
       <span class="gold">{{ playerStore.info.gold }}💰</span>
       <el-button @click="onClick">地圖</el-button>
