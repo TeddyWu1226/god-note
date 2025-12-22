@@ -3,8 +3,10 @@ import {WorldDefault} from "@/assets/const";
 
 
 export const Boss = {
-    // --- 區域 1: 迷霧森林 (Value 5) ---
-    BigBear: {
+// ==========================================
+    // --- 區域 1: 迷霧森林 (Misty Woods) ---
+    // ==========================================
+    BeginForest: {
         icon: '🐻',
         name: '森林巨熊',
         description: '貌似是這片森林的動物之主,有厚重的毛皮以及強大的破壞力,需要小心謹慎',
@@ -19,7 +21,52 @@ export const Boss = {
         level: 10,
         dropGold: 100
     } as MonsterType,
-    ForestGuardian: {
+    SunkenGrove: {
+        icon: '🍄',
+        name: '變異巨菇',
+        description: '受魔力影響長大的真菌，散發著毒孢子。',
+        ad: 1,
+        critIncrease: 100,
+        critRate: 0,
+        adDefend: 10,
+        dodge: 2,
+        hit: 65,
+        hp: 450,
+        hpLimit: 450,
+        level: 4,
+        dropGold: 150
+    } as MonsterType,
+    AncientRoots: {
+        icon: '🌳',
+        name: '古老樹精',
+        description: '活了千年的樹木，其根部能輕易貫穿盔甲。',
+        ad: 30,
+        critIncrease: 1.5,
+        critRate: 15,
+        adDefend: 15,
+        dodge: 0,
+        hit: 70,
+        hp: 800,
+        hpLimit: 800,
+        level: 6,
+        dropGold: 250
+    } as MonsterType,
+    FairyBarrier: {
+        icon: '🧚',
+        name: '妖精守衛',
+        description: '守護結界的幻象生物，動作極快。',
+        ad: 38,
+        critIncrease: 1.6,
+        critRate: 20,
+        adDefend: 12,
+        dodge: 15,
+        hit: 85,
+        hp: 1000,
+        hpLimit: 1000,
+        level: 8,
+        dropGold: 400
+    } as MonsterType,
+    GuardiansDen: {
         icon: '🐾',
         name: '森林守護者·賽納留斯',
         description: '森林的最終防線，能操縱植物與野獸。',
@@ -33,10 +80,71 @@ export const Boss = {
         hpLimit: 1200,
         level: 10,
         dropGold: 500
-    },
-
-    // --- 區域 2: 灼熱沙漠 (Value 10) ---
-    AncientPharaoh: {
+    } as MonsterType,
+    // ==========================================
+    // --- 區域 2: 灼熱沙漠 (Scorched Sands) ---
+    // ==========================================
+    ScorchingDunes: {
+        icon: '🦂',
+        name: '劇毒黑蠍',
+        description: '潛伏於沙丘之下的殺手。',
+        ad: 60,
+        critIncrease: 1.7,
+        critRate: 18,
+        adDefend: 25,
+        dodge: 8,
+        hit: 110,
+        hp: 1600,
+        hpLimit: 1600,
+        level: 12,
+        dropGold: 600
+    } as MonsterType,
+    MirageOasis: {
+        icon: '🐍',
+        name: '幻象巨蟒',
+        description: '在水霧中現身的龐然大物。',
+        ad: 75,
+        critIncrease: 1.7,
+        critRate: 20,
+        adDefend: 30,
+        dodge: 12,
+        hit: 115,
+        hp: 2000,
+        hpLimit: 2000,
+        level: 14,
+        dropGold: 750
+    } as MonsterType,
+    SandstormPass: {
+        icon: '🌪️',
+        name: '風暴元素',
+        description: '沙塵暴的核心化身。',
+        ad: 90,
+        critIncrease: 1.8,
+        critRate: 15,
+        adDefend: 35,
+        dodge: 20,
+        hit: 120,
+        hp: 2500,
+        hpLimit: 2500,
+        level: 16,
+        dropGold: 900
+    } as MonsterType,
+    ForgottenTemple: {
+        icon: '🗿',
+        name: '神殿守衛',
+        description: '守護古老秘寶的石像守衛。',
+        ad: 105,
+        critIncrease: 1.8,
+        critRate: 10,
+        adDefend: 45,
+        dodge: 0,
+        hit: 120,
+        hp: 3000,
+        hpLimit: 3000,
+        level: 18,
+        dropGold: 1050
+    } as MonsterType,
+    PharaohsRest: {
         icon: '⚰️',
         name: '法老王·阿蒙霍特普',
         description: '從永恆睡眠中甦醒，帶著詛咒砂礫的帝王。',
@@ -50,30 +158,154 @@ export const Boss = {
         hpLimit: 3500,
         level: 20,
         dropGold: 1200
-    },
+    } as MonsterType,
 
-    // --- 區域 3: 冰雪高地 (Value 15) ---
+    // ==========================================
+    // --- 區域 3: 冰雪高地 (Icy Plateau) ---
+    // ==========================================
+    SnowyFoothills: {
+        icon: '🐆',
+        name: '雪原劍齒豹',
+        description: '在嚴寒中生存的頂級獵食者。',
+        ad: 150,
+        critIncrease: 1.9,
+        critRate: 25,
+        adDefend: 60,
+        dodge: 15,
+        hit: 130,
+        hp: 4500,
+        hpLimit: 4500,
+        level: 22,
+        dropGold: 1400
+    } as MonsterType,
+    FrozenCliffs: {
+        icon: '🦍',
+        name: '高地雪人',
+        description: '擁有擲碎巨石力量的野獸。',
+        ad: 180,
+        critIncrease: 1.9,
+        critRate: 15,
+        adDefend: 80,
+        dodge: 5,
+        hit: 135,
+        hp: 5500,
+        hpLimit: 5500,
+        level: 24,
+        dropGold: 1650
+    } as MonsterType,
+    WindHowlRidge: {
+        icon: '🦅',
+        name: '風暴猛禽',
+        description: '雙翼揮動間能產生致命的冰刃。',
+        ad: 210,
+        critIncrease: 2.0,
+        critRate: 22,
+        adDefend: 90,
+        dodge: 25,
+        hit: 140,
+        hp: 6500,
+        hpLimit: 6500,
+        level: 26,
+        dropGold: 1900
+    } as MonsterType,
+    AncientCave: {
+        icon: '🐉',
+        name: '幼冰龍',
+        description: '雖然尚未成年，但龍息依舊致命。',
+        ad: 245,
+        critIncrease: 2.0,
+        critRate: 18,
+        adDefend: 100,
+        dodge: 10,
+        hit: 145,
+        hp: 7200,
+        hpLimit: 7200,
+        level: 28,
+        dropGold: 2200
+    } as MonsterType,
     FrozenThroneKnight: {
         icon: '🏇🏼',
         name: '冰封騎士·霜哀',
-        description: '守護冰封王座的亡靈將軍，寒氣逼人。',
+        description: '守護冰封王座的亡靈將軍。',
         ad: 280,
         critIncrease: 2.0,
         critRate: 10,
-        adDefend: 120, // 高防禦
+        adDefend: 120,
         dodge: 0,
         hit: 150,
         hp: 8000,
         hpLimit: 8000,
         level: 30,
         dropGold: 2500
-    },
+    } as MonsterType,
 
-    // --- 區域 4: 腐爛沼澤 (Value 20) ---
-    LichLord: {
+    // ==========================================
+    // --- 區域 4: 腐爛沼澤 (Rotten Swamp) ---
+    // ==========================================
+    MistyWetlands: {
+        icon: '🐙',
+        name: '沼澤觸手',
+        description: '淤泥下的無名恐懼。',
+        ad: 340,
+        critIncrease: 2.1,
+        critRate: 15,
+        adDefend: 130,
+        dodge: 10,
+        hit: 160,
+        hp: 10000,
+        hpLimit: 10000,
+        level: 32,
+        dropGold: 3000
+    } as MonsterType,
+    MutatedRiverbank: {
+        icon: '🐊',
+        name: '變異巨鱷',
+        description: '鱗片硬如鋼鐵的變異掠食者。',
+        ad: 400,
+        critIncrease: 2.1,
+        critRate: 25,
+        adDefend: 150,
+        dodge: 5,
+        hit: 170,
+        hp: 12500,
+        hpLimit: 12500,
+        level: 34,
+        dropGold: 3500
+    } as MonsterType,
+    GasVents: {
+        icon: '💨',
+        name: '腐化靈體',
+        description: '誕生於劇毒沼氣中的幽靈。',
+        ad: 460,
+        critIncrease: 2.2,
+        critRate: 20,
+        adDefend: 120,
+        dodge: 25,
+        hit: 180,
+        hp: 14000,
+        hpLimit: 14000,
+        level: 36,
+        dropGold: 4000
+    } as MonsterType,
+    SunkenCity: {
+        icon: '🧟',
+        name: '墮落祭司',
+        description: '沉沒城市的遺民，操縱亡靈之力。',
+        ad: 500,
+        critIncrease: 2.2,
+        critRate: 15,
+        adDefend: 140,
+        dodge: 10,
+        hit: 190,
+        hp: 16000,
+        hpLimit: 16000,
+        level: 38,
+        dropGold: 4500
+    } as MonsterType,
+    LichDomain: {
         icon: '☠️',
         name: '巫妖領主·薩杜斯',
-        description: '掌握生死之力的恐怖存在，呼吸間皆是劇毒。',
+        description: '掌握生死之力的恐怖存在。',
         ad: 550,
         critIncrease: 2.2,
         critRate: 25,
@@ -84,16 +316,78 @@ export const Boss = {
         hpLimit: 18000,
         level: 40,
         dropGold: 5000
-    },
+    } as MonsterType,
 
-    // --- 區域 5: 活火山脈 (Value 25) ---
-    FireElementLord: {
+    // ==========================================
+    // --- 區域 5: 活火山脈 (Active Volcano) ---
+    // ==========================================
+    VolcanoFoot: {
+        icon: '🌋',
+        name: '火岩斯拉格',
+        description: '由熔岩滴落形成的生物。',
+        ad: 650,
+        critIncrease: 2.3,
+        critRate: 20,
+        adDefend: 200,
+        dodge: 0,
+        hit: 210,
+        hp: 22000,
+        hpLimit: 22000,
+        level: 42,
+        dropGold: 6000
+    } as MonsterType,
+    MagmaPath: {
+        icon: '♨️',
+        name: '岩漿潛伏者',
+        description: '隱藏在灼熱河流中的殺手。',
+        ad: 800,
+        critIncrease: 2.3,
+        critRate: 25,
+        adDefend: 250,
+        dodge: 5,
+        hit: 220,
+        hp: 28000,
+        hpLimit: 28000,
+        level: 44,
+        dropGold: 7000
+    } as MonsterType,
+    ObsidianCave: {
+        icon: '⚫',
+        name: '黑曜石魔像',
+        description: '全身由極硬礦石組成的自動兵器。',
+        ad: 950,
+        critIncrease: 2.4,
+        critRate: 15,
+        adDefend: 400,
+        dodge: 0,
+        hit: 230,
+        hp: 35000,
+        hpLimit: 35000,
+        level: 46,
+        dropGold: 8500
+    } as MonsterType,
+    ElementalHabitat: {
+        icon: '🔥',
+        name: '火焰領主',
+        description: '純粹能量構成的燃燒生命。',
+        ad: 1050,
+        critIncrease: 2.5,
+        critRate: 35,
+        adDefend: 180,
+        dodge: 15,
+        hit: 240,
+        hp: 40000,
+        hpLimit: 40000,
+        level: 48,
+        dropGold: 9500
+    } as MonsterType,
+    VolcanoCrater: {
         icon: '☀️',
         name: '熔岩巨獸·克洛斯',
-        description: '誕生於地核的意志，全身流淌著足以毀滅一切的岩漿。',
+        description: '地核意志的具象化。',
         ad: 1100,
         critIncrease: 2.5,
-        critRate: 30, // 高爆擊
+        critRate: 30,
         adDefend: 200,
         dodge: 5,
         hit: 250,
@@ -101,67 +395,315 @@ export const Boss = {
         hpLimit: 45000,
         level: 50,
         dropGold: 10000
-    },
+    } as MonsterType,
 
-    // --- 區域 6: 深海海域 (Value 30) ---
-    AtlantisMonarch: {
+    // ==========================================
+    // --- 區域 6: 深海海域 (Deep Ocean) ---
+    // ==========================================
+    CoralReef: {
+        icon: '🐠',
+        name: '變異獅子魚',
+        description: '色彩斑斕但充滿毒刺。',
+        ad: 1500,
+        critIncrease: 2.0,
+        critRate: 20,
+        adDefend: 250,
+        dodge: 25,
+        hit: 300,
+        hp: 60000,
+        hpLimit: 60000,
+        level: 52,
+        dropGold: 12000
+    } as MonsterType,
+    KelpForest: {
+        icon: '🌿',
+        name: '海藻纏繞者',
+        description: '像是植物一般的捕獵者。',
+        ad: 1800,
+        critIncrease: 2.0,
+        critRate: 20,
+        adDefend: 300,
+        dodge: 30,
+        hit: 320,
+        hp: 75000,
+        hpLimit: 75000,
+        level: 54,
+        dropGold: 15000
+    } as MonsterType,
+    DeepSeaTrench: {
+        icon: '🫧',
+        name: '深淵鮟鱇',
+        description: '在極致黑暗中等待獵物的光。',
+        ad: 2000,
+        critIncrease: 2.0,
+        critRate: 25,
+        adDefend: 320,
+        dodge: 35,
+        hit: 340,
+        hp: 85000,
+        hpLimit: 85000,
+        level: 56,
+        dropGold: 18000
+    } as MonsterType,
+    AtlantisOuterWall: {
+        icon: '🧱',
+        name: '機械海龜',
+        description: '古文明遺留的巡邏機器。',
+        ad: 2100,
+        critIncrease: 2.0,
+        critRate: 15,
+        adDefend: 500,
+        dodge: 10,
+        hit: 350,
+        hp: 95000,
+        hpLimit: 95000,
+        level: 58,
+        dropGold: 20000
+    } as MonsterType,
+    AtlantisCity: {
         icon: '🏰',
         name: '深海君主·波賽頓',
-        description: '亞特蘭提斯的統治者，在水中幾乎無法被擊中。',
+        description: '亞特蘭提斯的統治者。',
         ad: 2200,
         critIncrease: 2.0,
         critRate: 20,
         adDefend: 350,
-        dodge: 40, // 高閃避
+        dodge: 40,
         hit: 350,
         hp: 100000,
         hpLimit: 100000,
         level: 60,
         dropGold: 20000
-    },
+    } as MonsterType,
 
-    // --- 區域 7: 雲上天國 (Value 35) ---
-    SeraphimJudge: {
+    // ==========================================
+    // --- 區域 7: 雲上天國 (Celestial Sky) ---
+    // ==========================================
+    FloatingIslands: {
+        icon: '🪨',
+        name: '雲岩巨人',
+        description: '由浮島岩石凝聚而成的守衛。',
+        ad: 3000,
+        critIncrease: 2.8,
+        critRate: 25,
+        adDefend: 500,
+        dodge: 10,
+        hit: 400,
+        hp: 150000,
+        hpLimit: 150000,
+        level: 62,
+        dropGold: 25000
+    } as MonsterType,
+    SkyGarden: {
+        icon: '🌷',
+        name: '幻色蝶妖',
+        description: '美麗卻致命的空中住民。',
+        ad: 3500,
+        critIncrease: 2.8,
+        critRate: 35,
+        adDefend: 450,
+        dodge: 25,
+        hit: 450,
+        hp: 180000,
+        hpLimit: 180000,
+        level: 64,
+        dropGold: 30000
+    } as MonsterType,
+    AbandonedPort: {
+        icon: '🪽',
+        name: '破舊空艇核心',
+        description: '失控的魔力核心。',
+        ad: 3800,
+        critIncrease: 3.0,
+        critRate: 30,
+        adDefend: 550,
+        dodge: 15,
+        hit: 480,
+        hp: 200000,
+        hpLimit: 200000,
+        level: 66,
+        dropGold: 35000
+    } as MonsterType,
+    CelestialLibrary: {
+        icon: '📚',
+        name: '禁忌魔導書',
+        description: '記載著毀滅性咒語的靈物。',
+        ad: 4200,
+        critIncrease: 3.0,
+        critRate: 40,
+        adDefend: 400,
+        dodge: 20,
+        hit: 500,
+        hp: 220000,
+        hpLimit: 220000,
+        level: 68,
+        dropGold: 40000
+    } as MonsterType,
+    JudgmentHall: {
         icon: '⚖️',
         name: '審判大天使',
-        description: '神之代言人，以正義之名降下神罰。',
+        description: '神之代言人，降下神罰。',
         ad: 4500,
         critIncrease: 3.0,
         critRate: 40,
         adDefend: 600,
         dodge: 15,
-        hit: 500, // 高命中
+        hit: 500,
         hp: 250000,
         hpLimit: 250000,
         level: 70,
         dropGold: 45000
-    },
+    } as MonsterType,
 
-    // --- 區域 8: 鏽蝕工廠 (Value 40) ---
-    MechaOverlord: {
+    // ==========================================
+    // --- 區域 8: 鏽蝕工廠 (Rusted Factory) ---
+    // ==========================================
+    PartsSector: {
+        icon: '⚙️',
+        name: '廢料壓碎機',
+        description: '只會執行摧毀指令的機械。',
+        ad: 5500,
+        critIncrease: 2.5,
+        critRate: 15,
+        adDefend: 800,
+        dodge: 0,
+        hit: 550,
+        hp: 350000,
+        hpLimit: 350000,
+        level: 72,
+        dropGold: 60000
+    } as MonsterType,
+    BoilerRoom: {
+        icon: '⏩',
+        name: '蒸汽動力裝置',
+        description: '處於過載邊緣的高溫機器。',
+        ad: 6200,
+        critIncrease: 2.5,
+        critRate: 20,
+        adDefend: 1000,
+        dodge: 0,
+        hit: 580,
+        hp: 420000,
+        hpLimit: 420000,
+        level: 74,
+        dropGold: 75000
+    } as MonsterType,
+    AssemblyLine: {
+        icon: '🤖',
+        name: '量產型鬥士',
+        description: '完美配合的戰鬥機器人。',
+        ad: 6800,
+        critIncrease: 2.5,
+        critRate: 25,
+        adDefend: 1200,
+        dodge: 5,
+        hit: 600,
+        hp: 480000,
+        hpLimit: 480000,
+        level: 76,
+        dropGold: 85000
+    } as MonsterType,
+    ControlCenter: {
+        icon: '🖥️',
+        name: '防禦矩陣系統',
+        description: '工廠的自動安保系統。',
+        ad: 7500,
+        critIncrease: 2.5,
+        critRate: 20,
+        adDefend: 1400,
+        dodge: 0,
+        hit: 620,
+        hp: 550000,
+        hpLimit: 550000,
+        level: 78,
+        dropGold: 95000
+    } as MonsterType,
+    PowerCore: {
         icon: '🌐',
         name: '動力核心·零號機',
-        description: '工廠的終極產物，擁有完美的自我修復與防禦機制。',
+        description: '工廠的終極產物。',
         ad: 8000,
         critIncrease: 2.5,
         critRate: 15,
-        adDefend: 1500, // 極高防禦
+        adDefend: 1500,
         dodge: 0,
         hit: 600,
         hp: 600000,
         hpLimit: 600000,
         level: 80,
         dropGold: 100000
-    },
+    } as MonsterType,
 
-    // --- 區域 9: 冥界深淵 (Value 45) ---
-    HadesRuler: {
+    // ==========================================
+    // --- 區域 9: 冥界深淵 (Nether Abyss) ---
+    // ==========================================
+    StyxCrossing: {
+        icon: '🚢',
+        name: '擺渡人守衛',
+        description: '負責守衛死者之河的亡魂。',
+        ad: 10000,
+        critIncrease: 3.5,
+        critRate: 40,
+        adDefend: 1600,
+        dodge: 20,
+        hit: 700,
+        hp: 800000,
+        hpLimit: 800000,
+        level: 82,
+        dropGold: 150000
+    } as MonsterType,
+    CrimsonPlains: {
+        icon: '🩸',
+        name: '血色收割者',
+        description: '在戰場遺址遊蕩的屠夫。',
+        ad: 11500,
+        critIncrease: 3.5,
+        critRate: 45,
+        adDefend: 1700,
+        dodge: 20,
+        hit: 750,
+        hp: 1000000,
+        hpLimit: 1000000,
+        level: 84,
+        dropGold: 180000
+    } as MonsterType,
+    SoulPrison: {
+        icon: '⛓️',
+        name: '典獄長·厄瑞玻斯',
+        description: '囚禁無數靈魂的殘酷官員。',
+        ad: 12500,
+        critIncrease: 3.5,
+        critRate: 40,
+        adDefend: 1800,
+        dodge: 10,
+        hit: 800,
+        hp: 1200000,
+        hpLimit: 1200000,
+        level: 86,
+        dropGold: 200000
+    } as MonsterType,
+    UpperAbyss: {
+        icon: '😈',
+        name: '深淵魔將',
+        description: '哈帝斯座下的強力副官。',
+        ad: 13500,
+        critIncrease: 3.5,
+        critRate: 55,
+        adDefend: 1900,
+        dodge: 25,
+        hit: 850,
+        hp: 1350000,
+        hpLimit: 1350000,
+        level: 88,
+        dropGold: 220000
+    } as MonsterType,
+    LowerAbyss: {
         icon: '👹',
         name: '冥府主宰·哈帝斯',
-        description: '統治靈魂的君王，直視其雙眼者將墮入深淵。',
+        description: '統治靈魂的君王。',
         ad: 15000,
         critIncrease: 3.5,
-        critRate: 50, // 極高爆擊
+        critRate: 50,
         adDefend: 2000,
         dodge: 25,
         hit: 800,
@@ -169,13 +711,75 @@ export const Boss = {
         hpLimit: 1500000,
         level: 90,
         dropGold: 250000
-    },
+    } as MonsterType,
 
-    // --- 區域 10: 異界終點 (Value 50) ---
-    GenesisCreator: {
+    // ==========================================
+    // --- 區域 10: 異界終點 (Otherworld End) ---
+    // ==========================================
+    TwistedTime: {
+        icon: '🕒',
+        name: '時光破碎者',
+        description: '存在於崩毀時間線中的怪異。',
+        ad: 20000,
+        critIncrease: 4.0,
+        critRate: 50,
+        adDefend: 3000,
+        dodge: 30,
+        hit: 1000,
+        hp: 2000000,
+        hpLimit: 2000000,
+        level: 92,
+        dropGold: 400000
+    } as MonsterType,
+    DimensionalRift: {
+        icon: '🌌',
+        name: '虛空行者',
+        description: '從裂縫中窺視現實的異界生命。',
+        ad: 25000,
+        critIncrease: 4.0,
+        critRate: 55,
+        adDefend: 3500,
+        dodge: 40,
+        hit: 1100,
+        hp: 3000000,
+        hpLimit: 3000000,
+        level: 94,
+        dropGold: 600000
+    } as MonsterType,
+    RealityNexus: {
+        icon: '🔀',
+        name: '矛盾體',
+        description: '由所有可能性交織成的混亂集合。',
+        ad: 30000,
+        critIncrease: 4.0,
+        critRate: 60,
+        adDefend: 4000,
+        dodge: 45,
+        hit: 1150,
+        hp: 4000000,
+        hpLimit: 4000000,
+        level: 96,
+        dropGold: 800000
+    } as MonsterType,
+    GodsRealm: {
+        icon: '🛐',
+        name: '位面監視者',
+        description: '維持神之領域秩序的意志。',
+        ad: 33000,
+        critIncrease: 4.0,
+        critRate: 50,
+        adDefend: 4500,
+        dodge: 40,
+        hit: 1200,
+        hp: 4500000,
+        hpLimit: 4500000,
+        level: 98,
+        dropGold: 900000
+    } as MonsterType,
+    TowerVoid: {
         icon: '🏛️',
         name: '創世守護者·塔納托斯',
-        description: '時空的守望者，萬物的起點也是終點。',
+        description: '萬物的起點與終點。',
         ad: 35000,
         critIncrease: 4.0,
         critRate: 60,
@@ -186,7 +790,9 @@ export const Boss = {
         hpLimit: 5000000,
         level: 100,
         dropGold: 1000000
-    },
+    } as MonsterType,
+
+    // --- 防作弊 ---
     Error: {
         icon: 'TED',
         name: '作者',

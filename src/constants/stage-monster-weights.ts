@@ -6,7 +6,7 @@ export const BeginForestWeights: Record<string, number> = {
     Slime: 60,
     WoodTick: 30,
     ForestSprout: 10,
-    FierceWolf: 10
+    FierceWolf: 5
 };
 
 /**
@@ -18,7 +18,7 @@ export const SunkenGroveWeights: Record<string, number> = {
     WoodTick: 30,
     ForestSprout: 25,
     GreenRabbit: 15,
-    FierceWolf: 10
+    FierceWolf: 5
 };
 
 /**
@@ -27,10 +27,9 @@ export const SunkenGroveWeights: Record<string, number> = {
  */
 export const AncientRootsWeights: Record<string, number> = {
     ForestSprout: 20,
-    ForestOwl: 35,      // 貓頭鷹開始頻繁出沒
-    StingerBee: 30,     // 蜜蜂成群結隊
+    MushroomMan: 20,    // 結界的守衛
     GreenRabbit: 15,
-    FierceWolf: 10
+    FierceWolf: 5
 };
 
 /**
@@ -40,8 +39,6 @@ export const AncientRootsWeights: Record<string, number> = {
 export const FairyBarrierWeights: Record<string, number> = {
     ForestOwl: 20,
     StingerBee: 25,
-    MushroomMan: 20,    // 結界的守衛
-    FierceWolf: 10
 };
 
 /**
@@ -51,10 +48,13 @@ export const FairyBarrierWeights: Record<string, number> = {
 export const GuardiansDenWeights: Record<string, number> = {
     WoodViper: 20,
     MushroomMan: 30,
-    FierceWolf: 40,     // 這裡已經是狼窩了
     Mandragora: 10      // 稀有的曼陀羅守護著深處
 };
 
+/**
+ * 無盡區域
+ * 特色：Boss 戰前的最後屏障，充滿強敵。
+ */
 export const EndlessWeights: Record<string, number> = {
     AngelGuard: 20,
     HighPriest: 20,

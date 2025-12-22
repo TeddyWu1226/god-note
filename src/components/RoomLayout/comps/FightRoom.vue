@@ -101,15 +101,22 @@ const genEliteMonster = (layer: number) => {
 }
 
 // 生成BOSS
+// 建立一個反向查找的地圖 (在文件初始化時執行一次)
+const StageValueMap = Object.fromEntries(
+    Object.entries(StageEnum).map(([key, data]) => [data.value, key])
+);
+
+/**
+ * 高效率查詢
+ */
+const getStageKeyByValue = (value: number): string | undefined => {
+  return StageValueMap[value];
+};
 const createBoss = () => {
   let newMonsters: MonsterType[]
-  switch (gameStateStore.currentStage) {
-    case StageEnum.BeginForest.value:
-      newMonsters = [create(Boss.BigBear)]
-      break
-    default:
-      newMonsters = [create(Boss.Error)];
-  }
+  const currentStageKey = getStageKeyByValue(gameStateStore.currentStage)
+  const boss =Boss[currentStageKey] ?? Boss.Error
+  newMonsters = [create(boss)]
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);

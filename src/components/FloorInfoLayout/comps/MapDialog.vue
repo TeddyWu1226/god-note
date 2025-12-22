@@ -95,7 +95,7 @@ const isLastTwoLayers = (layerIndex: number) => {
 const title = computed(() => {
   return `第 ${
       (gameStateStore.currentStage - 1) * 20 + gameStateStore.currentRoom[0]
-  } 層 - ${getEnumColumn(StageEnum, gameStateStore.currentStage)}`
+  } 層 - ${getEnumColumn(StageEnum, gameStateStore.currentStage, 'label', '塔之後⏳')}`
 })
 </script>
 
