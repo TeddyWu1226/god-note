@@ -119,6 +119,7 @@ export interface MonsterType extends UnitType {
     dropGold?: number
     onAttack?: MonsterActionType
     onDead?: MonsterActionType
+    effects: StatusEffect[];
 }
 
 /**

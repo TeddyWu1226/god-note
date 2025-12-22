@@ -11,13 +11,7 @@ const gameStateStore = useGameStateStore()
 const isRested = ref<boolean>(false)
 const onRest = () => {
   isRested.value = true
-  if (playerStore.info.hp < playerStore.finalStats.hpLimit) {
-    playerStore.info.hp = playerStore.finalStats.hpLimit
-  }
-  if (playerStore.info.sp < playerStore.finalStats.spLimit) {
-    playerStore.info.sp = playerStore.finalStats.spLimit
-  }
-  playerStore.statusEffects = playerStore.statusEffects.filter(effect => effect.isBuff)
+  playerStore.healFull()
   gameStateStore.transitionToNextState()
 }
 

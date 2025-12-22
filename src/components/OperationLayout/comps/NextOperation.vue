@@ -4,11 +4,13 @@ import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {RoomCoordinateTuple} from "@/types";
 import {getNextAvailableRooms, getRoomValue, useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
 
 const props = defineProps({
   disabled: Boolean,
 })
 const gameStateStore = useGameStateStore()
+const playerStore = usePlayerStore()
 const nextRooms = computed(() => {
   return getNextAvailableRooms()
 })
@@ -17,8 +19,10 @@ const selectRoom = (roomXY: RoomCoordinateTuple) => {
 };
 
 const goNestStage = () => {
+  playerStore.healFull()
   gameStateStore.init(gameStateStore.currentStage + 1)
   gameStateStore.setRoom(gameStateStore.currentRoom)
+
 }
 </script>
 

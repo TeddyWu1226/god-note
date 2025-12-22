@@ -287,6 +287,15 @@ export const usePlayerStore = defineStore('player-info', () => {
         statusEffects.value = remainingEffects;
     };
 
+    const healFull = () => {
+        if (info.value.hp < finalStats.value.hpLimit) {
+            info.value.hp = finalStats.value.hpLimit
+        }
+        if (info.value.sp < finalStats.value.spLimit) {
+            info.value.sp = finalStats.value.spLimit
+        }
+        statusEffects.value = statusEffects.value.filter(effect => effect.isBuff)
+    }
     return {
         info,
         stopValueChangeAnimation,
@@ -300,6 +309,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addGold,
         addStatus,
         nextTurnStatus,
+        healFull,
         init
     };
 }, {
