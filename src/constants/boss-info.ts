@@ -4,11 +4,12 @@ import {WorldDefault} from "@/assets/const";
 
 export const Boss = {
 // ==========================================
-    // --- 區域 1: 迷霧森林 (Misty Woods) ---
+    // --- 區域 1: 迷霧森林 (Misty Forest) ---
     // ==========================================
     BeginForest: {
         icon: '🐻',
         name: '森林巨熊',
+        class: 'boss',
         description: '貌似是這片森林的動物之主,有厚重的毛皮以及強大的破壞力,需要小心謹慎',
         ad: 10,
         critIncrease: WorldDefault.critIncrease,
@@ -23,19 +24,21 @@ export const Boss = {
     } as MonsterType,
     SunkenGrove: {
         icon: '🟣',
+        class: 'boss',
         name: '劇毒史萊姆',
-        description: '受到此環境而產生的變異體,具有一定毒性',
-        ad: 5,
+        description: '受到此環境而產生的變異體,非常混濁,好像非牛頓流體似的,且具有一定毒性',
+        ad: 1,
         critIncrease: 100,
         critRate: 0,
-        adDefend: 10,
+        adDefend: 0,
         dodge: 2,
         hit: 65,
-        hp: 450,
-        hpLimit: 450,
-        level: 4,
+        hp: 200,
+        hpLimit: 200,
+        level: 10,
         dropGold: 150,
-        onAttack: 'onPoisonousSlimeAttack'
+        onAttack: 'poisonSlimeOnAttack',
+        onAttacked: 'poisonSlimeOnAttacked',
     } as MonsterType,
     AncientRoots: {
         icon: '🌳',
@@ -49,7 +52,7 @@ export const Boss = {
         hit: 70,
         hp: 800,
         hpLimit: 800,
-        level: 6,
+        level: 10,
         dropGold: 250
     } as MonsterType,
     FairyBarrier: {
@@ -64,7 +67,7 @@ export const Boss = {
         hit: 85,
         hp: 1000,
         hpLimit: 1000,
-        level: 8,
+        level: 10,
         dropGold: 400
     } as MonsterType,
     GuardiansDen: {

@@ -25,7 +25,7 @@ const isRun = ref(false)
  */
 const potionPrices = [25, 50, 150, 300, 1000, 3000]
 const calculatePrice = (quality: number, dynamic = true) => {
-  const basePrice = [30, 100, 500, 2000, 10000, 5000][quality] || 50;
+  const basePrice = [50, 100, 500, 2000, 10000, 5000][quality] || 50;
   // 加入一點隨機波動 (±10%)
   if (dynamic) {
     return Math.floor(basePrice * (0.9 + Math.random() * 0.2));
@@ -41,7 +41,7 @@ const activeTab = ref<'buy' | 'sell'>('buy'); // 控制目前是買還是賣
 const getSellPrice = (item: any) => {
   // 如果物品原本就有 price 屬性則用它計算，否則根據品質估算
   const base = calculatePrice(item.quality || 0, false);
-  return Math.floor(base * 0.4);
+  return Math.floor(base * 0.25);
 };
 
 /**

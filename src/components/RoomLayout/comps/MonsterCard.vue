@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './boss-animation.css'
 import {computed, PropType, ref} from 'vue'; // 引入 ref 和 computed
 import {MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
@@ -41,7 +42,15 @@ defineExpose({
 
 <template>
   <el-card
-      :class="{'monster-card': true, 'is-selected': props.isSelected, 'is-shaking': isShaking}"
+      :class="{
+      'monster-card': true,
+      'is-selected': props.isSelected,
+      'is-shaking': isShaking,
+      // 根據 monster 的 class 加上對應樣式
+      'is-elite': props.info.class === 'elite',
+      'is-mystery': props.info.class === 'mystery',
+      'is-boss': props.info.class === 'boss'
+    }"
       shadow="hover"
       @click="handleClick"
   >

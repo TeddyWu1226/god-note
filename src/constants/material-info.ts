@@ -33,7 +33,7 @@ export const MATERIAL = {
         quality: 0,
     } as ItemType,
     BeeStinger: {
-        name: '劇毒蜂刺',
+        name: '毒蜂刺',
         icon: '🗡️',
         description: '末端帶有倒鉤，依然殘留著強烈毒性',
         quality: 1,

@@ -27,3 +27,19 @@ export function calculatePercentageAsNumber(
 	// 4. 回傳數值
   return Math.round(percentage * factor) / factor;
 }
+
+
+/**
+ * 根據傳入的機率回傳是否觸發成功
+ * @param chance 機率數值 (0 到 1 之間，例如 0.8 代表 80%)
+ * @returns boolean
+ */
+export const checkProbability = (chance: number): boolean => {
+  // 安全檢查：如果機率小於等於 0，絕對不觸發
+  if (chance <= 0) return false;
+  // 安全檢查：如果機率大於等於 1，絕對觸發
+  if (chance >= 1) return true;
+
+  // Math.random() 會產生一個 [0, 1) 之間的浮點數
+  return Math.random() < chance;
+};

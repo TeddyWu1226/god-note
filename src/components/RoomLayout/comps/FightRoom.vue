@@ -7,7 +7,6 @@ import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {computed, nextTick, ref} from "vue";
 import {ItemType, MonsterType} from "@/types";
-import {Monster} from "@/constants/monster-info";
 import {
   applyDamage,
   applyRandomFloatAndRound,
@@ -27,10 +26,11 @@ import {
   SunkenGroveWeights
 } from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/boss-info";
-import {MonsterActions} from "@/constants/monster-attack-effect";
+import {MonsterOnAttack} from "@/constants/monster-action/on-attack";
 import {useLogStore} from "@/store/log-store";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {UnitStatus} from "@/constants/status-info";
+import {MonsterOnStart} from "@/constants/monster-action/on-start";
+import {MonsterOnAttacked} from "@/constants/monster-action/on-attacked";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -52,25 +52,6 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
-
-  // 額外
-  nextTick().then(() => {
-    monsters.value.forEach((monster, index) => {
-      if (monster.name === Monster.FierceWolf.name) {
-        //效果
-        playerStore.addStatus(UnitStatus.WolfRoarWarning)
-        //動畫
-        useFloatingMessage(
-            '啊嗚~',
-            monsterCardRefs.value[index].$el,
-            {
-              duration: 1500, // 動畫時間保持不變
-              color: 'red'
-            }
-        );
-      }
-    })
-  })
 }
 
 
@@ -115,7 +96,7 @@ const getStageKeyByValue = (value: number): string | undefined => {
 const createBoss = () => {
   let newMonsters: MonsterType[]
   const currentStageKey = getStageKeyByValue(gameStateStore.currentStage)
-  const boss =Boss[currentStageKey] ?? Boss.Error
+  const boss = Boss[currentStageKey] ?? Boss.Error
   newMonsters = [create(boss)]
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
@@ -157,13 +138,15 @@ const monsterMove = (selectedMonster: MonsterType) => {
   // 傷害計算
   const damageOutput = applyDamage(selectedMonster, playerStore.finalStats);
   // 特殊效果
-  if (selectedMonster.onAttack && MonsterActions[selectedMonster.onAttack]) {
+  if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
     // 執行對應的函式
-    MonsterActions[selectedMonster.onAttack]({
+    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
+    MonsterOnAttack[selectedMonster.onAttack]({
       monster: selectedMonster,
       playerStore: playerStore,
       logStore: logStore,
       damage: damageOutput,
+      targetElement:targetElement.$el
     });
   }
   // 判斷玩家是否死亡
@@ -197,6 +180,17 @@ const onAttack = () => {
   triggerDamageEffect(damageOutput, targetElement.$el)
   if (damageOutput.isHit) {
     targetElement?.shake()
+    // 受到傷害效果
+    if (selectedMonster.onAttacked && MonsterOnAttacked[selectedMonster.onAttacked]) {
+      // 執行對應的函式
+      MonsterOnAttacked[selectedMonster.onAttacked]({
+        monster: selectedMonster,
+        playerStore: playerStore,
+        targetElement: targetElement.$el,
+        logStore: logStore,
+        damage: damageOutput,
+      });
+    }
   }
 
   // 回合結束判定
@@ -289,8 +283,21 @@ const init = () => {
     case RoomEnum.Boss.value:
       createBoss()
       break
-
   }
+  // 額外
+  nextTick().then(() => {
+    monsters.value.forEach((monster, index) => {
+      if (monster.onStart && MonsterOnStart[monster.onStart]) {
+        // 執行對應的函式
+        MonsterOnStart[monster.onStart]({
+          monster: monster,
+          playerStore: playerStore,
+          logStore: logStore,
+          targetElement: monsterCardRefs.value[index].$el,
+        });
+      }
+    })
+  })
 }
 
 if (!gameStateStore.isBattleWon) {

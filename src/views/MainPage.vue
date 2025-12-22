@@ -50,6 +50,7 @@ const resetGame = async () => {
       '再次確認',
       {
         confirmButtonText: '放棄這次旅程',
+        confirmButtonClass: 'danger',
         cancelButtonText: '取消',
         type: 'warning',
       }

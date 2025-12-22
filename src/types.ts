@@ -1,5 +1,7 @@
 import {EquipmentPosition} from "@/enums/enums";
-import {MonsterActions} from "@/constants/monster-attack-effect";
+import {MonsterOnAttack} from "@/constants/monster-action/on-attack";
+import {MonsterOnStart} from "@/constants/monster-action/on-start";
+import {MonsterOnAttacked} from "@/constants/monster-action/on-attacked";
 
 /**
  * 物品相關
@@ -111,15 +113,19 @@ export interface DropEntry<T extends ItemType = ItemType> {
 /**
  * 怪物相關
  */
-type MonsterActionType = keyof typeof MonsterActions;
+type MonsterOnAttackType = keyof typeof MonsterOnAttack;
+type MonsterOnStartType = keyof typeof MonsterOnStart;
+type MonsterOnAttackedType = keyof typeof MonsterOnAttacked;
 
 export interface MonsterType extends UnitType {
     description?: string //介紹
+    class?: string // 卡片的特殊特效
     drop?: DropEntry[]
     dropGold?: number
-    onAttack?: MonsterActionType
-    onDead?: MonsterActionType
-    effects: StatusEffect[];
+    onStart?: MonsterOnStartType
+    onAttack?: MonsterOnAttackType,
+    onAttacked?: MonsterOnAttackedType
+    onDead?: any
 }
 
 /**
@@ -166,4 +172,15 @@ export interface StatusEffect {
     // 每回合觸發的邏輯類型
     type?: 'damage' | 'heal';
     value?: number; // 每回合跳血/回血的數值
+}
+
+
+// 定義參數型別，未來如果要增加 LogStore 也可以直接加在這裡
+export interface MonsterActionParams {
+    monster?: MonsterType;
+    playerStore?: any;
+    gameStateStore?: any
+    logStore?: any;
+    damage?: BattleOutcome;
+    targetElement?: HTMLElement
 }

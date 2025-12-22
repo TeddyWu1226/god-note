@@ -22,7 +22,6 @@ const getRandomEvent = () => {
   if (!gameStateStore.isEventClose(SpecialEventEnum.GetFruit)) {
     availableEvent.push(SpecialEventEnum.GetFruit)
   }
-  console.log('availableEvent', availableEvent)
   return getRandomFromEnumArray(availableEvent)
 }
 
