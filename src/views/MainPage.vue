@@ -137,13 +137,23 @@ watch(
       <el-card
           class="start-view"
           v-else-if="gameStateStore.stateIs(GameState.INITIAL)"
-          body-class="flex items-center justify-center flex-column"
       >
-        <h1>🏛️ 神之塔 🏛️</h1>
-        <span>~聳立於大陸中央的巨塔,無盡的冒險正在等你開始~</span>
-        <el-button style="width: 8rem;height: 5rem;margin-top: 1rem" @click="startGame">
-          開始遊戲
-        </el-button>
+        <div class="content-wrapper">
+          <h1 class="game-title">神之筆記</h1>
+          <h2 class="game-subtitle">~無盡之塔~</h2>
+
+          <div class="story-box">
+            <p class="typewriter">傳說，高塔之巔棲息著能實現一切願望的神明</p>
+            <p class="typewriter delay-1">千年來，無數勇者化作枯骨，卻無人能觸及雲端</p>
+            <p class="typewriter delay-2">陌生的登塔者啊，你是命運的第幾次輪迴？</p>
+          </div>
+
+          <div class="action-zone">
+            <el-button class="start-btn" @click="startGame">
+              登上旅途
+            </el-button>
+          </div>
+        </div>
       </el-card>
       <el-container v-else>
         <el-header class="header">

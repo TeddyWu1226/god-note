@@ -28,10 +28,9 @@ import {
 import {Boss} from "@/constants/boss-info";
 import {MonsterOnAttack} from "@/constants/monster-action/on-attack";
 import {useLogStore} from "@/store/log-store";
-import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {MonsterOnStart} from "@/constants/monster-action/on-start";
 import {MonsterOnAttacked} from "@/constants/monster-action/on-attacked";
-import {UnitStatus} from "@/constants/status-info/unit-status";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -102,17 +101,6 @@ const createBoss = () => {
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
-  nextTick().then(() => {
-    // 額外動畫演示
-    useFloatingMessage(
-        '這裡不是你該闖入的地方!',
-        monsterCardRefs.value[0].$el,
-        {
-          duration: 2000, // 動畫時間保持不變
-          color: 'red'
-        }
-    );
-  })
 }
 
 /**
@@ -136,20 +124,21 @@ const handleMonsterSelect = (index: number) => {
  */
 
 const monsterMove = (selectedMonster: MonsterType) => {
-  // 傷害計算
-  const damageOutput = applyDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
   // 特殊效果
   if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
     // 執行對應的函式
     const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
     MonsterOnAttack[selectedMonster.onAttack]({
       monster: selectedMonster,
+      monsterIndex: selectedMonsterIndex.value,
       playerStore: playerStore,
+      gameStateStore: gameStateStore,
       logStore: logStore,
-      damage: damageOutput,
       targetElement: targetElement.$el
     });
   }
+  // 傷害計算
+  const damageOutput = applyDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
@@ -195,6 +184,20 @@ const checkAllMonsterDead = () => {
 /**
  * 玩家行動
  */
+const isPlayerStuck = () => {
+  const isStuck = playerStore.statusEffects.some((eff) => eff.type === 'stuck')
+  if (isStuck) {
+    useFloatingMessage(
+        '動不了!',
+        null,
+        {
+          duration: 1500,
+          color: 'red'
+        }
+    );
+  }
+  return isStuck
+}
 // 玩家回合結束
 const onPlayerTurnEnd = () => {
   playerStore.nextTurnStatus()
@@ -211,28 +214,29 @@ const onAttack = () => {
     return
   }
   // 傷害計算
-  const damageOutput = applyDamage(playerStore.finalStats, selectedMonster);
-  const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-  triggerDamageEffect(damageOutput, targetElement.$el)
-  if (damageOutput.isHit) {
-    targetElement?.shake()
-    // 若怪物受到傷害觸發
-    if (selectedMonster.onAttacked && MonsterOnAttacked[selectedMonster.onAttacked]) {
-      MonsterOnAttacked[selectedMonster.onAttacked]({
-        monster: selectedMonster,
-        playerStore: playerStore,
-        targetElement: targetElement.$el,
-        logStore: logStore,
-        damage: damageOutput,
-      });
+  if (!isPlayerStuck()) {
+    const damageOutput = applyDamage(playerStore.finalStats, selectedMonster);
+    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
+    triggerDamageEffect(damageOutput, targetElement.$el)
+    if (damageOutput.isHit) {
+      targetElement?.shake()
+      // 若怪物受到傷害觸發
+      if (selectedMonster.onAttacked && MonsterOnAttacked[selectedMonster.onAttacked]) {
+        MonsterOnAttacked[selectedMonster.onAttacked]({
+          monster: selectedMonster,
+          gameStateStore: gameStateStore,
+          playerStore: playerStore,
+          targetElement: targetElement.$el,
+          logStore: logStore,
+          damage: damageOutput,
+        });
+      }
     }
   }
-
   // 回合結束判定
   onPlayerTurnEnd()
-
   // 怪物是否死亡
-  if (!damageOutput.isKilled) {
+  if (selectedMonster.hp > 0) {
     // 怪物行動
     monsterMove(selectedMonster)
     gameStateStore.tickAllMonsters()

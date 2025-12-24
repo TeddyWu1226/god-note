@@ -9,7 +9,7 @@ import {MonsterOnAttacked} from "@/constants/monster-action/on-attacked";
 export interface qualityType {
     ad?: number // 物理攻擊力
     critIncrease?: number // 爆擊增傷(200%)
-    critRate?: number // 爆擊率(%)
+    critRate?: number // 爆擊率(100%)
     // 有關防禦
     adDefend?: number // 物理防禦值
     // 有關是否命中
@@ -123,9 +123,9 @@ export interface MonsterType extends UnitType {
     drop?: DropEntry[]
     dropGold?: number
     status?: StatusEffect[]
-    onStart?: MonsterOnStartType
-    onAttack?: MonsterOnAttackType,
-    onAttacked?: MonsterOnAttackedType
+    onStart?: MonsterOnStartType // 回合開始時觸發
+    onAttack?: MonsterOnAttackType, // 怪物攻擊前觸發
+    onAttacked?: MonsterOnAttackedType // 怪物被攻擊後觸發
     onDead?: any
 }
 
@@ -170,8 +170,13 @@ export interface StatusEffect {
     // 屬性加成 (正數為 Buff, 負數為 Debuff)
     bonus?: BonusType
     isBuff?: boolean // 是否為正向BUFF,不填都是負向
-    // 每回合觸發的邏輯類型
-    type?: 'damage' | 'heal';
+    /** 每回合觸發的邏輯類型
+     * damage:傷害
+     * heal:治療
+     * stuck:暈眩(做啥事都失敗)
+     * scared: 只能按逃跑
+     */
+    type?: 'damage' | 'heal' | 'stuck' | 'scared';
     value?: number; // 每回合跳血/回血的數值
 }
 
@@ -182,6 +187,16 @@ export interface MonsterActionParams {
     playerStore?: any;
     gameStateStore?: any
     logStore?: any;
-    damage?: BattleOutcome;
+    damage?: BattleOutcome; // onAttack 沒有傳這值
+    targetElement?: HTMLElement
+}
+
+export interface MonsterOnAttackParams {
+    monster?: MonsterType;
+    monsterIndex?: number;
+    playerStore?: any;
+    gameStateStore?: any
+    logStore?: any;
+    damage?: BattleOutcome; // onAttack 沒有傳這值
     targetElement?: HTMLElement
 }

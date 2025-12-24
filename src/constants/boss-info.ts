@@ -8,7 +8,7 @@ export const Boss = {
     // ==========================================
     BeginForest: {
         icon: '🐻',
-        name: '森林巨熊',
+        name: '森林守護者',
         class: 'boss',
         description: '貌似是這片森林的動物之主,有厚重的毛皮以及強大的破壞力,需要小心謹慎',
         ad: 10,
@@ -20,7 +20,8 @@ export const Boss = {
         hp: 100,
         hpLimit: 100,
         level: 10,
-        dropGold: 100
+        dropGold: 100,
+        onStart: 'bearOnstart'
     } as MonsterType,
     SunkenGrove: {
         icon: '🟣',
@@ -41,19 +42,22 @@ export const Boss = {
         onAttacked: 'poisonSlimeOnAttacked',
     } as MonsterType,
     AncientRoots: {
-        icon: '🌳',
-        name: '古老樹精',
-        description: '活了千年的樹木，其根部能輕易貫穿盔甲。',
-        ad: 30,
-        critIncrease: 1.5,
-        critRate: 15,
+        icon: '🕷️',
+        name: '古蜘蛛',
+        description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物,且對於被網住的生物必定爆擊',
+        class: 'boss',
+        ad: 20,
+        critIncrease: 200,
+        critRate: 0,
         adDefend: 15,
         dodge: 0,
         hit: 70,
-        hp: 800,
-        hpLimit: 800,
+        hp: 300,
+        hpLimit: 300,
         level: 10,
-        dropGold: 250
+        dropGold: 250,
+        onStart: 'spiderOnstart',
+        onAttack: 'spiderOnAttack'
     } as MonsterType,
     FairyBarrier: {
         icon: '🧚',
@@ -798,7 +802,7 @@ export const Boss = {
 
     // --- 防作弊 ---
     Error: {
-        icon: 'TED',
+        icon: '?',
         name: '作者',
         description: '當你碰到這個,就是等死',
         ad: 80000,

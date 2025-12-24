@@ -35,5 +35,22 @@ export const UnitStatus = {
         description: '每回合失去 5 點生命值',
         type: 'damage',
         value: 5
-    } as StatusEffect
+    } as StatusEffect,
+    SpiderStuck: {
+        name: '綑綁',
+        icon: '🕸',
+        duration: 5,
+        description: '你被綑綁了,任何行動都會失效',
+        type: 'stuck',
+    } as StatusEffect,
+    SpiderHunter:{
+        name: '獵殺者',
+        icon: '⚠️',
+        duration: 1,
+        isBuff: true,
+        description: '蜘蛛對於被綑綁的敵人可以造成百分百爆擊',
+        bonus: {
+            critRate: 100
+        }
+    } as StatusEffect,
 }

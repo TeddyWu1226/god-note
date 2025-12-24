@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {effect, ref} from "vue";
+import {ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {GameState} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
@@ -46,12 +46,12 @@ defineExpose({
 }
 
 .ancient-text {
-  font-style: oblique;  /* 人為傾斜（字型沒有斜體時） */
+  font-style: oblique; /* 人為傾斜（字型沒有斜體時） */
   font-family: "DFKai-SB", "標楷體", "Noto Serif TC", serif;
   font-size: 20px;
   line-height: 2;
   letter-spacing: 0.12em;
   padding: 24px;
-  text-shadow: 0.5px 0.5px 0.5px rgba(0,0,0,0.2);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 </style>
