@@ -13,14 +13,13 @@ export const RoomEnum = {
     },
     EliteFight: {
         value: 2,
-        label: '菁英戰鬥',
+        label: '進階戰鬥',
         icon: '💀',
-        // 🟠 菁英/高挑戰：飽和橙色
         color: '#FF8800',
     },
     Event: {
         value: 3,
-        label: '特殊事件',
+        label: '神秘遭遇',
         icon: '❓',
         color: '#8A2BE2',
     },

@@ -44,7 +44,8 @@ const monsterDropItems = ref<ItemType[]>([])
 
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
-  const newMonsters = spawnMonsters(count, weight, eliteBoost);
+  const strengthening = 1 + gameStateStore.days * 0.01 + gameStateStore.currentStage * 0.1
+  const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   monsters.value = newMonsters;
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -56,12 +57,12 @@ const getWeightByStage = () => {
 }
 
 //生成菁英戰鬥
-const genEliteMonster = (layer: number) => {
+const genEliteMonster = () => {
   const useWeight = getWeightByStage();
   if (!useWeight) return;
 
-  // 30~50% 機率生成 1 隻強化版菁英怪,其餘生成 2 隻普通怪，
-  const isDouble = Math.random() > (0.3 + layer * 0.01);
+  // 50% 機率生成 1 隻強化版菁英怪,其餘生成 2 隻普通怪，
+  const isDouble = Math.random() > 0.5;
 
   if (isDouble) {
     genMonsters(2, useWeight, false);
@@ -269,7 +270,6 @@ defineExpose({
 // --- 初始化邏輯 (讀檔機制) ---
 
 const init = () => {
-  const layer = gameStateStore.currentRoom[0];
   isEscape.value = false;
   selectedMonsterIndex.value = null;
 
@@ -285,7 +285,7 @@ const init = () => {
       genMonsters(1, getWeightByStage() || {'Error': 1});
       break;
     case RoomEnum.EliteFight.value:
-      genEliteMonster(layer);
+      genEliteMonster();
       break;
     case RoomEnum.Boss.value:
       createBoss()

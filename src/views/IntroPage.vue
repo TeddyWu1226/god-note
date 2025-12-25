@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
+import {RoomEnum} from "@/enums/room-enum";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -11,7 +12,7 @@ const initAll = async () => {
   // 初始化
   gameStateStore.init()
   // 前往第一層
-  gameStateStore.setRoom(gameStateStore.currentRoom)
+  gameStateStore.setRoom(RoomEnum.Bless.value)
 }
 
 

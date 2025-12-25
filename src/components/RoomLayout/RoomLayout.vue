@@ -62,7 +62,7 @@ defineExpose({
 /** 初始化刷新 **/
 const roomKeyCounter = ref(0)
 const logStore = useLogStore();
-watch(() => gameStateStore.currentRoom,
+watch(() => gameStateStore.days,
     () => {
       roomKeyCounter.value++
       logStore.logger.clear()

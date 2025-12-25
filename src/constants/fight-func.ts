@@ -312,21 +312,33 @@ const getRandomMonsterByWeight = (weightMap: Record<string, number>): MonsterTyp
  * 核心生成函數
  * @param count 生成數量
  * @param weight 權重表
+ * @param strengthening 強化倍率(1.0為基準)
  * @param eliteBoost 是否進行菁英強化
+ *
  */
-export const spawnMonsters = (count: number, weight: Record<string, number>, eliteBoost = false): MonsterType[] => {
+export const spawnMonsters = (
+    count: number,
+    weight: Record<string, number>,
+    strengthening: number = 1,
+    eliteBoost = false
+): MonsterType[] => {
     const newMonsters: MonsterType[] = [];
 
     for (let i = 0; i < count; i++) {
         let m = getRandomMonsterByWeight(weight);
-
+        // 基本階段強化
+        m.hpLimit = Math.round(m.hpLimit * strengthening);
+        m.hp = m.hpLimit;
+        m.ad = Math.round(m.ad * strengthening);
+        m.adDefend = Math.round(m.adDefend * strengthening);
         if (eliteBoost) {
             // 菁英強化
             m.name = `【菁英】${m.name}`;
+            m.class = 'elite';
             m.hpLimit = Math.round(m.hpLimit * 2);
             m.hp = m.hpLimit;
-            m.ad = Math.round(m.ad * 1.5);
-            m.adDefend = Math.round(m.adDefend * 1.5);
+            m.ad = Math.round(m.ad * 2);
+            m.adDefend = Math.round(m.adDefend * 2);
             m.dropGold = Math.round((m.dropGold || 10) * 3);
             m.level += 2;
         }

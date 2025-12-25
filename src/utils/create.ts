@@ -1,5 +1,5 @@
 import {reactive, Reactive} from "vue";
-import {EquipmentType, PotionType} from "@/types";
+import {EquipmentType, PotionType, RoomWeights} from "@/types";
 
 /**
  * 建立物件
@@ -117,4 +117,41 @@ export function getRandomFromEnumArray<T>(
     // 3. 隨機產生索引並回傳
     const randomIndex = Math.floor(Math.random() * filteredValues.length);
     return filteredValues[randomIndex];
+}
+
+
+/**
+ * 根據自定義權重物件，隨機返回一個標記值 (0, 1, 2, 3, 4, ...)
+ * * @param weights 標記權重物件，例如 { 0: 1, 1: 5, 2: 2, 3: 1, 4: 1 }
+ * @returns 隨機選中的標記值 (number)
+ */
+export function getRandomLabelByWeight(weights: RoomWeights): number {
+
+    // 1. 建立權重累積數組 (Cumulative Weight Array)
+    const weightedChoices: number[] = [];
+    let totalWeight = 0;
+
+    // 遍歷權重，為每個標記建立多個條目，數量等於其權重
+    for (const [label, weight] of Object.entries(weights)) {
+        const labelValue = parseInt(label);
+        const weightValue = weight;
+
+        for (let i = 0; i < weightValue; i++) {
+            weightedChoices.push(labelValue);
+        }
+        totalWeight += weightValue;
+    }
+
+    if (totalWeight === 0) {
+        // 如果沒有定義權重，返回預設值 0 或拋出錯誤
+        console.warn("權重總和為零，返回預設值 0。");
+        return 0;
+    }
+
+    // 2. 隨機選擇
+    // 生成一個從 0 到 (totalWeight - 1) 的隨機索引
+    const randomIndex = Math.floor(Math.random() * totalWeight);
+
+    // 3. 返回該索引對應的標記值
+    return weightedChoices[randomIndex];
 }

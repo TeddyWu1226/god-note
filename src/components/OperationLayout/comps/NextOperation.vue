@@ -1,44 +1,58 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {onMounted, ref} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
-import {RoomCoordinateTuple} from "@/types";
-import {getNextAvailableRooms, getRoomValue, useGameStateStore} from "@/store/game-state-store";
+import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
+import {getRandomLabelByWeight} from "@/utils/create";
+import {DEFAULT_ROOM_WEIGHTS} from "@/constants/default-const";
 
 const props = defineProps({
   disabled: Boolean,
 })
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
-const nextRooms = computed(() => {
-  return getNextAvailableRooms()
-})
-const selectRoom = (roomXY: RoomCoordinateTuple) => {
-  gameStateStore.setRoom(roomXY)
+
+const nextRooms = ref<number[]>([])
+const createNextRooms = () => {
+  nextRooms.value = []
+  // 建立兩個選項
+  nextRooms.value.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
+  nextRooms.value.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
+  // 去重複
+  nextRooms.value = Array.from(new Set(nextRooms.value));
+}
+
+const selectRoom = (roomValue: number) => {
+  gameStateStore.setRoom(roomValue)
+  gameStateStore.days += 1
 };
 
 const goNestStage = () => {
   playerStore.healFull()
   gameStateStore.init(gameStateStore.currentStage + 1)
-  gameStateStore.setRoom(gameStateStore.currentRoom)
-
+  gameStateStore.setRoom(RoomEnum.Bless.value)
 }
+onMounted(() => {
+  if (gameStateStore.currentRoomValue !== RoomEnum.Boss.value) {
+    createNextRooms()
+  }
+})
 </script>
 
 <template>
   <div class="flex">
     <el-button
         v-for="room in nextRooms"
-        :color="getEnumColumn(RoomEnum, getRoomValue(room),'color')"
+        :color="getEnumColumn(RoomEnum, room,'color')"
         :disabled="props.disabled"
         @click="selectRoom(room)"
     >
       <el-row>
-        <el-col :xl="10">前往:</el-col>
+        <el-col :xl="10">選擇:</el-col>
         <el-col :xl="14">
-          {{ getEnumColumn(RoomEnum, getRoomValue(room), 'icon') }}
-          {{ getEnumColumn(RoomEnum, getRoomValue(room)) }}
+          {{ getEnumColumn(RoomEnum, room, 'icon') }}
+          {{ getEnumColumn(RoomEnum, room) }}
         </el-col>
       </el-row>
     </el-button>
@@ -49,20 +63,6 @@ const goNestStage = () => {
         @click="goNestStage"
     >
       前往下一區域🚪
-    </el-button>
-    <el-button
-        v-else-if="nextRooms.length === 0"
-        :color="getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0]+1,0]),'color')"
-        :disabled="props.disabled"
-        @click="selectRoom([gameStateStore.currentRoom[0]+1,0])"
-    >
-      <el-row>
-        <el-col :xl="10">前往:</el-col>
-        <el-col :xl="14">
-          {{ getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0] + 1, 0]), 'icon') }}
-          {{ getEnumColumn(RoomEnum, getRoomValue([gameStateStore.currentRoom[0] + 1, 0])) }}
-        </el-col>
-      </el-row>
     </el-button>
   </div>
 </template>
