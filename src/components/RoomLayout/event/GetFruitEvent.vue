@@ -121,13 +121,13 @@ const onLeave = () => {
       <template v-if="answer === 0">
         <template v-if="!isAdvanced">
           <el-button
-              :disabled="!playerStore.hasItem('粗製的草藥水')"
+              :disabled="!playerStore.hasItem('粗製的草藥水')[0]"
               type="success"
               @click="handleChoice('herb')">
             提供 [粗製的草藥水]
           </el-button>
           <el-button
-              :disabled="!playerStore.hasItem('混濁的果汁')"
+              :disabled="!playerStore.hasItem('混濁的果汁')[0]"
               type="warning"
               @click="handleChoice('juice')">
             提供 [混濁的果汁]

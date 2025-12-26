@@ -18,11 +18,16 @@ export interface qualityType {
     // 有關身體素質
     hpLimit?: number; //生命上限
     spLimit?: number; // 法力上限
-
+    // 特殊加成
+    adIncrease?: number // 傷害增幅(%)
+    apIncrease?: number // 法術增幅(%)
+    defendIncrease?: number // 減傷(%)
+    // 吸血
+    lifeSteal?: number // 生命偷取(%)
 }
 
 // 用來動態顯示屬性名稱的字典 (可選，讓顯示更友善)
-export const statLabels: Record<string, string> = {
+export const statLabels: Record<keyof qualityType | 'heal' | 'magic', string> = {
     ad: '攻擊',
     critRate: '暴擊率',
     critIncrease: '爆傷',
@@ -32,7 +37,11 @@ export const statLabels: Record<string, string> = {
     hpLimit: '生命上限',
     spLimit: '法力上限',
     heal: '回復生命',
-    magic: '回復法力'
+    magic: '回復法力',
+    adIncrease: 'AD增傷',
+    apIncrease: 'AP增傷',
+    defendIncrease: '抗性',
+    lifeSteal: '吸血'
 };
 
 export interface ItemType {
@@ -74,6 +83,12 @@ export interface UnitType {
     hpLimit: number; //生命上限
     // 有關晉升
     level: number; //等級
+    // 特殊加成
+    adIncrease?: number // 傷害增幅(%)
+    apIncrease?: number // 法術增幅(%)
+    defendIncrease?: number // 減傷(%)
+    // 吸血
+    lifeSteal?: number // 生命偷取(%)
 }
 
 /**
@@ -151,6 +166,7 @@ export interface DamageResult {
     isHit: boolean;       // 是否命中
     isCrit: boolean;      // 是否暴擊
     baseDamage: number;   // 減防前的基礎傷害
+    healAmount: number;   // 生命回復量
 }
 
 export interface BattleOutcome extends DamageResult {

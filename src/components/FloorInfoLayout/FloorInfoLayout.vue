@@ -7,6 +7,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {GameState} from "@/enums/enums";
 import {ElMessageBox} from "element-plus";
 import {RoomEnum} from "@/enums/room-enum";
+import {MATERIAL} from "@/constants/material-info";
 
 
 const gameStateStore = useGameStateStore();
@@ -27,13 +28,30 @@ const onClick = () => {
       .then(() => {
         gameStateStore.days += 1
         gameStateStore.setRoom(RoomEnum.Boss.value);
+        switch (gameStateStore.currentStage) {
+          case 1:
+            playerStore.removeItem(MATERIAL.ForestWood.name, 3)
+        }
       })
       .catch(() => {
       })
 }
 
+const bossFightHint = ref('')
 const isCanFightBoss = computed(() => {
-  return gameStateStore.stateIs(GameState.SELECTION_PHASE)
+  if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
+    return false
+  }
+  switch (gameStateStore.currentStage) {
+    case 1:
+      // 收集靈木細枝
+      const need = 3
+      const [finish, current] = playerStore.hasItem(MATERIAL.ForestWood.name, need)
+      bossFightHint.value = `收集 ${MATERIAL.ForestWood.name}(${current}/${need})`
+      return finish
+    default:
+      return true
+  }
 })
 
 </script>
@@ -54,14 +72,19 @@ const isCanFightBoss = computed(() => {
       >
         挑戰BOSS💀
       </el-button>
+      <el-button
+          v-else-if="gameStateStore.stateIs(GameState.EVENT_PHASE)"
+          type="info"
+          class="boss-btn disabled"
+          disabled>
+        行動中...
+      </el-button>
       <el-tooltip v-else effect="light">
         <template #content>
-          <span v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
-            請先通過當前事件
-          </span>
+          <span>{{ bossFightHint }}</span>
         </template>
         <el-button type="info" class="boss-btn disabled" disabled>
-          封印中...🔒
+          封印中🔒
         </el-button>
       </el-tooltip>
     </div>

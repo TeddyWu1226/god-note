@@ -19,7 +19,11 @@ export const getEffectiveStats = (monster: MonsterType): MonsterType => {
         dodge: monster.dodge || 0,
         hit: monster.hit || 0,
         critRate: monster.critRate || 0,
-        critIncrease: monster.critIncrease || 0
+        critIncrease: monster.critIncrease || 0,
+        adIncrease: monster.adIncrease || 0,
+        apIncrease: monster.apIncrease || 0,
+        defendIncrease: monster.defendIncrease || 0,
+        lifeSteal: monster.lifeSteal || 0,
     };
 
     // 遍歷所有狀態，疊加 Bonus

@@ -59,7 +59,7 @@ export const MistyForestMonster = {
         level: 1,
         dropGold: 8,
         drop: [
-            {item: MATERIAL.ForestWood, chance: 0.3}
+            {item: MATERIAL.ForestWood, chance: 0.5}
         ]
     } as MonsterType,
 

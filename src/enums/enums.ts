@@ -51,7 +51,8 @@ export enum EquipmentPosition {
     BODY = 'body',
     WEAPON = 'weapon',
     OFFHAND = 'offhand',
-    ACCESSORIES = 'accessories',
+    ACCESSORY1 = 'accessory1',
+    ACCESSORY2 = 'accessory2',
 }
 
 export const EquipmentEnum = {
@@ -108,11 +109,23 @@ export const StatEnum = {
         icon: '⚔️',
         unit: ''
     },
+    adIncrease: {
+        value: 'adIncrease',
+        label: '物理增傷',
+        icon: '💪🏻',
+        unit: '%'
+    },
     adDefend: {
         value: 'adDefend',
         label: '防禦',
         icon: '🛡️',
         unit: ''
+    },
+    defendIncrease: {
+        value: 'defendIncrease',
+        label: '抗性',
+        icon: '🔰',
+        unit: '%'
     },
     critRate: {
         value: 'critRate',
@@ -137,5 +150,18 @@ export const StatEnum = {
         label: '閃避',
         icon: '💨',
         unit: ''
+    },
+
+    apIncrease: {
+        value: 'apIncrease',
+        label: '法術增傷',
+        icon: '💫',
+        unit: '%'
+    },
+    lifeSteal: {
+        value: 'lifeSteal',
+        label: '吸血',
+        icon: '🩸',
+        unit: '%'
     }
 };

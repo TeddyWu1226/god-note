@@ -3,16 +3,22 @@ import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
 export const Armor = {
-    // ==========================================
-    // 🛡️ 高防禦系列 (High Defense) - 數值已調低至 33%
-    // ==========================================
+    TatteredRags: {
+        name: '破爛衣衫',
+        description: '輕盈到幾乎沒有重量，便於躲避。',
+        icon: '👕',
+        position: EquipmentPosition.BODY,
+        quality: 0,
+        dodge: 10,
+        adDefend: 2
+    } as EquipmentType,
     PaddedArmor: {
         name: '填充棉甲',
         description: '雖然厚實，但防禦效果有限。',
         icon: '🧥',
         position: EquipmentPosition.BODY,
         quality: 0,
-        adDefend: 3
+        adDefend: 8
     } as EquipmentType,
     ChainMail: {
         name: '鎖子甲',
@@ -45,18 +51,6 @@ export const Armor = {
         position: EquipmentPosition.BODY,
         quality: 4,
         adDefend: 50
-    } as EquipmentType,
-
-    // ==========================================
-    // 💨 高閃避系列 (High Evasion)
-    // ==========================================
-    TatteredRags: {
-        name: '破爛衣衫',
-        description: '輕盈到幾乎沒有重量，便於躲避。',
-        icon: '👕',
-        position: EquipmentPosition.BODY,
-        quality: 0,
-        dodge: 10
     } as EquipmentType,
     TravellerTunic: {
         name: '旅人長袍',

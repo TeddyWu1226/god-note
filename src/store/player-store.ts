@@ -14,8 +14,18 @@ export const usePlayerStore = defineStore('player-info', () => {
     // --- Getters ---
     const totalBonus = computed(() => {
         const bonus: Record<string, number> = {
-            ad: 0, critIncrease: 0, critRate: 0, adDefend: 0,
-            dodge: 0, hit: 0, hpLimit: 0, spLimit: 0
+            ad: 0,
+            critIncrease: 0,
+            critRate: 0,
+            adDefend: 0,
+            dodge: 0,
+            hit: 0,
+            hpLimit: 0,
+            spLimit: 0,
+            adIncrease: 0,
+            apIncrease: 0,
+            defendIncrease: 0,
+            lifeSteal: 0
         };
         // 計算裝備加成
         if (info.value.equips) {
@@ -54,6 +64,10 @@ export const usePlayerStore = defineStore('player-info', () => {
             hit: info.value.hit + b.hit,
             hpLimit: info.value.hpLimit + b.hpLimit,
             spLimit: info.value.spLimit + b.spLimit,
+            adIncrease: info.value.adIncrease + b.adIncrease,
+            apIncrease: info.value.apIncrease + b.apIncrease,
+            defendIncrease: info.value.defendIncrease + b.defendIncrease,
+            lifeSteal: info.value.lifeSteal + b.lifeSteal,
         };
     });
 
@@ -63,7 +77,7 @@ export const usePlayerStore = defineStore('player-info', () => {
      * @param itemName 道具名稱
      * @param amount 需要的數量 (預設為 1)
      */
-    const hasItem = (itemName: string, amount: number = 1): boolean => {
+    const hasItem = (itemName: string, amount: number = 1): [boolean, number] => {
         // 合併所有背包並計算名稱相同的物件個數
         const allItems = [
             ...(info.value.items || []),
@@ -72,7 +86,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         ];
 
         const count = allItems.filter(item => item && item.name === itemName).length;
-        return count >= amount;
+        return [count >= amount, count]
     };
     /**
      * 移除指定名稱的道具 (每次只移除 1 個)
@@ -80,7 +94,7 @@ export const usePlayerStore = defineStore('player-info', () => {
      * @param amount 要移除的個數
      */
     const removeItem = (itemName: string, amount: number = 1): boolean => {
-        if (!hasItem(itemName, amount)) return false;
+        if (!hasItem(itemName, amount)[0]) return false;
 
         let removedCount = 0;
         // 定義搜尋順序
@@ -136,13 +150,15 @@ export const usePlayerStore = defineStore('player-info', () => {
      * @param inventoryIndex 物品在背包中的索引 (卸下時可不傳)
      * @param targetSlot 指定裝備位置
      */
-    const equipItem = (item: EquipmentType | null | undefined, inventoryIndex?: number, targetSlot?: keyof Equipment) => {
+    const equipItem = (
+        item: EquipmentType | null | undefined,
+        inventoryIndex?: number,
+        targetSlot?: keyof Equipment) => {
         if (!info.value.equips) info.value.equips = {};
 
         // 1. 取得目標位置：如果有傳 item 就用 item.position，否則必須傳入 targetSlot
-        const slot = targetSlot || (item?.position as keyof Equipment);
+        let slot: (keyof Equipment) = (targetSlot || (item?.position as keyof Equipment))
         if (!slot) return; // 安全檢查：找不到位置就跳出
-
         // 2. 紀錄更換前的「血量/魔力比例」
         const oldMaxHp = finalStats.value.hpLimit;
         const oldMaxSp = finalStats.value.spLimit;

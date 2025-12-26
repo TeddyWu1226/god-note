@@ -4,6 +4,7 @@ import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {EquipmentType, ItemType, PotionType, statLabels} from "@/types";
 import {PropType} from "vue";
+import {StatEnum} from "@/enums/enums";
 
 const props = defineProps({
   item: {
@@ -28,8 +29,9 @@ const props = defineProps({
         <div v-if="statLabels[key] && val" class="stat-row">
           <span class="stat-label">{{ statLabels[key] }}</span>
           <span class="stat-value" :class="{ 'plus': (val as number) > 0, 'minus': (val as number) < 0 }">
-                {{ (val as number) > 0 ? '+' : '' }}{{ val }}
-              </span>
+            {{ (val as number) > 0 ? '+' : '' }}{{ val }}
+           {{ getEnumColumn(StatEnum, key, 'unit') }}
+          </span>
         </div>
       </template>
     </div>

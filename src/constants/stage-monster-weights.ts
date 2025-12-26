@@ -3,9 +3,9 @@
  * 特色：新手教學區，史萊姆與基礎昆蟲為主。
  */
 export const BeginForestWeights: Record<string, number> = {
-    Slime: 60,
+    Slime: 50,
     WoodTick: 30,
-    ForestSprout: 10,
+    ForestSprout: 20,
     FierceWolf: 5
 };
 

@@ -15,7 +15,7 @@ const getItemDescriptionLine = (data: Partial<qualityType & PotionType>): string
   const descriptions: string[] = [];
 
   // 定義哪些欄位需要顯示百分比
-  const percentStats = ['critRate', 'critIncrease'];
+  const percentStats = ['critRate', 'critIncrease', 'adIncrease', 'defendIncrease', 'apIncrease', 'lifeSteal'];
 
   // 遍歷我們定義好的標籤字典
   for (const [key, label] of Object.entries(statLabels)) {
@@ -177,7 +177,8 @@ const handleEquipmentClick = (item: any, index: number) => {
                        :style="{color:getEnumColumn(QualityEnum, item.quality, 'color', '#444')}">
                     {{ item.name }}
                   </div>
-                  <div class="pos-tag">{{ getEnumColumn(EquipmentEnum, (item as EquipmentType).position) }}
+                  <div class="pos-tag">
+                    {{ getEnumColumn(EquipmentEnum, (item as EquipmentType).position) }}
                   </div>
                 </div>
                 <span>{{ getItemDescriptionLine(item) }}</span>

@@ -4,6 +4,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {ref} from "vue";
 import {UnitStatus} from "@/constants/status-info/unit-status";
 import {Potions} from "@/constants/potion-info";
+import {Accessories} from "@/constants/equipment/accessories-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -11,7 +12,7 @@ const isClose = ref(true);
 
 const onTest = () => {
   // playerStore.addStatus(UnitStatus.SlimeSlow)
-  // playerStore.gainItem(Potions.DilutedWater)
+  playerStore.gainItem(Accessories.SoulAnchor)
 }
 onTest()
 </script>

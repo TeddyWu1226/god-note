@@ -36,14 +36,18 @@ export const DEFAULT_USER_INFO: UserType = {
     spLimit: 100,
     level: 1,
     char: CharEnum.Beginner.value,
-    gold: 0
+    gold: 0,
+    adIncrease: 0,
+    apIncrease: 0,
+    defendIncrease: 0,
+    lifeSteal: 0
 }
 
 // 房間類型權重
 export const DEFAULT_ROOM_WEIGHTS: RoomWeights = {
-    0: 5, // 休息
-    1: 70, // 戰鬥
+    0: 8, // 休息
+    1: 60, // 戰鬥
     2: 15, // 菁英戰鬥
-    3: 5, // 特殊事件
-    4: 5, // 商店
+    3: 8, // 特殊事件
+    4: 9, // 商店
 };
