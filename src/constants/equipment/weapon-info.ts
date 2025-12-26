@@ -2,41 +2,245 @@
 import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
-export const Weapon = {
-    RustyDagger: {
+export const Dagger = {
+    Dagger0: {
         name: '生鏽匕首',
         description: '雖然破舊，但依舊鋒利。',
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 0,
-        ad: 5,
+        critRate: 10,
+        ad: 3,
     } as EquipmentType,
-    IronSword: {
-        name: '鐵劍',
-        description: '標準的士兵配劍。',
-        icon: '⚔️',
+    Dagger1: {
+        name: '小刀',
+        description: '普通的家用小刀。',
+        icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        ad: 12,
-        hit: 5
+        critRate: 12,
+        ad: 8,
     } as EquipmentType,
-    HeavyAxe: {
-        name: '重型戰斧',
-        description: '威力巨大但難以操控。',
+    Dagger2: {
+        name: '削皮刀',
+        description: '刀刃很薄，切口整齊。',
+        icon: '🔪',
+        position: EquipmentPosition.WEAPON,
+        quality: 2,
+        critRate: 15,
+        ad: 18,
+    } as EquipmentType,
+    Dagger3: {
+        name: '鋼製短刀',
+        description: '常見的冒險者配刀。',
+        icon: '🔪',
+        position: EquipmentPosition.WEAPON,
+        quality: 3,
+        critRate: 20,
+        ad: 35,
+    } as EquipmentType,
+    Dagger4: {
+        name: '折疊刀',
+        description: '刀身厚實，結構穩定。',
+        icon: '🔪',
+        position: EquipmentPosition.WEAPON,
+        quality: 4,
+        critRate: 25,
+        ad: 65,
+    } as EquipmentType,
+    Dagger5: {
+        name: '黑色短匕',
+        description: '漆黑的刀面不容易反光。',
+        icon: '🔪',
+        position: EquipmentPosition.WEAPON,
+        quality: 5,
+        critRate: 30,
+        ad: 100,
+        lifeSteal: 5
+    } as EquipmentType,
+};
+
+export const Sword = {
+    Sword0: {
+        name: '生鏽鐵劍',
+        description: '雖然破舊，但依舊鋒利。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 0,
+        ad: 6,
+    } as EquipmentType,
+    Sword1: {
+        name: '鐵劍',
+        description: '最基本的打鐵舖作品。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 1,
+        ad: 14,
+    } as EquipmentType,
+    Sword2: {
+        name: '長劍',
+        description: '稍微重一點的鐵劍。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 2,
+        ad: 28,
+        hit: 5,
+    } as EquipmentType,
+    Sword3: {
+        name: '鋼劍',
+        description: '用比較好的鋼材打造。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 3,
+        ad: 50,
+        hit: 10,
+    } as EquipmentType,
+    Sword4: {
+        name: '雙刃劍',
+        description: '兩邊都開了刃，很危險。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 4,
+        ad: 90,
+        adIncrease: 5,
+    } as EquipmentType,
+    Sword5: {
+        name: '重型鋼劍',
+        description: '加厚了護手的制式長劍。',
+        icon: '🗡️',
+        position: EquipmentPosition.WEAPON,
+        quality: 5,
+        ad: 160,
+        adIncrease: 10,
+    } as EquipmentType,
+};
+
+export const Axe = {
+    Axe0: {
+        name: '生鏽鐵斧',
+        description: '有些破舊，拿來伐木剛剛好。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 0,
+        hit: -10,
+        ad: 9,
+    } as EquipmentType,
+    Axe1: {
+        name: '木工斧',
+        description: '伐木工人弄丟的工具。',
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        ad: 25,
-        hit: -5
+        hit: -8,
+        ad: 20,
     } as EquipmentType,
+    Axe2: {
+        name: '砍柴斧',
+        description: '斧面變大了不少，很重。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 2,
+        hit: -6,
+        ad: 40,
+    } as EquipmentType,
+    Axe3: {
+        name: '鋼鐵斧',
+        description: '換了鋼製刃部，更耐用了。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 3,
+        hit: -5,
+        ad: 75,
+        adIncrease: 5,
+    } as EquipmentType,
+    Axe4: {
+        name: '雙手斧',
+        description: '需要兩隻手才能拿穩。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 4,
+        hit: -4,
+        ad: 140,
+        adIncrease: 12,
+    } as EquipmentType,
+    Axe5: {
+        name: '大鐵斧',
+        description: '巨大的斧頭，看起來很嚇人。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 5,
+        hit: -2,
+        ad: 250,
+        adIncrease: 20,
+    } as EquipmentType,
+};
+
+export const MagicStick = {
+    MagicStick0: {
+        name: '陳舊法杖',
+        description: '有些許魔力附著在上面。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 0,
+        apIncrease: 10,
+    } as EquipmentType,
+    MagicStick1: {
+        name: '木杖',
+        description: '路邊撿來的樹枝，還算順手。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 1,
+        apIncrease: 20,
+    } as EquipmentType,
+    MagicStick2: {
+        name: '長木棍',
+        description: '削平了節點的長木棍。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 2,
+        apIncrease: 40,
+        spLimit: 100,
+    } as EquipmentType,
+    MagicStick3: {
+        name: '圓頭杖',
+        description: '頂端鑲嵌了普通的石頭。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 3,
+        apIncrease: 80,
+        spLimit: 200,
+    } as EquipmentType,
+    MagicStick4: {
+        name: '石質法杖',
+        description: '石頭裡隱約有光透出來。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 4,
+        apIncrease: 130,
+        spLimit: 400,
+    } as EquipmentType,
+    MagicStick5: {
+        name: '鋼製法杖',
+        description: '金屬導魔性比木頭好很多。',
+        icon: '🪄',
+        position: EquipmentPosition.WEAPON,
+        quality: 5,
+        apIncrease: 200,
+        spLimit: 800,
+    } as EquipmentType,
+};
+const SpecialWeapon = {
     SpikeSpear: {
         name: '尖刺木槍',
         icon: '🪾',
         description: '從枯死的魔樹枝幹削製而成的尖刺長槍,但使用時會奪去部分生命。',
         position: EquipmentPosition.WEAPON,
-        ad: 8,
+        ad: 10,
         hpLimit: -50,
+        critRate: 10,
         hit: 5,
-        quality: 5
-    }
-};
+        quality: 11
+    } as EquipmentType,
+}
+
+export const Weapon = {...Dagger, ...Sword, ...MagicStick, ...Axe, ...SpecialWeapon}

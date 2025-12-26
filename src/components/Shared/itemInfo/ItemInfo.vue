@@ -30,7 +30,7 @@ const props = defineProps({
           <span class="stat-label">{{ statLabels[key] }}</span>
           <span class="stat-value" :class="{ 'plus': (val as number) > 0, 'minus': (val as number) < 0 }">
             {{ (val as number) > 0 ? '+' : '' }}{{ val }}
-           {{ getEnumColumn(StatEnum, key, 'unit') }}
+           {{ getEnumColumn(StatEnum, key, 'unit', '') }}
           </span>
         </div>
       </template>

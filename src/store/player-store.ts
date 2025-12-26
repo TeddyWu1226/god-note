@@ -254,7 +254,6 @@ export const usePlayerStore = defineStore('player-info', () => {
             existing.bonus = effect.bonus ? JSON.parse(JSON.stringify(effect.bonus)) : undefined;
         } else {
             // 2. 存入新狀態時進行深拷貝 (避免引用污染)
-            // 使用 JSON 方案或是你現有的 create() 工具
             statusEffects.value.push(create(effect));
         }
     };

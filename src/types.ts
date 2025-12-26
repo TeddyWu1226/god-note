@@ -148,12 +148,6 @@ export interface MonsterType extends UnitType {
  * 房間/階層相關
  */
 
-// 房間坐標系
-export type RoomCoordinateTuple = [number, number];
-// 階層房間組
-export type TrapezoidData = number[][];
-
-
 export interface RoomWeights {
     [labelValue: number]: number;
 }

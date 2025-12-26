@@ -268,33 +268,41 @@ export function canEscape(runner: UnitType, chasers: UnitType[]): boolean {
 
 
 /**
- * 根據權重隨機獲取一個怪物
- * @param weightMap 怪物 Key 與權重的對照表 (例如 { Slime: 70, Wolf: 30 })
- * @returns 隨機選出的怪物實例 (深拷貝)
+ * 通用權重隨機選取工具
+ * @param weightMap 權重對照表 (例如 { 'Slime': 70, 'Wolf': 30 })
+ * @param dataPool 資料來源池 (例如 Monster 物件、Equipment 物件)
+ * @param shouldClone 是否需要深拷貝 (預設為 true)
+ * @returns 隨機選出的實例
  */
-const getRandomMonsterByWeight = (weightMap: Record<string, number>): MonsterType => {
+export const getRandomItemByWeight = <T extends object>(
+    weightMap: Record<string, number>,
+    dataPool: Record<string, T>,
+    shouldClone: boolean = true
+): T => {
     const keys = Object.keys(weightMap);
 
-    // 1. 計算總權重
-    const totalWeight = keys.reduce((sum, key) => sum + weightMap[key], 0);
+    // 1. 過濾掉 dataPool 中不存在的 key，避免 undefined 型別問題
+    const validKeys = keys.filter(key => key in dataPool);
 
-    // 2. 產生 0 到 總權重 之間的隨機數
+    if (validKeys.length === 0) {
+        throw new Error("getRandomItemByWeight: No valid keys found in dataPool");
+    }
+
+    const totalWeight = validKeys.reduce((sum, key) => sum + weightMap[key], 0);
     let randomNum = Math.random() * totalWeight;
 
-    // 3. 尋找隨機數落在哪個區間
-    for (const key of keys) {
+    for (const key of validKeys) {
         if (randomNum < weightMap[key]) {
-            // 找到目標，回傳該怪物的深拷貝（避免戰鬥修改到原始設定）
-            const targetMonster = (Monster as any)[key];
-            return create(targetMonster)
+            const item = dataPool[key]; // 此時 TS 知道 item 必為 T
+            return shouldClone ? create<T>(item) : item;
         }
         randomNum -= weightMap[key];
     }
 
-    // 兜底方案：萬一出錯回傳第一個
-    return create((Monster as any)[keys[0]]);
-}
-
+    // 2. 兜底處理
+    const fallbackItem = dataPool[validKeys[0]];
+    return shouldClone ? create<T>(fallbackItem) : fallbackItem;
+};
 /**
  * 核心生成函數
  * @param count 生成數量
@@ -312,7 +320,7 @@ export const spawnMonsters = (
     const newMonsters: MonsterType[] = [];
 
     for (let i = 0; i < count; i++) {
-        let m = getRandomMonsterByWeight(weight);
+        let m = getRandomItemByWeight(weight, Monster);
         // 基本階段強化
         m.hpLimit = Math.round(m.hpLimit * strengthening);
         m.hp = m.hpLimit;

@@ -33,12 +33,10 @@ const handleTouchUnequip = (slotKey: keyof Equipment) => {
 const getBackgroundColor = (slotKey: string) => {
   const equips = playerStore.info?.equips;
   if (!equips || !equips[slotKey as keyof typeof equips]) {
-    return "rgba(255, 255, 255, 0.05)";
+    return "rgba(255, 255, 255, 0.01)";
   }
   const quality = equips[slotKey as keyof typeof equips]?.quality;
-  const qColor = getEnumColumn(QualityEnum, quality, 'color', '#ffffff');
-  // 混入 80% 白色達成淡化效果
-  return `color-mix(in srgb, ${qColor}, white 1%)`;
+  return getEnumColumn(QualityEnum, quality, 'color', '#ffffff')
 };
 
 /**
@@ -90,7 +88,7 @@ const handleUnequip = (slotKey: keyof Equipment) => {
           <div
               v-for="pos in EquipmentEnum"
               class="equip-slot"
-              :style="{ backgroundColor: getBackgroundColor(pos.value) }"
+              :style="{ borderColor: getBackgroundColor(pos.value) }"
               @dblclick="handleUnequip(pos.value)"
               @touchend="handleTouchUnequip(pos.value)"
           >
