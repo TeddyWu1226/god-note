@@ -121,13 +121,13 @@ watch(
           <span>𝄞神之筆記𝄞</span>
           <div>
             <el-button type="warning" style="height: 2rem" size="small" @click="showAchievement" plain>
-              🏆成就
+              🏆 成就
             </el-button>
             <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>
-              📖說明
+              📖 說明
             </el-button>
             <el-button type="danger" style="height: 2rem" size="small" @click="resetGame" plain>
-              🪦放棄
+              🪦 放棄
             </el-button>
           </div>
         </el-header>

@@ -6,6 +6,12 @@ export const useTrackerStore = defineStore('tracker', () => {
     // 當階段數據紀錄
     const currentKills = ref<Record<string, number>>({})
     const totalKills = ref<Record<string, number>>({})
+    // 成就用紀錄
+    const achievementsCount = ref({
+        // 和平計算
+        peaceDay: 0,
+        gambleWin: 0,
+    })
 
     // --- Actions ---
 
@@ -25,6 +31,8 @@ export const useTrackerStore = defineStore('tracker', () => {
         currentKills.value['TOTAL'] = (currentKills.value['TOTAL'] || 0) + amount
         totalKills.value[monsterName] = (totalKills.value[monsterName] || 0) + amount
         totalKills.value['TOTAL'] = (totalKills.value['TOTAL'] || 0) + amount
+        //和平重新計算
+        achievementsCount.value.peaceDay = 0
     }
 
 
@@ -47,6 +55,9 @@ export const useTrackerStore = defineStore('tracker', () => {
     function init(all = true) {
         if (all) {
             totalKills.value = {}
+            Object.keys(achievementsCount.value).forEach(key => {
+                achievementsCount.value[key] = 0
+            })
         }
         currentKills.value = {}
     }
@@ -55,6 +66,7 @@ export const useTrackerStore = defineStore('tracker', () => {
     return {
         currentKills,
         totalKills,
+        achievementsCount,
         recordKill,
         getKillCount,
         init

@@ -59,7 +59,11 @@ const triggerAchievementNotify = (ach: AchievementType) => {
  */
 // 擊殺類
 watch(
-    () => [trackerStore.currentKills, trackerStore.totalKills],
+    () => [
+      trackerStore.currentKills, trackerStore.totalKills, trackerStore.achievementsCount,
+      playerStore.info,
+      gameStateStore.isBattleWon,
+    ],
     () => {
       // 遍歷所有尚未解鎖的成就
       Object.entries(achievementStore.currentAchievement).forEach(([key, ach]: [keyof typeof Achievement, AchievementType]) => {
@@ -68,19 +72,49 @@ watch(
         let isConditionMet = false;
 
         // 總擊殺系列
-        const totalKills = trackerStore.getKillCount('TOTAL', 'total') || 0;
-        if (key === 'Kill20' && totalKills >= 20) isConditionMet = true;
-        if (key === 'Kill200' && totalKills >= 200) isConditionMet = true;
-        if (key === 'Kill2000' && totalKills >= 2000) isConditionMet = true;
-
+        if (key.startsWith('kill')) {
+          const totalKills = trackerStore.getKillCount('TOTAL', 'total');
+          if (key === 'Kill20' && totalKills >= 20) isConditionMet = true;
+          if (key === 'Kill200' && totalKills >= 200) isConditionMet = true;
+          if (key === 'Kill2000' && totalKills >= 2000) isConditionMet = true;
+        }
         // 菁英擊殺系列
-        const eliteKills = trackerStore.getKillCount('ElITE', 'total') || 0;
-        if (key === 'EliteHunter10' && eliteKills >= 10) isConditionMet = true;
-        if (key === 'EliteHunter100' && eliteKills >= 100) isConditionMet = true;
-        if (key === 'EliteHunter1000' && eliteKills >= 1000) isConditionMet = true;
+        if (key.startsWith('EliteHunter')) {
+          const eliteKills = trackerStore.getKillCount('ElITE', 'total');
+          if (key === 'EliteHunter10' && eliteKills >= 10) isConditionMet = true;
+          if (key === 'EliteHunter100' && eliteKills >= 100) isConditionMet = true;
+          if (key === 'EliteHunter1000' && eliteKills >= 1000) isConditionMet = true;
+          if (key === 'EliteHunter1000' && eliteKills >= 1000) isConditionMet = true;
+        }
+        // 金幣成就
+        if (key.startsWith('Gold')) {
+          const golds = playerStore.info.gold
+          if (key === 'Gold1000' && golds >= 1000) isConditionMet = true;
+          if (key === 'Gold9999' && golds >= 9999) isConditionMet = true;
+        }
+        // BOSS擊殺
+        if (key.startsWith('Boss')) {
+          if (key === 'Boss0' && trackerStore.getKillCount('森林守護者', 'total')) isConditionMet = true;
+        }
 
-        // 5. 隱藏成就
-        if (key === 'NewKillWolf' && gameStateStore.currentStage === 1 && (trackerStore.getKillCount('森林之狼', 'current') || 0 >= 1)) {
+        // 隱藏成就
+        if (key === 'NewKillWolf' &&
+            gameStateStore.currentStage === 1 &&
+            (trackerStore.getKillCount('森林之狼', 'current') >= 1)) {
+          isConditionMet = true;
+        }
+        if (key === 'NearDeath' &&
+            gameStateStore.isBattleWon &&
+            (playerStore.info.hp / playerStore.finalStats.hpLimit) <= 0.05
+        ) {
+          isConditionMet = true;
+        }
+        if (key === 'Pacifist' &&
+            trackerStore.achievementsCount.peaceDay >= 30) {
+          isConditionMet = true;
+        }
+        if (key === 'GambleMaster' &&
+            trackerStore.achievementsCount.gambleWin >= 3) {
           isConditionMet = true;
         }
 
@@ -96,6 +130,7 @@ watch(
     },
     {deep: true, immediate: true}
 );
+
 </script>
 
 <template>

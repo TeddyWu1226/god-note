@@ -27,6 +27,7 @@ const createNextRooms = () => {
 const selectRoom = (roomValue: number) => {
   gameStateStore.setRoom(roomValue)
   gameStateStore.days += 1
+  trackerStore.achievementsCount.peaceDay += 1
 };
 
 const goNextStage = () => {

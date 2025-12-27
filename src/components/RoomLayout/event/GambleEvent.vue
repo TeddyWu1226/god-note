@@ -5,9 +5,11 @@ import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
 import {ref} from "vue";
 import {GameState} from "@/enums/enums";
 import {ElMessage} from "element-plus";
+import {useTrackerStore} from "@/store/track-store";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
+const trackerStore = useTrackerStore();
 
 // 狀態控制
 // 0: 初始, 1: 選擇金額, 2: 拒絕, 3: 擲骰中, 4: 結算結果
@@ -42,9 +44,11 @@ const startGamble = (amount: number) => {
     if (isWin.value) {
       playerStore.addGold(betAmount.value); // 贏了獲得一倍
       finalText.value = `大成功！贏得了 ${betAmount.value} 金幣!`
+      trackerStore.achievementsCount.gambleWin += 1
     } else {
       playerStore.addGold(-betAmount.value); // 輸了扣除金額
       finalText.value = `運氣不太好... 輸掉了 ${betAmount.value} 金幣...`
+      trackerStore.achievementsCount.gambleWin = 0
     }
 
     answer.value = 4; // 顯示結果對話
