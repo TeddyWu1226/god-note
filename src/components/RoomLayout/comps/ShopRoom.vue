@@ -9,12 +9,11 @@ import {getEnumColumn} from "@/utils/enum";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {usePlayerStore} from "@/store/player-store";
 import {GameState} from "@/enums/enums";
-import {getRandomElements} from "@/utils/math";
-import {stageShopSaleEquipmentMap} from "@/constants/stage-weights";
 import {Armor} from "@/constants/items/equipment/armor-info";
 import {Head} from "@/constants/items/equipment/head-info";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -113,12 +112,21 @@ const sellStackedItem = (stackedItem: StackedItem) => {
 
 const init = () => {
   itemList.value = []
+  // 隨機裝備
   const randomEquips = getRandomItemsByQuality(
-      5,
+      4,
       QualityEnum.Tattered.value,
       false,
       Armor, Head, Offhand, Weapon
   );
+  //隨機好用道具
+  const randomUsableItems = getRandomItemsByQuality(
+      1,
+      QualityEnum.Rare.value,
+      false,
+      Usable
+  );
+  // 隨機藥水
   const randomPotion = getRandomItemsByQuality(
           3,
           QualityEnum.Tattered.value,
@@ -132,12 +140,19 @@ const init = () => {
     price: calculatePrice(item.quality ?? 0),
     sold: false
   })).concat(
-      randomPotion.map(item => ({
+      randomUsableItems.map(item => ({
         ...item,
-        price: potionPrices[item.quality ?? 0],
+        price: 500,
         sold: false
       }))
   )
+      .concat(
+          randomPotion.map(item => ({
+            ...item,
+            price: potionPrices[item.quality ?? 0],
+            sold: false
+          }))
+      )
 };
 /**
  * 點擊邏輯
@@ -315,7 +330,7 @@ onMounted(() => {
 }
 
 .item-card {
-  width: 8rem;
+  width: 7rem;
   background: var(--el-card-bg-color);
   border: 2px solid #ddd;
   border-radius: 8px;

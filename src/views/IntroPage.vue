@@ -19,8 +19,6 @@ const initAll = async () => {
 
 const startGame = async () => {
   await initAll()
-  playerStore.gainItem(Usable.campfire)
-
 }
 
 

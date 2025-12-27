@@ -116,7 +116,7 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
     // 輸出戰鬥日誌
     const logMessage = [
         `${attacker.name || '攻擊者'} 攻擊 ${defender.name || '防禦者'}，`,
-        outcome.isCrit ? `🔥 暴擊` : `命中`,
+        outcome.isCrit ? `💥 暴擊` : `命中`,
         `造成 ${damageTaken} 點傷害。`
     ].join('');
 

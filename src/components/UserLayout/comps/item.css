@@ -79,9 +79,9 @@
 /* 4. 文字與小標籤樣式 */
 .item-name {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
     color: #ddd;
-    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -91,7 +91,7 @@
 .equip-info {
     display: flex;
     flex-direction: column;
-    min-width: 80px;
+    min-width: 3rem;
 }
 
 .pos-tag {

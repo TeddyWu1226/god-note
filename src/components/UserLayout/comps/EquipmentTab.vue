@@ -37,7 +37,7 @@ const handleEquip = (item: any, index: number) => {
         </template>
         <div class="inventory-item" :style="{ borderColor: getEnumColumn(QualityEnum, item.quality, 'color') }"
              @dblclick="handleEquip(item, index)">
-          <span class="item-icon">{{ item.icon }}</span>
+          <span style="font-size: 1.2rem">{{ item.icon }}</span>
           <div class="equip-info">
             <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color') }">{{
                 item.name
