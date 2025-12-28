@@ -41,6 +41,8 @@ export enum SpecialEventEnum {
     BlessingOrCurse = 'BlessingOrCurse',
     // 魔樹事件
     GetFruit = 'GetFruit',
+    // 轉職
+    JobWarrior = 'JobWarrior',
 }
 
 /**

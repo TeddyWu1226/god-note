@@ -9,7 +9,7 @@ gameStateStore.transitionToNextState()
 
 <template>
   <EventTemplate class="weird" title="一個空空如也的地方...">
-    <div class="event-room-without-btn gamble-event">
+    <div class="event-room-without-btn ghost-room">
       你來到一個空無一物的地方<br/>
       但這裡不詳的氣息讓你不想在這多留...
     </div>
@@ -17,10 +17,10 @@ gameStateStore.transitionToNextState()
 </template>
 
 <style scoped>
-/* ==================================== */
-/* 1. 靜態基底樣式 (Base Style)       */
-/* ==================================== */
-.gamble-event {
+.weird{
+  background: #070007;
+}
+.ghost-room {
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -40,9 +40,6 @@ gameStateStore.transitionToNextState()
       flicker 0.2s infinite step-end; /* 微弱快速閃爍 */
 }
 
-/* ==================================== */
-/* 2. 關鍵幀定義 (Keyframes)          */
-/* ==================================== */
 
 /* 🅰️ 幽靈呼吸：改變光暈強度 */
 @keyframes breathing-glow {

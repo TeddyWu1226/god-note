@@ -53,9 +53,10 @@ export const useGameStateStore = defineStore('game-state', () => {
     const currentState = ref<GameState>(GameState.INITIAL);
     const isBattleWon = ref(false);
     const currentEnemy = ref<MonsterType[]>([]);
+    // 事件相關紀錄
     const currentEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
     const eventProcess = ref<Record<SpecialEventEnum, number>>({} as Record<SpecialEventEnum, number>);
-
+    const eventAction = ref(0)
     // --- Getters (用 computed 代替) ---
     /**
      * 不存在或0代表沒發生過
@@ -86,7 +87,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         currentStage.value = stageNum;
         isBattleWon.value = false;
         currentEnemy.value = [];
-        currentEventType.value = SpecialEventEnum.None;
+        currentEventType.value = null;
+        eventAction.value = 0
         eventProcess.value = {} as Record<SpecialEventEnum, number>;
         console.log('遊戲狀態已重置');
     }
@@ -95,8 +97,10 @@ export const useGameStateStore = defineStore('game-state', () => {
         currentRoomValue.value = roomValue ?? RoomEnum.Fight.value;
         isBattleWon.value = false;
         currentEnemy.value = [];
-        currentEventType.value = SpecialEventEnum.None;
         currentState.value = GameState.EVENT_PHASE;
+        // 重製事件
+        currentEventType.value = null;
+        eventAction.value = 0
     }
 
     function setCurrentEnemy(monsters: MonsterType[]): void {
@@ -211,6 +215,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         getEventProcess,
         stateIs,
         roomIs,
+        eventAction,
         init,
         setRoom, setCurrentEnemy, setBattleWon, transitionToNextState, setEvent, isEventClose, addEventProcess,
         addEffectToMonster, tickAllMonsters

@@ -8,6 +8,7 @@ import {ItemInfo} from "@/components/Shared/itemInfo";
 import {ElMessage} from "element-plus";
 import {useDraggable} from "@/components/DetailInfo/useDraggble";
 import type {Equipment} from "@/types";
+import {CharEnum} from "@/enums/char-enum";
 
 const playerStore = usePlayerStore();
 
@@ -66,7 +67,7 @@ const handleUnequip = (slotKey: keyof Equipment) => {
 
     <el-dialog
         v-model="isShowStats"
-        title="角色狀態"
+        :title="`角色狀態 (${getEnumColumn(CharEnum,playerStore.info.char)})`"
         class="user-detail"
         append-to-body
     >

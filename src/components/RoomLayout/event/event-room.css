@@ -2,6 +2,35 @@
     height: 15.15rem;
 }
 
-.weird{
-    background: #070007;
+.general-event {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/*中央圖片大小*/
+.event-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/*對話框*/
+.dialog-box {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/*過程置中*/
+.processing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

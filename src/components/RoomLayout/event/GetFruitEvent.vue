@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './event-room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
@@ -83,25 +84,27 @@ const onLeave = () => {
 <template>
   <EventTemplate title="🪾神祕魔樹">
     <template #default>
-      <div class="event-room-without-btn tree-event">
+      <div class="event-room-without-btn general-event">
         <template v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && answer === 0">
-          <div class="tree-icon">🪾</div>
-          <span>
+          <div class="event-icon">🪾</div>
+          <div class="dialog-box">
             這裡只剩下一截普通的樹樁。
-          </span>
+          </div>
         </template>
 
 
         <template v-else-if="answer === 0">
-          <div class="tree-icon">🪾</div>
-          <template v-if="!isAdvanced">
-            一顆邪惡氣息的枯樹聳立在那，雖然沒有葉子，卻散發著奇異的波動。<br/>
-            你感覺它似乎在渴望著某些水分...
-          </template>
-          <template v-else>
-            魔樹再次出現，這一次它的枝幹變成了暗紅色，<br/>
-            低沉的聲音在你腦海響起：「獻祭...獲得...更多...」
-          </template>
+          <div class="event-icon">🪾</div>
+          <div class="dialog-box">
+            <template v-if="!isAdvanced">
+              一顆<b>邪惡氣息的枯樹</b>聳立在那，<br/>雖然沒有葉子，卻散發著奇異的波動。<br/>
+              你感覺它似乎在渴望著某些水分...
+            </template>
+            <template v-else>
+              魔樹再次出現，這一次它的枝幹變成了暗紅色，<br/>
+              低沉的聲音在你腦海響起：「獻祭...獲得...更多...」
+            </template>
+          </div>
         </template>
 
         <div v-else-if="answer === 1" class="processing">
@@ -111,7 +114,9 @@ const onLeave = () => {
 
         <template v-else-if="answer === 2">
           <div class="tree-icon pulse">✨</div>
-          <p>{{ finalText }}</p>
+          <div class="dialog-box">
+            {{ finalText }}
+          </div>
         </template>
 
 
@@ -150,22 +155,6 @@ const onLeave = () => {
 </template>
 
 <style scoped>
-.tree-event {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  line-height: 1.6;
-  text-align: center;
-  min-height: 250px;
-}
-
-.tree-icon {
-  font-size: 5rem;
-  margin-bottom: 1rem;
-}
 
 /* 吸收動畫 */
 .absorbing {
@@ -200,9 +189,5 @@ const onLeave = () => {
   }
 }
 
-.processing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+
 </style>

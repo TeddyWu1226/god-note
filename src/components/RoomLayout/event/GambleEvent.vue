@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import './event-room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
@@ -59,24 +60,31 @@ const startGamble = (amount: number) => {
 </script>
 
 <template>
-  <EventTemplate title="👨‍💼生意人">
+  <EventTemplate title="賭博遊戲">
     <template #default>
-      <div class="event-room-without-btn gamble-event">
-        <span v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && answer ===0">
-          這裡空無一人...
-        </span>
-        <template v-else-if="answer === 0">
-          有一個穿著正裝的人類向你招手:<br/>
-          「那位小伙, 要不要用你的金幣跟我賭一把? <br/>(4點以上你就贏)」
+      <div class="event-room-without-btn general-event">
+        <template v-if="answer === 0">
+          <div class="event-icon">👨‍💼</div>
+          <div class="dialog-box">
+            <p>有一個穿著正裝的人類向你招手:</p>
+            <p>「那位小伙, 要不要用你的金幣跟我賭一把? 」</p>
+            <p>(4點以上你就贏)</p>
+          </div>
+
         </template>
 
         <template v-else-if="answer === 1">
-          「有魄力! 那你打算賭多少?」<br/>
+          <div class="event-icon">👨‍💼</div>
+          <div class="dialog-box">
+            「有魄力! 那你打算賭多少?」<br/>
+          </div>
           <span class="gold-hint">(目前擁有: {{ playerStore.info.gold }} G)</span>
         </template>
 
         <template v-else-if="answer === 2">
-          「阿, 不要就算了...」<br/>
+          <div class="dialog-box">
+            「阿, 不要就算了...」<br/>
+          </div>
           他悻悻然地走了
         </template>
 
@@ -112,18 +120,6 @@ const startGamble = (amount: number) => {
 </template>
 
 <style scoped>
-.gamble-event {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  letter-spacing: 0.1em;
-  text-align: center;
-  min-height: 200px;
-}
-
 .gold-hint {
   font-size: 1rem;
   color: #ffca28;

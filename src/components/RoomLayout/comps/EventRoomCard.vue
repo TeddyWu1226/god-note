@@ -1,37 +1,71 @@
 <script setup lang="ts">
-import {computed} from 'vue';
+import {computed, onMounted} from 'vue';
 import {useGameStateStore} from "@/store/game-state-store";
 import {eventComponentMap} from "@/components/RoomLayout/event/useEventRoom";
 import {SpecialEventEnum} from "@/enums/enums";
-import {getRandomFromEnumArray} from "@/utils/create";
+import {usePlayerStore} from "@/store/player-store";
+import {CharEnum} from "@/enums/char-enum";
 
-
-// 假設您的 Store 中有一個屬性 currentEventType 決定當前事件
 const gameStateStore = useGameStateStore();
+const playerStore = usePlayerStore();
+/**
+ * 事件配置表：控制隨機權限
+ */
+const EVENT_CONFIG = [
+  {
+    type: SpecialEventEnum.Gamble,
+    canAppear: () => true // 賭博總是能出現
+  },
+  {
+    type: SpecialEventEnum.GetFruit,
+    canAppear: () => !gameStateStore.isEventClose(SpecialEventEnum.GetFruit)
+  },
+  {
+    type: SpecialEventEnum.JobWarrior, // 假設這是你的劍士轉職事件
+    canAppear: () => playerStore.info.char === CharEnum.Beginner.value// 範例條件
+  }
+];
+
+
+/**
+ * 獲取當前允許的所有隨機事件
+ */
+const getAvailableEvents = () => {
+  // 過濾出所有符合出現條件的事件 Type
+  return EVENT_CONFIG
+      .filter(event => event.canAppear())
+      .map(event => event.type);
+};
+
+/**
+ * 隨機抽取事件
+ */
+const pickRandomEvent = () => {
+  const pool = getAvailableEvents();
+
+  // 設置防錯，如果沒有可用事件則給一個預設
+  if (pool.length === 0) return SpecialEventEnum.Gamble;
+
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex];
+};
+
+// 初始化邏輯
+const initializeEventRoom = () => {
+  // 只有當前還沒有事件時才初始化，避免在某些情況下組件重新渲染導致事件變更
+  if (!gameStateStore.currentEventType) {
+    const selectedEvent = pickRandomEvent();
+    gameStateStore.setEvent(selectedEvent);
+  }
+};
 
 // 動態載入當前事件組件
 const currentEventComponent = computed(() => {
-  // 根據 Store 中的類型，從映射中取得對應的 Vue 組件
   return eventComponentMap[gameStateStore.currentEventType as SpecialEventEnum] || null;
 });
-
-// 隨機事件抽取
-const getRandomEvent = () => {
-  const availableEvent = [SpecialEventEnum.Gamble]
-  // 魔樹事件
-  if (!gameStateStore.isEventClose(SpecialEventEnum.GetFruit)) {
-    availableEvent.push(SpecialEventEnum.GetFruit)
-  }
-  return getRandomFromEnumArray(availableEvent)
-}
-
-// 房間初始化邏輯 (確保每次進入房間都重置事件狀態，如果需要)
-const initializeEventRoom = () => {
-  gameStateStore.setEvent(getRandomEvent())
-};
-
-initializeEventRoom()
-
+onMounted(() => {
+  initializeEventRoom();
+});
 </script>
 
 <template>
