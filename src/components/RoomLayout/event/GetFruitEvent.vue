@@ -13,7 +13,6 @@ const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 
 // 0: 初始, 1: 吸收中, 2: 完成
-const answer = ref(0);
 const finalText = ref("");
 
 const isAdvanced = computed(() => {
@@ -21,7 +20,7 @@ const isAdvanced = computed(() => {
 })
 
 const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sacrifice_sp') => {
-  answer.value = 1;
+  gameStateStore.eventAction = 1;
   switch (type) {
     case 'herb':
       playerStore.removeItem(Potions.heal0.name);
@@ -48,7 +47,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
       case 'sacrifice_hp':
         if (playerStore.info.hp <= 50) {
           ElMessage.error("你的血量不足以獻祭...");
-          answer.value = 0;
+          gameStateStore.eventAction = 0;
           return;
         }
         playerStore.info.hp -= 50;
@@ -58,7 +57,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
       case 'sacrifice_sp':
         if (playerStore.info.sp < 50) {
           ElMessage.error("你的魔力不足以獻祭...");
-          answer.value = 0;
+          gameStateStore.eventAction = 0;
           return;
         }
         playerStore.info.sp -= 50;
@@ -66,7 +65,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         finalText.value = "古樹吸取了你的魔力，你感到靈魂一顫，魔力上限提升了。";
         break;
     }
-    answer.value = 2;
+    gameStateStore.eventAction = 2;
     gameStateStore.transitionToNextState();
     if (type === 'destroy') {
       gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true)
@@ -85,7 +84,7 @@ const onLeave = () => {
   <EventTemplate title="🪾神祕魔樹">
     <template #default>
       <div class="event-room-without-btn general-event">
-        <template v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && answer === 0">
+        <template v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && gameStateStore.eventAction === 0">
           <div class="event-icon">🪾</div>
           <div class="dialog-box">
             這裡只剩下一截普通的樹樁。
@@ -93,7 +92,7 @@ const onLeave = () => {
         </template>
 
 
-        <template v-else-if="answer === 0">
+        <template v-else-if="gameStateStore.eventAction === 0">
           <div class="event-icon">🪾</div>
           <div class="dialog-box">
             <template v-if="!isAdvanced">
@@ -107,12 +106,12 @@ const onLeave = () => {
           </div>
         </template>
 
-        <div v-else-if="answer === 1" class="processing">
+        <div v-else-if="gameStateStore.eventAction === 1" class="processing">
           <div class="tree-icon absorbing">🌳</div>
           <p>正在發生變化...</p>
         </div>
 
-        <template v-else-if="answer === 2">
+        <template v-else-if="gameStateStore.eventAction === 2">
           <div class="tree-icon pulse">✨</div>
           <div class="dialog-box">
             {{ finalText }}
@@ -124,7 +123,7 @@ const onLeave = () => {
     </template>
 
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
-      <template v-if="answer === 0">
+      <template v-if="gameStateStore.eventAction === 0">
         <template v-if="!isAdvanced">
           <el-button
               :disabled="!playerStore.hasItem(Potions.heal0.name)[0]"

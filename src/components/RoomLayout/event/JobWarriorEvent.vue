@@ -3,16 +3,20 @@ import './event-room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
-import {computed, ref} from "vue";
+import {ref} from "vue";
 import {GameState} from "@/enums/enums";
 import {ElMessage} from "element-plus";
+import {CharEnum} from "@/enums/char-enum";
+
+/**
+ * 狀態控制
+ * 0: 初始, 1: 轉職, 2: 拒絕 ,3:結果
+ */
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 
-// 0: 初始對話, 1: 儀式進行中, 2: 轉職完成
-const answer = ref(0);
-const finalText = ref("");
+const isLearning = ref(false);
 
 const COST = 100;
 
@@ -23,8 +27,8 @@ const handleJobChange = () => {
     return;
   }
 
-  answer.value = 1;
-
+  gameStateStore.eventAction = 1;
+  isLearning.value = true;
   // 執行扣款
   playerStore.info.gold -= COST;
   // 動畫展示
@@ -32,18 +36,17 @@ const handleJobChange = () => {
     // HP上限+20
     playerStore.info.hpLimit += 20;
     playerStore.info.hp += 20;
+    playerStore.info.char = CharEnum.Warrior.value
 
-    finalText.value = "你支付了 50G，在他的指導下掌握了用劍的精要。你的氣勢變得更加銳利，正式成為了一名【劍士】！";
 
-    // 3. 記錄事件狀態 (可選：用於成就或後續劇情)
-    // gameStateStore.addEventProcess('JOB_WARRIOR', true);
-
-    answer.value = 2;
+    gameStateStore.eventAction = 3;
+    isLearning.value = false
     gameStateStore.transitionToNextState();
   }, 1000);
 };
 
 const onLeave = () => {
+  gameStateStore.eventAction = 2;
   gameStateStore.transitionToNextState();
 }
 </script>
@@ -52,7 +55,7 @@ const onLeave = () => {
   <EventTemplate title="⚔️ 轉職事件">
     <template #default>
       <div class="event-room-without-btn general-event">
-        <template v-if="answer === 0">
+        <template v-if="gameStateStore.eventAction === 0">
           <div class="event-icon">🤺</div>
           <div class="dialog-box">
             <p>你遇到了一個手拿銀色長劍的登塔者，他正靠在牆邊擦拭劍身。</p>
@@ -60,21 +63,28 @@ const onLeave = () => {
             <p>「<b>給我一點錢</b>，我能教你如何成為真正的<b>劍士</b>，如何？」</p>
           </div>
         </template>
-
-        <div v-else-if="answer === 1" class="processing">
+        <div v-else-if="isLearning" class="processing">
           <div class="event-icon">⚔️</div>
           <p>正在領悟劍技中...</p>
         </div>
 
-        <template v-else-if="answer === 2">
+
+        <template v-else-if="gameStateStore.eventAction === 3">
           <div class="event-icon pulse">🗡️</div>
-          <p class="final-text">{{ finalText }}</p>
+          <p class="final-text">
+            在他的指導下掌握了用劍的精要。<br/>你的氣勢變得更加銳利，<br/>正式成為了一名【劍士】！
+          </p>
+        </template>
+        <template v-else>
+          <div class="dialog-box">
+            <p>「好吧,等你想清楚再來找我。」</p>
+          </div>
         </template>
       </div>
     </template>
 
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
-      <template v-if="answer === 0">
+      <template v-if="gameStateStore.eventAction === 0">
         <el-button
             type="warning"
             :disabled="playerStore.info.gold < COST"

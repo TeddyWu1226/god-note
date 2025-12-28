@@ -8,24 +8,26 @@ import {GameState} from "@/enums/enums";
 import {ElMessage} from "element-plus";
 import {useTrackerStore} from "@/store/track-store";
 
+/**
+ * 狀態控制
+ * 0: 初始, 1: 選擇金額, 2: 拒絕, 3:結果
+ */
+
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 const trackerStore = useTrackerStore();
-
-// 狀態控制
-// 0: 初始, 1: 選擇金額, 2: 拒絕, 3: 擲骰中, 4: 結算結果
-const answer = ref(0);
 const betAmount = ref(0);
 const diceResult = ref(1);
 const isWin = ref(false);
+const isRolling = ref(false);
 
 const onCancel = () => {
-  answer.value = 2;
+  gameStateStore.eventAction = 2;
   // 延遲一段時間後切換房間狀態，讓玩家看完對話
   gameStateStore.transitionToNextState();
 };
 
-const finalText = ref("")
+const finalText = ref<string | undefined>(undefined);
 // 執行賭博
 const startGamble = (amount: number) => {
   if (playerStore.info.gold < amount) {
@@ -34,7 +36,7 @@ const startGamble = (amount: number) => {
   }
 
   betAmount.value = amount;
-  answer.value = 3; // 進入擲骰子狀態
+  isRolling.value = true
 
   // 模擬擲骰子動畫時間
   setTimeout(() => {
@@ -51,8 +53,8 @@ const startGamble = (amount: number) => {
       finalText.value = `運氣不太好... 輸掉了 ${betAmount.value} 金幣...`
       trackerStore.achievementsCount.gambleWin = 0
     }
-
-    answer.value = 4; // 顯示結果對話
+    isRolling.value = false
+    gameStateStore.eventAction = 3; // 顯示結果對話
     gameStateStore.transitionToNextState()
   }, 1200);
 };
@@ -63,7 +65,7 @@ const startGamble = (amount: number) => {
   <EventTemplate title="賭博遊戲">
     <template #default>
       <div class="event-room-without-btn general-event">
-        <template v-if="answer === 0">
+        <template v-if="gameStateStore.eventAction === 0">
           <div class="event-icon">👨‍💼</div>
           <div class="dialog-box">
             <p>有一個穿著正裝的人類向你招手:</p>
@@ -72,8 +74,11 @@ const startGamble = (amount: number) => {
           </div>
 
         </template>
-
-        <template v-else-if="answer === 1">
+        <div v-else-if="isRolling" class="dice-container">
+          <div class="dice rolling">🎲</div>
+          <p>擲骰中...</p>
+        </div>
+        <template v-else-if="gameStateStore.eventAction === 1">
           <div class="event-icon">👨‍💼</div>
           <div class="dialog-box">
             「有魄力! 那你打算賭多少?」<br/>
@@ -81,39 +86,44 @@ const startGamble = (amount: number) => {
           <span class="gold-hint">(目前擁有: {{ playerStore.info.gold }} G)</span>
         </template>
 
-        <template v-else-if="answer === 2">
+        <template v-else-if="gameStateStore.eventAction === 2">
           <div class="dialog-box">
             「阿, 不要就算了...」<br/>
           </div>
           他悻悻然地走了
         </template>
-
-        <div v-else-if="answer === 3" class="dice-container">
-          <div class="dice rolling">🎲</div>
-          <p>擲骰中...</p>
-        </div>
-
-        <template v-else-if="answer === 4">
+        <template v-else-if="gameStateStore.eventAction === 3">
           <div class="result-display">
-            <div class="dice-final">🎲 {{ diceResult }}</div>
-            <p v-if="isWin">「手氣真旺! 這是你應得的。」</p>
-            <p v-else>「哎呀，看來幸運女神不在你身邊呢。」</p>
-            <p :style="{color:isWin?'gold':'gray'}">{{ finalText }}</p>
+            <template v-if="finalText">
+              <div class="dice-final">🎲 {{ diceResult }}</div>
+              <p v-if="isWin">「手氣真旺! 這是你應得的。」</p>
+              <p v-else>「哎呀，看來幸運女神不在你身邊呢。」</p>
+              <p :style="{color:isWin?'gold':'gray'}">{{ finalText }}</p>
+            </template>
+            <template v-else>
+              這裡空無一人...
+            </template>
           </div>
         </template>
       </div>
     </template>
 
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
-      <template v-if="answer === 0">
-        <el-button type="warning" @click="answer = 1">好! 賭多少?</el-button>
+      <template v-if="gameStateStore.eventAction === 0">
+        <el-button type="warning" @click="gameStateStore.eventAction = 1">好! 賭多少?</el-button>
         <el-button type="info" @click="onCancel">不了</el-button>
       </template>
 
-      <template v-else-if="answer === 1">
-        <el-button type="warning" @click="startGamble(50)">50 G</el-button>
-        <el-button type="warning" @click="startGamble(100)">100 G</el-button>
-        <el-button type="info" @click="answer = 0">再想想</el-button>
+      <template v-else-if="gameStateStore.eventAction === 1">
+        <el-button type="warning" @click="startGamble(50)">
+          50 G
+        </el-button>
+        <el-button type="warning" @click="startGamble(100)">
+          100 G
+        </el-button>
+        <el-button type="info" @click="gameStateStore.eventAction = 0">
+          再想想
+        </el-button>
       </template>
     </template>
   </EventTemplate>

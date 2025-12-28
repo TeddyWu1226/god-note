@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
+import {GameState} from "@/enums/enums";
 
 const gameStateStore = useGameStateStore()
-gameStateStore.transitionToNextState()
+gameStateStore.currentState = GameState.SELECTION_PHASE;
 
 </script>
 
@@ -17,9 +18,10 @@ gameStateStore.transitionToNextState()
 </template>
 
 <style scoped>
-.weird{
+.weird {
   background: #070007;
 }
+
 .ghost-room {
   padding: 2rem;
   display: flex;
@@ -30,29 +32,24 @@ gameStateStore.transitionToNextState()
   letter-spacing: 0.1em;
 
   /* 初始微光效果 */
-  text-shadow:
-      0 0 5px #4afffc,
-      0 0 10px #4afffc;
+  text-shadow: 0 0 5px #4afffc,
+  0 0 10px #4afffc;
 
   /* 應用動畫 */
-  animation:
-      breathing-glow 4s infinite ease-in-out alternate, /* 緩慢呼吸效果 */
-      flicker 0.2s infinite step-end; /* 微弱快速閃爍 */
+  animation: breathing-glow 4s infinite ease-in-out alternate, /* 緩慢呼吸效果 */ flicker 0.2s infinite step-end; /* 微弱快速閃爍 */
 }
 
 
 /* 🅰️ 幽靈呼吸：改變光暈強度 */
 @keyframes breathing-glow {
   0% {
-    text-shadow:
-        0 0 4px #4afffc,
-        0 0 8px #4afffc; /* 呼吸弱時 */
+    text-shadow: 0 0 4px #4afffc,
+    0 0 8px #4afffc; /* 呼吸弱時 */
   }
   100% {
-    text-shadow:
-        0 0 8px #4afffc,
-        0 0 15px #4afffc,
-        0 0 25px rgba(74, 255, 252, 0.5); /* 呼吸強時，光暈擴散 */
+    text-shadow: 0 0 8px #4afffc,
+    0 0 15px #4afffc,
+    0 0 25px rgba(74, 255, 252, 0.5); /* 呼吸強時，光暈擴散 */
   }
 }
 
