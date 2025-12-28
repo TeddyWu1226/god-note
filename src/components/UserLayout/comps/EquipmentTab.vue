@@ -4,9 +4,10 @@ import {usePlayerStore} from '@/store/player-store'
 import {QualityEnum} from "@/enums/quality-enum"
 import {EquipmentEnum} from "@/enums/enums"
 import {getEnumColumn} from "@/utils/enum"
-import {statLabels} from "@/types"
+import {statLabels, UsableType} from "@/types"
 import {ElMessage} from "element-plus"
 import {ItemInfo} from "@/components/Shared/itemInfo";
+import {createDoubleTapHandler} from "@/utils/touch";
 
 const playerStore = usePlayerStore()
 
@@ -26,6 +27,9 @@ const handleEquip = (item: any, index: number) => {
   playerStore.equipItem(item, index);
   ElMessage.success(`裝備了 ${item.name}!`);
 };
+const onTouchHandleEquip = createDoubleTapHandler((item: any, index: number) => {
+  handleEquip(item, index);
+}, 350)
 </script>
 
 <template>
@@ -35,8 +39,12 @@ const handleEquip = (item: any, index: number) => {
         <template #content>
           <ItemInfo :item="item"/>
         </template>
-        <div class="inventory-item" :style="{ borderColor: getEnumColumn(QualityEnum, item.quality, 'color') }"
-             @dblclick="handleEquip(item, index)">
+        <div
+            class="inventory-item"
+            :style="{ borderColor: getEnumColumn(QualityEnum, item.quality, 'color') }"
+            @dblclick="handleEquip(item, index)"
+            @touchend="onTouchHandleEquip(item, index)"
+        >
           <span style="font-size: 1.2rem">{{ item.icon }}</span>
           <div class="equip-info">
             <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color') }">{{

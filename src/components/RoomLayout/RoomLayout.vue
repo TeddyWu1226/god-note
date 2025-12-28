@@ -8,7 +8,7 @@ import RestRoom from "@/components/RoomLayout/comps/RestRoom.vue";
 import FightRoom from "@/components/RoomLayout/comps/FightRoom.vue";
 import EventRoomCard from "@/components/RoomLayout/comps/EventRoomCard.vue";
 import {useLogStore} from "@/store/log-store";
-import ShopRoom from "@/components/RoomLayout/comps/ShopRoom.vue";
+import ShopRoom from "@/components/RoomLayout/comps/ShopRoom/ShopRoom.vue";
 import BlessRoom from "@/components/RoomLayout/comps/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";

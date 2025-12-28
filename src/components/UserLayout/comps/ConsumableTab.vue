@@ -2,9 +2,10 @@
 import './item.css'
 import {computed} from 'vue'
 import {usePlayerStore} from '@/store/player-store'
-import {UsableType} from "@/types"
+import {Equipment, UsableType} from "@/types"
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
+import {createDoubleTapHandler} from "@/utils/touch";
 
 const playerStore = usePlayerStore()
 const emit = defineEmits(['onItemSkill'])
@@ -20,10 +21,11 @@ const aggregatedConsumables = computed(() => {
   return Array.from(map.values()).sort((a, b) => (b.item.quality || 0) - (a.item.quality || 0));
 });
 
-const handleUse = async (potion: UsableType, event: MouseEvent) => {
+const handleUse = async (potion: UsableType, event?: MouseEvent) => {
   if (!potion.usable) return;
   // 取得當前點擊的 DOM 元素
   const targetEl = event.currentTarget as HTMLElement;
+  console.log('targetEl', targetEl)
   // 如果有技能邏輯，需要等待父組件判斷
   if (potion.skill) {
     const canUse = await new Promise<boolean>((resolve) => {
@@ -51,13 +53,22 @@ const handleUse = async (potion: UsableType, event: MouseEvent) => {
     playerStore.info.consumeItems.splice(index, 1);
   }
 };
+const onTouchHandleUse = createDoubleTapHandler((potion: UsableType, event?: any) => {
+  handleUse(potion, event);
+}, 350)
+
 </script>
 
 <template>
   <el-scrollbar height="7rem">
     <div v-if="aggregatedConsumables.length > 0" class="potion-grid">
-      <div v-for="entry in aggregatedConsumables" :key="entry.item.name" class="item-slot"
-           @dblclick="handleUse(entry.item,$event)">
+      <div
+          v-for="entry in aggregatedConsumables"
+          :key="entry.item.name"
+          class="item-slot"
+          @dblclick="handleUse(entry.item,$event)"
+          @touchend="onTouchHandleUse(entry.item,$event)"
+      >
         <el-tooltip placement="top" effect="light">
           <template #content>
             <div class="tooltip-content">

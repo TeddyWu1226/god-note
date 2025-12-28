@@ -8,11 +8,14 @@
     font-size: 14px;
 }
 
-/* 如果是遊戲，通常建議讓整個 main 內容都無法被選取 */
+
 html, body {
+    /* main 內容都無法被選取 */
     user-select: none;
     /* 防止水平方向出現捲軸 */
     overflow-x: hidden;
+    /* 防止連點放大 */
+    touch-action: manipulation;
 }
 
 

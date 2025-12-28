@@ -17,12 +17,14 @@ const props = defineProps({
   <div v-if="props.item" class="detail-container">
     <div class="detail-icon">{{ props.item.icon }}</div>
     <h3 :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
-      {{ props.item.name }}
+      {{ props.item.name }}{{ props.item.usable ? '(消耗品)' : ''}}
     </h3>
 
     <p class="detail-desc">{{ props.item.description }}</p>
 
-    <el-divider content-position="left"></el-divider>
+    <el-divider content-position="left">
+      {{ props.item.usable ? '使用後' : '裝備屬性'}}
+    </el-divider>
 
     <div class="detail-stats">
       <template v-for="(val, key) in props.item" :key="key">

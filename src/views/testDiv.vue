@@ -13,8 +13,8 @@ const isClose = ref(true);
 
 const onTest = () => {
   // playerStore.addStatus(UnitStatus.SlimeSlow)
-  playerStore.gainItem(Potions.BurningPotion)
-  playerStore.gainItem(Accessories.SoulAnchor)
+  // playerStore.gainItem(Potions.BurningPotion)
+  // playerStore.gainItem(Accessories.SoulAnchor)
 }
 onTest()
 </script>

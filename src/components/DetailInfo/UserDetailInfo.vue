@@ -9,6 +9,7 @@ import {ElMessage} from "element-plus";
 import {useDraggable} from "@/components/DetailInfo/useDraggble";
 import type {Equipment} from "@/types";
 import {CharEnum} from "@/enums/char-enum";
+import {createDoubleTapHandler} from "@/utils/touch";
 
 const playerStore = usePlayerStore();
 
@@ -20,13 +21,7 @@ const isShowStats = ref(false);
 const {position, isDragging, isSnapping, handleStart} = useDraggable(fabRef, {
   onSelect: () => isShowStats.value = true
 });
-// 移動端雙擊判定優化
-let lastTap = 0;
-const handleTouchUnequip = (slotKey: keyof Equipment) => {
-  const now = Date.now();
-  if (now - lastTap < 300) handleUnequip(slotKey);
-  lastTap = now;
-};
+
 
 /**
  * 裝備背景顏色計算 (統一調淡)
@@ -47,7 +42,9 @@ const handleUnequip = (slotKey: keyof Equipment) => {
   playerStore.equipItem(null, null, slotKey)
   ElMessage.success('脫下裝備')
 };
-
+const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
+  handleUnequip(slotKey);
+}, 350)
 
 </script>
 
@@ -91,7 +88,7 @@ const handleUnequip = (slotKey: keyof Equipment) => {
               class="equip-slot"
               :style="{ borderColor: getBackgroundColor(pos.value) }"
               @dblclick="handleUnequip(pos.value)"
-              @touchend="handleTouchUnequip(pos.value)"
+              @touchend="onTouchUnequip(pos.value)"
           >
             <el-tooltip
                 v-if="playerStore.info.equips?.[pos.value as keyof typeof playerStore.info.equips]"
