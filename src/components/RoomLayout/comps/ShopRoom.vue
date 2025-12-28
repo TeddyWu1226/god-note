@@ -363,13 +363,13 @@ onMounted(() => {
 
 .item-icon {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .item-name {
   font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
 }
 
 

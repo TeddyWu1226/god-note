@@ -80,7 +80,7 @@ const HideAchievement = {
         description: "在[初始之森]擊敗森林之狼",
         isUnlocked: false,
         isHide: true,
-        hindHint: "在初始的林地中證明你的膽識..."
+        hindHint: "在初始的森林中證明你的膽識..."
     } as AchievementType,
     NearDeath: {
         name: "命懸一線",

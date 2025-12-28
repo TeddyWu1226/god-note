@@ -18,8 +18,8 @@ export const Dagger = {
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        critRate: 12,
-        ad: 8,
+        critRate: 13,
+        ad: 6,
     } as EquipmentType,
     Dagger2: {
         name: '削皮刀',
@@ -27,8 +27,8 @@ export const Dagger = {
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 2,
-        critRate: 15,
-        ad: 18,
+        critRate: 16,
+        ad: 9,
     } as EquipmentType,
     Dagger3: {
         name: '鋼製短刀',
@@ -36,8 +36,8 @@ export const Dagger = {
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 3,
-        critRate: 20,
-        ad: 35,
+        critRate: 19,
+        ad: 12,
     } as EquipmentType,
     Dagger4: {
         name: '折疊刀',
@@ -45,8 +45,8 @@ export const Dagger = {
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 4,
-        critRate: 25,
-        ad: 65,
+        critRate: 22,
+        ad: 15,
     } as EquipmentType,
     Dagger5: {
         name: '黑色短匕',
@@ -54,9 +54,8 @@ export const Dagger = {
         icon: '🔪',
         position: EquipmentPosition.WEAPON,
         quality: 5,
-        critRate: 30,
-        ad: 100,
-        lifeSteal: 5
+        critRate: 25,
+        ad: 20,
     } as EquipmentType,
 };
 
@@ -67,7 +66,7 @@ export const Sword = {
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 0,
-        ad: 6,
+        ad: 5,
     } as EquipmentType,
     Sword1: {
         name: '鐵劍',
@@ -75,7 +74,7 @@ export const Sword = {
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        ad: 14,
+        ad: 10,
     } as EquipmentType,
     Sword2: {
         name: '長劍',
@@ -83,7 +82,7 @@ export const Sword = {
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 2,
-        ad: 28,
+        ad: 15,
         hit: 5,
     } as EquipmentType,
     Sword3: {
@@ -92,17 +91,17 @@ export const Sword = {
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 3,
-        ad: 50,
+        ad: 20,
         hit: 10,
     } as EquipmentType,
     Sword4: {
-        name: '雙刃劍',
-        description: '兩邊都開了刃，很危險。',
+        name: '合金劍',
+        description: '更精良的工藝,更多傷害。',
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 4,
-        ad: 90,
-        adIncrease: 5,
+        ad: 15,
+        hit: 15,
     } as EquipmentType,
     Sword5: {
         name: '重型鋼劍',
@@ -110,8 +109,8 @@ export const Sword = {
         icon: '🗡️',
         position: EquipmentPosition.WEAPON,
         quality: 5,
-        ad: 160,
-        adIncrease: 10,
+        ad: 30,
+        hit: 20,
     } as EquipmentType,
 };
 
@@ -123,25 +122,25 @@ export const Axe = {
         position: EquipmentPosition.WEAPON,
         quality: 0,
         hit: -10,
-        ad: 9,
+        ad: 7,
     } as EquipmentType,
     Axe1: {
-        name: '木工斧',
-        description: '伐木工人弄丟的工具。',
+        name: '銅斧',
+        description: '進入銅器時代,武器更耐用',
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        hit: -8,
-        ad: 20,
+        hit: -10,
+        ad: 14,
     } as EquipmentType,
     Axe2: {
-        name: '砍柴斧',
-        description: '斧面變大了不少，很重。',
+        name: '鋼鐵斧',
+        description: '換了鋼製刃部，更耐用了。',
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 2,
-        hit: -6,
-        ad: 40,
+        hit: -10,
+        ad: 21,
     } as EquipmentType,
     Axe3: {
         name: '鋼鐵斧',
@@ -149,9 +148,9 @@ export const Axe = {
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 3,
-        hit: -5,
-        ad: 75,
-        adIncrease: 5,
+        hit: -10,
+        ad: 28,
+        critIncrease: 10
     } as EquipmentType,
     Axe4: {
         name: '雙手斧',
@@ -159,9 +158,9 @@ export const Axe = {
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 4,
-        hit: -4,
-        ad: 140,
-        adIncrease: 12,
+        hit: -10,
+        ad: 35,
+        critIncrease: 15
     } as EquipmentType,
     Axe5: {
         name: '大鐵斧',
@@ -169,9 +168,9 @@ export const Axe = {
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 5,
-        hit: -2,
-        ad: 250,
-        adIncrease: 20,
+        hit: -10,
+        ad: 45,
+        critIncrease: 20
     } as EquipmentType,
 };
 

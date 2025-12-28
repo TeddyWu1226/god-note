@@ -72,7 +72,7 @@ watch(
         let isConditionMet = false;
 
         // 總擊殺系列
-        if (key.startsWith('kill')) {
+        if (key.startsWith('Kill')) {
           const totalKills = trackerStore.getKillCount('TOTAL', 'total');
           if (key === 'Kill20' && totalKills >= 20) isConditionMet = true;
           if (key === 'Kill200' && totalKills >= 200) isConditionMet = true;

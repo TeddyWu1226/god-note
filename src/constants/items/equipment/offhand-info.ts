@@ -4,11 +4,12 @@ import {EquipmentPosition} from "@/enums/enums";
 export const Offhand = {
     Shield0: {
         name: '殘破木門',
-        description: '從廢墟拆下來的門板，聊勝於無。',
+        description: '從廢墟拆下來的門板，笨重但聊勝於無。',
         icon: '🚪',
         position: EquipmentPosition.OFFHAND,
         quality: 0,
-        adDefend: 2
+        defendIncrease: 5,
+        dodge: -10
     } as EquipmentType,
 
     Shield1: {
@@ -17,8 +18,8 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 1,
-        adDefend: 6,
-        dodge: -5
+        adDefend: 5,
+        defendIncrease: 5,
     } as EquipmentType,
 
     Shield2: {
@@ -27,7 +28,8 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 2,
-        adDefend: 12,
+        adDefend: 10,
+        defendIncrease: 5,
         dodge: 5
     } as EquipmentType,
 
@@ -37,9 +39,9 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
-        adDefend: 24,
+        adDefend: 15,
         dodge: -8,
-        defendIncrease: 2
+        defendIncrease: 5
     } as EquipmentType,
 
     Shield4: {
@@ -48,9 +50,9 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
-        adDefend: 48,
-        dodge: -15,
-        defendIncrease: 5
+        adDefend: 25,
+        dodge: -30,
+        defendIncrease: 10
     } as EquipmentType,
 
     Shield5: {
@@ -61,7 +63,7 @@ export const Offhand = {
         quality: 5,
         adDefend: 72,
         dodge: 0,
-        defendIncrease: 8
+        defendIncrease: 10
     } as EquipmentType,
 
     Shield6: {
@@ -72,7 +74,7 @@ export const Offhand = {
         quality: 6,
         adDefend: 96,
         dodge: 15,
-        defendIncrease: 10
+        defendIncrease: 15
     } as EquipmentType,
 
     Shield7: {
@@ -82,7 +84,7 @@ export const Offhand = {
         position: EquipmentPosition.OFFHAND,
         quality: 7,
         adDefend: 150,
-        defendIncrease: 12,
+        defendIncrease: 15,
         hpLimit: 200
     } as EquipmentType,
 
@@ -95,6 +97,6 @@ export const Offhand = {
         adDefend: 200,
         hpLimit: 500,
         dodge: 30,
-        defendIncrease: 5
+        defendIncrease: 20
     } as EquipmentType,
 };

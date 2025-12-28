@@ -19,6 +19,6 @@ export const QualityEnum = {
     Cursed: {
         value: 11,
         label: '詛咒的',
-        color: '#390039', // 紫色的
+        color: '#9e0101', // 紫色的
     }
 };
