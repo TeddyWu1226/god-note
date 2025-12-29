@@ -19,9 +19,10 @@ const trackerStore = useTrackerStore();
 
 const onClick = () => {
   ElMessageBox.confirm(
-      '確定要挑戰本層BOSS?',
+      `<p>${stageProgress.value.text}(已達成)</p><p>確定要挑戰本層BOSS?</p>`,
       '再次確認',
       {
+        dangerouslyUseHTMLString: true,
         confirmButtonText: '確定',
         confirmButtonClass: 'danger',
         cancelButtonText: '再想想',

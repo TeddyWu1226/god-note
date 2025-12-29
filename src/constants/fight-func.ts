@@ -91,7 +91,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType): Battl
         return outcome;
     }
 
-    // 2. 更新生命值 (核心邏輯)
+    // 2. 更新生命值
     const damageTaken = damageOutput.totalDamage
     if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
         // 直接修改 Store 裡的原始數據 info.hp
@@ -251,7 +251,7 @@ export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement?
 
     let messageText: string;
     let messageColor = '#E0E0E0'; // 預設顏色
-    // --- 2. 核心邏輯：根據結果決定訊息和樣式 ---
+    // --- 2. 根據結果決定訊息和樣式 ---
 
     if (damageOutCome.isKilled) {
         // 💀 死亡：顯示總傷害並加上死亡符號

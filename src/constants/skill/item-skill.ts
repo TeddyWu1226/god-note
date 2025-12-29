@@ -46,4 +46,17 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
         showEffect(targetElement, "現在無法使用!", "debuff")
         callback(false);
     },
+    useUnPoisonPotion: (params: SpecifyMonsterItemSkillParams) => {
+        const {playerStore, gameStateStore, callback, targetElement} = params;
+        if (!gameStateStore.stateIs(GameState.EVENT_PHASE)) {
+            showEffect(targetElement, "現在無法使用!", "debuff")
+            callback(false);
+            return
+        }
+        if (playerStore.hasStatus('中毒')) {
+            playerStore.removeStatus('中毒');
+            showEffect(targetElement, "中毒狀態已消除", 'buff')
+        }
+        callback(true)
+    },
 };

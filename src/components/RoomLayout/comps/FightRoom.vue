@@ -176,6 +176,7 @@ const checkAllMonsterDead = () => {
   }
 }
 
+
 /**
  * 玩家行動
  */
@@ -214,7 +215,6 @@ const onAttack = () => {
     const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
     selectedMonster.lastDamageResult = damageOutput
     if (damageOutput.isHit) {
-      targetElement?.shake()
       // 若怪物受到傷害觸發
       if (selectedMonster.onAttacked && MonsterOnAttacked[selectedMonster.onAttacked]) {
         MonsterOnAttacked[selectedMonster.onAttacked]({
@@ -261,32 +261,34 @@ const onItemSkill = ({skillKey, callback, el}) => {
 const isUsing = ref(false)
 // 技能使用
 const onSkill = async (skillKey: string) => {
-  if (isUsing.value) return
-  isUsing.value = true
   if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
   const selectedMonster = monsters.value[selectedMonsterIndex.value];
-  const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-  // 加上 await 確保技能動作執行完畢
-  const useSkill = Skills[skillKey] as SkillType
-  const success = await useSkill.use({
-    monster: selectedMonster,
-    monsterIndex: selectedMonsterIndex.value,
-    targetElement: targetElement?.$el,
-    playerStore: playerStore,
-    gameStateStore: gameStateStore
-  });
-  // 施展不生效就中斷
-  if (!success) {
-    isUsing.value = false
-    return
-  }
-  if (useSkill.costSp) {
-    const newSP = playerStore.info.sp - useSkill.costSp;
-    playerStore.info.sp = Math.max(0, newSP)
-  }
-  if (useSkill.costHp) {
-    const newHP = playerStore.info.hp - useSkill.costHp;
-    playerStore.info.hp = Math.max(0, newHP)
+  if (isUsing.value) return
+  isUsing.value = true
+  if (!isPlayerStuck()) {
+    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
+    // 加上 await 確保技能動作執行完畢
+    const useSkill = Skills[skillKey] as SkillType
+    const success = await useSkill.use({
+      monster: selectedMonster,
+      monsterIndex: selectedMonsterIndex.value,
+      targetElement: targetElement?.$el,
+      playerStore: playerStore,
+      gameStateStore: gameStateStore
+    });
+    // 施展不生效就中斷
+    if (!success) {
+      isUsing.value = false
+      return
+    }
+    if (useSkill.costSp) {
+      const newSP = playerStore.info.sp - useSkill.costSp;
+      playerStore.info.sp = Math.max(0, newSP)
+    }
+    if (useSkill.costHp) {
+      const newHP = playerStore.info.hp - useSkill.costHp;
+      playerStore.info.hp = Math.max(0, newHP)
+    }
   }
 
   // 怪物是否死亡
@@ -304,7 +306,7 @@ const onSkill = async (skillKey: string) => {
 // 逃跑
 const isEscape = ref(false)
 const onRun = () => {
-  if (!canEscape(playerStore.finalStats, monsters.value)) {
+  if (isPlayerStuck() || !canEscape(playerStore.finalStats, monsters.value)) {
     if (!selectedMonsterIndex.value) {
       selectedMonsterIndex.value = 0
     }

@@ -16,10 +16,10 @@ export const BeginForestWeights: Record<string, number> = {
 export const SunkenGroveWeights: Record<string, number> = {
     Slime: 20,
     WoodTick: 30,
-    ForestSprout: 25,
-    GreenRabbit: 30,
-    StingerBee: 30,
-    FierceWolf: 5
+    ForestSprout: 20,
+    GreenRabbit: 10,
+    StingerBee: 20,
+    FierceWolf: 3
 };
 
 /**
@@ -27,9 +27,11 @@ export const SunkenGroveWeights: Record<string, number> = {
  * 特色：光線昏暗，空中捕食者與劇毒生物增加。
  */
 export const AncientRootsWeights: Record<string, number> = {
-    ForestSprout: 20,
-    MushroomMan: 20,
-    GreenRabbit: 15,
+    Slime: 5,
+    ForestSprout: 5,
+    StingerBee: 30,
+    GreenRabbit: 30,
+    MushroomMan: 10,
     FierceWolf: 5,
     SmallSpider: 5
 };

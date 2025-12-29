@@ -61,9 +61,17 @@ const Special = {
         name: '燃燒藥水',
         description: '可以使目標燃燒或燒掉某些東西',
         icon: '🔥',
-        quality: 1,
+        quality: 0,
         usable: true,
         skill: 'useBurningPotion'
+    } as UsableType,
+    UnPoisonPotion: {
+        name: '解毒劑',
+        description: '可以使自身消除「中毒」效果',
+        icon: '💉',
+        quality: 1,
+        usable: true,
+        skill: 'useUnPoisonPotion'
     } as UsableType,
 }
 

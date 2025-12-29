@@ -28,6 +28,17 @@ export const UnitStatus = {
         type: 'damage',
         value: 5
     } as StatusEffect,
+    MushroomManPoison: {
+        name: '麻痺',
+        icon: '🦠',
+        duration: 3,
+        description: '降低 50 點命中值',
+        bonus: {
+            hit: -50
+        },
+        type: 'damage',
+        value: 3
+    } as StatusEffect,
     BeePoison: {
         name: '中毒',
         icon: '🤢',
@@ -40,17 +51,17 @@ export const UnitStatus = {
         name: '綑綁',
         icon: '🕸',
         duration: 5,
-        description: '你被綑綁了,任何行動都會失效',
+        description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
         type: 'stuck',
     } as StatusEffect,
     SmallSpiderStuck: {
         name: '綑綁',
         icon: '🕸',
-        duration: 1,
-        description: '你被綑綁了,任何行動都會失效',
+        duration: 3,
+        description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
         type: 'stuck',
     } as StatusEffect,
-    SpiderHunter:{
+    SpiderHunter: {
         name: '獵殺者',
         icon: '⚠️',
         duration: 1,

@@ -13,7 +13,7 @@ export const createDoubleTapHandler = <T extends any[]>(
     return (...args: T) => {
         const now = Date.now();
 
-        // 🚩 關鍵：只拿第一個參數（通常是物品物件或名稱）來比對，不要把 event 拿來序列化
+        // 只拿第一個參數（通常是物品物件或名稱）來比對，不要把 event 拿來序列化
         const currentTargetKey = typeof args[0] === 'object' ? args[0].name : String(args[0]);
 
         if (currentTargetKey === lastTargetKey && (now - lastTap) < delay) {

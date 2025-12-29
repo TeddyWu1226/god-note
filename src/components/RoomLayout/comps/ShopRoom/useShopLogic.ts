@@ -9,7 +9,8 @@ import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 
 // 基礎價格表 (0: Tattered ~ 5: Unique)
-export const EQUIP_BASE_PRICE = [50, 150, 600, 2500, 5000, 10000];
+export const EQUIP_BASE_PRICE = [100, 200, 400, 800, 1600, 3200];
+export const POTION_BASE_PRICE = [50, 100, 200, 400, 800, 1600];
 export const MATERIAL_BASE_PRICE = [10, 30, 100, 200, 500, 1000];
 
 export function useShopLogic(currentStage: number) {
@@ -70,17 +71,20 @@ export function useShopLogic(currentStage: number) {
      * 價格計算邏輯
      * 隨層數進行通膨，且 Unique 品質物品價格呈指數成長
      */
-    const calculatePrice = (quality: number) => {
+    const calculatePrice = (quality: number, usePrice: number[], stack = false) => {
 
-        const base = EQUIP_BASE_PRICE[quality] || 50;
+        const base = usePrice[quality] || 50;
 
         // 隨層數通膨：每層增加 3% 的價格，深層後斜率加強
         const inflationFactor = currentStage > 30 ? 1.5 : 1.0;
         const stageMultiplier = 1 + (currentStage * 0.03 * inflationFactor);
 
+
+        if (stack) {
+            return Math.floor(base * stageMultiplier)
+        }
         // 加入 ±15% 隨機波動
         const randomFlux = 0.85 + Math.random() * 0.3;
-
         return Math.floor(base * stageMultiplier * randomFlux);
     };
 
@@ -92,19 +96,32 @@ export function useShopLogic(currentStage: number) {
         });
 
         // 固定生成 1 件特殊道具
-        const usable = getRandomItemsByQuality(1, Math.min(3, getWeightedQuality()), false, Usable)[0];
-
+        let usable = getRandomItemsByQuality(1, Math.min(3, getWeightedQuality()), false, Usable)[0];
+        const potionCount = !usable ? 4 : 3
         // 固定生成 3 件藥水 (品質限制在 Tattered 到 Rare)
-        const potions = Array.from({length: 3}).map(() => {
+        const potions = Array.from({length: potionCount}).map(() => {
             const q = Math.min(3, getWeightedQuality());
             return getRandomItemsByQuality(1, q, true, Potions)[0];
         });
-
-        return [...equips, usable, ...potions].filter(Boolean).map(item => ({
+        const _equips = equips.map(item => ({
             ...item,
-            price: calculatePrice(item.quality ?? 0),
+            price: calculatePrice(item.quality ?? 0, EQUIP_BASE_PRICE),
             sold: false
         }));
+        let _usable: object | undefined = undefined;
+        if (usable) {
+            _usable = {
+                ...usable,
+                price: 500,
+                sold: false
+            }
+        }
+        const _potions = potions.map(item => ({
+            ...item,
+            price: calculatePrice(item.quality ?? 0, POTION_BASE_PRICE, true),
+            sold: false
+        }));
+        return [..._equips, _usable, ..._potions].filter(Boolean)
     };
 
     return {generateGoods};

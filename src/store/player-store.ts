@@ -166,7 +166,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         const hpRatio = info.value.hp / (oldMaxHp || 1);
         const spRatio = info.value.sp / (oldMaxSp || 1);
 
-        // 🚩 核心邏輯：判定是「裝備」還是「卸下」
+        // 判定是「裝備」還是「卸下」
         if (!item) {
             // 情況 A：傳入空值 -> 卸下裝備
             if (info.value.equips[slot]) {

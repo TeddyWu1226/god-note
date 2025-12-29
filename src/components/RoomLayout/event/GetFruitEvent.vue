@@ -107,12 +107,12 @@ const onLeave = () => {
         </template>
 
         <div v-else-if="gameStateStore.eventAction === 1" class="processing">
-          <div class="tree-icon absorbing">🌳</div>
+          <div class="event-icon absorbing">🌳</div>
           <p>正在發生變化...</p>
         </div>
 
         <template v-else-if="gameStateStore.eventAction === 2">
-          <div class="tree-icon pulse">✨</div>
+          <div class="event-icon pulse">✨</div>
           <div class="dialog-box">
             {{ finalText }}
           </div>

@@ -14,4 +14,11 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
         showEffect(targetElement, "🛡️⬆️", "buff");
         monster.adDefend += 5
     },
+    mushroomManOnAttacked: ({playerStore, logStore}) => {
+        if (checkProbability(0.5)) {
+            // 使攻擊者中毒
+            playerStore.addStatus(UnitStatus.MushroomManPoison)
+            logStore.logger.add(`你中毒了。`);
+        }
+    }
 };

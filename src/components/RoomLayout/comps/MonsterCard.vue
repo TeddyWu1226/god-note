@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import './boss-animation.css'
-import {computed, PropType, ref, watch} from 'vue'; // 引入 ref 和 computed
-import {MonsterType} from "@/types";
+import {computed, PropType, ref, watch} from 'vue';
+import {BattleOutcome, MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
-import {getEffectiveStats} from "@/store/game-state-store";
-import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
 import {triggerDamageEffect} from "@/constants/fight-func";
+import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
+import {usePlayerStore} from "@/store/player-store";
+import {useLogStore} from "@/store/log-store";
 
 const props = defineProps({
   info: {type: Object as PropType<MonsterType>},
@@ -16,6 +18,9 @@ const handleClick = () => {
   emit('select', props.info);
 };
 
+const playerStore = usePlayerStore()
+const gameStateStore = useGameStateStore()
+const logStore = useLogStore()
 const finalStats = computed(() => getEffectiveStats(props.info));
 
 // 新增狀態：用於控制抖動動畫
@@ -38,7 +43,6 @@ const shake = () => {
   }, SHAKE_DURATION);
 };
 
-// ⭐️ 將 shake 方法暴露給父組件
 defineExpose({
   shake
 });
@@ -52,10 +56,30 @@ const valueClass = (valueKey: string) => {
   }
 }
 const CardRef = ref(null);
+
+const onMonsterAttacked = (damageOutput: BattleOutcome) => {
+  if (props.info.onAttacked && MonsterOnAttacked[props.info.onAttacked]) {
+    MonsterOnAttacked[props.info.onAttacked]({
+      monster: props.info,
+      gameStateStore: gameStateStore,
+      playerStore: playerStore,
+      targetElement: CardRef.value.$el,
+      logStore: logStore,
+      damage: damageOutput,
+    });
+  }
+}
+
 // 核心監控邏輯
 watch(() => props.info.lastDamageResult, (newResult) => {
   if (newResult && CardRef.value) {
     triggerDamageEffect(newResult, CardRef.value.$el);
+    if (newResult.isHit) {
+      onMonsterAttacked(newResult);
+      if (newResult.totalDamage > newResult.baseDamage * 0.5) {
+        shake()
+      }
+    }
   }
 }, {deep: true});
 </script>

@@ -16,7 +16,7 @@ export const MistyForestMonster = {
         hp: 20,
         hpLimit: 20,
         level: 1,
-        dropGold: 5,
+        dropGold: 3,
         drop: [
             {item: MATERIAL.SlimeGoo, chance: 0.5}
         ],
@@ -37,7 +37,7 @@ export const MistyForestMonster = {
         hp: 15,
         hpLimit: 15,
         level: 1,
-        dropGold: 4,
+        dropGold: 5,
         drop: [
             {item: MATERIAL.AntShell, chance: 0.5}
         ]
@@ -56,7 +56,7 @@ export const MistyForestMonster = {
         hp: 30,
         hpLimit: 30,
         level: 1,
-        dropGold: 8,
+        dropGold: 5,
         drop: [
             {item: MATERIAL.ForestWood, chance: 0.5}
         ]
@@ -116,19 +116,18 @@ export const MistyForestMonster = {
         hp: 20,
         hpLimit: 20,
         level: 3,
-        dropGold: 15,
+        dropGold: 12,
         drop: [
             {item: MATERIAL.BeeStinger, chance: 0.1}
         ],
         onAttack: 'beeOnAttack'
     } as MonsterType,
-
-    // 小 Boss 級別
     MushroomMan: {
         icon: '🍄',
         name: '毒粉蕈人',
-        description: '行走緩慢的蕈類，厚實的菌蓋提供了極佳防護',
-        ad: 8,
+        class: 'elite',
+        description: '行走緩慢的蕈類，厚實的菌蓋提供了極佳防護,而且攻擊他都會飄逸神秘粉末',
+        ad: 5,
         critIncrease: 0,
         critRate: 0,
         adDefend: 10,
@@ -137,7 +136,8 @@ export const MistyForestMonster = {
         hp: 65,
         hpLimit: 65,
         level: 5,
-        dropGold: 100
+        dropGold: 50,
+        onAttacked: 'mushroomManOnAttacked'
     } as MonsterType,
 
     WoodViper: {
@@ -173,7 +173,7 @@ export const MistyForestMonster = {
         hp: 85,
         hpLimit: 85,
         level: 5,
-        dropGold: 100,
+        dropGold: 75,
         drop: [
             {
                 item: MATERIAL.WolfSkin,

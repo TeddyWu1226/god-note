@@ -133,7 +133,7 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* 🚩 只有在貼邊狀態時才啟用平滑動畫 */
+/* 只有在貼邊狀態時才啟用平滑動畫 */
 .floating-bag.is-snapping {
   transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
