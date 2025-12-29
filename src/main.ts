@@ -15,3 +15,5 @@ const app = createApp(App)
 app.use(ElementPlus)
 app.use(pinia)
 app.mount('#app')
+
+document.title = `神祇記事 v${__APP_VERSION__}`;

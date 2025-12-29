@@ -33,7 +33,7 @@ const startGame = async () => {
 <template>
   <el-card class="start-view">
     <div class="content-wrapper">
-      <h1 class="game-title">神之筆記</h1>
+      <h1 class="game-title">神祇記事</h1>
       <h2 class="game-subtitle">~無盡之塔~</h2>
 
       <div class="story-box">
