@@ -196,11 +196,6 @@ watch(
   height: 40vh;
 }
 
-.operation-layout {
-  height: 5vh;
-}
-
-
 .user-layout {
   height: 20vh;
 }

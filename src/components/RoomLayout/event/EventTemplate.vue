@@ -28,8 +28,4 @@ const props = defineProps({
 .flex > * {
   flex: 1;
 }
-
-.operation-layout {
-  height: 5vh
-}
 </style>
