@@ -7,6 +7,7 @@ import {ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
 import {CharEnum} from "@/enums/char-enum";
+import {Skills} from "@/constants/skill/skill";
 
 /**
  * 狀態控制
@@ -37,6 +38,8 @@ const handleJobChange = () => {
     playerStore.info.hpLimit += 20;
     playerStore.info.hp += 20;
     playerStore.info.char = CharEnum.Warrior.value
+    // 習得技能
+    playerStore.addSkill(Skills.DoubleHit.id)
 
 
     gameStateStore.eventAction = 3;

@@ -117,6 +117,7 @@ export interface UserType extends UnitType {
     items?: ItemType[]  // 雜項
     equipments?: EquipmentType[] // 裝備
     consumeItems?: (ItemType | UsableType)[] // 消耗品
+    skills: string[] // 技能ID列
 }
 
 
@@ -146,6 +147,7 @@ export interface MonsterType extends UnitType {
     onAttack?: MonsterOnAttackType, // 怪物攻擊前觸發
     onAttacked?: MonsterOnAttackedType // 怪物被攻擊後觸發
     onDead?: any
+    lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
 }
 
 /**
@@ -170,6 +172,7 @@ export interface DamageResult {
 export interface BattleOutcome extends DamageResult {
     isKilled: boolean;       // 被攻擊者是否被擊敗 (HP <= 0)
     remainingHP: number;     // 被攻擊者剩餘的 HP
+    timestamp?: number;
 }
 
 export interface BonusType extends qualityType {
@@ -226,6 +229,7 @@ export interface NoneMonsterItemSkillParams {
     callback: (result: boolean) => void
     targetElement?: HTMLElement
 }
+
 export interface SpecifyMonsterItemSkillParams {
     monster?: MonsterType;
     monsterIndex?: number;
@@ -249,3 +253,30 @@ export interface AchievementType {
     isHide: boolean; // 是否為隱藏成就
     hindHint?: string // 隱藏成就提示
 }
+
+
+/**
+ * 技能
+ */
+export interface SkillParams {
+    monster?: MonsterType;
+    monsterIndex?: number;
+    targetElement?: HTMLElement // 怪物的 html元素
+    playerStore?: PlayerStore;
+    gameStateStore?: GameStateStore
+}
+
+export interface SkillDescriptionParams {
+    playerStore?: PlayerStore;
+}
+
+export interface SkillType {
+    id: string;
+    name: string;
+    icon: string;
+    description: (prop: SkillDescriptionParams) => string; // 敘述
+    costSp?: number;
+    costHp?: number;
+    use: (prop: SkillParams) => Promise<boolean> | boolean; // 回傳技能是否施展成功
+}
+

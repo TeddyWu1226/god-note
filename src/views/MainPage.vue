@@ -63,6 +63,9 @@ const OperationLayoutRef = ref()
 const onAttack = () => {
   RoomLayoutRef.value?.onAttack()
 }
+const onSkill = (skillKey: string) => {
+  RoomLayoutRef.value?.onSkill(skillKey)
+}
 const onItemSkill = (prop) => {
   RoomLayoutRef.value?.onItemSkill(prop)
 }
@@ -146,6 +149,7 @@ watch(
               @attack="onAttack"
               @rest="onRest"
               @cancel="onCancel"
+              @skill="onSkill"
           />
           <UserValueLayout/>
           <UserLayout class="user-layout" @on-item-skill="onItemSkill"/>

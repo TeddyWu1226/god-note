@@ -5,6 +5,7 @@ import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 
+const MAX_SKILLS = 5
 export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
     const info = ref<UserType>(JSON.parse(JSON.stringify(DEFAULT_USER_INFO)));
@@ -346,24 +347,44 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
         statusEffects.value = statusEffects.value.filter(effect => effect.isBuff)
     }
+
+    const addSkill = (skillKey: string) => {
+        if (info.value.skills.includes(skillKey)) return
+        // 2. 檢查技能欄位是否已滿
+        if (info.value.skills.length >= MAX_SKILLS) {
+            return;
+        }
+        info.value.skills.push(skillKey);
+    }
+    const removeSkill = (skillKey: string) => {
+        const index = info.value.skills.indexOf(skillKey);
+        if (index > -1) {
+            info.value.skills.splice(index, 1);
+        }
+    }
+
+    const replaceSkill = (oldKey: string, newKey: string) => {
+        const index = info.value.skills.indexOf(oldKey);
+        if (index > -1) {
+            info.value.skills[index] = newKey;
+        }
+    }
+
+    const hasSkill = (skillKey: string): boolean => {
+        return info.value.skills.includes(skillKey);
+    }
     return {
         info,
         stopValueChangeAnimation,
         totalBonus,
         finalStats,
         statusEffects,
-        equipItem,
-        hasEquip,
-        gainItem,
-        hasItem,
-        removeItem,
+        equipItem, hasEquip,
+        gainItem, hasItem, removeItem,
         addGold,
-        addStatus,
-        hasStatus,
-        removeStatus,
-        nextTurnStatus,
-        healFull,
-        init
+        addStatus, hasStatus, removeStatus,
+        addSkill, removeSkill, replaceSkill, hasSkill,
+        nextTurnStatus, init, healFull
     };
 }, {
     persist: {

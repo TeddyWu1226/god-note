@@ -72,7 +72,7 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
  * @param defender 被攻擊者單元 (此物件的 HP 屬性將會被修改)
  * @returns 包含戰鬥結果的 BattleOutcome 物件
  */
-export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutcome {
+export function applyAttackDamage(attacker: UnitType, defender: UnitType): BattleOutcome {
     const logStore = useLogStore();
     const playerStore = usePlayerStore();
     // 1. 執行傷害計算
@@ -120,6 +120,118 @@ export function applyDamage(attacker: UnitType, defender: UnitType): BattleOutco
         `造成 ${damageTaken} 點傷害。`
     ].join('');
 
+    logStore.logger.add(logMessage);
+
+    return outcome;
+}
+
+
+/**
+ * 執行技能傷害：對齊 calculateDamage 邏輯。
+ * 計算順序：命中 -> 增幅 -> 暴擊 -> 固定防禦 -> 百分比減傷 -> 生命偷取
+ */
+export function applySkillDamage(
+    attacker: UnitType,
+    defender: UnitType,
+    baseValue: number, // 技能的基礎倍率傷害 (例如 stats.ad * 0.7)
+    type: 'ad' | 'ap' | 'true',
+    skillName: string,
+    extraCritRate: number = 0 // 技能額外提供的爆擊率
+): BattleOutcome {
+    const logStore = useLogStore();
+    const playerStore = usePlayerStore();
+    const MAX_RATE = 100;
+
+    const outcome: BattleOutcome = {
+        totalDamage: 0,
+        baseDamage: 0,
+        healAmount: 0,
+        isHit: false,
+        isCrit: false,
+        isKilled: false,
+        remainingHP: defender.hp,
+        timestamp: Date.now(),
+    };
+
+    // --- 1. 命中判斷 (比照原邏輯) ---
+    const BASE_HIT_RATE = 100;
+    let hitRate = Math.max(0, BASE_HIT_RATE + (attacker.hit || 0) - (defender.dodge || 0));
+    if (Math.random() * MAX_RATE >= hitRate) {
+        logStore.logger.add(`${defender.name} 閃避了 【${skillName}】。`);
+        return outcome;
+    }
+    outcome.isHit = true;
+
+    // --- 2. 基礎傷害與傷害增幅 ---
+    let damage = baseValue;
+    const increaseAttr = type === 'ad' ? 'adIncrease' : (type === 'ap' ? 'apIncrease' : null);
+
+    if (increaseAttr && attacker[increaseAttr]) {
+        damage *= (1 + attacker[increaseAttr] / 100);
+    }
+
+    // --- 3. 暴擊判斷與增傷 (在防禦前套用) ---
+    const totalCritRate = (attacker.critRate || 0) + extraCritRate;
+    if (Math.random() * MAX_RATE < totalCritRate) {
+        outcome.isCrit = true;
+        // 使用 attacker.critIncrease 作為暴擊倍率
+        damage *= ((attacker.critIncrease || 150) / 100);
+    }
+    outcome.baseDamage = damage;
+
+    // --- 4. 防禦力減免與抗性 ---
+    let finalDamage = damage;
+
+    if (type === 'ad') {
+        // 物理：扣除固定防禦
+        finalDamage = Math.max(1, finalDamage - (defender.adDefend || 0));
+    }
+    // true 類型直接跳過固定防禦
+
+    // --- 5. 百分比減傷 (defendIncrease) ---
+    if (type !== 'true' && defender.defendIncrease) {
+        const reduction = Math.min(defender.defendIncrease, 95);
+        finalDamage *= (1 - reduction / 100);
+    }
+
+    // --- 6. 取整與生命偷取 ---
+    outcome.totalDamage = Math.floor(finalDamage);
+    if (attacker.lifeSteal && outcome.totalDamage > 0) {
+        outcome.healAmount = Math.floor(outcome.totalDamage * (attacker.lifeSteal / 100));
+    }
+
+    // --- 7. 更新生命值與 Store 同步 ---
+    const isTargetPlayer = (defender.name === playerStore.info.name);
+
+    // 扣除目標 HP
+    if (isTargetPlayer) {
+        playerStore.info.hp = Math.max(0, playerStore.info.hp - outcome.totalDamage);
+        defender.hp = playerStore.info.hp;
+    } else {
+        defender.hp = Math.max(0, defender.hp - outcome.totalDamage);
+    }
+
+    // 處理生命偷取 (若有吸血，回復攻擊者 HP)
+    if (outcome.healAmount > 0) {
+        const isAttackerPlayer = (attacker.name === playerStore.info.name);
+        if (isAttackerPlayer) {
+            playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + outcome.healAmount);
+        } else {
+            attacker.hp = Math.min(attacker.hpLimit, attacker.hp + outcome.healAmount);
+        }
+    }
+
+    if (defender.hp <= 0) outcome.isKilled = true;
+    outcome.remainingHP = defender.hp;
+
+    // --- 8. 輸出日誌 ---
+    const typeNames = {ad: '物理', ap: '魔法', true: '真實'};
+    const logMessage = [
+        `${attacker.name} 施放 【${skillName}】，`,
+        outcome.isCrit ? `💥 暴擊` : `命中`,
+        `造成 ${outcome.totalDamage} 點${typeNames[type]}傷害。`,
+        outcome.healAmount > 0 ? `(恢復 ${outcome.healAmount} 點生命)` : ''
+    ].join('');
     logStore.logger.add(logMessage);
 
     return outcome;

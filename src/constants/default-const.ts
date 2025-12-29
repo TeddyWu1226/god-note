@@ -40,7 +40,8 @@ export const DEFAULT_USER_INFO: UserType = {
     adIncrease: 0,
     apIncrease: 0,
     defendIncrease: 0,
-    lifeSteal: 0
+    lifeSteal: 0,
+    skills: []
 }
 
 // 房間類型權重

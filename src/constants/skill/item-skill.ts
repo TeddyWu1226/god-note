@@ -45,6 +45,5 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
         }
         showEffect(targetElement, "現在無法使用!", "debuff")
         callback(false);
-
     },
 };

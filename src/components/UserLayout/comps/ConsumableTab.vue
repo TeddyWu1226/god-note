@@ -2,7 +2,7 @@
 import './item.css'
 import {computed} from 'vue'
 import {usePlayerStore} from '@/store/player-store'
-import {Equipment, UsableType} from "@/types"
+import {UsableType} from "@/types"
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
@@ -25,7 +25,6 @@ const handleUse = async (potion: UsableType, event?: MouseEvent) => {
   if (!potion.usable) return;
   // 取得當前點擊的 DOM 元素
   const targetEl = event.currentTarget as HTMLElement;
-  console.log('targetEl', targetEl)
   // 如果有技能邏輯，需要等待父組件判斷
   if (potion.skill) {
     const canUse = await new Promise<boolean>((resolve) => {

@@ -34,6 +34,10 @@ const onAttack = () => {
   FightRoomRef.value.onAttack()
 }
 
+const onSkill = (skillKey: string) => {
+  FightRoomRef.value.onSkill(skillKey)
+}
+
 const onRun = () => {
   FightRoomRef.value?.onRun()
 }
@@ -49,7 +53,7 @@ const onItemSkill = ({skillKey, callback, el}) => {
           targetElement: el
         }
     )
-  }  else {
+  } else {
     FightRoomRef.value?.onItemSkill({skillKey, callback, el})
   }
 }
@@ -73,6 +77,7 @@ const onCancel = () => {
 
 defineExpose({
   onAttack,
+  onSkill,
   onRun,
   onRest,
   onCancel,

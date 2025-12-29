@@ -6,13 +6,12 @@ import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
 import {computed, nextTick, ref} from "vue";
-import {ItemType, MonsterType} from "@/types";
+import {ItemType, MonsterType, SkillType} from "@/types";
 import {
-  applyDamage,
+  applyAttackDamage,
   applyRandomFloatAndRound,
   canEscape, getLootFromTable,
-  spawnMonsters,
-  triggerDamageEffect
+  spawnMonsters
 } from "@/constants/fight-func";
 import {ElMessage} from "element-plus";
 import {LogView} from "@/components/LogView";
@@ -29,6 +28,7 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
 import {ItemSkill} from "@/constants/skill/item-skill";
+import {Skills} from "@/constants/skill/skill";
 
 const emit = defineEmits(['playerDead', 'runFailed'])
 const gameStateStore = useGameStateStore()
@@ -131,7 +131,7 @@ const monsterMove = (selectedMonster: MonsterType) => {
     });
   }
   // 傷害計算
-  const damageOutput = applyDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
+  const damageOutput = applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
   // 判斷玩家是否死亡
   if (damageOutput.isKilled) {
     emit('playerDead', damageOutput.isKilled)
@@ -210,9 +210,9 @@ const onAttack = () => {
   }
   // 傷害計算
   if (!isPlayerStuck()) {
-    const damageOutput = applyDamage(playerStore.finalStats, selectedMonster);
+    const damageOutput = applyAttackDamage(playerStore.finalStats, selectedMonster);
     const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-    triggerDamageEffect(damageOutput, targetElement.$el)
+    selectedMonster.lastDamageResult = damageOutput
     if (damageOutput.isHit) {
       targetElement?.shake()
       // 若怪物受到傷害觸發
@@ -228,16 +228,19 @@ const onAttack = () => {
       }
     }
   }
-  // 回合結束判定
-  onPlayerTurnEnd()
+
   // 怪物是否死亡
   if (selectedMonster.hp > 0) {
     // 怪物行動
     monsterMove(selectedMonster)
     gameStateStore.tickAllMonsters()
   }
+  // 玩家回合結束判定
+  onPlayerTurnEnd()
+  // 檢查怪物是否死亡
   checkAllMonsterDead()
 }
+// 物品使用
 const onItemSkill = ({skillKey, callback, el}) => {
   // 指定怪物
   if (!selectedMonsterIndex.value) {
@@ -255,6 +258,49 @@ const onItemSkill = ({skillKey, callback, el}) => {
       }
   )
 }
+const isUsing = ref(false)
+// 技能使用
+const onSkill = async (skillKey: string) => {
+  if (isUsing.value) return
+  isUsing.value = true
+  if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
+  const selectedMonster = monsters.value[selectedMonsterIndex.value];
+  const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
+  // 加上 await 確保技能動作執行完畢
+  const useSkill = Skills[skillKey] as SkillType
+  const success = await useSkill.use({
+    monster: selectedMonster,
+    monsterIndex: selectedMonsterIndex.value,
+    targetElement: targetElement?.$el,
+    playerStore: playerStore,
+    gameStateStore: gameStateStore
+  });
+  // 施展不生效就中斷
+  if (!success) {
+    isUsing.value = false
+    return
+  }
+  if (useSkill.costSp) {
+    const newSP = playerStore.info.sp - useSkill.costSp;
+    playerStore.info.sp = Math.max(0, newSP)
+  }
+  if (useSkill.costHp) {
+    const newHP = playerStore.info.hp - useSkill.costHp;
+    playerStore.info.hp = Math.max(0, newHP)
+  }
+
+  // 怪物是否死亡
+  if (selectedMonster.hp > 0) {
+    // 怪物行動
+    monsterMove(selectedMonster)
+    gameStateStore.tickAllMonsters()
+  }
+  // 玩家回合結束判定
+  onPlayerTurnEnd()
+  // 檢查怪物是否死亡
+  checkAllMonsterDead()
+  isUsing.value = false
+};
 // 逃跑
 const isEscape = ref(false)
 const onRun = () => {
@@ -286,6 +332,7 @@ const onRun = () => {
 
 defineExpose({
   onAttack,
+  onSkill,
   onRun,
   onItemSkill
 })

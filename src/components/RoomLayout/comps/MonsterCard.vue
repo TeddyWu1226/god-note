@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import './boss-animation.css'
-import {computed, PropType, ref} from 'vue'; // 引入 ref 和 computed
+import {computed, PropType, ref, watch} from 'vue'; // 引入 ref 和 computed
 import {MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
 import {getEffectiveStats} from "@/store/game-state-store";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {triggerDamageEffect} from "@/constants/fight-func";
 
 const props = defineProps({
   info: {type: Object as PropType<MonsterType>},
@@ -49,10 +51,18 @@ const valueClass = (valueKey: string) => {
     return 'debuff'
   }
 }
+const CardRef = ref(null);
+// 核心監控邏輯
+watch(() => props.info.lastDamageResult, (newResult) => {
+  if (newResult && CardRef.value) {
+    triggerDamageEffect(newResult, CardRef.value.$el);
+  }
+}, {deep: true});
 </script>
 
 <template>
   <el-card
+      ref="CardRef"
       :class="{
       'monster-card': true,
       'is-selected': props.isSelected,
@@ -183,6 +193,7 @@ p {
 .debuff {
   color: var(--el-color-danger);
 }
+
 /* ------------------- 狀態效果列 ------------------- */
 .status-bar {
   position: relative;

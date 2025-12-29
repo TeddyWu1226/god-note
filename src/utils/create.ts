@@ -167,3 +167,6 @@ export const getRandomItemByWeight = <T extends object>(
     const fallbackItem = dataPool[validKeys[0]];
     return shouldClone ? create<T>(fallbackItem) : fallbackItem;
 };
+
+
+export const Sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
