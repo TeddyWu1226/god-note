@@ -91,6 +91,7 @@ export interface UnitType {
     adIncrease?: number // 傷害增幅(%)
     apIncrease?: number // 法術增幅(%)
     defendIncrease?: number // 減傷(%)
+    runIncrease?: number // 額外逃跑值
     // 吸血
     lifeSteal?: number // 生命偷取(%)
 }

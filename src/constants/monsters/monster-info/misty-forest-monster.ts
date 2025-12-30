@@ -22,8 +22,6 @@ export const MistyForestMonster = {
         ],
         onAttack: 'slimeOnAttack'
     } as MonsterType,
-
-    // 2. 昆蟲類 - 高命中/高閃避
     WoodTick: {
         icon: '🐜',
         name: '木兵蟻',

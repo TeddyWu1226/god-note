@@ -5,13 +5,13 @@ export const MATERIAL = {
     SlimeGoo: {
         name: '史萊姆黏液',
         icon: '🧪',
-        description: '黏糊糊的綠色液體，可以用來製作簡易藥水',
+        description: '黏糊糊的綠色液體',
         quality: 0,
     } as ItemType,
     AntShell: {
         name: '螞蟻甲殼',
         icon: '🐜',
-        description: '堅硬的昆蟲外殼，是製作輕甲的素材',
+        description: '堅硬的昆蟲外殼',
         quality: 0,
     } as ItemType,
     ForestWood: {
@@ -23,13 +23,13 @@ export const MATERIAL = {
     OwlFeather: {
         name: '夜行梟羽毛',
         icon: '🪶',
-        description: '非常輕盈且不沾水，適合製作箭矢',
+        description: '非常輕盈且不沾水',
         quality: 1,
     } as ItemType,
     RabbitHorn: {
         name: '角兔的小角',
         icon: '𓄏',
-        description: '尖銳的小型角，可用作武器尖端',
+        description: '尖銳的小型角',
         quality: 0,
     } as ItemType,
     BeeStinger: {

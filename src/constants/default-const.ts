@@ -45,7 +45,7 @@ export const DEFAULT_USER_INFO: UserType = {
 }
 
 // 房間類型權重
-export const DEFAULT_ROOM_WEIGHTS: RoomWeights = {
+export const  DEFAULT_ROOM_WEIGHTS: RoomWeights = {
     0: 8, // 休息
     1: 60, // 戰鬥
     2: 15, // 菁英戰鬥

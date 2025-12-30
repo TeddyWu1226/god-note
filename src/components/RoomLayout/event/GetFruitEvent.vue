@@ -12,6 +12,7 @@ import {getRandomElements} from "@/utils/math";
 import {RoomEnum} from "@/enums/room-enum";
 import {SpecialBoss} from "@/constants/monsters/special-boss-info";
 import {create} from "@/utils/create";
+import {Accessory2} from "@/constants/items/equipment/accessories-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -34,7 +35,8 @@ const finalText = ref("");
 
 const isAdvanced = computed(() => {
   return gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 1 ||
-      gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) == 3
+      gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) == 3 ||
+      gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) == 5
 })
 
 const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sacrifice_sp' | 'sacrifice_all') => {
@@ -105,12 +107,12 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         // 第五階段：獻祭全部生命
         playerStore.info.hp = 0;
         finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，將龐大的生命能量灌注回你殘破的軀殼中。你的潛能徹底爆發了！";
-        // todo:獲得物品
+        playerStore.gainItem(Accessory2.EvilWoodenHeart)
         break;
     }
     gameStateStore.eventAction = 2;
     gameStateStore.transitionToNextState();
-    if (type === 'destroy' || 'sacrifice_all') {
+    if (type === 'destroy' || type === 'sacrifice_all') {
       gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true)
     } else {
       gameStateStore.addEventProcess(SpecialEventEnum.GetFruit)
@@ -126,8 +128,7 @@ const onLeave = () => {
     boss.hp += playerStore.finalStats.hpLimit
     boss.ad += playerStore.finalStats.ad
     boss.adDefend += playerStore.finalStats.adDefend
-    gameStateStore.setCurrentEnemy([boss])
-    gameStateStore.setRoom(RoomEnum.SpecialBoss.value)
+    gameStateStore.switchToFightRoom(RoomEnum.SpecialBoss.value, [boss])
   } else {
     gameStateStore.transitionToNextState();
   }
@@ -202,7 +203,6 @@ const onLeave = () => {
         <template v-else-if="gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5">
           <el-button
               type="danger"
-              style="font-weight: bold; border: 2px solid black;"
               @click="handleChoice('sacrifice_all')">
             獻祭全部生命
           </el-button>

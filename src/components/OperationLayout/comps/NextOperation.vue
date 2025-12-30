@@ -14,20 +14,21 @@ const props = defineProps({
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
-const nextRooms = ref<number[]>([])
 const createNextRooms = () => {
-  nextRooms.value = []
+  gameStateStore.nextRooms = []
   // 建立兩個選項
-  nextRooms.value.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
-  nextRooms.value.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
+  const rooms = []
+  rooms.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
+  rooms.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
   // 去重複
-  nextRooms.value = Array.from(new Set(nextRooms.value));
+  gameStateStore.nextRooms = Array.from(new Set(rooms));
 }
 
 const selectRoom = (roomValue: number) => {
   gameStateStore.setRoom(roomValue)
   gameStateStore.days += 1
   trackerStore.achievementsCount.peaceDay += 1
+  gameStateStore.nextRooms = []
 };
 
 const goNextStage = () => {
@@ -35,8 +36,12 @@ const goNextStage = () => {
   trackerStore.init(false)
   gameStateStore.init(gameStateStore.currentStage + 1)
   gameStateStore.setRoom(RoomEnum.Bless.value)
+  gameStateStore.nextRooms = []
 }
 onMounted(() => {
+  if (gameStateStore.nextRooms.length > 0) {
+    return
+  }
   if (gameStateStore.currentRoomValue !== RoomEnum.Boss.value) {
     createNextRooms()
   }
@@ -46,7 +51,7 @@ onMounted(() => {
 <template>
   <div class="flex">
     <el-button
-        v-for="room in nextRooms"
+        v-for="room in gameStateStore.nextRooms"
         :color="getEnumColumn(RoomEnum, room,'color')"
         :disabled="props.disabled"
         @click="selectRoom(room)"

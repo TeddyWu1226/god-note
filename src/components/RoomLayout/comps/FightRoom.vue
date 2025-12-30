@@ -116,22 +116,24 @@ const handleMonsterSelect = (index: number) => {
  * 怪物行動
  */
 
-const monsterMove = (selectedMonster: MonsterType) => {
-  // 特殊效果
-  if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
-    // 執行對應的函式
-    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-    MonsterOnAttack[selectedMonster.onAttack]({
-      monster: selectedMonster,
-      monsterIndex: selectedMonsterIndex.value,
-      playerStore: playerStore,
-      gameStateStore: gameStateStore,
-      logStore: logStore,
-      targetElement: targetElement.$el
-    });
-  }
-  // 傷害計算
-  applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
+const monsterMove = () => {
+  monsters.value?.forEach((selectedMonster, index) => {
+    // 特殊效果
+    if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
+      // 執行對應的函式
+      const targetElement = monsterCardRefs.value[index];
+      MonsterOnAttack[selectedMonster.onAttack]({
+        monster: selectedMonster,
+        monsterIndex: index,
+        playerStore: playerStore,
+        gameStateStore: gameStateStore,
+        logStore: logStore,
+        targetElement: targetElement.$el
+      });
+    }
+    // 傷害計算
+    applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
+  })
 }
 
 const whenMonsterDead = (selectedMonster: MonsterType) => {
@@ -157,14 +159,14 @@ const whenMonsterDead = (selectedMonster: MonsterType) => {
   }
 }
 
+
 const checkAllMonsterDead = () => {
-  //檢查每個怪物血量
+  //檢查每個怪物血量是否死亡
   monsters.value.forEach((monster) => {
     if (monster.hp <= 0) {
       whenMonsterDead(monster)
     }
   })
-
   // 怪物全部死亡
   if (monsters.value.length === 0) {
     gameStateStore.setCurrentEnemy([])
@@ -225,12 +227,15 @@ const onAttack = () => {
     }
   }
 
-  // 怪物是否死亡
-  if (selectedMonster.hp > 0) {
-    // 怪物行動
-    monsterMove(selectedMonster)
-    gameStateStore.tickAllMonsters()
-  }
+  //檢查每個怪物血量是否死亡
+  monsters.value.forEach((monster) => {
+    if (monster.hp <= 0) {
+      whenMonsterDead(monster)
+    }
+  })
+
+  monsterMove()
+  gameStateStore.tickAllMonsters()
   // 玩家回合結束判定
   onPlayerTurnEnd()
   // 檢查怪物是否死亡
@@ -287,12 +292,17 @@ const onSkill = async (skillKey: string) => {
     }
   }
 
-  // 怪物是否死亡
-  if (selectedMonster.hp > 0) {
-    // 怪物行動
-    monsterMove(selectedMonster)
-    gameStateStore.tickAllMonsters()
-  }
+
+  //檢查每個怪物血量是否死亡
+  monsters.value.forEach((monster) => {
+    if (monster.hp <= 0) {
+      whenMonsterDead(monster)
+    }
+  })
+
+  // 怪物行動
+  gameStateStore.tickAllMonsters()
+
   // 玩家回合結束判定
   onPlayerTurnEnd()
   // 檢查怪物是否死亡
@@ -303,18 +313,8 @@ const onSkill = async (skillKey: string) => {
 const isEscape = ref(false)
 const onRun = () => {
   if (isPlayerStuck() || !canEscape(playerStore.finalStats, monsters.value)) {
-    if (!selectedMonsterIndex.value) {
-      selectedMonsterIndex.value = 0
-    }
-    let selectedMonster: MonsterType | null
-    if (monsters.value.length >= 1) {
-      const randomIndex = Math.floor(Math.random() * monsters.value.length);
-      selectedMonster = monsters.value[randomIndex];
-    } else {
-      selectedMonster = monsters.value[selectedMonsterIndex.value];
-    }
     emit('runFailed', true)
-    monsterMove(selectedMonster)
+    monsterMove()
     gameStateStore.tickAllMonsters()
     checkAllMonsterDead()
   } else {
@@ -324,7 +324,6 @@ const onRun = () => {
   }
   // 回合結束判定
   onPlayerTurnEnd()
-
 }
 
 
@@ -341,13 +340,19 @@ const init = () => {
   isEscape.value = false;
   selectedMonsterIndex.value = null;
 
-  // 1. 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取
+  // 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取
   if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {
     monsters.value = gameStateStore.currentEnemy;
     return;
   }
 
-  // 2. 若無緩存，則根據房間類型生成
+  // 檢查是否有突襲怪物
+  if (gameStateStore.switchEnemy && gameStateStore.switchEnemy.length > 0) {
+    monsters.value = gameStateStore.takeSwitchEnemy()
+    gameStateStore.setCurrentEnemy(monsters.value);
+  }
+
+  // 若無緩存，則根據房間類型生成
   switch (currentRoomValue.value) {
     case RoomEnum.Fight.value:
       genMonsters(1, getWeightByStage() || {'Error': 1});

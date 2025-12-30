@@ -1,37 +1,31 @@
 /**
  * 區域 1-1: 初始之森 (BeginForest)
- * 特色：新手教學區，史萊姆與基礎昆蟲為主。
  */
 export const BeginForestWeights: Record<string, number> = {
     Slime: 50,
-    WoodTick: 30,
-    ForestSprout: 20,
-    FierceWolf: 5
+    ForestSprout: 30,
+    WoodTick: 15,
+    FierceWolf: 3
 };
 
 /**
  * 區域 1-2: 下沉樹叢區 (SunkenGrove)
- * 特色：植被茂密，開始出現敏捷的生物。
  */
 export const SunkenGroveWeights: Record<string, number> = {
     Slime: 20,
-    WoodTick: 30,
     ForestSprout: 20,
+    WoodTick: 30,
     GreenRabbit: 10,
-    StingerBee: 20,
     FierceWolf: 3
 };
 
 /**
  * 區域 1-3: 古老樹根地 (AncientRoots)
- * 特色：光線昏暗，空中捕食者與劇毒生物增加。
  */
 export const AncientRootsWeights: Record<string, number> = {
-    Slime: 5,
-    ForestSprout: 5,
-    StingerBee: 30,
+    ForestSprout: 20,
+    StingerBee: 20,
     GreenRabbit: 30,
-    MushroomMan: 10,
     FierceWolf: 5,
     SmallSpider: 5
 };
@@ -42,6 +36,7 @@ export const AncientRootsWeights: Record<string, number> = {
  */
 export const FairyBarrierWeights: Record<string, number> = {
     ForestOwl: 20,
+    MushroomMan: 10,
 
 };
 

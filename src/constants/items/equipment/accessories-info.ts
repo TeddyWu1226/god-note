@@ -2,7 +2,7 @@
 import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
-export const Accessories = {
+export const Accessory1 = {
     WoodenRing: {
         name: '木質指環',
         description: '簡單的裝飾品。',
@@ -87,6 +87,33 @@ export const Accessories = {
         icon: '⚓',
         position: EquipmentPosition.ACCESSORY1,
         quality: 5,
-        adIncrease: 1000
+        adIncrease: 1000,
+        hit: 100
+    } as EquipmentType,
+    CursedWoodenRing: {
+        name: '詛咒的荊棘之戒',
+        description: '擊敗邪靈樹妖後掉落的物品,穿戴後會吸收你的靈魂以換取更強大的力量。',
+        icon: '💍',
+        position: EquipmentPosition.ACCESSORY1,
+        quality: 11,
+        hpLimit: -25,
+        spLimit: -25,
+        adIncrease: 10,
+        apIncrease: 10,
     } as EquipmentType
 };
+
+
+export const Accessory2 = {
+    EvilWoodenHeart: {
+        name: '邪靈樹妖之心',
+        description: '成長為最終的邪靈樹妖給你的禮物,穿戴後會吸收你的靈魂以換取更強大的力量。',
+        icon: '🤎',
+        position: EquipmentPosition.ACCESSORY1,
+        quality: 11,
+        hpLimit: -50,
+        spLimit: -50,
+        adIncrease: 20,
+        apIncrease: 20,
+    } as EquipmentType
+}
