@@ -30,7 +30,7 @@ import {useTrackerStore} from "@/store/track-store";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {Skills} from "@/constants/skill/skill";
 
-const emit = defineEmits(['playerDead', 'runFailed'])
+const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const logStore = useLogStore()
@@ -131,11 +131,7 @@ const monsterMove = (selectedMonster: MonsterType) => {
     });
   }
   // 傷害計算
-  const damageOutput = applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
-  // 判斷玩家是否死亡
-  if (damageOutput.isKilled) {
-    emit('playerDead', damageOutput.isKilled)
-  }
+  applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats);
 }
 
 const whenMonsterDead = (selectedMonster: MonsterType) => {

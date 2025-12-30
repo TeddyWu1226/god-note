@@ -8,18 +8,36 @@ import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
+import {getRandomElements} from "@/utils/math";
+import {RoomEnum} from "@/enums/room-enum";
+import {SpecialBoss} from "@/constants/monsters/special-boss-info";
+import {create} from "@/utils/create";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 
-// 0: 初始, 1: 吸收中, 2: 完成
+/**
+ * eventAction 狀態控制
+ * 0: 初始, 1: 提交需求, 2: 結果
+ */
+
+/**
+ * eventProcess 事件進度
+ * 0: 提交物品(可拆樹)
+ * 1: 獻祭
+ * 2: 提交物品
+ * 3. 獻祭
+ * 4: 提交物品
+ * 5. 獻祭/強制戰鬥
+ */
 const finalText = ref("");
 
 const isAdvanced = computed(() => {
-  return gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) == 1
+  return gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 1 ||
+      gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) == 3
 })
 
-const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sacrifice_sp') => {
+const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sacrifice_sp' | 'sacrifice_all') => {
   gameStateStore.eventAction = 1;
   switch (type) {
     case 'herb':
@@ -32,13 +50,32 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
   setTimeout(() => {
     switch (type) {
       case 'herb':
-        playerStore.info.ad += 5;
-        finalText.value = "枯樹吸收了草藥水，生長出一個咖啡色的小果實，你吃下後攻擊力永久提升了！";
+        finalText.value = '枯樹吸收了草藥水，'
+        const picked = getRandomElements(['ad', 'apIncrease', 'hit'])[0]
+        if (picked === 'ad') {
+          playerStore.info.ad += 3;
+          finalText.value += "生長出一個咖啡色的果實，你吃下後攻擊力永久提升了！";
+        } else if (picked === 'apIncrease') {
+          playerStore.info.apIncrease += 3;
+          finalText.value += "生長出一個藍色的果實，你吃下後法術傷害永久提升了！";
+        } else {
+          playerStore.info.hit += 3;
+          finalText.value += "生長出一個綠色的果實，你吃下後命中值永久提升了！";
+        }
         break;
       case 'juice':
-        playerStore.info.hpLimit += 30;
-        playerStore.info.hp += 30; // 上限增加時同時補血
-        finalText.value = "枯樹長出了嫩芽，生長出一個鮮紅色的嫩葉，你吃下後生命上限提升了！";
+        finalText.value = '枯樹長出了嫩芽，'
+        const picked2 = getRandomElements(['critRate', 'adDefend', 'dodge'])[0]
+        if (picked2 === 'critRate') {
+          playerStore.info.critRate += 3;
+          finalText.value += "生長出一個鮮紅色的嫩葉，你吃下後爆擊率永久提升了！";
+        } else if (picked2 === 'adDefend') {
+          playerStore.info.adDefend += 1;
+          finalText.value += "生長出一個鐵灰色的嫩葉，你吃下後物理防禦永久提升了！";
+        } else {
+          playerStore.info.dodge += 3;
+          finalText.value += "生長出一個青綠色的嫩葉，你吃下後閃避值永久提升了！";
+        }
         break;
       case 'destroy':
         playerStore.gainItem(Weapon.SpikeSpear);
@@ -64,10 +101,16 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         playerStore.info.spLimit += 25;
         finalText.value = "古樹吸取了你的魔力，你感到靈魂一顫，魔力上限提升了。";
         break;
+      case 'sacrifice_all':
+        // 第五階段：獻祭全部生命
+        playerStore.info.hp = 0;
+        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，將龐大的生命能量灌注回你殘破的軀殼中。你的潛能徹底爆發了！";
+        // todo:獲得物品
+        break;
     }
     gameStateStore.eventAction = 2;
     gameStateStore.transitionToNextState();
-    if (type === 'destroy') {
+    if (type === 'destroy' || 'sacrifice_all') {
       gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true)
     } else {
       gameStateStore.addEventProcess(SpecialEventEnum.GetFruit)
@@ -76,7 +119,18 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
 };
 
 const onLeave = () => {
-  gameStateStore.transitionToNextState();
+  if (gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5) {
+    const boss = create(SpecialBoss.EvilWoodMan)
+    // 怪物強化
+    boss.hpLimit += playerStore.finalStats.hpLimit
+    boss.hp += playerStore.finalStats.hpLimit
+    boss.ad += playerStore.finalStats.ad
+    boss.adDefend += playerStore.finalStats.adDefend
+    gameStateStore.setCurrentEnemy([boss])
+    gameStateStore.setRoom(RoomEnum.SpecialBoss.value)
+  } else {
+    gameStateStore.transitionToNextState();
+  }
 }
 </script>
 
@@ -125,6 +179,7 @@ const onLeave = () => {
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="gameStateStore.eventAction === 0">
         <template v-if="!isAdvanced">
+          <!--    提交物品     -->
           <el-button
               :disabled="!playerStore.hasItem(Potions.Heal0.name)[0]"
               type="success"
@@ -138,9 +193,18 @@ const onLeave = () => {
             提供 [{{ Potions.Magic0.name }}]
           </el-button>
           <el-button
+              v-if="gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 0"
               type="danger"
               @click="handleChoice('destroy')">
-            拆毀枯樹
+            拆毀它
+          </el-button>
+        </template>
+        <template v-else-if="gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5">
+          <el-button
+              type="danger"
+              style="font-weight: bold; border: 2px solid black;"
+              @click="handleChoice('sacrifice_all')">
+            獻祭全部生命
           </el-button>
         </template>
         <template v-else>

@@ -6,7 +6,7 @@ import {ElCard} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 
 const playerStore = usePlayerStore();
-
+const emit = defineEmits(['playerDead'])
 
 // 創建一個 Template Ref 指向 el-card 實例
 const cardRef = ref<typeof ElCard | null>(null);
@@ -93,6 +93,10 @@ watch(
             messageClass: messageClass
           }
       );
+      // 如果生命值歸零
+      if (playerStore.info.hp <= 0) {
+        emit('playerDead', true)
+      }
     },
     {immediate: false}
 );
@@ -176,12 +180,6 @@ watch(
   padding: 0.5rem 1rem;
 }
 
-/* ---------------------------------------------------- */
-/* ⭐️ 新增特效 CSS Class (需要在 Global 或 FloatingMessage 組件的 CSS 中定義) */
-/* ---------------------------------------------------- */
-
-/* 如果您在 FloatingMessage 組件中使用了 :deep() 或 global style，可以在那裡定義 */
-/* 這裡僅提供範例，您可能需要將這些樣式複製到 FloatingMessage.vue 的 <style> 標籤中 */
 
 /* 大額傷害/治療的字體效果 */
 .massive-damage-font, .massive-heal-font {

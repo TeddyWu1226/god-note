@@ -139,7 +139,6 @@ watch(
           <RoomLayout
               ref="RoomLayoutRef"
               class="room-layout"
-              @player-dead="onPlayerDead"
               @run-failed="onRunFailed"
           />
           <OperationLayout
@@ -151,7 +150,7 @@ watch(
               @cancel="onCancel"
               @skill="onSkill"
           />
-          <UserValueLayout/>
+          <UserValueLayout @player-dead="onPlayerDead"/>
           <UserLayout class="user-layout" @on-item-skill="onItemSkill"/>
         </el-main>
       </el-container>

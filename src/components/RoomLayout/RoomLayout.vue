@@ -13,7 +13,7 @@ import BlessRoom from "@/components/RoomLayout/comps/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 
-const emit = defineEmits(['playerDead', 'runFailed'])
+const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 
@@ -21,9 +21,6 @@ const currentRoomValue = computed(() => {
       return gameStateStore.currentRoomValue
     }
 )
-const onPlayerDead = () => {
-  emit('playerDead', true)
-}
 const onRunFailed = () => {
   emit('runFailed', true)
 }
@@ -109,8 +106,9 @@ watch(() => gameStateStore.days,
         ref="FightRoomRef"
         v-if="currentRoomValue === RoomEnum.Fight.value ||
         currentRoomValue === RoomEnum.EliteFight.value ||
-        currentRoomValue === RoomEnum.Boss.value"
-        @player-dead="onPlayerDead"
+        currentRoomValue === RoomEnum.Boss.value||
+        currentRoomValue === RoomEnum.SpecialBoss.value
+"
         @run-failed="onRunFailed"
         :key="roomKeyCounter"
     />

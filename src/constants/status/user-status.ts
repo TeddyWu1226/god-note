@@ -8,7 +8,7 @@ export const UserStatus = {
         isBuff: true,
         description: '煙霧迷漫狀態下, 獲得必定逃跑效果',
         bonus: {
-            dodge: 1000000000000
+            dodge: 1000
         }
     } as StatusEffect,
     OnBurn: {
