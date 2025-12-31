@@ -157,7 +157,7 @@ watch(
       <UserDetailInfo v-if="!gameStateStore.stateIs(GameState.INITIAL)"/>
     </div>
     <StageTransition ref="StageTransitionRef"/>
-    <el-dialog v-model="isShowIllustration" title="說明" width="40rem">
+    <el-dialog v-model="isShowIllustration" title="說明">
       <p>1. 無盡之塔是階層式結構,唯有打敗該層BOSS才能前往下一層</p>
       <p>2. 在達成指定條件前, 無法挑戰該層BOSS</p>
       <p>3. 你可以盡情的選擇你所想要走的路線,但請做好萬全準備後再選擇挑戰BOSS</p>

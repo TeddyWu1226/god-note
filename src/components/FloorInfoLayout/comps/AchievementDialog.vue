@@ -139,7 +139,7 @@ watch(
 </script>
 
 <template>
-  <el-dialog v-model="model" top="5vh" width="50rem" title="🏆 冒險成就" class="achievement-dialog">
+  <el-dialog v-model="model" top="5vh" title="🏆 冒險成就" class="achievement-dialog">
     <el-scrollbar max-height="60vh">
       <div class="achievement-grid">
         <div
@@ -188,18 +188,18 @@ watch(
 .achievement-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 10px;
+  gap: 0.75rem;
+  padding: 0.625rem;
 }
 
 .ach-card {
   display: flex;
   align-items: center;
   background: rgba(40, 40, 40, 0.8);
-  border: 1px solid #444;
-  border-left: 4px solid var(--ach-color);
-  border-radius: 8px;
-  padding: 12px;
+  border: 0.0625rem solid #444; /* 1px / 16 */
+  border-left: 0.25rem solid var(--ach-color); /* 4px / 16 */
+  border-radius: 0.5rem; /* 8px / 16 */
+  padding: 0.75rem; /* 12px / 16 */
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -212,20 +212,20 @@ watch(
 
 .ach-card:not(.locked) {
   background: rgba(50, 50, 50, 0.9);
-  box-shadow: 0 0 10px v-bind('getColor(ach?.quality) + "33"'); /* 輕微發光 */
+  box-shadow: 0 0 0.625rem v-bind('getColor(ach?.quality) + "33"');
 }
 
 .ach-icon-wrapper {
-  width: 50px;
-  height: 50px;
+  width: 3.125rem; /* 50px / 16 */
+  height: 3.125rem; /* 50px / 16 */
   display: flex;
   justify-content: center;
   align-items: center;
   background: #222;
   border-radius: 50%;
-  margin-right: 15px;
-  font-size: 1.8rem;
-  border: 2px solid #333;
+  margin-right: 0.9375rem; /* 15px / 16 */
+  font-size: 1.8rem; /* 你原本就是寫 rem，維持不變 */
+  border: 0.125rem solid #333; /* 2px / 16 */
 }
 
 .ach-info {
@@ -236,7 +236,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem; /* 4px / 16 */
 }
 
 .ach-name {
@@ -261,24 +261,20 @@ watch(
   border-style: dashed;
 }
 
-/* 滾動條美化 */
-:deep(.el-scrollbar__bar.is-vertical) {
-  width: 6px;
-}
 </style>
 
 <style>
 /* 注意：ElNotification 掛載在 body 下，不能用 scoped */
 .el-notification.ach-notification {
   background-color: rgba(20, 20, 20, 0.95) !important;
-  border: 1px solid #444 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-  border-left: 5px solid #fff !important; /* 預設 */
+  border: 0.0625rem solid #444 !important; /* 1px */
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.5) !important; /* 4px 12px */
+  border-left: 0.3125rem solid #fff !important; /* 5px */
 }
 
 .el-notification.ach-notification .el-notification__title {
   color: #999 !important;
-  font-size: 12px !important;
+  font-size: 0.75rem !important; /* 12px / 16 */
   text-transform: uppercase;
 }
 
