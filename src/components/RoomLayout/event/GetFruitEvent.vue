@@ -134,6 +134,13 @@ const onLeave = () => {
     gameStateStore.transitionToNextState();
   }
 }
+
+/**初始化**/
+const init = () => {
+  gameStateStore.recordThisStageAppear(SpecialEventEnum.GetFruit)
+}
+init()
+
 </script>
 
 <template>

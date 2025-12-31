@@ -19,8 +19,13 @@ const EVENT_CONFIG = [
     canAppear: () => true // 賭博總是能出現
   },
   {
+    type: SpecialEventEnum.Chest,
+    canAppear: () => true // 賭博總是能出現
+  },
+  {
     type: SpecialEventEnum.GetFruit, // 魔樹事件
-    canAppear: () => !gameStateStore.isEventClose(SpecialEventEnum.GetFruit)
+    canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit) &&
+        !gameStateStore.isEventClose(SpecialEventEnum.GetFruit)
   },
   {
     type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
@@ -31,7 +36,7 @@ const EVENT_CONFIG = [
       if (playerStore.info.char !== CharEnum.Beginner.value) {
         return false;
       }
-      return trackerStore.getKillCount("USE_SWORD", 'total') >= 5;
+      return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
     }
   }
 ];
@@ -41,6 +46,7 @@ const EVENT_CONFIG = [
  * 獲取當前允許的所有隨機事件
  */
 const getAvailableEvents = () => {
+  console.log('gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)', gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit))
   // 過濾出所有符合出現條件的事件 Type
   return EVENT_CONFIG
       .filter(event => event.canAppear())

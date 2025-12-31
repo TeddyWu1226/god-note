@@ -3,10 +3,12 @@ import NoneEvent from "@/components/RoomLayout/event/NoneEvent.vue";
 import GambleEvent from "@/components/RoomLayout/event/GambleEvent.vue";
 import GetFruitEvent from "@/components/RoomLayout/event/GetFruitEvent.vue";
 import JobWarriorEvent from "@/components/RoomLayout/event/JobWarriorEvent.vue";
+import ChestEvent from "@/components/RoomLayout/event/ChestEvent.vue";
 
 export const eventComponentMap = {
-    [SpecialEventEnum.None]: NoneEvent,
-    [SpecialEventEnum.Gamble]: GambleEvent,
-    [SpecialEventEnum.GetFruit]: GetFruitEvent,
-    [SpecialEventEnum.JobWarrior]: JobWarriorEvent
+	[SpecialEventEnum.None]: NoneEvent,
+	[SpecialEventEnum.Gamble]: GambleEvent,
+	[SpecialEventEnum.GetFruit]: GetFruitEvent,
+	[SpecialEventEnum.JobWarrior]: JobWarriorEvent,
+	[SpecialEventEnum.Chest]: ChestEvent,
 };

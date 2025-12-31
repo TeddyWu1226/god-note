@@ -31,6 +31,17 @@ watch(
       if (oldValue > newValue && newValue === hpLimit.value) {
         return;
       }
+      // 如果生命值歸零
+      if (playerStore.info.hp <= 0) {
+        if (playerStore.hasItem(Usable.GodLuckLeaf.name)[0]) {
+          playerStore.healFull()
+          playerStore.removeItem(Usable.GodLuckLeaf.name)
+          showEffect(cardRef.value.$el, "🪽女神光輝的壟罩🪽", "fullscreen")
+          return;
+        }
+        emit('playerDead', true)
+      }
+
       // 如果停止動畫就不顯示
       if (playerStore.stopValueChangeAnimation) {
         return;
@@ -95,16 +106,7 @@ watch(
             messageClass: messageClass
           }
       );
-      // 如果生命值歸零
-      if (playerStore.info.hp <= 0) {
-        if (playerStore.hasItem(Usable.GodLuckLeaf.name)[0]) {
-          playerStore.healFull()
-          playerStore.removeItem(Usable.GodLuckLeaf.name)
-          showEffect(cardRef.value.$el, "🪽女神光輝的壟罩🪽", "fullscreen")
-          return;
-        }
-        emit('playerDead', true)
-      }
+
     },
     {immediate: false}
 );
