@@ -42,6 +42,15 @@ const EVENT_CONFIG = [
       }
       return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
     }
+  },
+  {
+    type: SpecialEventEnum.JobWizard, // 法師轉職事件
+    canAppear: () => {
+      if (playerStore.info.char !== CharEnum.Beginner.value) {
+        return false;
+      }
+      return playerStore.finalStats.apIncrease > 0
+    }
   }
 ];
 
@@ -50,7 +59,6 @@ const EVENT_CONFIG = [
  * 獲取當前允許的所有隨機事件
  */
 const getAvailableEvents = () => {
-  console.log('gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)', gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit))
   // 過濾出所有符合出現條件的事件 Type
   return EVENT_CONFIG
       .filter(event => event.canAppear())
@@ -62,7 +70,7 @@ const getAvailableEvents = () => {
  */
 const pickRandomEvent = () => {
   const pool = getAvailableEvents();
-  // console.log('pool', pool)
+  console.log('pool', pool)
   // 設置防錯，如果沒有可用事件則給一個預設
   if (pool.length === 0) return SpecialEventEnum.Gamble;
 

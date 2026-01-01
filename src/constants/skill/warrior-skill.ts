@@ -9,14 +9,14 @@ export const WarriorSkill = {
         name: "二連擊",
         icon: "⚔️",
         description: (prop) => {
-            const atk = Math.floor(prop.playerStore?.finalStats.ad * 0.7)
+            const atk = Math.floor(prop.playerStore?.finalStats.ad)
             return `快速斬出兩擊，各別造成 ${ColorText.ad(atk)}。`;
         },
         costSp: 15,
         use: async ({monster, playerStore}) => {
             if (!monster) return false
             const stats = playerStore.finalStats;
-            const dmg = Math.floor(stats.ad * 0.7) // 基礎值
+            const dmg = Math.floor(stats.ad) // 基礎值
             // 攻擊兩次
             let damageOutput = applySkillDamage(playerStore.finalStats, monster, dmg, 'ad', '二連擊');
             monster.lastDamageResult = damageOutput

@@ -7,5 +7,10 @@ export const CharEnum = {
     Warrior: {
         value: 'Warrior',
         label: '劍士'
+    },
+    // 法師
+    Wizard: {
+        value: 'Wizard',
+        label: '法師'
     }
 }
