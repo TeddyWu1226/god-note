@@ -155,6 +155,7 @@ const whenMonsterDead = (selectedMonster: MonsterType) => {
     const percent = 0.1 + (gameStateStore.days * 0.01)
     if (checkProbability(percent)) {
       playerStore.gainItem(SpecialItem.TwilightKey);
+      monsterDropItems.value.push(SpecialItem.TwilightKey)
     }
   }
   // 觸發死亡被動
