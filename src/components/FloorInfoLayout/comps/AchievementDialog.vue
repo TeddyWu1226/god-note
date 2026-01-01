@@ -10,6 +10,8 @@ import {AchievementType} from "@/types";
 import {ElNotification} from "element-plus";
 import {useAchievementStore} from "@/store/achievement-store";
 import {CharEnum} from "@/enums/char-enum";
+import {Weapon} from "@/constants/items/equipment/weapon-info";
+import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
 
 const model = defineModel({type: Boolean, default: false});
 const achievementStore = useAchievementStore()
@@ -55,7 +57,7 @@ const triggerAchievementNotify = (ach: AchievementType) => {
 }
 
 /**
- * 成就檢查
+ * 解鎖成就檢查
  */
 // 擊殺類
 watch(
@@ -97,7 +99,21 @@ watch(
           if (key === 'Boss0' && trackerStore.getKillCount('森林守護者', 'total')) isConditionMet = true;
         }
 
-        // 隱藏成就
+        /**
+         * 隱藏成就
+         */
+        // 魔樹相關
+        if (key === 'EvilTree1' && playerStore.hasItem(Weapon.SpikeSpear.name)[0]) {
+          isConditionMet = true;
+        }
+        if (key === 'EvilTree2' && playerStore.hasItem(Accessory1.CursedWoodenRing.name)[0]) {
+          isConditionMet = true;
+        }
+        if (key === 'EvilTree3' && playerStore.hasItem(Accessory2.EvilWoodenHeart.name)[0]) {
+          isConditionMet = true;
+        }
+
+        // 森林之狼
         if (key === 'NewKillWolf' &&
             gameStateStore.currentStage === 1 &&
             (trackerStore.getKillCount('森林之狼', 'current') >= 1)) {
@@ -326,7 +342,6 @@ const getRankColor = computed(() => {
 </style>
 
 <style>
-/* 注意：ElNotification 掛載在 body 下，不能用 scoped */
 .el-notification.ach-notification {
   background-color: rgba(20, 20, 20, 0.95) !important;
   border: 0.0625rem solid #444 !important; /* 1px */

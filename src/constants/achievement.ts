@@ -118,6 +118,34 @@ const HideAchievement = {
         isHide: true,
         hindHint: "如果能連續贏下賭博..."
     } as AchievementType,
+    // 魔樹成就
+    EvilTree1: {
+        name: "樵夫1",
+        icon: "🪓",
+        quality: 4,
+        description: "取得「尖刺木槍」",
+        isUnlocked: false,
+        isHide: true,
+        hindHint: "拆毀邪惡之物..."
+    } as AchievementType,
+    EvilTree2: {
+        name: "樵夫2",
+        icon: "🪓",
+        quality: 6,
+        description: "取得「詛咒的荊棘之戒」",
+        isUnlocked: false,
+        isHide: true,
+        hindHint: "擊敗邪惡之物..."
+    } as AchievementType,
+    EvilTree3: {
+        name: "樵夫3",
+        icon: "🪓",
+        quality: 8,
+        description: "取得「邪靈樹妖之心」",
+        isUnlocked: false,
+        isHide: true,
+        hindHint: "培養邪惡之物..."
+    } as AchievementType,
 }
 
 export const Achievement = {...PublicAchievement, ...HideAchievement}

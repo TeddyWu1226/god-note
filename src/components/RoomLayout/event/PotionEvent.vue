@@ -37,7 +37,7 @@ const drinkPotion = () => {
     if (rnd < 50) {
       // 50% 機率：恢復效果 (Heal)
       resultType.value = 'heal';
-      const healAmount = 10 + (stage * 10);
+      const healAmount = 20 + (stage * 20);
       playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + healAmount);
       resultMsg.value = `味道意外地清甜！恢復了 <span style="color: #4caf50; font-weight: bold;">${healAmount} HP</span>。`;
 

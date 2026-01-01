@@ -398,7 +398,7 @@ export const spawnMonsters = (
         m.hpLimit = Math.round(m.hpLimit * strengthening);
         m.hp = m.hpLimit;
         m.ad = Math.round(m.ad * strengthening);
-        m.adDefend = Math.round(m.adDefend * strengthening);
+        // m.adDefend = Math.round(m.adDefend * strengthening);
         if (eliteBoost) {
             // 菁英強化
             m.name = `【菁英】${m.name}`;

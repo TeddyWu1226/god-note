@@ -6,23 +6,19 @@ import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
-import {ref} from "vue";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackStore = useTrackerStore()
 const achievementStore = useAchievementStore()
 
-// 預設選擇 Normal
-const difficulty = ref(DifficultyEnum.Normal.value);
 const initAll = async () => {
   // 初始化角色
   playerStore.init()
 
   // 初始化
   gameStateStore.init()
-  gameStateStore.difficulty = difficulty.value;
-  if (difficulty.value === DifficultyEnum.Easy.value) {
+  if (gameStateStore.difficulty === DifficultyEnum.Easy.value) {
     playerStore.gainItem(Usable.SmokeBomb)
     playerStore.gainItem(Usable.SmokeBomb)
     playerStore.gainItem(Usable.SmokeBomb)
@@ -59,9 +55,9 @@ const startGame = async () => {
               v-for="opt in DifficultyEnum"
               :key="opt.value"
               class="diff-card"
-              :class="{ active: difficulty === opt.value }"
+              :class="{ active: gameStateStore.difficulty === opt.value }"
               :style="{ '--diff-color': opt.color }"
-              @click="difficulty = opt.value"
+              @click="gameStateStore.difficulty = opt.value"
           >
             <div class="diff-icon">{{ opt.icon }}</div>
             <div class="diff-label">{{ opt.label }}</div>
