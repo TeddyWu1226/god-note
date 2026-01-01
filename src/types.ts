@@ -7,6 +7,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
+import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 
 /**
  * 物品相關
@@ -57,6 +58,7 @@ export interface ItemType {
     icon: string;
     quality?: number
     usable?: boolean // 是否可使用
+    unsellable?: boolean // 是否非賣品
 }
 
 export interface EquipmentType extends ItemType, qualityType {
@@ -141,6 +143,7 @@ export interface DropEntry<T extends ItemType = ItemType> {
 type MonsterOnAttackType = keyof typeof MonsterOnAttack;
 type MonsterOnStartType = keyof typeof MonsterOnStart;
 type MonsterOnAttackedType = keyof typeof MonsterOnAttacked;
+type MonsterOnDeadType = keyof typeof MonsterOnDead;
 
 export interface MonsterType extends UnitType {
     description?: string //介紹
@@ -151,7 +154,7 @@ export interface MonsterType extends UnitType {
     onStart?: MonsterOnStartType // 回合開始時觸發
     onAttack?: MonsterOnAttackType, // 怪物攻擊前觸發
     onAttacked?: MonsterOnAttackedType // 怪物被攻擊後觸發
-    onDead?: any
+    onDead?: MonsterOnDeadType// 怪物死亡時觸發
     lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
 }
 
@@ -208,6 +211,7 @@ export type PlayerStoreType = ReturnType<typeof usePlayerStore>;
 export type logStoreType = ReturnType<typeof useLogStore>;
 export type TrackerStoreType = ReturnType<typeof useTrackerStore>;
 export type AchievementStoreType = ReturnType<typeof useAchievementStore>;
+
 //
 export interface MonsterActionParams {
     monster?: MonsterType;

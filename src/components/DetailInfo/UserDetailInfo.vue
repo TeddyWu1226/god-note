@@ -97,7 +97,7 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
             >
               <template #content>
                 <ItemInfo :item="playerStore.info.equips[pos.value as keyof typeof playerStore.info.equips]"/>
-                <div style="font-size: 0.8rem; color: #999; text-align: center; margin-top: 5px;">
+                <div style="font-size: 0.8rem; color: #999; text-align: center; margin-top: 5px;min-width: 10rem">
                   ( 雙擊卸下裝備 )
                 </div>
               </template>

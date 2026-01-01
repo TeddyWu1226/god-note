@@ -10,6 +10,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {MATERIAL} from "@/constants/items/material-info";
 import {useTrackerStore} from "@/store/track-store";
 import {Monster} from "@/constants/monsters/monster-info";
+import {SpecialItem} from "@/constants/items/special-item-info";
 
 
 const gameStateStore = useGameStateStore();
@@ -57,8 +58,9 @@ const STAGE_GOALS: Record<number, {
 }> = {
   1: {type: QuestType.COLLECT, target: MATERIAL.ForestWood.name, need: 3, label: '收集'},
   2: {type: QuestType.KILL, need: 30, label: '狩獵'},
-  3: {type: QuestType.TARGET, target: Monster.SmallSpider.name, need: 1, label: '擊敗'},
+  3: {type: QuestType.TARGET, target: Monster.SmallSpider.name, need: 3, label: '擊敗'},
   4: {type: QuestType.SURVIVE, target: '天', need: 50, label: '生存'},
+  5: {type: QuestType.COLLECT, target: SpecialItem.TwilightKey.name, need: 1, label: '收集'},
 };
 // 獲取當前階段的進度數據
 const stageProgress = computed(() => {

@@ -143,7 +143,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             isBattleWon.value = won;
             if (won) {
                 currentEnemy.value = [];
-                transitionToNextState();
+                currentState.value = GameState.SELECTION_PHASE;
             }
         }
     }

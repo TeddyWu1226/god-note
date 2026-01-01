@@ -47,9 +47,9 @@ export const FairyBarrierWeights: Record<string, number> = {
  * 特色：Boss 戰前的最後屏障，充滿強敵。
  */
 export const TwilightWeights: Record<string, number> = {
-    StingerBee: 10,
+    StingerBee: 20,
     GreenRabbit: 20,
-    FairyGuard:30,
+    FairyGuard:20,
     MushroomMan: 20,
     Mandragora: 10
 };

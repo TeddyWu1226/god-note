@@ -137,14 +137,34 @@ export const MistyForestMonster = {
         ad: 10,
         critIncrease: 0,
         critRate: 0,
-        adDefend: 10,
+        adDefend: 12,
         dodge: -10,
         hit: 5,
-        hp: 65,
-        hpLimit: 65,
+        hp: 10,
+        hpLimit: 10,
         level: 5,
-        dropGold: 50,
+        dropGold: 25,
         onAttacked: 'mushroomManOnAttacked'
+    } as MonsterType,
+    Mandragora: {
+        icon: '🌺',
+        name: '尖叫蔓陀羅',
+        class: 'elite',
+        description: '森林的恐怖傳聞，其尖叫聲能震懾所有入侵者',
+        ad: 15,
+        critIncrease: 200,
+        critRate: 25,
+        adDefend: 5,
+        dodge: 0,
+        hit: 20,
+        hp: 60,
+        hpLimit: 60,
+        level: 2,
+        dropGold: 25,
+        drop: [
+            {item: MATERIAL.MandrakeRoot, chance: 0.1}
+        ],
+        onDead: 'mandragoraOnDead'
     } as MonsterType,
     FierceWolf: {
         icon: '🐺',
@@ -168,25 +188,6 @@ export const MistyForestMonster = {
             }
         ],
         onStart: 'wolfOnStart'
-    } as MonsterType,
-    Mandragora: {
-        icon: '👺',
-        name: '尖叫蔓陀羅',
-        class: 'elite',
-        description: '初始之森的恐怖傳聞，其尖叫聲能震懾所有入侵者',
-        ad: 15,
-        critIncrease: 200,
-        critRate: 25,
-        adDefend: 5,
-        dodge: 0,
-        hit: 20,
-        hp: 120,
-        hpLimit: 120,
-        level: 5,
-        dropGold: 100,
-        drop: [
-            {item: MATERIAL.MandrakeRoot, chance: 0.5}
-        ]
     } as MonsterType,
     SmallSpider: {
         icon: '🕷️',

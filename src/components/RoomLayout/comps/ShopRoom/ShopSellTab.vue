@@ -3,7 +3,7 @@ import './shop.css'
 import {computed} from 'vue';
 import {usePlayerStore} from "@/store/player-store";
 import {ElMessage, ElMessageBox} from "element-plus";
-import {UsableType, EquipmentType} from "@/types";
+import {UsableType, EquipmentType, ItemType} from "@/types";
 import {EQUIP_BASE_PRICE, MATERIAL_BASE_PRICE} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
 import {createDoubleTapHandler} from "@/utils/touch";
 
@@ -24,6 +24,7 @@ const stackedBags = computed(() => {
     const map = new Map<string, StackedItem>();
     (playerStore.info[type] || []).forEach((item, index) => {
       if (!item) return;
+      if (item.unsellable) return;
       if (map.has(item.name)) {
         const existing = map.get(item.name)!;
         existing.count++;
@@ -63,7 +64,10 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 
   // 計算預計收益
   let totalGold = 0;
-  bag.forEach((item: any) => {
+  bag.forEach((item: StackedItem) => {
+    if (item.unsellable) {
+      return
+    }
     if (item) {
       // 複用你寫好的 getSellPrice
       totalGold += getSellPrice(item as StackedItem);
@@ -87,7 +91,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
   ).then(() => {
     // 使用者點擊確認
     playerStore.addGold(totalGold);
-    playerStore.info[type] = []; // 清空該背包
+    playerStore.info[type] = playerStore.info[type].filter(item => item.unsellable) as EquipmentType[];
 
     ElMessage({
       type: 'success',

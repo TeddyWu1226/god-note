@@ -28,15 +28,15 @@ const onTest = () => {
   playerStore.gainItem(Potions.Heal1)
 
 
-  gameStateStore.currentStage = 4
+  gameStateStore.currentStage = 5
 }
 const addEquipment = () => {
   playerStore.gainItem(Accessory1.SoulAnchor)
   // playerStore.gainItem(Usable.GodLuckLeaf)
   playerStore.gainItem(Weapon.Sword0)
   playerStore.gainItem(Head.HpHead1)
-  playerStore.gainItem(Armor.Armor0)
-  playerStore.gainItem(Offhand.Shield0)
+  playerStore.gainItem(Armor.Armor1)
+  playerStore.gainItem(Offhand.Shield1)
 }
 const heal = () => {
   playerStore.healFull()
