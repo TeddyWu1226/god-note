@@ -26,6 +26,7 @@ export const usePlayerStore = defineStore('player-info', () => {
             adIncrease: 0,
             apIncrease: 0,
             defendIncrease: 0,
+            runIncrease: 0,
             lifeSteal: 0
         };
         // 計算裝備加成
@@ -68,6 +69,7 @@ export const usePlayerStore = defineStore('player-info', () => {
             adIncrease: info.value.adIncrease + b.adIncrease,
             apIncrease: info.value.apIncrease + b.apIncrease,
             defendIncrease: info.value.defendIncrease + b.defendIncrease,
+            runIncrease: info.value.runIncrease + b.runIncrease,
             lifeSteal: info.value.lifeSteal + b.lifeSteal,
         };
     });

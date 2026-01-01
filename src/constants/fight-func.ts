@@ -339,7 +339,7 @@ export function escapePercent(runner: UnitType, chasers: UnitType[]): number {
 
     // 閃避值加強
 
-    const dodgeIncrease = runner.dodge * 0.2;
+    const dodgeIncrease = (runner.dodge + (runner.runIncrease || 0)) * 0.2;
 
     // 最終計算的理論成功率
     let finalChance = BASE_CHANCE + levelModifier + dodgeIncrease;
@@ -370,7 +370,6 @@ export function canEscape(runner: UnitType, chasers: UnitType[]): boolean {
 
     // 生成一個 0 到 100 之間的隨機數
     const roll = Math.random() * 100;
-    console.log('roll', roll)
     console.log('finalChance', finalChance)
     // 判斷是否成功逃跑
     return roll <= finalChance;

@@ -3,21 +3,21 @@ import {EquipmentType} from "@/types";
 import {EquipmentPosition} from "@/enums/enums";
 
 export const Accessory1 = {
-    WoodenRing: {
-        name: '木質指環',
-        description: '簡單的裝飾品。',
+    DefendRing0: {
+        name: '木質防禦指環',
+        description: '簡單的裝飾品,些微的增加抗性。',
         icon: '💍',
         position: EquipmentPosition.ACCESSORY1,
         quality: 0,
-        spLimit: 5
+        defendIncrease: 3
     } as EquipmentType,
     ApprenticeRing: {
         name: '學徒之戒',
         description: '幫助聚集魔力。',
-        icon: '💎',
+        icon: '💍',
         position: EquipmentPosition.ACCESSORY1,
         quality: 1,
-        spLimit: 100
+        spLimit: 50
     } as EquipmentType,
     SharpEarring: {
         name: '銳利耳環',
@@ -105,6 +105,15 @@ export const Accessory1 = {
 
 
 export const Accessory2 = {
+    AttackNecklace0: {
+        name: '木質攻擊項鍊',
+        description: '簡單的裝飾品,可以增加些微的輸出。',
+        icon: '📿',
+        position: EquipmentPosition.ACCESSORY2,
+        quality: 0,
+        adIncrease: 3,
+        apIncrease: 3
+    } as EquipmentType,
     EvilWoodenHeart: {
         name: '邪靈樹妖之心',
         description: '成長為最終的邪靈樹妖給你的禮物,穿戴後會吸收你的靈魂以換取更強大的力量。',

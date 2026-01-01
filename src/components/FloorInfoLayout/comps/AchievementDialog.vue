@@ -135,11 +135,73 @@ watch(
     },
     {deep: true, immediate: true}
 );
+// 統計用
+// 進度條顏色階梯
+const progressColors = [
+  {color: '#909399', percentage: 20},
+  {color: '#67c23a', percentage: 40},
+  {color: '#409eff', percentage: 60},
+  {color: '#e6a23c', percentage: 80},
+  {color: '#f56c6c', percentage: 100},
+];
 
+// 計算冒險評價
+const getRankTitle = computed(() => {
+  const ratio = Object.values(achievementStore.currentAchievement).filter(a => a.isUnlocked).length / Object.keys(achievementStore.currentAchievement).length;
+  if (ratio >= 1) return '神話級挑戰者';
+  if (ratio >= 0.8) return '傳說冒險者';
+  if (ratio >= 0.5) return '資深討伐者';
+  if (ratio >= 0.2) return '正式勇者';
+  return '初出茅廬';
+});
+
+const getRankColor = computed(() => {
+  const ratio = Object.values(achievementStore.currentAchievement).filter(a => a.isUnlocked).length / Object.keys(achievementStore.currentAchievement).length;
+  if (ratio >= 1) return '#ffcc00'; // 金色
+  if (ratio >= 0.8) return '#e600ff';
+  if (ratio >= 0.5) return '#a335ee';
+  return '#409eff'; // 藍色
+});
 </script>
 
 <template>
-  <el-dialog v-model="model" top="5vh" title="🏆 冒險成就" class="achievement-dialog">
+  <el-dialog v-model="model" top="5vh" title="🏆 成就" class="achievement-dialog">
+    <div class="statistic-container">
+      <div class="stat-main">
+        <el-progress
+            type="circle"
+            :percentage="Math.round((Object.values(achievementStore.currentAchievement).filter(a => a.isUnlocked).length / Object.keys(achievementStore.currentAchievement).length) * 100)"
+            :stroke-width="10"
+            :color="progressColors"
+            :width="80"
+        >
+          <template #default="{ percentage }">
+            <div class="progress-label">
+              <span class="percentage">{{ percentage }}%</span>
+              <span class="label">解鎖率</span>
+            </div>
+          </template>
+        </el-progress>
+
+        <div class="stat-info">
+          <div class="stat-item">
+            <span class="stat-title">已達成成就</span>
+            <span class="stat-value">
+              <i class="count">{{
+                  Object.values(achievementStore.currentAchievement).filter(a => a.isUnlocked).length
+                }}</i>
+              <span class="total">/ {{ Object.keys(achievementStore.currentAchievement).length }}</span>
+            </span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-title">評價</span>
+            <span class="stat-rank" :style="{ color: getRankColor }">{{ getRankTitle }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-divider"></div>
+    </div>
     <el-scrollbar max-height="60vh">
       <div class="achievement-grid">
         <div
@@ -224,7 +286,7 @@ watch(
   background: #222;
   border-radius: 50%;
   margin-right: 0.9375rem; /* 15px / 16 */
-  font-size: 1.8rem; /* 你原本就是寫 rem，維持不變 */
+  font-size: 1.8rem;
   border: 0.125rem solid #333; /* 2px / 16 */
 }
 
@@ -330,5 +392,91 @@ watch(
     transform: translateX(0) scale(1);
     opacity: 1;
   }
+}
+
+.statistic-container {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.7) 100%);
+  border: 1px solid #555;
+  border-radius: 12px;
+  margin: 10px;
+  padding: 20px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.stat-main {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.progress-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-label .percentage {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #eee;
+}
+
+.progress-label .label {
+  font-size: 0.6rem;
+  color: #888;
+}
+
+.stat-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-title {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: 'Crimson Text', serif; /* 如果有引入遊戲字體 */
+  font-size: 1.4rem;
+  color: #ddd;
+}
+
+.stat-value .count {
+  color: #ffcc00; /* 突顯數字 */
+  font-style: normal;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.stat-value .total {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.stat-rank {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 1px;
+}
+
+.stat-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #555, transparent);
+  margin-top: 15px;
+}
+
+/* 讓 Progress 裡的文字顏色適配暗色模式 */
+:deep(.el-progress__text) {
+  color: #eee !important;
 }
 </style>

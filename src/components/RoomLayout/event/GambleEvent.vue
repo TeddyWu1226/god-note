@@ -79,7 +79,7 @@ const startGamble = (amount: number) => {
 <template>
   <EventTemplate title="賭博遊戲">
     <template #default>
-      <div class="event-room-without-btn general-event">
+      <div class=" general-event">
         <template v-if="gameStateStore.eventAction === 0">
           <div class="event-icon">👨‍💼</div>
           <div class="dialog-box">

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import './event-room.css'
-import { useGameStateStore } from "@/store/game-state-store";
-import { usePlayerStore } from "@/store/player-store";
+import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
-import { ref } from "vue";
-import { GameState } from "@/enums/enums";
-import { getRandomElements } from "@/utils/math";
-import { UserStatus } from "@/constants/status/user-status";
-import { StatusEffect } from "@/types";
+import {ref} from "vue";
+import {GameState} from "@/enums/enums";
+import {getRandomElements} from "@/utils/math";
+import {UserStatus} from "@/constants/status/user-status";
+import {StatusEffect} from "@/types";
 
 /**
  * 狀態控制 (eventAction)
@@ -57,8 +57,8 @@ const drinkPotion = () => {
       playerStore.addStatus(randomStatus);
 
       // 判斷狀態好壞來決定顏色 (簡單邏輯)
-      const statusColor = ['瞎眼', '虛弱', '中毒'].some(n => randomStatus.name.includes(n)) ? '#ff4d4f' : '#40a9ff';
-      resultMsg.value = `嘔... 味道怪怪的！你感到身體產生異樣，獲得狀態 <span style="color: ${statusColor}; font-weight: bold;">[${randomStatus.name}]</span>。`;
+      const statusColor = '#ff4d4f';
+      resultMsg.value = `嘔... 味道怪怪的！你感到身體產生異樣，獲得狀態 <span style="color: ${statusColor}; font-weight: bold;">${randomStatus.name}</span>。`;
     }
 
     // 動畫結束，切換狀態
@@ -72,7 +72,7 @@ const drinkPotion = () => {
 <template>
   <EventTemplate title="奇怪的藥劑櫃">
     <template #default>
-      <div class="event-room-without-btn general-event">
+      <div class="general-event">
 
         <template v-if="gameStateStore.eventAction === 0">
           <div :class="['event-icon', 'cabinet-icon', { 'animate-drink': isDrinking }]">🧪</div>
@@ -112,16 +112,16 @@ const drinkPotion = () => {
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="gameStateStore.eventAction === 0">
         <el-button
-          type="success"
-          @click="drinkPotion"
-          :loading="isDrinking"
+            type="success"
+            @click="drinkPotion"
+            :loading="isDrinking"
         >
           隨便喝一瓶
         </el-button>
         <el-button
-          type="info"
-          @click="onLeave"
-          :disabled="isDrinking"
+            type="info"
+            @click="onLeave"
+            :disabled="isDrinking"
         >
           還是別亂喝
         </el-button>
@@ -132,7 +132,7 @@ const drinkPotion = () => {
 
 <style scoped>
 .cabinet-icon {
-  font-size: 5rem;
+  font-size: 3rem;
   margin-bottom: 1.5rem;
   filter: drop-shadow(0 0 10px rgba(156, 39, 176, 0.4));
   transition: all 0.3s ease;
@@ -144,8 +144,12 @@ const drinkPotion = () => {
 }
 
 @keyframes drink {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(45deg) translate(10px, -10px); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(45deg) translate(10px, -10px);
+  }
 }
 
 .drinking-text {
@@ -174,9 +178,15 @@ const drinkPotion = () => {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 :deep(.dialog-box span) {

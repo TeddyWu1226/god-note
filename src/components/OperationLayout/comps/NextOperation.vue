@@ -5,8 +5,9 @@ import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {getRandomLabelByWeight} from "@/utils/create";
-import {DEFAULT_ROOM_WEIGHTS} from "@/constants/default-const";
+import {DEFAULT_ROOM_WEIGHTS, EAST_ROOM_WEIGHTS, NORMAL_ROOM_WEIGHTS} from "@/constants/default-const";
 import {useTrackerStore} from "@/store/track-store";
+import {DifficultyEnum} from "@/enums/difficulty-enum";
 
 const props = defineProps({
   disabled: Boolean,
@@ -18,8 +19,12 @@ const createNextRooms = () => {
   gameStateStore.nextRooms = []
   // 建立兩個選項
   const rooms = []
-  rooms.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
-  rooms.push(getRandomLabelByWeight(DEFAULT_ROOM_WEIGHTS))
+  let weight = DEFAULT_ROOM_WEIGHTS
+  if (gameStateStore.difficulty === DifficultyEnum.Easy.value) {
+    weight = EAST_ROOM_WEIGHTS
+  }
+  rooms.push(getRandomLabelByWeight(weight))
+  rooms.push(getRandomLabelByWeight(weight))
   // 去重複
   gameStateStore.nextRooms = Array.from(new Set(rooms));
 }

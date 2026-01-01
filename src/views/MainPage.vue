@@ -138,7 +138,6 @@ watch(
           <FloorInfoLayout/>
           <RoomLayout
               ref="RoomLayoutRef"
-              class="room-layout"
               @run-failed="onRunFailed"
           />
           <OperationLayout
@@ -195,9 +194,7 @@ watch(
   height: 5vh;
 }
 
-.room-layout {
-  height: 40vh;
-}
+
 
 .user-layout {
   height: 20vh;

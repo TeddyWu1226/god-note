@@ -5,19 +5,30 @@ import {RoomEnum} from "@/enums/room-enum";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
+import {DifficultyEnum} from "@/enums/difficulty-enum";
+import {ref} from "vue";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackStore = useTrackerStore()
 const achievementStore = useAchievementStore()
 
+// 預設選擇 Normal
+const difficulty = ref(DifficultyEnum.Normal.value);
 const initAll = async () => {
   // 初始化角色
   playerStore.init()
+
   // 初始化
   gameStateStore.init()
+  gameStateStore.difficulty = difficulty.value;
+  if (difficulty.value === DifficultyEnum.Easy.value) {
+    playerStore.gainItem(Usable.SmokeBomb)
+    playerStore.gainItem(Usable.SmokeBomb)
+    playerStore.gainItem(Usable.SmokeBomb)
+  }
   trackStore.init()
-  achievementStore.init()
+  achievementStore.tryTime += 1
   // 前往第一層
   gameStateStore.setRoom(RoomEnum.Bless.value)
 }
@@ -41,7 +52,23 @@ const startGame = async () => {
         <p class="typewriter delay-1">千年來，無數勇者化作枯骨，卻無人能觸及雲端</p>
         <p class="typewriter delay-2">陌生的登塔者啊，你是命運的第幾次輪迴？</p>
       </div>
-
+      <div class="difficulty-selection">
+        <p class="select-title">—— 選擇命運的難度 ——</p>
+        <div class="diff-cards">
+          <div
+              v-for="opt in DifficultyEnum"
+              :key="opt.value"
+              class="diff-card"
+              :class="{ active: difficulty === opt.value }"
+              :style="{ '--diff-color': opt.color }"
+              @click="difficulty = opt.value"
+          >
+            <div class="diff-icon">{{ opt.icon }}</div>
+            <div class="diff-label">{{ opt.label }}</div>
+            <div class="diff-desc">{{ opt.desc }}</div>
+          </div>
+        </div>
+      </div>
       <div class="action-zone">
         <el-button class="start-btn" @click="startGame">
           登上旅途
@@ -163,5 +190,78 @@ const startGame = async () => {
   to {
     opacity: 1;
   }
+}
+
+
+.difficulty-selection {
+  margin-bottom: 3rem;
+  animation: fade-in 2s forwards;
+  animation-delay: 1.5s;
+  opacity: 0;
+}
+
+.select-title {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.2rem;
+}
+
+
+:root {
+  --diff-color: #fff
+}
+
+.diff-cards {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.diff-card {
+  width: 140px;
+  padding: 1.25rem 0.625rem;
+  border: 1px solid #333;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.diff-card:hover {
+  border-color: #666;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.diff-card.active {
+  border-color: var(--diff-color);
+  background: rgba(var(--diff-color), 0.1);
+  box-shadow: inset 0 0 15px var(--diff-color);
+  transform: translateY(-5px);
+}
+
+.diff-label {
+  color: #eee;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.diff-desc {
+  font-size: 0.75rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.diff-card.active .diff-label {
+  color: var(--diff-color);
+}
+
+.diff-card.active .diff-desc {
+  color: #ccc;
+}
+
+.diff-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 </style>

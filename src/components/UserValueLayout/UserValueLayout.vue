@@ -129,7 +129,7 @@ watch(
             :total-value="playerStore.finalStats.spLimit"
         />
       </el-form-item>
-      <el-form-item label="狀態">
+      <el-form-item>
         <div class="status-effects-container">
           <div
               v-for="effect in playerStore.statusEffects"

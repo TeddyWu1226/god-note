@@ -46,12 +46,12 @@ defineExpose({
 }
 
 .ancient-text {
-  font-style: oblique; /* 人為傾斜（字型沒有斜體時） */
+  font-style: oblique;
   font-family: "DFKai-SB", "標楷體", "Noto Serif TC", serif;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 2;
   letter-spacing: 0.12em;
-  padding: 24px;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  text-shadow: 0.0625rem 0.0625rem 0.0625rem rgba(0, 0, 0, 0.2);
 }
 </style>

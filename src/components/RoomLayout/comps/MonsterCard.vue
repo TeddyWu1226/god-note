@@ -158,9 +158,13 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   justify-content: center;
   max-width: 10rem;
   font-size: 1rem;
-  padding: 0;
 }
 
+@media (max-width: 767px) {
+  .monster-card {
+    max-width: 13rem;
+  }
+}
 .el-col {
   margin-top: 0.1rem;
   margin-bottom: 0.1rem;

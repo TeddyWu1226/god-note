@@ -17,7 +17,7 @@ export const UnitStatus = {
 		isBuff: true,
 		description: '森林之狼對你怒吼警告,希望你不要做出傻事,要跑趁現在',
 		bonus: {
-			dodge: 1000
+			runIncrease: 1000
 		}
 	} as StatusEffect,
 	SlimePoison: {

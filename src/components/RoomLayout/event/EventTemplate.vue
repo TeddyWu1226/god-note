@@ -4,7 +4,7 @@ import './event-room.css'
 const props = defineProps({
   title: {type: String, required: true},
   titleClass: {type: String, required: false},
-  class: {type: String, required: false},
+  class: {type: String, required: false, default: 'room-layout'},
 })
 </script>
 

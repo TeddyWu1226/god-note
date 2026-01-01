@@ -35,6 +35,9 @@
     flex-direction: column;
 }
 
+.room-layout {
+    height: 40vh;
+}
 
 .operation-layout {
     display: grid;

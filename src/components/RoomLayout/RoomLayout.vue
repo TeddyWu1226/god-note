@@ -97,7 +97,7 @@ watch(() => gameStateStore.days,
 
 <template>
   <EventRoomCard v-if="currentRoomValue === RoomEnum.Event.value" :key="roomKeyCounter"/>
-  <el-card v-else>
+  <el-card v-else class="room-layout">
     <div class="title">
       {{ getEnumColumn(RoomEnum, currentRoomValue, 'icon') }}
       {{ getEnumColumn(RoomEnum, currentRoomValue) }}

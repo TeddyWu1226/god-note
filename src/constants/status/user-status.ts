@@ -6,7 +6,7 @@ export const UserStatus = {
 		icon: '💨',
 		duration: 1,
 		isBuff: true,
-		description: '煙霧迷漫狀態下, 獲得必定逃跑效果',
+		description: '煙霧迷漫狀態下, 獲得容易逃跑效果',
 		bonus: {
 			dodge: 1000
 		}

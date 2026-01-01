@@ -83,8 +83,7 @@ const openChest = () => {
 <template>
   <EventTemplate title="神秘寶箱">
     <template #default>
-      <div class="event-room-without-btn general-event">
-
+      <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
           <div :class="['event-icon', { 'opening-animation': isOpening }]">📦</div>
           <div class="dialog-box">

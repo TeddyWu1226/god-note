@@ -10,7 +10,7 @@ gameStateStore.currentState = GameState.SELECTION_PHASE;
 
 <template>
   <EventTemplate class="weird" title="一個空空如也的地方...">
-    <div class="event-room-without-btn ghost-room">
+    <div class="ghost-room">
       你來到一個空無一物的地方<br/>
       但這裡不詳的氣息讓你不想在這多留...
     </div>

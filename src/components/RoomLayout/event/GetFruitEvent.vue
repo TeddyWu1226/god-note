@@ -146,7 +146,7 @@ init()
 <template>
   <EventTemplate title="🪾神祕魔樹">
     <template #default>
-      <div class="event-room-without-btn general-event">
+      <div class="general-event">
         <template v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && gameStateStore.eventAction === 0">
           <div class="event-icon">🪾</div>
           <div class="dialog-box">
