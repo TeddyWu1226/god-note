@@ -20,7 +20,7 @@ const STAT_OPTIONS = [
   {key: 'hpLimit', label: '生命上限', icon: '❤️', min: 5, max: 10, unit: '', type: 'value'},
   {key: 'critRate', label: '爆擊率', icon: '💥', min: 1, max: 4, unit: '%', type: 'value'},
   {key: 'critIncrease', label: '爆擊傷害', icon: '💢', min: 1, max: 4, unit: '%', type: 'value'},
-  {key: 'critIncrease', label: '法術增傷', icon: '💫', min: 1, max: 4, unit: '%', type: 'value'},
+  {key: 'apIncrease', label: '法術增傷', icon: '💫', min: 1, max: 4, unit: '%', type: 'value'},
   {key: 'hit', label: '命中率', icon: '🎯', min: 1, max: 4, unit: '', type: 'value'}
 ];
 const getRandomQuality = () => {
