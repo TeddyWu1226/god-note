@@ -10,6 +10,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
     const info = ref<UserType>(JSON.parse(JSON.stringify(DEFAULT_USER_INFO)));
     const pendingLevelUpRewards = ref(0); // 升級獎勵次數
+    const remainingLevelUpRewards = ref([]);
     const stopValueChangeAnimation = ref<boolean>(false);
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
@@ -425,7 +426,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     };
     return {
         info,
-        pendingLevelUpRewards,
+        pendingLevelUpRewards, remainingLevelUpRewards,
         stopValueChangeAnimation,
         totalBonus,
         finalStats,

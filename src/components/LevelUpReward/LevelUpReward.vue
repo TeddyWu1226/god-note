@@ -4,7 +4,6 @@ import {usePlayerStore} from "@/store/player-store";
 
 const playerStore = usePlayerStore();
 const isShow = ref(false);
-const rewardOptions = ref<any[]>([]);
 
 // 品質配置
 const QUALITY_CONFIG: any = {
@@ -53,7 +52,7 @@ const generateOptions = () => {
       finalValue: finalIntegerValue
     });
   }
-  rewardOptions.value = options;
+  playerStore.remainingLevelUpRewards = options;
 };
 
 const startRewardSequence = () => {
@@ -66,7 +65,11 @@ watch(
     (newCount) => {
       // 如果有次數且目前遮罩是關閉的，就觸發顯示
       if (newCount > 0 && !isShow.value) {
-        startRewardSequence();
+        if (playerStore.remainingLevelUpRewards.length === 0) {
+          startRewardSequence();
+        } else {
+          isShow.value = true;
+        }
       }
     },
     {immediate: true} // 初始化時也檢查一次，解決重新整理後的顯示問題
@@ -89,6 +92,7 @@ const handleSelect = (reward: any) => {
 
   // 3. 關閉當前畫面
   isShow.value = false;
+  playerStore.remainingLevelUpRewards = []
 
   // 4. 檢查是否還有剩餘次數，如果有，延遲一小段時間再次開啟（視覺效果較好）
   if (playerStore.pendingLevelUpRewards > 0) {
@@ -108,7 +112,7 @@ const handleSelect = (reward: any) => {
 
         <div class="card-wrapper">
           <div
-              v-for="(opt, i) in rewardOptions"
+              v-for="(opt, i) in playerStore.remainingLevelUpRewards"
               :key="i"
               class="reward-card"
               :class="opt.quality.label"
