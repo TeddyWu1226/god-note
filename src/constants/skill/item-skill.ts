@@ -5,6 +5,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {UserStatus} from "@/constants/status/user-status";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {Boss} from "@/constants/monsters/boss-info";
+import {useSaveStore} from "@/store/save-store";
 
 export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | SpecifyMonsterItemSkillParams) => void> = {
 	// 選擇回合使用
@@ -16,6 +17,18 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 		}
 		playerStore.healFull()
 		callback(true)
+	},
+	useGodNotePage: ({playerStore, gameStateStore, callback, targetElement}) => {
+		if (!gameStateStore.stateIs(GameState.SELECTION_PHASE)) {
+			showEffect(targetElement, "現在無法使用!", "debuff")
+			callback(false);
+			return
+		}
+		const saveStore = useSaveStore()
+		saveStore.saveAll()
+		showEffect(targetElement, "已存檔", "fullscreen")
+		callback(true);
+		return
 	},
 	// 戰鬥回合使用
 	useSmokeBomb: ({playerStore, gameStateStore, callback, targetElement}) => {

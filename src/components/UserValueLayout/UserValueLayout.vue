@@ -33,9 +33,9 @@ watch(
       }
       // 如果生命值歸零
       if (playerStore.info.hp <= 0) {
-        if (playerStore.hasItem(Usable.GodLuckLeaf.name)[0]) {
+        if (playerStore.hasItem(Usable.GodStar.name)[0]) {
           playerStore.healFull()
-          playerStore.removeItem(Usable.GodLuckLeaf.name)
+          playerStore.removeItem(Usable.GodStar.name)
           showEffect(cardRef.value.$el, "🪽女神光輝的壟罩🪽", "fullscreen")
           return;
         }

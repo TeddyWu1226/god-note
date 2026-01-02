@@ -1,5 +1,7 @@
 import {MonsterType} from "@/types";
 import {WorldDefault} from "@/assets/const";
+import {Accessory1} from "@/constants/items/equipment/accessories-info";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
 
 
 export const Boss = {
@@ -94,7 +96,11 @@ export const Boss = {
 		onStart: 'twilightOnStart',
 		onDead: 'twilightOnDead',
 		onAttack: 'twilightOnAttack',
-		onAttacked: 'twilightOnAttacked'
+		onAttacked: 'twilightOnAttacked',
+		drop: [
+			{item: Usable.GodStar, chance: 1},
+			{item: Usable.GodNotePage, chance: 1}
+		]
 	} as MonsterType,
 	// ==========================================
 	// --- 區域 2: 灼熱沙漠 (Scorched Sands) ---

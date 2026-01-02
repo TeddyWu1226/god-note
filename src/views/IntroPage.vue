@@ -6,33 +6,62 @@ import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
+import {computed} from "vue";
+import {useSaveStore} from "@/store/save-store";
+import {ElMessageBox} from "element-plus";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackStore = useTrackerStore()
 const achievementStore = useAchievementStore()
+const saveStore = useSaveStore();
+
+// ⭐️ 判斷是否有存檔：檢查 savedSlots[0] 是否有內容
+const hasSave = computed(() => {
+  return !!saveStore.savedSlots[0];
+});
 
 const initAll = async () => {
-  // 初始化角色
-  playerStore.init()
-
-  // 初始化
-  gameStateStore.init()
+  playerStore.init();
+  saveStore.clearSaves()
+  gameStateStore.init();
   if (gameStateStore.difficulty === DifficultyEnum.Easy.value) {
-    playerStore.gainItem(Usable.SmokeBomb)
-    playerStore.gainItem(Usable.SmokeBomb)
-    playerStore.gainItem(Usable.SmokeBomb)
+    playerStore.gainItem(Usable.SmokeBomb);
+    playerStore.gainItem(Usable.SmokeBomb);
+    playerStore.gainItem(Usable.SmokeBomb);
   }
-  trackStore.init()
-  achievementStore.tryTime += 1
-  // 前往第一層
-  gameStateStore.setRoom(RoomEnum.Bless.value)
-}
+  trackStore.init();
+  achievementStore.tryTime += 1;
+  gameStateStore.setRoom(RoomEnum.Bless.value);
+};
 
-
+// ⭐️ 重新開始：如果有舊存檔，先跳出詢問
 const startGame = async () => {
-  await initAll()
-}
+  if (hasSave.value) {
+    try {
+      await ElMessageBox.confirm(
+          '重新開始將會覆蓋現有的神祇記事存檔，確定要抹除過去的輪迴嗎？',
+          '命運警告',
+          {
+            confirmButtonText: '確定抹除',
+            cancelButtonText: '保留回憶',
+            type: 'warning',
+            center: true,
+          }
+      );
+      await initAll();
+    } catch {
+      // 點擊取消，不做任何動作
+    }
+  } else {
+    await initAll();
+  }
+};
+
+// ⭐️ 繼續遊戲
+const continueGame = () => {
+  saveStore.loadAll(0);
+};
 
 
 </script>
@@ -66,8 +95,19 @@ const startGame = async () => {
         </div>
       </div>
       <div class="action-zone">
-        <el-button class="start-btn" @click="startGame">
-          登上旅途
+        <el-button
+            v-if="hasSave"
+            class="continue-btn"
+            @click="continueGame"
+        >
+          從紀錄開始
+        </el-button>
+
+        <el-button
+            :class="hasSave ? 'restart-btn' : 'start-btn'"
+            @click="startGame"
+        >
+          {{ hasSave ? '抹除並重新開始' : '登上旅途' }}
         </el-button>
       </div>
     </div>
@@ -259,5 +299,59 @@ const startGame = async () => {
 .diff-icon {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+}
+
+.action-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* 繼續按鈕：充滿神性與光芒 */
+.continue-btn {
+  background: rgba(255, 215, 0, 0.1) !important;
+  border: 1px solid #ffd700 !important;
+  color: #fff !important;
+  font-size: 1.6rem !important;
+  padding: 2.2rem 4.5rem !important;
+  transition: all 0.4s ease !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  letter-spacing: 0.3rem;
+  animation: pulse-glow 2.5s infinite;
+}
+
+.continue-btn:hover {
+  background: #ffd700 !important;
+  color: #000 !important;
+  box-shadow: 0 0 30px rgba(255, 214, 0, 0.8);
+  transform: scale(1.05);
+}
+
+/* 重新開始按鈕：有存檔時顯得比較暗淡且危險 */
+.restart-btn {
+  background: transparent !important;
+  border: 1px solid #444 !important;
+  color: #666 !important;
+  font-size: 0.9rem !important;
+  padding: 0.8rem 1.5rem !important;
+  transition: all 0.3s !important;
+}
+
+.restart-btn:hover {
+  border-color: #ff4d4d !important;
+  color: #ff4d4d !important;
+  background: rgba(255, 77, 77, 0.05) !important;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    opacity: 0.9;
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    opacity: 1;
+  }
 }
 </style>
