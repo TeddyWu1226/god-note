@@ -13,6 +13,7 @@ import BlessRoom from "@/components/RoomLayout/comps/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
+import {Potions} from "@/constants/items/usalbe-item/potion-info";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -41,7 +42,10 @@ const onRun = () => {
 }
 
 const onItemSkill = ({skillKey, callback, el}) => {
-  const specifySkill = [Usable.Campfire.skill, Usable.GodNotePage.skill, Usable.ShabbyTent.skill]
+  const specifySkill = [
+    Usable.Campfire.skill, Usable.GodNotePage.skill, Usable.ShabbyTent.skill,
+    Potions.UnPoisonPotion.skill
+  ]
   if (specifySkill.includes(skillKey)) {
     ItemSkill[skillKey](
         {

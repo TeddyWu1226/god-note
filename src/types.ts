@@ -49,7 +49,7 @@ export const statLabels: Record<keyof qualityType | 'heal' | 'magic', string> = 
     apIncrease: '法術增傷',
     defendIncrease: '抗性',
     lifeSteal: '吸血',
-    runIncrease: '逃跑值'
+    runIncrease: '逃跑值',
 };
 
 export interface ItemType {
@@ -98,7 +98,8 @@ export interface UnitType {
     adIncrease?: number // 傷害增幅(%)
     apIncrease?: number // 法術增幅(%)
     defendIncrease?: number // 減傷(%)
-    runIncrease?: number // 額外逃跑值
+    runIncrease?: number // 額外逃跑值 (每1點多1%)
+    chaseIncrease?: number // 額外追擊值 (每1點降1%)
     // 吸血
     lifeSteal?: number // 生命偷取(%)
 }

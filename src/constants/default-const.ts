@@ -3,29 +3,12 @@ import {CharEnum} from "@/enums/char-enum";
 import {RoomWeights, UserType} from "@/types";
 import {WorldDefault} from "@/assets/const";
 
-// todo:測試用
-// export const DEFAULT_USER_INFO: UserType = {
-//     name: '作者',
-//     icon: 'TED',
-//     ad: 10,
-//     adDefend: 10,
-//     critIncrease: WorldDefault.critIncrease,
-//     critRate: WorldDefault.critRate,
-//     dodge: 0,
-//     hit: 0,
-//     hp: 200,
-//     hpLimit: 200,
-//     sp: 100,
-//     spLimit: 100,
-//     level: 1,
-//     char: CharEnum.Beginner.value,
-//     gold: 0
-// }
 export const DEFAULT_USER_INFO: UserType = {
     name: '玩家',
     icon: '🌟',
     ad: 10,
     adDefend: 0,
+    apDefend: 0,
     critIncrease: WorldDefault.critIncrease,
     critRate: WorldDefault.critRate,
     dodge: 0,
@@ -42,6 +25,7 @@ export const DEFAULT_USER_INFO: UserType = {
     defendIncrease: 0,
     lifeSteal: 0,
     runIncrease: 0,
+    chaseIncrease: 0,
     skills: [],
     currentExp: 0
 }

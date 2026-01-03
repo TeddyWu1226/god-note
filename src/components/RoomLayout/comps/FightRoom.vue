@@ -309,7 +309,7 @@ const onSkill = async (skillKey: string) => {
 // 逃跑
 const isEscape = ref(false)
 const onRun = () => {
-  if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy, gameStateStore.roomIs(RoomEnum.Boss.value))) {
+  if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy)) {
     emit('runFailed', true)
     monsterMove()
     gameStateStore.tickAllMonsters()

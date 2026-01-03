@@ -1,5 +1,5 @@
 // useFloatingMessage.ts
-import { createVNode, render, VNode } from 'vue';
+import {createVNode, render, VNode} from 'vue';
 import FloatingMessage from './FloatingMessage.vue';
 
 export function useFloatingMessage(
@@ -21,6 +21,7 @@ export function useFloatingMessage(
             transform: 'translate(10px, -50%)',
             position: 'absolute',
             width: 'auto',
+            minWidth: '5rem',
             zIndex: 9999, // 確保在最上層
         };
     } else {
@@ -62,5 +63,5 @@ export function useFloatingMessage(
     // 如果 1.5 秒後組件還沒自己銷毀，強制執行
     setTimeout(destroy, (options.duration || 1500) + 500); // 多加 500ms 緩衝動畫
 
-    return { close: destroy };
+    return {close: destroy};
 }

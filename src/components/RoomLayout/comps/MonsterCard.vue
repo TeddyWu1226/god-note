@@ -110,7 +110,7 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     </div>
     <el-tooltip>
       <template #content>
-        <p>{{ props.info.name }}</p>
+        <p>{{ props.info.name }} Lv.{{ props.info.level}}</p>
         <p>{{ props.info.description }}</p>
       </template>
       <el-row v-if="isDead" style="width: 100%" justify="center">
