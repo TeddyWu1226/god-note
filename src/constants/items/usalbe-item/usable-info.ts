@@ -28,7 +28,7 @@ export const Usable = {
 	SmokeBomb: {
 		name: '煙霧彈',
 		quality: 3,
-		description: '讓你可以在「戰鬥階段」使用,使用後獲得1回合必定逃跑的效果(無法在BOSS房間使用)',
+		description: '讓你可以在「戰鬥階段」使用,使用後獲得1回合超提高逃跑成功的效果(無法在BOSS房間使用)',
 		icon: '💨',
 		usable: true,
 		skill: 'useSmokeBomb'

@@ -267,6 +267,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         info.value = JSON.parse(JSON.stringify(DEFAULT_USER_INFO));
         pendingLevelUpRewards.value = 0; // 增加待領取次數
         statusEffects.value = []
+        skillProficiency.value = {}
     };
 
     /**
@@ -447,7 +448,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addGold,
         addStatus, hasStatus, removeStatus,
         addSkill, removeSkill, replaceSkill, hasSkill,
-        nextTurnStatus, init, healFull,
+        init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
         gainExp
     };

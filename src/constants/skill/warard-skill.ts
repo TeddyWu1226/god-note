@@ -11,7 +11,7 @@ export const WizardSkill = {
         icon: "🔥",
         description: ({playerStore}) => {
             const proficiency = playerStore.getSkillProficiency('FireBall')
-            const dmg = formatPrecision(5 + proficiency * 0.15, 2)
+            const dmg = Math.floor((5 + proficiency * 0.15) * (1 + playerStore.finalStats.apIncrease / 100))
             const percent = formatPrecision(0.1 + proficiency * 0.007 * 100, 1)
             return `對目標丟出一顆火球,造成 ${ColorText.ap(dmg)},有${percent}%機率造成「燃燒」效果。`;
         },
@@ -19,7 +19,7 @@ export const WizardSkill = {
         use: async ({monster, monsterIndex, playerStore, gameStateStore}) => {
             if (!monster) return false
             const proficiency = playerStore.getSkillProficiency('FireBall')
-            const dmg = formatPrecision(5 + proficiency * 0.15, 2)
+            const dmg = Math.floor((5 + proficiency * 0.15) * (1 + playerStore.finalStats.apIncrease / 100))
             monster.lastDamageResult = applySkillDamage(playerStore.finalStats, monster, dmg, 'ap', '火球術')
             const percent = formatPrecision(0.1 + proficiency * 0.007, 3)
             if (checkProbability(percent)) {

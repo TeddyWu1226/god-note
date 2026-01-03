@@ -1,7 +1,7 @@
 # ⚔️ 神祇記事 (God Note)
 
 [![Deploy Vite Site](https://github.com/teddywu1226/god-note/actions/workflows/deploy.yml/badge.svg)](https://github.com/teddywu1226/god-note/actions)
-![Version](https://img.shields.io/badge/Version-v0.0.2-blue)
+![Version](https://img.shields.io/badge/Version-v0.0.4-blue)
 ![Vue 3](https://img.shields.io/badge/Vue-3.5-4FC08D?logo=vue.js)
 ![Vite 7](https://img.shields.io/badge/Vite-7.2-646CFF?logo=vite)
 
@@ -26,7 +26,7 @@
 
 ## 📜 更新日誌 (Changelog)
 
-### [v0.0.3] - 2025-12-12 ~ NOW
+### [v0.0.4] - 2025-12-12 ~ NOW
 
 #### 測試版開發中
 

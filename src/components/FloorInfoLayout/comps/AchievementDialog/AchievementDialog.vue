@@ -104,6 +104,11 @@ const hiddenStats = computed(() => {
 // 進度百分比
 const publicProgress = computed(() => (publicStats.value.total ? (publicStats.value.unlocked / publicStats.value.total) * 100 : 0));
 const hiddenProgress = computed(() => (hiddenStats.value.total ? (hiddenStats.value.unlocked / hiddenStats.value.total) * 100 : 0));
+// 更新成就名稱
+const init = () => {
+  achievementStore.init()
+}
+init()
 </script>
 
 <template>
@@ -171,6 +176,9 @@ const hiddenProgress = computed(() => (hiddenStats.value.total ? (hiddenStats.va
             <p class="ach-desc">
               <template v-if="ach.isUnlocked || !ach.isHide">
                 {{ ach.description }}
+                <i v-if="ach.isUnlocked &&ach.hindHint" class="hint-text" style="padding-left: 1rem">
+                  {{ ach.hindHint }}
+                </i>
               </template>
               <template v-else>
                 <i class="hint-text">{{ ach.hindHint || '尚未解鎖的隱藏成就...' }}</i>

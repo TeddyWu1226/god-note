@@ -64,6 +64,7 @@ export const Boss = {
     FairyBarrier: {
         icon: '🧝',
         name: '妖精長老',
+        class: 'boss',
         description: '此地妖精結界的管理者,時常有護衛在身邊',
         ad: 8,
         critIncrease: 150,
