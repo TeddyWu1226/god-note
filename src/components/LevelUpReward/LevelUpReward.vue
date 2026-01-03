@@ -17,10 +17,10 @@ const QUALITY_CONFIG: any = {
 const STAT_OPTIONS = [
   {key: 'ad', label: '攻擊力', icon: '⚔️', min: 6, max: 9, unit: '%', type: 'percent'},
   {key: 'hpLimit', label: '生命上限', icon: '❤️', min: 6, max: 9, unit: '', type: 'value'},
-  {key: 'critRate', label: '爆擊率', icon: '💥', min: 2, max: 3, unit: '%', type: 'value'},
+  {key: 'critRate', label: '爆擊率', icon: '💥', min: 1, max: 2, unit: '%', type: 'value'},
   {key: 'critIncrease', label: '爆擊傷害', icon: '💢', min: 1, max: 3, unit: '%', type: 'value'},
   {key: 'apIncrease', label: '法術增傷', icon: '💫', min: 2, max: 3, unit: '%', type: 'value'},
-  {key: 'hit', label: '命中率', icon: '🎯', min: 2, max: 3, unit: '', type: 'value'}
+  {key: 'hit', label: '命中值', icon: '🎯', min: 2, max: 3, unit: '', type: 'value'}
 ];
 const getRandomQuality = () => {
   const rand = Math.random() * 100;
@@ -76,6 +76,7 @@ watch(
         if (playerStore.remainingLevelUpRewards.length === 0) {
           startRewardSequence();
         } else {
+          canClick.value = true;
           isShow.value = true;
         }
       }
@@ -104,13 +105,6 @@ const handleSelect = (reward: any) => {
   // 3. 關閉當前畫面
   isShow.value = false;
   playerStore.remainingLevelUpRewards = []
-
-  // 4. 檢查是否還有剩餘次數，如果有，延遲一小段時間再次開啟（視覺效果較好）
-  if (playerStore.pendingLevelUpRewards > 0) {
-    setTimeout(() => {
-      startRewardSequence();
-    }, 400); // 給予過渡動畫一點時間
-  }
 };
 </script>
 

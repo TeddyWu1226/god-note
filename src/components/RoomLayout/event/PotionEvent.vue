@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import './event-room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {GameState} from "@/enums/enums";
 import {getRandomElements} from "@/utils/math";
 import {UserStatus} from "@/constants/status/user-status";
@@ -18,8 +18,39 @@ const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 const isDrinking = ref(false);
 const resultType = ref<'heal' | 'mana' | 'debuff' | 'neutral' | null>(null);
-const resultMsg = ref("這裡剩下滿地的空瓶子。");
+
+const iShowPotion = computed(() => gameStateStore.currentStage <= 5)
+const resultMsg = ref(iShowPotion.value ? "這裡剩下滿地的空瓶子。" : '這裡剩下一口乾涸的水井。');
 const buff = ref<StatusEffect | undefined>();
+
+
+const eventConfig = computed(() => {
+  if (iShowPotion.value) {
+    return {
+      title: "奇怪的藥劑櫃",
+      icon: "🧪",
+      defaultMsg: "你發現了一個佈滿五顏六色瓶子的藥劑櫃。標籤已經脫落...",
+      leaveMsg: "你決定不拿自己的腸胃開玩笑，轉身離開了。",
+      actionText: "隨便喝一瓶",
+      drinkingMsg: "咕嚕咕嚕... 呸！",
+      animClass: "animate-cabinet",
+      healProb: 50, // 50% 成功
+      multiplier: 1.0
+    };
+  } else {
+    return {
+      title: "神秘的水井",
+      icon: "🕳️",
+      defaultMsg: "一口隱約散發著清涼氣息的古井，井口溢出一些不明的神祕液體。",
+      leaveMsg: "看著混濁的水面，你決定還是忍耐口渴。",
+      actionText: "喝一口井水",
+      drinkingMsg: "大口大口地飲用井水...",
+      animClass: "animate-well",
+      healProb: 65, // 井水成功率較高
+      multiplier: 0.6 // 但量比較少
+    };
+  }
+});
 
 const onLeave = () => {
   gameStateStore.eventAction = 2;
@@ -67,40 +98,39 @@ const drinkPotion = () => {
     gameStateStore.transitionToNextState();
   }, 1500);
 };
+
 </script>
 
 <template>
-  <EventTemplate title="奇怪的藥劑櫃">
+  <EventTemplate :title="eventConfig.title">
     <template #default>
       <div class="general-event">
-
         <template v-if="gameStateStore.eventAction === 0">
-          <div :class="['event-icon', 'cabinet-icon', { 'animate-drink': isDrinking }]">🧪</div>
+          <div :class="['event-icon', eventConfig.animClass, { 'is-active': isDrinking }]">
+            {{ eventConfig.icon }}
+          </div>
           <div class="dialog-box">
             <template v-if="!isDrinking">
-              <p>你發現了一個佈滿五顏六色瓶子的藥劑櫃。</p>
-              <p>有些標籤已經脫落，有些則散發著詭異的光芒...</p>
-              <p class="hint-text">(看起來雖然可疑，但或許能救你一命？)</p>
+              <p>{{ eventConfig.defaultMsg }}</p>
             </template>
             <template v-else>
-              <p class="drinking-text">咕嚕咕嚕... 呸！</p>
+              <p class="drinking-text">{{ eventConfig.drinkingMsg }}</p>
             </template>
           </div>
         </template>
 
         <template v-else-if="gameStateStore.eventAction === 2">
-          <div class="event-icon cabinet-icon" style="opacity: 0.5">🧪</div>
+          <div class="event-icon" style="opacity: 0.5">{{ eventConfig.icon }}</div>
           <div class="dialog-box">
-            <p>你決定不拿自己的腸胃開玩笑，轉身離開了。</p>
+            <p>{{ eventConfig.leaveMsg }}</p>
           </div>
         </template>
 
         <template v-else-if="gameStateStore.eventAction === 3">
           <div class="result-display">
-            <div v-if="resultType === 'heal'" class="result-icon-large">💖</div>
-            <div v-else-if="resultType === 'debuff'" class="result-icon-large">{{ buff?.icon || '🌀' }}</div>
-            <div v-else-if="resultType === 'neutral'" class="result-icon-large">✨</div>
-
+            <div class="result-icon-large">
+              {{ resultType === 'heal' ? '💖' : (buff?.icon || '✨') }}
+            </div>
             <div class="dialog-box">
               <p v-html="resultMsg"></p>
             </div>
@@ -111,19 +141,11 @@ const drinkPotion = () => {
 
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="gameStateStore.eventAction === 0">
-        <el-button
-            type="success"
-            @click="drinkPotion"
-            :loading="isDrinking"
-        >
-          隨便喝一瓶
+        <el-button type="success" @click="drinkPotion" :loading="isDrinking">
+          {{ eventConfig.actionText }}
         </el-button>
-        <el-button
-            type="info"
-            @click="onLeave"
-            :disabled="isDrinking"
-        >
-          還是別亂喝
+        <el-button type="info" @click="onLeave" :disabled="isDrinking">
+          離開
         </el-button>
       </template>
     </template>
@@ -131,24 +153,25 @@ const drinkPotion = () => {
 </template>
 
 <style scoped>
-.cabinet-icon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 0 10px rgba(156, 39, 176, 0.4));
-  transition: all 0.3s ease;
+/* 藥劑櫃：左右晃動傾斜 */
+.animate-cabinet.is-active {
+  animation: cab-shake 0.5s infinite alternate;
 }
 
-/* 飲用動畫 */
-.animate-drink {
-  animation: drink 0.5s infinite alternate ease-in-out;
-}
-
-@keyframes drink {
-  0% {
-    transform: rotate(0deg);
+@keyframes cab-shake {
+  to {
+    transform: rotate(30deg) translateY(-10px);
   }
-  100% {
-    transform: rotate(45deg) translate(10px, -10px);
+}
+
+/* 井水：上下震動（吸水的感覺） */
+.animate-well.is-active {
+  animation: well-pump 0.3s infinite alternate;
+}
+
+@keyframes well-pump {
+  to {
+    transform: translateY(10px) scaleY(0.9);
   }
 }
 
@@ -164,11 +187,6 @@ const drinkPotion = () => {
   margin-bottom: 1rem;
 }
 
-.hint-text {
-  font-size: 0.9rem;
-  color: #888;
-  font-style: italic;
-}
 
 .result-display {
   display: flex;

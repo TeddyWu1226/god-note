@@ -3,6 +3,7 @@ import {AchievementStoreType, AchievementType, GameStateStoreType, PlayerStoreTy
 import {CharEnum} from "@/enums/char-enum";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
+import {Boss} from "@/constants/monsters/boss-info";
 
 /**
  * 成就檢查核心邏輯
@@ -62,7 +63,18 @@ export const checkAchievements = (
             if (key === 'Boss0' && gameStateStore.currentStage > 1) isConditionMet = true;
             if (key === 'Boss1' && gameStateStore.currentStage > 5) isConditionMet = true;
         }
-
+        // --- 不轉職通關 ---
+        if (key.startsWith('BeginnerKillGod')) {
+            const kill = trackerStore.getKillCount(Boss.Twilight.name, 'total');
+            if (key === 'BeginnerKillGod0' &&
+                playerStore.info.char === CharEnum.Beginner.value &&
+                kill > 0
+            ) isConditionMet = true;
+        }
+        // --- 轉職 ---
+        if (key === 'ThisGameHasJob' && playerStore.info.char !== CharEnum.Beginner.value) {
+            isConditionMet = true;
+        }
         /** 隱藏成就 **/
         // --- 魔樹事件 ---
         if (key.startsWith('EvilTree')) {
@@ -76,10 +88,6 @@ export const checkAchievements = (
             isConditionMet = true;
         }
 
-        // --- 轉職 ---
-        if (key === 'ThisGameHasJob' && playerStore.info.char !== CharEnum.Beginner.value) {
-            isConditionMet = true;
-        }
 
         // --- 和平 ---
         if (key === 'Pacifist' && trackerStore.achievementsCount.peaceDay >= 30) {

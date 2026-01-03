@@ -102,6 +102,22 @@ const PublicAchievement = {
         description: "連續5個階段不選擇任何祈禱就踏上征途",
         isHide: false,
     } as AchievementType,
+    ThisGameHasJob: {
+        name: "這遊戲還有轉職?",
+        icon: "💼",
+        quality: 3,
+        description: "成功轉職任一職業",
+        isUnlocked: false,
+        isHide: false,
+    } as AchievementType,
+    BeginnerKillGod0: {
+        name: "登塔者弒神",
+        icon: "🙏",
+        quality: 3,
+        description: "不轉職的情況下擊敗「墮落的半神」",
+        isUnlocked: false,
+        isHide: false,
+    } as AchievementType,
     Boss0: {
         name: "開始遊戲",
         icon: "🐻",
@@ -109,6 +125,7 @@ const PublicAchievement = {
         description: "擊敗「森林守護者」",
         isHide: false,
     } as AchievementType,
+
     Boss1: {
         name: "月光再次照亮森林",
         icon: "🌙",
@@ -116,22 +133,13 @@ const PublicAchievement = {
         description: "通關暮光之林",
         isHide: false,
     } as AchievementType,
-
 }
 
 /**
  * 隱藏成就：解鎖前僅顯示暗示或完全保密
  */
 const HideAchievement = {
-    ThisGameHasJob: {
-        name: "這遊戲還有轉職?",
-        icon: "💼",
-        quality: 3,
-        description: "成功轉職任一職業",
-        isUnlocked: false,
-        isHide: true,
-        hindHint: "找到另一個出路..."
-    } as AchievementType,
+
     NewKillWolf: {
         name: "初生之犢不畏狼",
         icon: "🐺",

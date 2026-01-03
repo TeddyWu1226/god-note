@@ -16,15 +16,15 @@ const trackerStore = useTrackerStore();
 const EVENT_CONFIG = [
   {
     type: SpecialEventEnum.Gamble,
-    canAppear: () => true // 賭博總是能出現
+    canAppear: () => true
   },
   {
     type: SpecialEventEnum.Chest,
-    canAppear: () => true // 賭博總是能出現
+    canAppear: () => true
   },
   {
     type: SpecialEventEnum.Potion,
-    canAppear: () => true // 賭博總是能出現
+    canAppear: () => true
   },
   {
     type: SpecialEventEnum.GetFruit, // 魔樹事件

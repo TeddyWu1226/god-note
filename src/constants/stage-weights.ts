@@ -16,5 +16,5 @@ export const stageMonsterWeightsMap: Record<number, Record<string, number>> = {
     3: AncientRootsWeights,
     4: FairyBarrierWeights,
     5: TwilightWeights,
-    // 6: ScorchingDunesWeights
+    6: ScorchingDunesWeights
 }

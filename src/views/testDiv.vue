@@ -37,6 +37,12 @@ const onTest = () => {
   // playerStore.gainItem(Armor.Armor1)
   // playerStore.gainItem(Offhand.Shield1)
   gameStateStore.currentStage = 6
+  playerStore.gainExp({amount: 700})
+  playerStore.gainItem(Accessory1.SoulAnchor)
+  playerStore.gainItem(Weapon.Sword1)
+  playerStore.gainItem(Head.HpHead1)
+  playerStore.gainItem(Armor.Armor1)
+  playerStore.gainItem(Offhand.Shield1)
 }
 const give = () => {
   playerStore.gainItem(Usable.ShabbyTent)
@@ -53,7 +59,7 @@ const setRoom = () => {
   gameStateStore.nextRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value,
     RoomEnum.Shop.value, RoomEnum.Rest.value, RoomEnum.Event.value]
 }
-const onSave = ()=>{
+const onSave = () => {
   saveStore.saveAll()
 }
 </script>
@@ -84,11 +90,11 @@ const onSave = ()=>{
         <el-collapse-item title="統計追蹤">
           <h3>當前階段</h3>
           <div>
-            {{trackerStore.currentKills}}
+            {{ trackerStore.currentKills }}
           </div>
           <h3>本場遊戲</h3>
           <div>
-            {{trackerStore.totalKills}}
+            {{ trackerStore.totalKills }}
           </div>
           <h3>其他</h3>
           <p v-for="key in Object.keys(trackerStore.achievementsCount)">-->
