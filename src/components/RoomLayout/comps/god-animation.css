@@ -1,6 +1,6 @@
 /* ------------------- 墮落的神話怪 (Mystery) ------------------- */
 
-.monster-card.is-mystery {
+.monster-card.mystery {
     position: relative;
     border: 2px solid #a020f0 !important;
     background: linear-gradient(to bottom, #1a0033, #05000d);
@@ -10,7 +10,7 @@
 }
 
 /* --- 背景：凋零碎片層 --- */
-.monster-card.is-mystery::before {
+.monster-card.mystery::before {
     content: '';
     position: absolute;
     inset: -100%; /* 擴大範圍以利旋轉 */
@@ -25,7 +25,7 @@
 }
 
 /* --- 背景：內部呼吸光暈 --- */
-.monster-card.is-mystery .card-inner-glow {
+.monster-card.mystery .card-inner-glow {
     position: absolute;
     inset: 0;
     background: radial-gradient(circle at 50% 50%, rgba(160, 32, 240, 0.15), transparent 70%);
@@ -35,7 +35,7 @@
 }
 
 /* --- 文字：名稱特效與重影 --- */
-.is-mystery .monster-name {
+.mystery .monster-name {
     color: #fff;
     text-shadow: 0 0 10px #a020f0, 0 0 20px #a020f0;
     position: relative;
@@ -43,7 +43,7 @@
     animation: mystery-text-glitch 4s ease-in-out infinite;
 }
 
-.is-mystery .monster-name::before {
+.mystery .monster-name::before {
     content: attr(data-name);
     position: absolute;
     top: 0;
@@ -56,7 +56,7 @@
     animation: mystery-smoke 2s ease-in-out infinite;
 }
 
-.is-mystery .monster-icon {
+.mystery .monster-icon {
     font-size: 3rem;
     position: relative;
     display: inline-block;
@@ -72,7 +72,7 @@
 
 
 /* --- 標籤：右上角 GOD (使用 after) --- */
-.monster-card.is-mystery::after {
+.monster-card.mystery::after {
     content: "GOD";
     position: absolute;
     top: 5px;

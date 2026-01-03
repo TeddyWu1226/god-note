@@ -1,18 +1,20 @@
-/* --- 共通：讓文字在特殊背景下更清晰 --- */
-.is-elite, .is-mystery, .is-boss {
-    color: white; /* 特殊怪通常背景較深 */
+/* ------------------- 巨大怪物 (Elite) ------------------- */
+.big .monster-icon{
+    font-size: 3.5rem;
 }
-
-/* ------------------- 1. 菁英怪 (Elite) ------------------- */
+.big .monster-name{
+    font-size: 0.8rem;
+}
+/* ------------------- 菁英怪 (Elite) ------------------- */
 /* 風格：欄邊，穩重但強大 */
-.monster-card.is-elite {
+.monster-card.elite {
     border: 2px solid #268cef !important; /* 藍色邊框 */
     background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
     position: relative;
     overflow: hidden;
 }
 
-.is-elite::before {
+.elite::before {
     content: "";
     position: absolute;
     top: -50%;
@@ -26,14 +28,14 @@
 
 /* ------------------- 3. BOSS 怪 (Boss) ------------------- */
 /* 風格：熔岩暗紅，強烈的壓迫感與動態呼吸燈 */
-.monster-card.is-boss {
+.monster-card.boss {
     border: 2px solid #ff4d4d !important;
     background: radial-gradient(circle at center, #4a0000 0%, #000000 100%);
     transform: scale(1.05); /* BOSS 本來就該大一點點 */
     z-index: 10;
 }
 
-.is-boss::after {
+.boss::after {
     content: "BOSS";
     position: absolute;
     top: 5px;
@@ -47,7 +49,7 @@
 }
 
 /* BOSS 呼吸燈特效 */
-.is-boss {
+.boss {
     animation: boss-glow 2s infinite alternate;
 }
 

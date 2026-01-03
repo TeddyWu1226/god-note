@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import './event-room.css'
-import { useGameStateStore } from "@/store/game-state-store";
-import { usePlayerStore } from "@/store/player-store";
+import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
-import { ref } from "vue";
-import { GameState } from "@/enums/enums";
-import { useShopLogic } from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
-import { getRandomItemsByQuality } from "@/utils/create";
-import { Armor } from "@/constants/items/equipment/armor-info";
-import { Head } from "@/constants/items/equipment/head-info";
-import { Offhand } from "@/constants/items/equipment/offhand-info";
-import { Weapon } from "@/constants/items/equipment/weapon-info";
-import { Accessory1, Accessory2 } from "@/constants/items/equipment/accessories-info";
-import { getEnumColumn } from "@/utils/enum";
-import { QualityEnum } from "@/enums/quality-enum";
+import {ref} from "vue";
+import {GameState} from "@/enums/enums";
+import {useShopLogic} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
+import {getRandomItemsByQuality} from "@/utils/create";
+import {Armor} from "@/constants/items/equipment/armor-info";
+import {Head} from "@/constants/items/equipment/head-info";
+import {Offhand} from "@/constants/items/equipment/offhand-info";
+import {Weapon} from "@/constants/items/equipment/weapon-info";
+import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
+import {getEnumColumn} from "@/utils/enum";
+import {QualityEnum} from "@/enums/quality-enum";
 
 /**
  * 狀態控制 (eventAction)
@@ -26,7 +26,7 @@ const isOpening = ref(false);
 const resultType = ref<'treasure' | 'trap' | 'mimic' | 'equip' | null>(null);
 const resultMsg = ref("這個地方剩下一個空空如也的寶箱。");
 
-const { getWeightedQuality } = useShopLogic(gameStateStore.currentStage);
+const {getEquipWeightedQuality} = useShopLogic(gameStateStore.currentStage);
 
 const onLeave = () => {
   gameStateStore.eventAction = 2;
@@ -49,10 +49,10 @@ const openChest = () => {
       // 30% 機率：獲得裝備 (Equip)
       resultType.value = 'equip';
       const equip = getRandomItemsByQuality(
-        1,
-        getWeightedQuality(),
-        false,
-        Armor, Head, Offhand, Weapon, Accessory1, Accessory2
+          1,
+          getEquipWeightedQuality(),
+          false,
+          Armor, Head, Offhand, Weapon, Accessory1, Accessory2
       )[0];
 
       playerStore.gainItem(equip);
@@ -116,16 +116,16 @@ const openChest = () => {
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="gameStateStore.eventAction === 0">
         <el-button
-          type="primary"
-          @click="openChest"
-          :loading="isOpening"
+            type="primary"
+            @click="openChest"
+            :loading="isOpening"
         >
           打開寶箱
         </el-button>
         <el-button
-          type="info"
-          @click="onLeave"
-          :disabled="isOpening"
+            type="info"
+            @click="onLeave"
+            :disabled="isOpening"
         >
           離開
         </el-button>
@@ -173,18 +173,36 @@ const openChest = () => {
 }
 
 @keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  20% { transform: translate(-1px, -2px) rotate(-1deg); }
-  40% { transform: translate(-3px, 0px) rotate(1deg); }
-  60% { transform: translate(3px, 2px) rotate(0deg); }
-  80% { transform: translate(1px, -1px) rotate(1deg); }
-  100% { transform: translate(-1px, 2px) rotate(-1deg); }
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  20% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  40% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  60% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  80% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  100% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }
 
 .result-display {

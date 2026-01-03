@@ -27,6 +27,22 @@ const Heal = {
         heal: 100,
         usable: true
     } as UsableType,
+    Heal3: {
+        name: '特製生命藥劑',
+        description: '經過多次過濾的濃縮液，效果顯著提升。',
+        icon: '🧪',
+        quality: 3,
+        heal: 200,
+        usable: true
+    } as UsableType,
+    Heal4: {
+        name: '強效生命精華',
+        description: '提煉自荒漠罕見植物，擁有強大的再生能量。',
+        icon: '🧪',
+        quality: 4,
+        heal: 400,
+        usable: true
+    } as UsableType,
 };
 
 
@@ -53,6 +69,22 @@ const Magic = {
         icon: '🍷',
         quality: 2,
         magic: 60
+    } as UsableType,
+    Magic3: {
+        name: '高純度法力藥水',
+        description: '去除了雜質的藍色液體，魔力波動穩定。',
+        icon: '🍷',
+        quality: 3,
+        magic: 120,
+        usable: true
+    } as UsableType,
+    Magic4: {
+        name: '強效魔力增幅液',
+        description: '內含微小魔力結晶，能快速填補乾涸的氣海。',
+        icon: '🍷',
+        quality: 4,
+        magic: 240,
+        usable: true
     } as UsableType,
 };
 

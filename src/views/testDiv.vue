@@ -29,17 +29,15 @@ const onTest = () => {
   playerStore.gainItem(Potions.Heal1)
   playerStore.gainItem(Potions.Heal1)
   playerStore.gainItem(Potions.Heal1)
-  playerStore.gainItem(SpecialItem.TwilightKey)
-
-  gameStateStore.currentStage = 5
+  playerStore.gainItem(Accessory1.SoulAnchor)
+  playerStore.gainItem(Weapon.Sword1)
+  playerStore.gainItem(Head.HpHead1)
+  playerStore.gainItem(Armor.Armor1)
+  playerStore.gainItem(Offhand.Shield1)
+  gameStateStore.currentStage = 6
 }
 const addEquipment = () => {
-  playerStore.gainItem(Accessory1.SoulAnchor)
-  // playerStore.gainItem(Usable.GodLuckLeaf)
-  playerStore.gainItem(Weapon.Sword1)
-  playerStore.gainItem(Head.HpHead0)
-  playerStore.gainItem(Armor.Armor0)
-  playerStore.gainItem(Offhand.Shield1)
+  playerStore.gainItem(Usable.SmokeBomb)
 }
 const heal = () => {
   playerStore.healFull()
@@ -58,10 +56,10 @@ const onSave = ()=>{
   <el-card class="test">
     <el-button @click="isClose = !isClose" style="width: 100% ">縮放</el-button>
     <div style="padding-top: 5px" v-if="!isClose">
-      <el-button @click="addEquipment">給裝備</el-button>
+      <el-button @click="addEquipment">逃脫</el-button>
       <el-button @click="heal">回滿血</el-button>
-      <el-button @click="onTest">測試</el-button>
       <el-button @click="setRoom">房間設定</el-button>
+      <el-button @click="onTest">測試</el-button>
       <el-button @click="onSave">存檔</el-button>
       <el-collapse>
         <el-collapse-item title="回合環境參數">
