@@ -1,6 +1,6 @@
 import {MonsterType} from "@/types";
 import {WorldDefault} from "@/assets/const";
-import {MATERIAL} from "@/constants/items/material-info";
+import {MATERIAL} from "@/constants/items/material/material-info";
 
 /**
  * 無限的怪物

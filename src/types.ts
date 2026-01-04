@@ -59,6 +59,7 @@ export interface ItemType {
     quality?: number
     usable?: boolean // 是否可使用
     unsellable?: boolean // 是否非賣品
+    price?: number // 販售價格
 }
 
 export interface EquipmentType extends ItemType, qualityType {

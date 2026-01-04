@@ -7,7 +7,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {GameState} from "@/enums/enums";
 import {ElMessageBox} from "element-plus";
 import {RoomEnum} from "@/enums/room-enum";
-import {MATERIAL} from "@/constants/items/material-info";
+import {MATERIAL} from "@/constants/items/material/material-info";
 import {useTrackerStore} from "@/store/track-store";
 import {Monster} from "@/constants/monsters/monster-info";
 import {SpecialItem} from "@/constants/items/special-item-info";

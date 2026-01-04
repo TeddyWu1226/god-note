@@ -2,7 +2,7 @@
 import {UnitStatus} from "@/constants/status/unit-status";
 import {MonsterActionParams} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {MistyForestMonster} from "@/constants/monsters/monster-info/misty-forest-monster";
+import {MistyForestMonster} from "@/constants/monsters/monster-info/1-misty-forest-monster";
 import {create} from "@/utils/create";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 

@@ -16,7 +16,7 @@ import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
-import {MATERIAL} from "@/constants/items/material-info";
+import {MATERIAL} from "@/constants/items/material/material-info";
 import {CharEnum} from "@/enums/char-enum";
 
 const gameStateStore = useGameStateStore()

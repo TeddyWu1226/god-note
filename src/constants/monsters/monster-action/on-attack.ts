@@ -3,7 +3,7 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {MonsterOnAttackParams} from "@/types";
 import {checkProbability} from "@/utils/math";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
-import {MistyForestMonster} from "@/constants/monsters/monster-info/misty-forest-monster";
+import {MistyForestMonster} from "@/constants/monsters/monster-info/1-misty-forest-monster";
 import {create} from "@/utils/create";
 
 
