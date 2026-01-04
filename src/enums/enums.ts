@@ -36,6 +36,9 @@ export enum SpecialEventEnum {
     Chest = 'Chest',    // 寶箱事件
     Potion = 'Potion', // 藥水事件
 
+    // 休息跳轉事件
+    Storyteller = 'Storyteller',
+
     // 單次完成事件
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件

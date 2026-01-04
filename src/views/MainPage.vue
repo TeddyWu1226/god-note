@@ -157,13 +157,51 @@ watch(
       <UserDetailInfo v-if="!gameStateStore.stateIs(GameState.INITIAL)"/>
     </div>
     <StageTransition ref="StageTransitionRef"/>
-    <el-dialog v-model="isShowIllustration" title="說明">
-      <p>1. 無盡之塔是階層式結構,唯有打敗該層BOSS才能前往下一層</p>
-      <p>2. 在達成指定條件前, 無法挑戰該層BOSS</p>
-      <p>3. 你可以盡情的選擇你所想要走的路線,但請做好萬全準備後再選擇挑戰BOSS</p>
-      <p>4. 命只有一次,死亡即是終點,也是新的開始</p>
-      <p>5. 道具,怪物基本都有相關提示,也許多看點對你有幫助</p>
-      <p>6. 怪物會隨著時間變得更加強大,直到你通過該層層主</p>
+    <el-dialog
+        v-model="isShowIllustration"
+        title="📖 說明"
+        width="500px"
+        custom-class="illustration-dialog"
+    >
+      <div class="rule-container">
+        <section class="rule-section">
+          <h3 class="section-title">◈ 塔層與挑戰</h3>
+          <div class="rule-item">
+            <span class="rule-icon">🧗</span>
+            <p><strong>階層結構：</strong> 唯有擊敗該層 <span class="highlight-boss">BOSS</span> 才能前往下一層。</p>
+          </div>
+          <div class="rule-item">
+            <span class="rule-icon">🔒</span>
+            <p><strong>挑戰限制：</strong> 需達成指定條件後，方可解鎖 BOSS 挑戰權。</p>
+          </div>
+          <div class="rule-item">
+            <span class="rule-icon">🗺️</span>
+            <p><strong>路線規劃：</strong> 你可以自由選擇路線，但請在挑戰 BOSS 前做好萬全準備。</p>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <section class="rule-section">
+          <h3 class="section-title">◈ 戰鬥與成長</h3>
+          <div class="rule-item">
+            <span class="rule-icon">🕒</span>
+            <p><strong>環境壓制：</strong> 每一層怪物會隨著 <span class="highlight-time">時間流逝</span> 變得愈發強大。</p>
+          </div>
+          <div class="rule-item">
+            <span class="rule-icon">📈</span>
+            <p><strong>經驗提升：</strong> 擊敗等級 <span class="highlight-exp">≥1</span> 的怪物可獲高額經驗；低於自身等級者經驗大幅削減。</p>
+          </div>
+          <div class="rule-item">
+            <span class="rule-icon">💀</span>
+            <p><strong>進階戰鬥：</strong> 有機率遭遇 <span class="highlight-elite">[菁英]</span> 敵人。它們極其強大，但等級更高且<strong>必定掉落</strong>專屬獎勵。</p>
+          </div>
+        </section>
+
+        <div class="rule-footer">
+          <span class="rule-icon">💡</span> 提示：多觀察道具與怪物的細節描述，往往隱藏著生存關鍵。
+        </div>
+      </div>
     </el-dialog>
     <AchievementDialog v-model="isShowAchievementDialog"/>
     <LevelUpReward/>
@@ -199,5 +237,70 @@ watch(
 
 .user-layout {
   height: 20vh;
+}
+.rule-container {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  line-height: 1.6;
+  /* 16px / 16 = 1rem */
+  padding: 0.5rem;
+}
+
+.section-title {
+  /* 18px / 16 = 1.125rem */
+  font-size: 1.125rem;
+  color: #8e44ad;
+  margin-bottom: 0.75rem; /* 12px */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.rule-section {
+  margin-bottom: 1.5rem; /* 24px */
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.9375rem; /* 15px */
+  background: var(--el-card-bg-color);
+  padding: 0.625rem; /* 10px */
+  border-radius: 0.5rem; /* 8px */
+  transition: transform 0.2s ease;
+}
+
+
+.rule-item p {
+  margin: 0;
+  /* 15px / 16 = 0.9375rem */
+  font-size: 0.9375rem;
+}
+
+.highlight-boss { color: #d63031; font-weight: bold; }
+.highlight-time { color: #e67e22; font-weight: bold; }
+.highlight-exp { color: #27ae60; font-weight: bold; }
+.highlight-elite { color: #0984e3; font-weight: bold; }
+
+.divider {
+  border: 0;
+  border-top: 0.0625rem dashed #ddd; /* 1px */
+  margin: 1.25rem 0; /* 20px */
+}
+
+.rule-footer {
+  margin-top: 1.25rem; /* 20px */
+  padding: 0.75rem; /* 12px */
+  background: #fff3cd;
+  /* 4px / 16 = 0.25rem */
+  border-left: 0.25rem solid #ffc107;
+  /* 13.6px / 16 = 0.85rem */
+  font-size: 0.85rem;
+  border-radius: 0.25rem; /* 4px */
+  color: #856404;
+}
+
+/* 強制調整 Dialog 內的強勢標籤 */
+strong {
+  margin-right: 0.125rem;
 }
 </style>

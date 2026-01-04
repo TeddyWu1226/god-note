@@ -1,9 +1,10 @@
 <script setup lang="ts">
-
+import '../event/event-room.css'
 import {effect, ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import {GameState} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
+import {GameState, SpecialEventEnum} from "@/enums/enums";
+import {checkProbability} from "@/utils/math";
 
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore()
@@ -13,6 +14,13 @@ const onRest = () => {
   isRested.value = true
   playerStore.healFull()
   gameStateStore.transitionToNextState()
+  if (gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.Storyteller)) {
+    return
+  }
+  if (checkProbability(0.3)) {
+    gameStateStore.switchToEventRoom(SpecialEventEnum.Storyteller)
+  }
+
 }
 
 defineExpose({
@@ -22,23 +30,31 @@ defineExpose({
 
 <template>
   <div class="rest">
-    <div style="padding-bottom: 1rem;">這邊好像很適合休息💤...</div>
-    <div v-if="isRested" style="color: var(--el-color-success);text-align: center">
-      休息了一會,<br/>你的HP跟SP完全恢復了!
-    </div>
-    <div v-else-if="gameStateStore.currentState === GameState.SELECTION_PHASE">
-      但現在的我不想休息!
-    </div>
-    <div v-else>
-      你選擇...?
-    </div>
+    <template v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
+      <div class="event-icon">💤</div>
+      <div class="dialog-box">
+        <p>這邊好像很適合休息...</p>
+        <p>你選擇...?</p>
+      </div>
+    </template>
+    <template v-else>
+      <template v-if="isRested">
+        <div class="event-icon">💤</div>
+        <div style="color: var(--el-color-success);text-align: center" class="dialog-box">
+          你休息了一會,<br/>你的HP跟SP完全恢復外,身上暫時的負面效果也消除了!
+        </div>
+      </template>
+      <div v-else class="dialog-box">
+        趕路吧...
+      </div>
+    </template>
+
   </div>
 </template>
 
 <style scoped>
 .rest {
   height: auto;
-  font-size: 1.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;

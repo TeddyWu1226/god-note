@@ -16,6 +16,8 @@ import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
+import {MATERIAL} from "@/constants/items/material-info";
+import {CharEnum} from "@/enums/char-enum";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -24,31 +26,21 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-
-  playerStore.addGold(1000)
-  // playerStore.gainItem(Potions.Heal1)
-  // playerStore.gainItem(Potions.Heal1)
-  // playerStore.gainItem(Potions.Heal1)
-  // playerStore.gainItem(Potions.Heal1)
-  // playerStore.gainItem(Potions.Heal1)
-  // playerStore.gainItem(Accessory1.SoulAnchor)
-  // playerStore.gainItem(Weapon.Sword1)
-  // playerStore.gainItem(Head.HpHead1)
-  // playerStore.gainItem(Armor.Armor1)
-  // playerStore.gainItem(Offhand.Shield1)
   gameStateStore.currentStage = 6
-  playerStore.gainExp({amount: 700})
-  playerStore.gainItem(Accessory1.SoulAnchor)
-  playerStore.gainItem(Weapon.Sword1)
-  playerStore.gainItem(Head.HpHead1)
-  playerStore.gainItem(Armor.Armor1)
-  playerStore.gainItem(Offhand.Shield1)
 }
 const give = () => {
-  playerStore.gainItem(Usable.ShabbyTent)
-  playerStore.gainItem(Usable.ShabbyTent)
+  playerStore.addGold(1000)
+  // playerStore.gainItem(MATERIAL.ForestWood)
+  // playerStore.gainItem(Usable.ShabbyTent)
+  // playerStore.gainItem(Usable.ShabbyTent)
   playerStore.gainItem(Usable.CamouflageGrass)
   playerStore.gainItem(Usable.CamouflageGrass)
+
+  // playerStore.gainItem(Potions.Heal1)
+  // playerStore.gainItem(Potions.Heal1)
+  // playerStore.gainItem(Potions.Heal1)
+  // playerStore.gainItem(Potions.Heal1)
+  // playerStore.gainItem(Potions.Heal1)
 
 }
 const heal = () => {
@@ -59,7 +51,7 @@ const setRoom = () => {
   gameStateStore.nextRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value,
     RoomEnum.Shop.value, RoomEnum.Rest.value, RoomEnum.Event.value]
 }
-const onSave = () => {
+const onSave = ()=>{
   saveStore.saveAll()
 }
 </script>
@@ -90,11 +82,11 @@ const onSave = () => {
         <el-collapse-item title="統計追蹤">
           <h3>當前階段</h3>
           <div>
-            {{ trackerStore.currentKills }}
+            {{trackerStore.currentKills}}
           </div>
           <h3>本場遊戲</h3>
           <div>
-            {{ trackerStore.totalKills }}
+            {{trackerStore.totalKills}}
           </div>
           <h3>其他</h3>
           <p v-for="key in Object.keys(trackerStore.achievementsCount)">-->

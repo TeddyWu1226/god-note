@@ -114,23 +114,32 @@ export const useGameStateStore = defineStore('game-state', () => {
         eventAction.value = 0
     }
 
+    /**
+     * 突然切換至戰鬥房間
+     * @param roomValue
+     * @param monsters
+     */
+    function switchToFightRoom(roomValue: number, monsters?: MonsterType[]): void {
+        setRoom(roomValue);
+        if (monsters) {
+            switchEnemy.value = monsters;
+        }
+    }
+
+
+    /**
+     * 突然切換至事件房間
+     * @param event
+     */
+    function switchToEventRoom(event: SpecialEventEnum): void {
+        setRoom(RoomEnum.Event.value);
+        currentEventType.value = event;
+    }
+
     function setCurrentEnemy(monsters: MonsterType[]): void {
         currentEnemy.value = monsters
     }
 
-    /**
-     * 突然切換戰鬥房間用
-     * @param roomValue
-     * @param monsters
-     */
-    function switchToFightRoom(roomValue: number, monsters: MonsterType[]): void {
-        currentRoomValue.value = roomValue ?? RoomEnum.Fight.value;
-        isBattleWon.value = false;
-        currentState.value = GameState.EVENT_PHASE;
-        currentEventType.value = null;
-        eventAction.value = 0
-        switchEnemy.value = monsters;
-    }
 
     function takeSwitchEnemy(): MonsterType[] {
         const enemy = switchEnemy.value;
@@ -257,7 +266,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         roomIs,
         eventAction,
         init, transitionToNextState,
-        setRoom, switchToFightRoom, takeSwitchEnemy,
+        setRoom, switchToFightRoom, switchToEventRoom, takeSwitchEnemy,
         setCurrentEnemy, setBattleWon,
         setEvent, isEventClose,
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,

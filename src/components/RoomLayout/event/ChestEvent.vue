@@ -135,12 +135,6 @@ const openChest = () => {
 </template>
 
 <style scoped>
-.event-icon {
-  font-size: 4.5rem;
-  margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
-}
-
 /* 震動動畫 */
 .opening-animation {
   animation: shake 0.2s infinite;

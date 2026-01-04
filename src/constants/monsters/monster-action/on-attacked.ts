@@ -33,7 +33,7 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
     },
     cactusSpiritOnAttacked: ({monster, playerStore, targetElement, logStore}) => {
         // 使攻擊者受傷
-        playerStore.info.hp -= 5
-        logStore.logger.add(`仙人掌對你噴射了尖刺,你受到的 5 傷害`);
+        playerStore.info.hp -= monster.ad
+        logStore.logger.add(`仙人掌對你噴射了尖刺,你受到的 ${monster.ad} 傷害`);
     },
 };

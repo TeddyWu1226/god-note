@@ -77,4 +77,23 @@ export const UserStatus = {
             hit: 20,
         }
     } as StatusEffect,
+    SongHeal: {
+        name: '悠揚:生命回復',
+        icon: '💚',
+        duration: 20,
+        isBuff: true,
+        description: '每次行動恢復 5 HP',
+        type: 'heal',
+        value: 5
+    } as StatusEffect,
+    SongDefend: {
+        name: '悠揚:防禦提升',
+        icon: '🛡️',
+        duration: 20,
+        isBuff: true,
+        description: '防禦提升 3 點',
+        bonus: {
+            adDefend: 3,
+        }
+    } as StatusEffect,
 }

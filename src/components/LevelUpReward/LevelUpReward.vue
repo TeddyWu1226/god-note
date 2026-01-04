@@ -56,12 +56,13 @@ const generateOptions = () => {
 };
 
 const startRewardSequence = () => {
+  // 升級回血/回魔
+  playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + Math.round(playerStore.finalStats.hpLimit / 2))
+  playerStore.info.sp = Math.min(playerStore.finalStats.spLimit, playerStore.info.sp + Math.round(playerStore.finalStats.spLimit / 2))
   generateOptions();
   isShow.value = true;
-
   // 開始鎖定點擊
   canClick.value = false;
-
   // 1 秒後解除鎖定
   setTimeout(() => {
     canClick.value = true;
@@ -97,6 +98,9 @@ const handleSelect = (reward: any) => {
     playerStore.info[key] += Math.max(Math.round(baseValue * (finalValue / 100)), 1);
   } else {
     playerStore.info[key] += finalValue;
+    if (key === 'hpLimit') {
+      playerStore.info.hp += finalValue;
+    }
   }
 
   // 2. 關鍵：減少待領取次數

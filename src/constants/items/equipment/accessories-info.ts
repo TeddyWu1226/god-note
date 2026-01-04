@@ -26,7 +26,7 @@ export const Accessory1 = {
         position: EquipmentPosition.ACCESSORY1,
         quality: 1,
         critRate: 5,
-        hit: 5
+        hit: 10
     } as EquipmentType,
     HeartAmulet: {
         name: '生命護身符',
