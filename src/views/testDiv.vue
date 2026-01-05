@@ -29,6 +29,7 @@ const onTest = () => {
   gameStateStore.currentStage = 6
   playerStore.gainExp({amount: 700})
   playerStore.addSkill(Skills.FireBall.id)
+  playerStore.addSkill(Skills.CommonHeal.id)
   playerStore.addSkillProficiency(Skills.FireBall.id, 100)
 }
 const give = () => {
