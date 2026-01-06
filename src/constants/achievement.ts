@@ -1,5 +1,5 @@
 import {AchievementType} from "@/types";
-
+// 成就列表
 /**
  * 公開成就：玩家可以直接看到目標並朝其努力
  */
@@ -79,6 +79,20 @@ const PublicAchievement = {
         icon: "🫃",
         quality: 3,
         description: "「踏上征途」累計100次",
+        isHide: false,
+    } as AchievementType,
+    LiveInSameStage100: {
+        name: "移民了?",
+        icon: "🏠",
+        quality: 2,
+        description: "在同一層中存活超過100天",
+        isHide: false,
+    } as AchievementType,
+    LiveInSameStage500: {
+        name: "塔的住民",
+        icon: "🏠",
+        quality: 7,
+        description: "在同一層中存活超過500天",
         isHide: false,
     } as AchievementType,
     WithOutBless0: {
@@ -212,6 +226,15 @@ const HideAchievement = {
         isUnlocked: false,
         isHide: true,
         hindHint: "培養邪惡之物..."
+    } as AchievementType,
+    Dune: {
+        name: "DUNE",
+        icon: "🌕",
+        quality: 4,
+        description: "完成「倒地的陌生男子」事件",
+        isUnlocked: false,
+        isHide: true,
+        hindHint: "沙丘有拍續集?..."
     } as AchievementType,
 }
 

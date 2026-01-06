@@ -8,6 +8,7 @@ import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {create} from "@/utils/create";
 import {SpecialBoss} from "@/constants/monsters/special-boss-info";
 import {RoomEnum} from "@/enums/room-enum";
+import {Accessory2} from "@/constants/items/equipment/accessories-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -43,6 +44,7 @@ const handleChoice = (type: 'get_bottle' | 'give_water' | 'rob') => {
     gameStateStore.addEventProcess(SpecialEventEnum.NeedWater);
     if (gameStateStore.otherRecord['WATER'] === 2) {
       gameStateStore.eventAction = 3;
+      playerStore.gainItem(Accessory2.AtreidesNecklace)
       gameStateStore.transitionToNextState()
       gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true)
     } else {
@@ -93,7 +95,9 @@ init()
               你冷酷地搜颳了受傷的陌生男子，拿走了他的金幣。他在憤恨中消失在沙塵之中...
             </template>
             <template v-else-if="gameStateStore.eventAction === 3">
-              陌生男子一飲而盡，臉色瞬間恢復了點血色。<br/>他感激地說：「大恩大德，亞崔迪家族會感謝你！」
+              陌生男子一飲而盡，臉色瞬間恢復了點血色。<br/>
+              他感激地說：「大恩大德，亞崔迪家族會感謝你！」<br/>
+              並給你一個神祕的項鍊。
             </template>
             <template v-else-if="gameStateStore.eventAction === 4">
               陌生男子一飲而盡，臉色瞬間大驚失色。<br/>「操！你給我喝了啥?」

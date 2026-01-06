@@ -4,6 +4,7 @@ import {CharEnum} from "@/enums/char-enum";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
 import {Boss} from "@/constants/monsters/boss-info";
+import {SpecialEventEnum} from "@/enums/enums";
 
 /**
  * 成就檢查核心邏輯
@@ -56,12 +57,17 @@ export const checkAchievements = (
             if (key === 'WithOutBless1' && count >= 3) isConditionMet = true;
             if (key === 'WithOutBless2' && count >= 5) isConditionMet = true;
         }
-
         // --- 過關類 ---
         if (key.startsWith('Boss')) {
             const count = achievementStore.tryTime
             if (key === 'Boss0' && gameStateStore.currentStage > 1) isConditionMet = true;
             if (key === 'Boss1' && gameStateStore.currentStage > 5) isConditionMet = true;
+        }
+        // --- 存活超過N天 ---
+        if (key.startsWith('LiveInSameStage')) {
+            const count = achievementStore.tryTime
+            if (key === 'LiveInSameStage100' && gameStateStore.days >= 100) isConditionMet = true;
+            if (key === 'LiveInSameStage500' && gameStateStore.currentStage >= 500) isConditionMet = true;
         }
         // --- 不轉職通關 ---
         if (key.startsWith('BeginnerKillGod')) {
@@ -82,13 +88,10 @@ export const checkAchievements = (
             if (key === 'EvilTree2' && playerStore.hasItem(Accessory1.CursedWoodenRing.name)[0]) isConditionMet = true;
             if (key === 'EvilTree3' && playerStore.hasItem(Accessory2.EvilWoodenHeart.name)[0]) isConditionMet = true;
         }
-
         // --- 殘血戰鬥 ---
         if (key === 'NearDeath' && gameStateStore.isBattleWon && (playerStore.info.hp / playerStore.finalStats.hpLimit) <= 0.05) {
             isConditionMet = true;
         }
-
-
         // --- 和平 ---
         if (key === 'Pacifist' && trackerStore.achievementsCount.peaceDay >= 30) {
             isConditionMet = true;
@@ -97,6 +100,10 @@ export const checkAchievements = (
         if (key.startsWith('Gamble')) {
             if (key === 'GambleMaster' && trackerStore.achievementsCount.gambleWin >= 3) isConditionMet = true;
             if (key === 'GambleLoser' && trackerStore.achievementsCount.gambleLose >= 3) isConditionMet = true;
+        }
+        // --- 沙丘任務 ---
+        if (key === 'Dune' && gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
+            isConditionMet = true;
         }
 
         if (isConditionMet) {
