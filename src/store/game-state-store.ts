@@ -49,6 +49,7 @@ export const getEffectiveStats = (monster: MonsterType): MonsterType => {
 export const useGameStateStore = defineStore('game-state', () => {
 	const currentRoomValue = ref<number>(RoomEnum.Rest.value);
 	const currentStage = ref(1);
+	const isDead = ref(false)
 	// 無限挑戰制所需參數
 	const days = ref(0);
 	const nextRooms = ref<number[]>([])
@@ -89,6 +90,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	function init(stageNum = 1, restart = false): void {
 		if (stageNum === 1) {
 			currentState.value = GameState.INITIAL;
+			isDead.value = false
 			currentRoomValue.value = RoomEnum.Rest.value;
 		}
 		days.value = 0
@@ -252,7 +254,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 
 	// --- 記得導出所有要在組件中使用的東西 ---
 	return {
-		currentRoomValue, difficulty,
+		currentRoomValue, difficulty, isDead,
 		days, nextRooms,
 		currentStage,
 		currentState,

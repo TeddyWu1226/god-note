@@ -33,23 +33,23 @@ const handleChoice = (type: 'get_bottle' | 'give_water' | 'rob') => {
     gameStateStore.addEventProcess(SpecialEventEnum.NeedWater);
     gameStateStore.otherRecord['WATER'] = 1
     gameStateStore.eventAction = 1;
+    gameStateStore.transitionToNextState()
   } else if (type === 'rob') {
     playerStore.info.gold += 200;
     gameStateStore.eventAction = 2;
     gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true);
+    gameStateStore.transitionToNextState()
   } else if (type === 'give_water') {
     gameStateStore.addEventProcess(SpecialEventEnum.NeedWater);
     if (gameStateStore.otherRecord['WATER'] === 2) {
       gameStateStore.eventAction = 3;
+      gameStateStore.transitionToNextState()
       gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true)
     } else {
       gameStateStore.switchToFightRoom(RoomEnum.SpecialBoss.value, [create(SpecialBoss.AtreidesMan)])
       gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true)
     }
   }
-
-
-  gameStateStore.transitionToNextState()
 };
 
 const onLeave = () => {

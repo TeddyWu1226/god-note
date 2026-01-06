@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
-
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
-import {useTrackerStore} from "@/store/track-store";
 
-const emit = defineEmits(['restart']);
 const gameStateStore = useGameStateStore()
-const trackerStore = useTrackerStore()
 
 const restartGame = async () => {
   gameStateStore.init()
-  emit('restart')
 }
 
 </script>
@@ -31,9 +26,9 @@ const restartGame = async () => {
         getEnumColumn(StageEnum, gameStateStore.currentStage)
       }} 的旅途上
     </h1>
-<!--    <div>-->
-<!--      <el-button type="primary" class="other-btn">顯示其他數據</el-button>-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      <el-button type="primary" class="other-btn">顯示其他數據</el-button>-->
+    <!--    </div>-->
     <el-button type="danger" style="width: 100%;height: 5rem" @click="restartGame">
       重新開始
     </el-button>

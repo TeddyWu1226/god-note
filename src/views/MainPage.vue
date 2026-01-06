@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
@@ -18,7 +18,7 @@ import AchievementDialog from "@/components/FloorInfoLayout/comps/AchievementDia
 import {LevelUpReward} from "@/components/LevelUpReward";
 
 const gameStateStore = useGameStateStore()
-const isDead = ref(false)
+const isDead = computed(() => gameStateStore.isDead);
 const cardConfig = ref({
   shadow: 'never',
 })
@@ -79,12 +79,6 @@ const onRest = () => {
 const onCancel = () => {
   RoomLayoutRef.value?.onCancel()
 }
-const onPlayerDead = (dead: boolean) => {
-  if (!dead) {
-    return
-  }
-  isDead.value = true
-}
 const onRunFailed = () => {
   OperationLayoutRef.value?.showEscapeFailedMessage()
 }
@@ -113,12 +107,7 @@ watch(
 <template>
   <el-config-provider :card="cardConfig" :button="buttonConfig" :message="{max:3}">
     <div class="common-layout">
-      <DeadPage
-          v-if="isDead"
-          @restart="()=>{
-            isDead = false
-          }"
-      />
+      <DeadPage v-if="isDead"/>
       <IntroPage v-else-if="gameStateStore.stateIs(GameState.INITIAL)"/>
       <el-container v-else>
         <el-header class="header">
@@ -150,7 +139,7 @@ watch(
               @cancel="onCancel"
               @skill="onSkill"
           />
-          <UserValueLayout @player-dead="onPlayerDead"/>
+          <UserValueLayout/>
           <UserLayout class="user-layout" @on-item-skill="onItemSkill"/>
         </el-main>
       </el-container>
@@ -180,21 +169,24 @@ watch(
           </div>
         </section>
 
-        <hr class="divider" />
+        <hr class="divider"/>
 
         <section class="rule-section">
           <h3 class="section-title">◈ 戰鬥與成長</h3>
           <div class="rule-item">
             <span class="rule-icon">🕒</span>
-            <p><strong>環境壓制：</strong> 每一層怪物會隨著 <span class="highlight-time">時間流逝</span> 變得愈發強大。</p>
+            <p><strong>環境壓制：</strong> 每一層怪物會隨著 <span class="highlight-time">時間流逝</span> 變得愈發強大。
+            </p>
           </div>
           <div class="rule-item">
             <span class="rule-icon">📈</span>
-            <p><strong>經驗提升：</strong> 擊敗等級 <span class="highlight-exp">≥1</span> 的怪物可獲高額經驗；低於自身等級者經驗大幅削減。</p>
+            <p><strong>經驗提升：</strong> 擊敗等級 <span class="highlight-exp">≥1</span> 的怪物可獲高額經驗；低於自身等級者經驗大幅削減。
+            </p>
           </div>
           <div class="rule-item">
             <span class="rule-icon">💀</span>
-            <p><strong>進階戰鬥：</strong> 有機率遭遇 <span class="highlight-elite">[菁英]</span> 敵人。它們極其強大，但等級更高且<strong>必定掉落</strong>專屬獎勵。</p>
+            <p><strong>進階戰鬥：</strong> 有機率遭遇 <span class="highlight-elite">[菁英]</span> 敵人。它們極其強大，但等級更高且<strong>必定掉落</strong>專屬獎勵。
+            </p>
           </div>
         </section>
 
@@ -238,6 +230,7 @@ watch(
 .user-layout {
   height: 20vh;
 }
+
 .rule-container {
   font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
   line-height: 1.6;
@@ -276,10 +269,25 @@ watch(
   font-size: 0.9375rem;
 }
 
-.highlight-boss { color: #d63031; font-weight: bold; }
-.highlight-time { color: #e67e22; font-weight: bold; }
-.highlight-exp { color: #27ae60; font-weight: bold; }
-.highlight-elite { color: #0984e3; font-weight: bold; }
+.highlight-boss {
+  color: #d63031;
+  font-weight: bold;
+}
+
+.highlight-time {
+  color: #e67e22;
+  font-weight: bold;
+}
+
+.highlight-exp {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.highlight-elite {
+  color: #0984e3;
+  font-weight: bold;
+}
 
 .divider {
   border: 0;

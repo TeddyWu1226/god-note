@@ -6,9 +6,10 @@ import {ElCard} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {useGameStateStore} from "@/store/game-state-store";
 
 const playerStore = usePlayerStore();
-const emit = defineEmits(['playerDead'])
+const gameStore = useGameStateStore();
 
 // 創建一個 Template Ref 指向 el-card 實例
 const cardRef = ref<typeof ElCard | null>(null);
@@ -39,7 +40,7 @@ watch(
           showEffect(cardRef.value.$el, "🪽神聖光芒的庇護🪽", "fullscreen")
           return;
         }
-        emit('playerDead', true)
+        gameStore.isDead = true
       }
 
       // 如果停止動畫就不顯示
