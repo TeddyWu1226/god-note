@@ -8,7 +8,7 @@ export const StageEnum = {
 
     // --- 區域 2: 灼熱沙漠 (Scorched Sands) ---
     ScorchingDunes: {value: 6, label: '炙熱沙丘🏜️'},
-    MirageOasis: {value: 7, label: '海市蜃樓綠洲地🏝️'},
+    MirageOasis: {value: 7, label: '海市蜃樓綠洲🏝️'},
     SandstormPass: {value: 8, label: '沙暴隘口🌪️'},
     ForgottenTemple: {value: 9, label: '被遺忘神殿遺址🏛️'},
     PharaohsRest: {value: 10, label: '法老王安息地⚰️'},

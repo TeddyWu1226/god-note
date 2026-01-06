@@ -64,7 +64,7 @@ export const ScorchingDunesWeights: Record<string, number> = {
 };
 
 /**
- * 區域 2-1: 海市蜃樓綠洲地(MirageOasis)
+ * 區域 2-1: 海市蜃樓綠洲(MirageOasis)
  */
 export const MirageOasisWeights: Record<string, number> = {
     SandRabbit: 20,

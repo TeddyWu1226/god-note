@@ -173,7 +173,7 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 /* 高亮特效樣式 */
 .monster-card.is-selected {
   /* 改變邊框顏色或陰影來強調選中狀態 */
-  border: 2px solid #00f3ff; /* 青藍色邊框 */
+  border: 2px solid #00f3ff !important; /* 青藍色邊框 */
   box-shadow: 0 0 15px rgba(0, 243, 255, 0.9), /* 強烈外發光 */ 0 0 5px rgba(0, 243, 255, 0.5); /* 內部細微光暈 */
   transform: scale(1.02); /* 輕微放大以突出 */
   cursor: pointer;

@@ -6,26 +6,26 @@
  * @returns 四捨五入後的百分比數值 (e.g., 37.5)
  */
 export function calculatePercentageAsNumber(
-  numerator: number,
-  denominator: number,
-  precision: number = 2
+	numerator: number,
+	denominator: number,
+	precision: number = 2
 ): number {
-  // 1. 處理特殊情況：分母為 0
-  if (denominator === 0) {
-    return 0;
-  }
+	// 1. 處理特殊情況：分母為 0
+	if (denominator === 0) {
+		return 0;
+	}
 
-  // 2. 執行除法並轉換為百分比 (e.g., 0.375 -> 37.5)
-  const percentage = (numerator / denominator) * 100;
+	// 2. 執行除法並轉換為百分比 (e.g., 0.375 -> 37.5)
+	const percentage = (numerator / denominator) * 100;
 
-  // 3. 處理四捨五入的關鍵步驟
-  // 3a. 計算乘數 (例如 N=2 時為 100, N=3 時為 1000)
-  const factor = Math.pow(10, precision);
+	// 3. 處理四捨五入的關鍵步驟
+	// 3a. 計算乘數 (例如 N=2 時為 100, N=3 時為 1000)
+	const factor = Math.pow(10, precision);
 
-  // 3b. 四捨五入：(percentage * factor) 四捨五入 / factor
-  // Math.round() 執行四捨五入
+	// 3b. 四捨五入：(percentage * factor) 四捨五入 / factor
+	// Math.round() 執行四捨五入
 	// 4. 回傳數值
-  return Math.round(percentage * factor) / factor;
+	return Math.round(percentage * factor) / factor;
 }
 
 
@@ -35,13 +35,13 @@ export function calculatePercentageAsNumber(
  * @returns boolean
  */
 export const checkProbability = (chance: number): boolean => {
-  // 安全檢查：如果機率小於等於 0，絕對不觸發
-  if (chance <= 0) return false;
-  // 安全檢查：如果機率大於等於 1，絕對觸發
-  if (chance >= 1) return true;
+	// 安全檢查：如果機率小於等於 0，絕對不觸發
+	if (chance <= 0) return false;
+	// 安全檢查：如果機率大於等於 1，絕對觸發
+	if (chance >= 1) return true;
 
-  // Math.random() 會產生一個 [0, 1) 之間的浮點數
-  return Math.random() < chance;
+	// Math.random() 會產生一個 [0, 1) 之間的浮點數
+	return Math.random() < chance;
 };
 
 
@@ -53,36 +53,35 @@ export const checkProbability = (chance: number): boolean => {
  * @returns 抽出的元素陣列
  */
 export const getRandomElements = <T>(
-    arr: T[],
-    count: number = 1,
-    allowDuplicate: boolean = false
+	arr: T[],
+	count: number = 1,
+	allowDuplicate: boolean = false
 ): T[] => {
-  // 安全檢查
-  if (arr.length === 0) return [];
-  if (!allowDuplicate && count > arr.length) {
-    console.warn("抽取數量超過陣列長度且不允許重複，將回傳陣列最大長度");
-    count = arr.length;
-  }
+	// 安全檢查
+	if (arr.length === 0) return [];
+	if (!allowDuplicate && count > arr.length) {
+		console.warn("抽取數量超過陣列長度且不允許重複，將回傳陣列最大長度");
+		count = arr.length;
+	}
 
-  const result: T[] = [];
-  const source = [...arr]; // 複製原陣列，避免修改到原始資料
+	const result: T[] = [];
+	const source = [...arr]; // 複製原陣列，避免修改到原始資料
 
-  for (let i = 0; i < count; i++) {
-    const randomIndex = Math.floor(Math.random() * source.length);
+	for (let i = 0; i < count; i++) {
+		const randomIndex = Math.floor(Math.random() * source.length);
 
-    if (allowDuplicate) {
-      // 允許重複：直接取值，不移除原陣列內容
-      result.push(source[randomIndex]);
-    } else {
-      // 不允許重複：取值後從來源中移除 (使用 splice)
-      const element = source.splice(randomIndex, 1)[0];
-      result.push(element);
-    }
-  }
+		if (allowDuplicate) {
+			// 允許重複：直接取值，不移除原陣列內容
+			result.push(source[randomIndex]);
+		} else {
+			// 不允許重複：取值後從來源中移除 (使用 splice)
+			const element = source.splice(randomIndex, 1)[0];
+			result.push(element);
+		}
+	}
 
-  return result;
+	return result;
 };
-
 
 
 /**
@@ -91,6 +90,20 @@ export const getRandomElements = <T>(
  * @param precision 小數點位數 (預設 3)
  */
 export const formatPrecision = (val: number, precision: number = 3): number => {
-  const multiplier = Math.pow(10, precision);
-  return Math.round(val * multiplier) / multiplier;
+	const multiplier = Math.pow(10, precision);
+	return Math.round(val * multiplier) / multiplier;
 };
+
+/**
+ * 洗牌
+ * @param array 原始數值
+ */
+export const shuffleArray = <T>(array: T[]): T[] => {
+	const result = [...array]; // 建立副本，避免修改到原始陣列
+	for (let i = result.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		// 交換位置
+		[result[i], result[j]] = [result[j], result[i]];
+	}
+	return result;
+}

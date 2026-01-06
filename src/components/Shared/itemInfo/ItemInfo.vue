@@ -17,13 +17,13 @@ const props = defineProps({
   <div v-if="props.item" class="detail-container">
     <div class="detail-icon">{{ props.item.icon }}</div>
     <h3 :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
-      {{ props.item.name }}{{ props.item.usable ? '(消耗品)' : ''}}
+      {{ props.item.name }}{{ props.item.usable ? '(消耗品)' : '' }}
     </h3>
 
     <p class="detail-desc">{{ props.item.description }}</p>
 
-    <el-divider content-position="left">
-      {{ props.item.usable ? '使用後' : '裝備屬性'}}
+    <el-divider v-if="props.item.usable || props.item['position']" content-position="left">
+      {{ props.item.usable ? '可使用' : '裝備屬性' }}
     </el-divider>
 
     <div class="detail-stats">
@@ -46,6 +46,7 @@ const props = defineProps({
   flex-direction: column;
   align-items: center;
   text-align: center;
+  min-width: 10rem;
 }
 
 .detail-icon {
