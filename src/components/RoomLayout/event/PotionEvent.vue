@@ -33,9 +33,7 @@ const eventConfig = computed(() => {
       leaveMsg: "你決定不拿自己的腸胃開玩笑，轉身離開了。",
       actionText: "隨便喝一瓶",
       drinkingMsg: "咕嚕咕嚕... 呸！",
-      animClass: "animate-cabinet",
-      healProb: 50, // 50% 成功
-      multiplier: 1.0
+      animClass: "animate-cabinet"
     };
   } else {
     return {
@@ -45,9 +43,7 @@ const eventConfig = computed(() => {
       leaveMsg: "看著混濁的水面，你決定還是忍耐口渴。",
       actionText: "喝一口井水",
       drinkingMsg: "大口大口地飲用井水...",
-      animClass: "animate-well",
-      healProb: 65, // 井水成功率較高
-      multiplier: 0.6 // 但量比較少
+      animClass: "animate-well"
     };
   }
 });
