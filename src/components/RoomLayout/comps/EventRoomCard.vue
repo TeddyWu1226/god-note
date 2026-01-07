@@ -6,6 +6,7 @@ import {SpecialEventEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
 import {CharEnum} from "@/enums/char-enum";
 import {useTrackerStore} from "@/store/track-store";
+import {MATERIAL} from "@/constants/items/material/material-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -13,63 +14,73 @@ const trackerStore = useTrackerStore();
 /**
  * 事件配置表：控制隨機權限
  */
-const EVENT_CONFIG = [
-  {
-    type: SpecialEventEnum.Gamble,
-    canAppear: () => playerStore.info.gold >= 50
-  },
-  {
-    type: SpecialEventEnum.Chest,
-    canAppear: () => true
-  },
-  {
-    type: SpecialEventEnum.Potion,
-    canAppear: () => true
-  },
-  {
-    type: SpecialEventEnum.GetFruit, // 魔樹事件
-    canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
-  },
-  {
-    type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
-    canAppear: () => {
-      if (playerStore.info.char !== CharEnum.Beginner.value) {
-        return false;
-      }
-      return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
-    }
-  },
-  {
-    type: SpecialEventEnum.JobWizard, // 法師轉職事件
-    canAppear: () => {
-      if (playerStore.info.char !== CharEnum.Beginner.value) {
-        return false;
-      }
-      return playerStore.finalStats.apIncrease > 10
-    }
-  },
+const GeneralEvent = [
+  // {
+  //   type: SpecialEventEnum.Gamble,
+  //   canAppear: () => playerStore.info.gold >= 50
+  // },
+  // {
+  //   type: SpecialEventEnum.Chest,
+  //   canAppear: () => true
+  // },
+  // {
+  //   type: SpecialEventEnum.Potion,
+  //   canAppear: () => true
+  // },
+  // {
+  //   type: SpecialEventEnum.GetFruit, // 魔樹事件
+  //   canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
+  // },
+  // {
+  //   type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
+  //   canAppear: () => {
+  //     if (playerStore.info.char !== CharEnum.Beginner.value) {
+  //       return false;
+  //     }
+  //     return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
+  //   }
+  // },
+  // {
+  //   type: SpecialEventEnum.JobWizard, // 法師轉職事件
+  //   canAppear: () => {
+  //     if (playerStore.info.char !== CharEnum.Beginner.value) {
+  //       return false;
+  //     }
+  //     return playerStore.finalStats.apIncrease > 10
+  //   }
+  // },
+];
+
+// 第二區域才開放的事件(stage >=6)
+const ScorchedSandsEvent = [
   {
     type: SpecialEventEnum.Fusion, // 合成功能解鎖
-    canAppear: () => {
-      return gameStateStore.currentStage >= 6
-    }
+    canAppear: () => true
   },
   {
     type: SpecialEventEnum.NeedWater, // 求水事件
     canAppear: () => {
-      if (gameStateStore.otherRecord['WATER'] === 1) return false
-      return gameStateStore.currentStage >= 2
+      return !(gameStateStore.otherRecord['WATER'] === 1)
+    }
+  },
+  {
+    type: SpecialEventEnum.HuntDuneBeast, // 狩獵巨獸事件
+    canAppear: () => {
+      return (playerStore.hasItem(MATERIAL.BehemothScales.name))[0]
     }
   }
-];
-
+]
 
 /**
  * 獲取當前允許的所有隨機事件
  */
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
-  return EVENT_CONFIG
+  let allowEvent = [...GeneralEvent]
+  if (gameStateStore.currentStage >= 6) {
+    allowEvent = allowEvent.concat(ScorchedSandsEvent)
+  }
+  return allowEvent
       .filter(event => !gameStateStore.isEventClose(event.type))
       .filter(event => event.canAppear())
       .map(event => event.type);

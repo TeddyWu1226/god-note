@@ -31,3 +31,13 @@
     flex-direction: column;
     align-items: center;
 }
+
+
+/* 低調的灰色提示 */
+.hint {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    color: #909399; /* 灰色 */
+    text-align: center;
+}

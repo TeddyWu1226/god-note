@@ -70,8 +70,8 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 		}
 
 	},
-
 	duneBeastOnAttacked: ({monster, playerStore, targetElement, logStore}) => {
+		console.log('有喔')
 		if (checkProbability(0.2)) {
 			// 掉落鱗片
 			playerStore.gainItem(MATERIAL.BehemothScales)
