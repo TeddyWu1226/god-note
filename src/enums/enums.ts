@@ -43,6 +43,7 @@ export enum SpecialEventEnum {
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘
+    HuntDuneBeast = 'HuntDuneBeast', // 狩獵沙丘巨獸
     // 轉職事件
     JobWarrior = 'JobWarrior', 	// 轉職劍士
     JobWizard = 'JobWizard', // 轉職法師

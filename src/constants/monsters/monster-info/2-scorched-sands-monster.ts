@@ -198,7 +198,7 @@ export const ScorchedSandsMonster = {
 	DuneBeast: {
 		icon: '🦖',
 		name: '沙漠巨獸',
-		description: '沙丘野生魔物中的領主，其吼聲能震落天上的飛鳥，但行動相對笨重，能跑就快跑吧',
+		description: '沙丘野生魔物中的領主，其吼聲能震落天上的飛鳥，但行動相對笨重，能跑就快跑吧!',
 		class: 'elite big',
 		level: 15,
 		hp: 1000,
@@ -217,4 +217,5 @@ export const ScorchedSandsMonster = {
 			{item: MATERIAL.LowerGiant, chance: 0.33},
 		],
 	} as MonsterType,
+	onAttacked: 'duneBeastOnAttacked',
 }

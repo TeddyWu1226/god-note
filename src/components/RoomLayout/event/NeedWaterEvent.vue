@@ -21,7 +21,6 @@ const playerStore = usePlayerStore();
  * 3: 給水
  */
 
-// 用來紀錄玩家剛才按下了哪個按鈕，以便在結果頁面顯示對應文字
 const choiceType = ref<'get_bottle' | 'give_water' | 'rob' | null>(null);
 
 const currentProcess = computed(() => gameStateStore.getEventProcess(SpecialEventEnum.NeedWater));

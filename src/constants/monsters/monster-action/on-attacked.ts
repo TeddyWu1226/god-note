@@ -5,6 +5,7 @@ import {checkProbability, shuffleArray} from "@/utils/math";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {create} from "@/utils/create";
+import {MATERIAL} from "@/constants/items/material/material-info";
 
 /**
  * 怪物受傷後判斷
@@ -29,7 +30,7 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 	twilightOnAttacked: ({monster, playerStore, targetElement, logStore}) => {
 		const chance = 0.2 + (((monster.ad - 14) / 2) * 0.1)
 		if (checkProbability(chance)) {
-			// 使攻擊者中毒
+			// 掉落休止符
 			playerStore.gainItem(SpecialItem.PauseToken)
 			logStore.logger.add(`你得到了一個神秘的符號`);
 		}
@@ -68,5 +69,13 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 			gameStateStore.currentEnemy = shuffleArray(gameStateStore.currentEnemy)
 		}
 
+	},
+
+	duneBeastOnAttacked: ({monster, playerStore, targetElement, logStore}) => {
+		if (checkProbability(0.2)) {
+			// 掉落鱗片
+			playerStore.gainItem(MATERIAL.BehemothScales)
+			logStore.logger.add(`你從巨獸身上得到了一個鱗片`);
+		}
 	},
 };

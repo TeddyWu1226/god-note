@@ -56,7 +56,13 @@ export const ScorchedSandsMaterial = {
 		quality: 1,
 		price: 50
 	} as ItemType,
-
+	BehemothScales: {
+		name: '巨獸鱗片',
+		icon: '🦖',
+		description: '沙漠巨獸身上受擊而掉落的鱗片。',
+		quality: 4,
+		price: 80
+	} as ItemType,
 	BehemothHeart: {
 		name: '巨獸之心',
 		icon: '🫀',
