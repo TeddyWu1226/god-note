@@ -80,7 +80,7 @@ export const UserStatus = {
     SongHeal: {
         name: '悠揚:生命回復',
         icon: '💚',
-        duration: 20,
+        duration: -1,
         isBuff: true,
         description: '每次行動恢復 5 HP',
         type: 'heal',
@@ -89,11 +89,21 @@ export const UserStatus = {
     SongDefend: {
         name: '悠揚:防禦提升',
         icon: '🛡️',
-        duration: 20,
+        duration: -1,
         isBuff: true,
         description: '防禦提升 3 點',
         bonus: {
             adDefend: 3,
+        }
+    } as StatusEffect,
+    SongAgile: {
+        name: '悠揚:閃避提升',
+        icon: '🏃🏻',
+        duration: -1,
+        isBuff: true,
+        description: '閃避提升 15 點',
+        bonus: {
+            dodge: 15,
         }
     } as StatusEffect,
 }

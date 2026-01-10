@@ -73,7 +73,7 @@ defineExpose({
       @run="onRun"
   />
   <RestOperation
-      v-else-if="gameStateStore.roomIs(RoomEnum.Rest.value) &&
+      v-else-if="gameStateStore.roomIs([RoomEnum.Rest.value,RoomEnum.Fusion.value]) &&
       gameStateStore.stateIs(GameState.EVENT_PHASE)"
       @rest="onRest"
       @cancel="onCancel"

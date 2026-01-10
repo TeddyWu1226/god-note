@@ -14,7 +14,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div v-if="props.item" class="detail-container">
+  <div class="detail-container">
     <div class="detail-icon">{{ props.item.icon }}</div>
     <h3 :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
       {{ props.item.name }}{{ props.item.usable ? '(消耗品)' : '' }}

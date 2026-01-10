@@ -62,7 +62,7 @@ const openChest = () => {
     } else if (rnd < 60) {
       // 20% 機率：陷阱 (Trap)
       resultType.value = 'trap';
-      const dmg = 15 + (stage * 5);
+      const dmg = 10 + (stage * 5);
       resultMsg.value = `咔噠！你觸發了箭矢陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
       playerStore.info.hp -= dmg;
     } else {

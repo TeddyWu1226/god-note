@@ -70,22 +70,22 @@ export const getRandomItemsByQuality = (
 };
 
 /**
- * 從指定的 Enum 陣列中隨機取出一個值，並支援排除清單
- * @param enumArray 想要抽選的 Enum 陣列 (例如 [SpecialEventEnum.Gamble, SpecialEventEnum.MagicTree])
+ * 從指定的陣列中隨機取出一個值，並支援排除清單
+ * @param array 想要抽選的 Enum 陣列 (例如 [SpecialEventEnum.Gamble, SpecialEventEnum.MagicTree])
  * @param excludeList 想要排除的 Value 陣列
  * @returns 隨機挑選出的 Enum Value
  */
-export function getRandomFromEnumArray<T>(
-    enumArray: T[],
+export function getRandomFromArray<T>(
+    array: T[],
     excludeList: T[] = []
 ): T {
     // 1. 過濾掉排除清單中的值
-    const filteredValues = enumArray.filter(value => !excludeList.includes(value));
+    const filteredValues = array.filter(value => !excludeList.includes(value));
 
     // 2. 安全檢查：如果過濾後沒東西了
     if (filteredValues.length === 0) {
         console.warn("getRandomFromEnumArray: 過濾後沒有可選的值，回傳原始陣列首項");
-        return enumArray[0];
+        return array[0];
     }
 
     // 3. 隨機產生索引並回傳

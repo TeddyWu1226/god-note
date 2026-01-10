@@ -44,7 +44,7 @@ const goNextStage = () => {
   gameStateStore.init(gameStateStore.currentStage + 1)
   gameStateStore.setRoom(RoomEnum.Bless.value)
   gameStateStore.nextRooms = []
-  if (gameStateStore.currentStage === 8) {
+  if (gameStateStore.currentStage === 6) {
     playerStore.addStatus(EvnStatus.Sandstorm)
     useEpicSubtitle("沙塵暴席捲整個峽谷...", 2000);
   }

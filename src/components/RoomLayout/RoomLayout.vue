@@ -61,6 +61,9 @@ const onItemSkill = ({skillKey, callback, el}) => {
   }
 }
 
+/** 合成房間 **/
+const FusionRoomRef = ref()
+
 /** 休息房間 **/
 const RestRoomRef = ref()
 const onRest = () => {
@@ -70,8 +73,6 @@ const onRest = () => {
 /** 購物房間 **/
 const ShopRoomRef = ref()
 
-/** 合成房間 **/
-const FusionRoomRef = ref()
 
 /** 綜合取消 **/
 const onCancel = () => {

@@ -6,14 +6,14 @@ export const MonsterCrystals = {
 	// 下級魔物晶石
 	LowerNormal: {
 		name: '下級魔物晶石',
-		icon: '◆︎',
+		icon: '▲',
 		description: '微弱魔力的結晶，隨處可見。',
 		quality: 1,
 		price: 50
 	} as ItemType,
 	LowerLarge: {
 		name: '大顆下級魔物晶石',
-		icon: '♦',
+		icon: '◆︎',
 		description: '體積較大的下級晶石，魔力存量較多。',
 		quality: 1,
 		price: 100
@@ -95,4 +95,4 @@ export const MonsterCrystals = {
 		price: 10000
 	} as ItemType,
 };
-export const MATERIAL = {...MistyForestMaterial, ...ScorchedSandsMaterial, ...MonsterCrystals}
+export const Material = {...MistyForestMaterial, ...ScorchedSandsMaterial, ...MonsterCrystals}

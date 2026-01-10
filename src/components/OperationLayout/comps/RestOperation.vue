@@ -12,12 +12,15 @@ const props = defineProps({
 })
 /**狀態紀錄**/
 const rest = (): void => {
-  emit('rest');
+  if (gameStateStore.roomIs(RoomEnum.Fusion.value)) {
+    gameStateStore.setRoom(RoomEnum.Rest.value)
+  } else {
+    emit('rest');
+  }
 }
 
 const fusion = (): void => {
   gameStateStore.setRoom(RoomEnum.Fusion.value)
-  gameStateStore.transitionToNextState()
 }
 
 
@@ -31,7 +34,7 @@ const cancel = (): void => {
     <el-button type="success" :disabled="props.disabled" @click="rest">
       休息一下
     </el-button>
-    <template v-if="gameStateStore.isEventClose(SpecialEventEnum.Fusion)">
+    <template v-if="gameStateStore.isEventClose(SpecialEventEnum.Fusion) && gameStateStore.roomIs(RoomEnum.Rest.value)">
       <el-button
           type="warning"
           :disabled="props.disabled"

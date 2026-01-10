@@ -2,32 +2,48 @@
 import '../event/event-room.css'
 import {ref, computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
-import {FusionUsableList} from "@/constants/items/fusion-list/fusion-usable-list";
+import {ExtraFusionUsableItem, FusionUsableList} from "@/constants/items/fusion-list/fusion-usable-list";
 import {FusionEquipList} from "@/constants/items/fusion-list/fusion-equip-list";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
-import {FusionListType, ItemType} from "@/types";
+import {FusionListType} from "@/types";
 import {ElMessage} from "element-plus";
 import {FusionOtherList} from "@/constants/items/fusion-list/fusion-other-list";
 import {ItemInfo} from "@/components/Shared/itemInfo";
+import {SpecialEventEnum} from "@/enums/enums";
+import {useGameStateStore} from "@/store/game-state-store";
 
 const playerStore = usePlayerStore();
+const gameStateStore = useGameStateStore();
 const onlyShowAvailable = ref(true);
 // 當前選中的類別: 0 為消耗品, 1 為裝備, 2 為其他
 const activeCategory = ref(0);
 
 // 先取得當前分頁的原始列表
 const currentRawList = computed(() => {
+  let list: FusionListType[] = [];
+
   switch (activeCategory.value) {
-    case 0:
-      return FusionUsableList;
-    case 1:
-      return FusionEquipList;
-    case 2:
-      return FusionOtherList;
-    default:
-      return [];
+    case 0: // 消耗品
+      list = [...FusionUsableList];
+
+      // 條件：狩獵沙漠巨獸進度 >= 1
+      if (gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) >= 1) {
+        list.push(ExtraFusionUsableItem.DuneBeastBomb);
+      }
+      break;
+
+    case 1: // 裝備
+      list = [...FusionEquipList];
+      // 這裡也可以留空，未來有特殊解鎖裝備時使用
+      break;
+
+    case 2: // 其他
+      list = [...FusionOtherList];
+      break;
   }
+
+  return list;
 });
 
 // 2. 實作篩選邏輯：根據分類後的列表再進行「可合成」篩選
@@ -104,7 +120,7 @@ const onCraft = (recipe: FusionListType) => {
         <el-row v-for="(recipe, index) in filteredList" :key="index" class="recipe-row">
           <el-tooltip effect="light" trigger="click">
             <template #content>
-              <ItemInfo :item="recipe.target"/>
+              <ItemInfo :item="recipe.target" style="max-width: 20rem"/>
             </template>
             <el-col :span="18" class="target-block">
               <div class="target-icon">{{ recipe.target.icon }}</div>

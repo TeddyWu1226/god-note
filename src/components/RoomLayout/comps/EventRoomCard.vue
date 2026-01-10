@@ -6,6 +6,9 @@ import {SpecialEventEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
 import {CharEnum} from "@/enums/char-enum";
 import {useTrackerStore} from "@/store/track-store";
+import {Material} from "@/constants/items/material/material-info";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
+import {Monster} from "@/constants/monsters/monster-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -13,7 +16,7 @@ const trackerStore = useTrackerStore();
 /**
  * 事件配置表：控制隨機權限
  */
-const EVENT_CONFIG = [
+const GeneralEvent = [
   {
     type: SpecialEventEnum.Gamble,
     canAppear: () => playerStore.info.gold >= 50
@@ -48,28 +51,48 @@ const EVENT_CONFIG = [
       return playerStore.finalStats.apIncrease > 10
     }
   },
+];
+
+// 第二區域才開放的事件(stage >=6)
+const ScorchedSandsEvent = [
   {
     type: SpecialEventEnum.Fusion, // 合成功能解鎖
-    canAppear: () => {
-      return gameStateStore.currentStage >= 6
-    }
+    canAppear: () => true
   },
   {
     type: SpecialEventEnum.NeedWater, // 求水事件
     canAppear: () => {
-      if (gameStateStore.otherRecord['WATER'] === 1) return false
-      return gameStateStore.currentStage >= 6
+      return !(gameStateStore.otherRecord['WATER'] === 1)
+    }
+  },
+  {
+    type: SpecialEventEnum.HuntDuneBeast, // 狩獵巨獸事件
+    canAppear: () => {
+      return (
+          (!gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.HuntDuneBeast) &&
+              gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) === 0 &&
+              playerStore.hasItem(Material.BehemothScales.name)[0]
+          ) ||
+          (gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) === 1 &&
+              playerStore.hasItem(Usable.DuneBeastBomb.name)[0]
+          ) ||
+          (trackerStore.getKillCount(Monster.DuneBeast.name, 'current') >= 1
+          )
+      )
     }
   }
-];
-
+]
 
 /**
  * 獲取當前允許的所有隨機事件
  */
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
-  return EVENT_CONFIG
+  let allowEvent = [...GeneralEvent]
+  if (gameStateStore.currentStage >= 6) {
+    allowEvent = allowEvent.concat(ScorchedSandsEvent)
+  }
+  return allowEvent
       .filter(event => !gameStateStore.isEventClose(event.type))
       .filter(event => event.canAppear())
       .map(event => event.type);

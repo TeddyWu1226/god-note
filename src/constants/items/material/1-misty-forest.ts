@@ -53,7 +53,7 @@ export const MistyForestMaterial = {
     MandrakeRoot: {
         name: '蔓陀羅根',
         icon: '🍠',
-        description: '長得像人臉的怪異根部，極為珍貴的鍊金素材',
+        description: '長得像人臉的怪異根部，可以賣個好價錢',
         quality: 3,
         price: 100
     } as ItemType,

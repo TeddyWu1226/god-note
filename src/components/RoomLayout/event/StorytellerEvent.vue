@@ -7,6 +7,7 @@ import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {UserStatus} from "@/constants/status/user-status";
 import {ElMessage} from 'element-plus';
+import {getRandomFromArray} from "@/utils/create";
 
 /**
  * 狀態控制 (eventAction)
@@ -31,6 +32,7 @@ const bossHints: Record<number, string> = {
   5: "「祂仍在跳著那支未完的舞，攻勢隨節奏而凌厲。打斷他的節奏吧!順便打斷他的夢~」",
   6: "「潛藏在沙漠隘口的毒獸，他的毒若不在及時解除，你將葬身於沙海之中~」",
   7: "「迷霧中的邪惡之物~四面楚歌的情境下~如何識破真身?」",
+  8: "「堅硬的鎧甲保護著它~易燃的尖刺是他的反擊~所以燃燒吧!」",
 };
 
 const resultMsg = ref("聽完歌曲你隨之一振,繼續征途吧!");
@@ -41,22 +43,22 @@ const onLeave = () => {
 };
 
 const listenToStory = () => {
-  // 1. 檢查金幣
+  // 檢查金幣
   if (playerStore.info.gold < cost.value) {
     ElMessage.warning("金幣不足，詩人禮貌地拒絕了你的請求。");
     return;
   }
 
-  // 2. 扣除費用
+  // 扣除費用
   playerStore.info.gold -= cost.value;
 
-  // 3. 立即生成結果與 BUFF
+  // 立即生成結果與 BUFF
   const stage = gameStateStore.currentStage;
   const hint = bossHints[stage] || "前方是一片未知的混沌，連琴弦也無法預測其危險...";
-
+  // 移除舊的BUFF
+  playerStore.statusEffects = playerStore.statusEffects.filter(status => !status.name.includes('悠揚'))
   // 獲得BUFF
-  const isLucky = Math.random() > 0.5;
-  const rewardStatus = isLucky ? UserStatus.SongHeal : UserStatus.SongDefend;
+  const rewardStatus = getRandomFromArray([UserStatus.SongHeal, UserStatus.SongDefend, UserStatus.SongAgile])
   playerStore.addStatus(rewardStatus);
 
   resultMsg.value = `

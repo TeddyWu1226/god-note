@@ -1,6 +1,6 @@
 import {MonsterType} from "@/types";
 import {WorldDefault} from "@/assets/const";
-import {MATERIAL} from "@/constants/items/material/material-info";
+import {Material} from "@/constants/items/material/material-info";
 import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
 
 

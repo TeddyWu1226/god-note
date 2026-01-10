@@ -5,17 +5,23 @@ import {checkProbability} from "@/utils/math";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
+import EvnStatus from "@/constants/status/evn-status";
 
 
 export const MonsterOnDead: Record<string, (params: MonsterActionParams) => void> = {
-	mandragoraOnDead: ({playerStore, targetElement, logStore}) => {
-		playerStore.addStatus(UnitStatus.MandragoraScared)
-		logStore.logger.add(`你受到驚嚇了。`);
-		showEffect(targetElement, "阿!~~~~", "debuff");
-	},
-	twilightOnDead: ({playerStore, gameStateStore, targetElement}) => {
-		useEpicSubtitle("「希望...與汝再...舞一曲...」", 3000);
-		// 清掉休止符
-		playerStore.removeItem(SpecialItem.PauseToken.name, -1)
-	}
+    mandragoraOnDead: ({playerStore, targetElement, logStore}) => {
+        playerStore.addStatus(UnitStatus.MandragoraScared)
+        logStore.logger.add(`你受到驚嚇了。`);
+        showEffect(targetElement, "阿!~~~~", "debuff");
+    },
+    twilightOnDead: ({playerStore, gameStateStore, targetElement}) => {
+        useEpicSubtitle("「希望...與汝再...舞一曲...」", 3000);
+        // 清掉休止符
+        playerStore.removeItem(SpecialItem.PauseToken.name, -1)
+    },
+    duneBeastOnDead: ({playerStore, targetElement, logStore}) => {
+        logStore.logger.add(`沙塵暴平息了。`);
+        playerStore.removeStatus(EvnStatus.Sandstorm.name)
+
+    },
 };

@@ -7,7 +7,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {GameState} from "@/enums/enums";
 import {ElMessageBox} from "element-plus";
 import {RoomEnum} from "@/enums/room-enum";
-import {MATERIAL} from "@/constants/items/material/material-info";
+import {Material} from "@/constants/items/material/material-info";
 import {useTrackerStore} from "@/store/track-store";
 import {Monster} from "@/constants/monsters/monster-info";
 import {SpecialItem} from "@/constants/items/special-item-info";
@@ -35,7 +35,7 @@ const onClick = () => {
         gameStateStore.setRoom(RoomEnum.Boss.value);
         switch (gameStateStore.currentStage) {
           case 1:
-            playerStore.removeItem(MATERIAL.ForestWood.name, 3)
+            playerStore.removeItem(Material.ForestWood.name, 3)
             break;
           case 5:
             playerStore.removeItem(SpecialItem.TwilightKey.name, 1)
@@ -64,14 +64,15 @@ const STAGE_GOALS: Record<number, {
   need: number;
   label: string
 }> = {
-  1: {type: QuestType.COLLECT, target: MATERIAL.ForestWood.name, need: 3, label: '收集'},
+  1: {type: QuestType.COLLECT, target: Material.ForestWood.name, need: 3, label: '收集'},
   2: {type: QuestType.KILL, need: 30, label: '狩獵'},
   3: {type: QuestType.TARGET, target: Monster.SmallSpider.name, need: 3, label: '擊敗'},
   4: {type: QuestType.SURVIVE, target: '天', need: 50, label: '生存'},
   5: {type: QuestType.COLLECT, target: SpecialItem.TwilightKey.name, need: 1, label: '收集'},
-  6: {type: QuestType.SURVIVE, target: '天', need: 30, label: '生存'},
+  6: {type: QuestType.KILL, need: 30, label: '狩獵'},
   7: {type: QuestType.COLLECT, target: SpecialItem.ClearMirror.name, need: 1, label: '收集'},
-  8: {type: QuestType.SURVIVE, target: '天', need: 999, label: '生存(待完成)'},
+  8: {type: QuestType.SURVIVE, target: '天', need: 40, label: '生存(待完成)'},
+  9: {type: QuestType.SURVIVE, target: '天', need: 999, label: '生存(待完成)'},
 };
 // 獲取當前階段的進度數據
 const stageProgress = computed(() => {

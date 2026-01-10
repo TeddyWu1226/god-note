@@ -50,4 +50,13 @@ export const Usable = {
 		unsellable: true,
 		skill: 'useGodNotePage'
 	} as UsableType,
+	DuneBeastBomb:{
+		name: '巨獸炸彈',
+		quality: 6,
+		description: '一個看似強力的合成炸彈，感覺容易引爆造成大量傷害。在上面用肉包裝之下，更能吸引巨獸吃下他而引爆造成大量傷害',
+		icon: '💣',
+		usable: true,
+		unsellable: true,
+		skill: 'useDuneBeastBomb'
+	} as UsableType,
 };
