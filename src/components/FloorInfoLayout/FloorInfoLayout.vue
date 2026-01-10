@@ -67,12 +67,12 @@ const STAGE_GOALS: Record<number, {
   1: {type: QuestType.COLLECT, target: Material.ForestWood.name, need: 3, label: '收集'},
   2: {type: QuestType.KILL, need: 30, label: '狩獵'},
   3: {type: QuestType.TARGET, target: Monster.SmallSpider.name, need: 3, label: '擊敗'},
-  4: {type: QuestType.SURVIVE, target: '天', need: 50, label: '生存'},
+  4: {type: QuestType.SURVIVE, target: '50天', need: 50, label: '生存'},
   5: {type: QuestType.COLLECT, target: SpecialItem.TwilightKey.name, need: 1, label: '收集'},
   6: {type: QuestType.KILL, need: 30, label: '狩獵'},
   7: {type: QuestType.COLLECT, target: SpecialItem.ClearMirror.name, need: 1, label: '收集'},
-  8: {type: QuestType.SURVIVE, target: '天', need: 40, label: '生存'},
-  9: {type: QuestType.SURVIVE, target: '天', need: 999, label: '生存(待開發)'},
+  8: {type: QuestType.SURVIVE, target: '40天', need: 40, label: '生存'},
+  9: {type: QuestType.SURVIVE, target: '999天', need: 999, label: '生存(待開發)'},
 };
 // 獲取當前階段的進度數據
 const stageProgress = computed(() => {
