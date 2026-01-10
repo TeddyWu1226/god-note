@@ -32,6 +32,7 @@ import {Skills} from "@/constants/skill/skill";
 import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 import {checkProbability} from "@/utils/math";
 import {SpecialItem} from "@/constants/items/special-item-info";
+import {Monster} from "@/constants/monsters/monster-info";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -87,6 +88,10 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 
 const getWeightByStage = () => {
+  const monsterMap = stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
+  if (trackStore.getKillCount(Monster.DuneBeast.name, 'current') > 0) {
+    delete monsterMap.DuneBeast;
+  }
   return stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
 }
 

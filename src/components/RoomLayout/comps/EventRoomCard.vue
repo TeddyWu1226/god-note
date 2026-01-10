@@ -17,40 +17,40 @@ const trackerStore = useTrackerStore();
  * 事件配置表：控制隨機權限
  */
 const GeneralEvent = [
-  // {
-  //   type: SpecialEventEnum.Gamble,
-  //   canAppear: () => playerStore.info.gold >= 50
-  // },
-  // {
-  //   type: SpecialEventEnum.Chest,
-  //   canAppear: () => true
-  // },
-  // {
-  //   type: SpecialEventEnum.Potion,
-  //   canAppear: () => true
-  // },
-  // {
-  //   type: SpecialEventEnum.GetFruit, // 魔樹事件
-  //   canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
-  // },
-  // {
-  //   type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
-  //   canAppear: () => {
-  //     if (playerStore.info.char !== CharEnum.Beginner.value) {
-  //       return false;
-  //     }
-  //     return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
-  //   }
-  // },
-  // {
-  //   type: SpecialEventEnum.JobWizard, // 法師轉職事件
-  //   canAppear: () => {
-  //     if (playerStore.info.char !== CharEnum.Beginner.value) {
-  //       return false;
-  //     }
-  //     return playerStore.finalStats.apIncrease > 10
-  //   }
-  // },
+  {
+    type: SpecialEventEnum.Gamble,
+    canAppear: () => playerStore.info.gold >= 50
+  },
+  {
+    type: SpecialEventEnum.Chest,
+    canAppear: () => true
+  },
+  {
+    type: SpecialEventEnum.Potion,
+    canAppear: () => true
+  },
+  {
+    type: SpecialEventEnum.GetFruit, // 魔樹事件
+    canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
+  },
+  {
+    type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
+    canAppear: () => {
+      if (playerStore.info.char !== CharEnum.Beginner.value) {
+        return false;
+      }
+      return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
+    }
+  },
+  {
+    type: SpecialEventEnum.JobWizard, // 法師轉職事件
+    canAppear: () => {
+      if (playerStore.info.char !== CharEnum.Beginner.value) {
+        return false;
+      }
+      return playerStore.finalStats.apIncrease > 10
+    }
+  },
 ];
 
 // 第二區域才開放的事件(stage >=6)
