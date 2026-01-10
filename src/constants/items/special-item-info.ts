@@ -28,7 +28,7 @@ export const SpecialItem = {
 	ClearMirrorFragment: {
 		name: '清澈之鏡碎片',
 		icon: '◀',
-		description: '一片被打碎的鏡子碎片',
+		description: '一片被打碎的鏡子碎片，可以在休息時合成出「清澈之鏡」',
 		quality: 3,
 		unsellable: true,
 	} as ItemType,

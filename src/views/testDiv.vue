@@ -41,13 +41,13 @@ const give = () => {
   Array.from({ length: 10 }).forEach(() =>   playerStore.gainItem(ScorchedSandsMaterial.SandWormBloodClot));
   playerStore.gainItem(Accessory2.SoulAnchor)
 
-  // playerStore.gainItem(Weapon.MagicStick1)
-  // playerStore.gainItem(Weapon.Sword1)
-  // playerStore.gainItem(Head.HpHead1)
-  // playerStore.gainItem(Armor.Armor1)
-  // playerStore.gainItem(Offhand.Shield1)
-  // playerStore.gainItem(Offhand.Book1)
-  // playerStore.info.hpLimit = 130
+  playerStore.gainItem(Weapon.MagicStick1)
+  playerStore.gainItem(Weapon.Sword1)
+  playerStore.gainItem(Head.HpHead1)
+  playerStore.gainItem(Armor.Armor1)
+  playerStore.gainItem(Offhand.Shield1)
+  playerStore.gainItem(Offhand.Book1)
+  playerStore.info.hpLimit = 130
 
 }
 const heal = () => {

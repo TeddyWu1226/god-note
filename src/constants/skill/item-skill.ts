@@ -121,8 +121,10 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
         const {monster, monsterIndex, playerStore, gameStateStore, callback, targetElement} = params;
         if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
             if (monster.name.includes('巨獸')) {
-                monster.hp -= 700
-                monster.adDefend -= 15
+                monster.hp =300
+                monster.adDefend = 5
+                monster.apDefend = 5
+                monster.ad = 50
                 showEffect(targetElement, "💥炸彈在巨獸身體內引爆💥", "fullscreen")
             } else {
                 monster.hp -= 200

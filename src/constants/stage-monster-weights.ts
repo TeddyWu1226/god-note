@@ -57,33 +57,35 @@ export const TwilightWeights: Record<string, number> = {
  * 區域 2-1: 炙熱沙丘(ScorchingDunes)
  */
 export const ScorchingDunesWeights: Record<string, number> = {
-	SandRabbit: 40,
-	CactusSpirit: 25,
-	QuicksandWorm: 10,
-	DuneBeast: 3
+	SandRabbit: 8,
+	CactusSpirit: 5,
+	QuicksandWorm: 2,
+	DuneBeast: 1
 };
 
 /**
  * 區域 2-2: 海市蜃樓綠洲(MirageOasis)
  */
 export const MirageOasisWeights: Record<string, number> = {
-	SandRabbit: 20,
-	CactusSpirit: 20,
-	QuicksandWorm: 20,
-	DesertScorpion: 20,
-	ArmoredVulture: 20
+	SandRabbit: 2,
+	CactusSpirit: 2,
+	QuicksandWorm: 2,
+	DesertScorpion: 2,
+	ArmoredVulture: 2,
+	SandRabbit2: 2,
+	DuneBeast: 1
 };
 
 /**
  * 區域 2-3: 沙暴隘口(SandstormPass)
  */
 export const SandstormPassWeights: Record<string, number> = {
-	ArmoredVulture: 10,
-	SandRabbit2: 10,
-	CactusSpirit2: 10,
-	QuicksandWorm2: 10,
-	DesertScorpion2: 10,
-	DuneBeast: 5
+	ArmoredVulture: 2,
+	SandRabbit2: 2,
+	CactusSpirit2: 2,
+	QuicksandWorm2: 2,
+	DesertScorpion2: 2,
+	DuneBeast: 1
 };
 
 

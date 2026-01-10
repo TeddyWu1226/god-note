@@ -10,7 +10,7 @@ export const StageEnum = {
     ScorchingDunes: {value: 6, label: '炙熱沙丘🏜️'},
     MirageOasis: {value: 7, label: '海市蜃樓綠洲🏝️'},
     SandstormPass: {value: 8, label: '沙暴隘口🌪️'},
-    ForgottenTemple: {value: 9, label: '被遺忘神殿遺址🏛️'},
+    PyramidEntrance: {value: 9, label: '金字塔🛕'},
     PharaohsRest: {value: 10, label: '法老王安息地⚰️'},
 
     // --- 區域 3: 冰雪高地 (Icy Plateau) ---

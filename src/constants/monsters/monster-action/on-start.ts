@@ -5,6 +5,7 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {MistyForestMonster} from "@/constants/monsters/monster-info/1-misty-forest-monster";
 import {create} from "@/utils/create";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
+import {SandstormPassWeights} from "@/constants/stage-monster-weights";
 
 
 export const MonsterOnStart: Record<string, (params: MonsterActionParams) => void> = {
@@ -135,6 +136,17 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
             {
                 duration: 2000, // 動畫時間保持不變
                 color: 'red'
+            }
+        );
+    },
+    sandstormPassOnStart: ({playerStore, targetElement}) => {
+        // 額外動畫演示
+        useFloatingMessage(
+            '刺刺!刺刺!',
+            targetElement,
+            {
+                duration: 2000, // 動畫時間保持不變
+                color: 'green'
             }
         );
     },

@@ -29,6 +29,9 @@ export const getEffectiveStats = (monster: MonsterType): MonsterType => {
     };
 
     // 遍歷所有狀態，疊加 Bonus
+    if (!monster.status) {
+        monster.status = []
+    }
     monster.status?.forEach(eff => {
         if (eff.bonus) {
             (Object.keys(eff.bonus) as Array<keyof typeof eff.bonus>).forEach(key => {

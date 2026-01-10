@@ -33,14 +33,17 @@ defineExpose({
   position: absolute;
   top: 15rem;
   left: 3rem;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 
-  /* ⭐️ 限制大小：避免遮住畫面過多空間 */
+  /* ⭐️ 避免遮住畫面過多空間 */
   width: 20rem;
   max-height: 5rem; /* 超過此高度的舊 Log 會被隱藏 */
 
-  /* 基礎設定 */
-  pointer-events: none; /* 滑鼠穿透 */
-  overflow: hidden; /* 確保超過範圍的 Log 不可見 */
+  /* ⭐️ 允許滑鼠事件與滾動 */
+  pointer-events: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 100;
 
   /* ⭐️ 底部漸變消失：讓 Log 被推下去時自然淡出 */
@@ -55,7 +58,9 @@ defineExpose({
       transparent 100%
   );
 }
-
+.log-view-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 .log-list-wrapper {
   display: flex;
   flex-direction: column;

@@ -16,7 +16,7 @@ export const FusionOtherList = [
     {
         target: SpecialItem.ClearMirror,
         requirements: [
-            {item: SpecialItem.ClearMirrorFragment, count: 20}
+            {item: SpecialItem.ClearMirrorFragment, count: 10}
         ]
     } as FusionListType,
 ]
