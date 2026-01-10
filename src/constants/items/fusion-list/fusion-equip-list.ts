@@ -37,7 +37,7 @@ export const FusionEquipList = [
         target: Accessory1.DefendRing2,
         requirements: [
             {item: Material.LowerNormal, count: 5},
-            {item: Material.MandrakeRoot, count: 1},
+            {item: Material.ScorpionBlackShell, count: 1},
         ]
     } as FusionListType,
     {

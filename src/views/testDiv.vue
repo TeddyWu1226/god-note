@@ -4,7 +4,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {ref} from "vue";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import {Accessory1} from "@/constants/items/equipment/accessories-info";
+import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {Skills} from "@/constants/skill/skill";
 import {SpecialEventEnum} from "@/enums/enums";
@@ -39,7 +39,7 @@ const give = () => {
   Array.from({ length: 5 }).forEach(() => playerStore.gainItem(Potions.Magic1));
   Array.from({ length: 10 }).forEach(() =>   playerStore.gainItem(ScorchedSandsMaterial.DesertRabbitMeat));
   Array.from({ length: 10 }).forEach(() =>   playerStore.gainItem(ScorchedSandsMaterial.SandWormBloodClot));
-
+  playerStore.gainItem(Accessory2.SoulAnchor)
 
   // playerStore.gainItem(Weapon.MagicStick1)
   // playerStore.gainItem(Weapon.Sword1)
