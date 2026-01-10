@@ -9,6 +9,7 @@ import {AchievementType} from "@/types";
 import {ElNotification} from "element-plus";
 import {useAchievementStore} from "@/store/achievement-store";
 import {checkAchievements} from "@/components/FloorInfoLayout/comps/AchievementDialog/achievement-service";
+import {StageEnum} from "@/enums/stage-enum";
 
 const model = defineModel({type: Boolean, default: false});
 const achievementStore = useAchievementStore()
@@ -113,6 +114,9 @@ init()
 
 <template>
   <el-dialog v-model="model" top="5vh" title="🏆 成就" class="achievement-dialog">
+    <el-card style="margin-bottom: 1rem">
+      目前進度: 第 {{gameStateStore.currentStage}} 層- {{getEnumColumn(StageEnum, gameStateStore.currentStage)}} (存活第 {{gameStateStore.days}} 天)
+    </el-card>
     <div class="statistic-container">
       <el-row :gutter="20">
         <el-col :span="12">

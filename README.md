@@ -1,7 +1,7 @@
 # ⚔️ 神祇記事 (God Note)
 
 [![Deploy Vite Site](https://github.com/teddywu1226/god-note/actions/workflows/deploy.yml/badge.svg)](https://github.com/teddywu1226/god-note/actions)
-![Version](https://img.shields.io/badge/Version-v0.0.5-blue)
+![Version](https://img.shields.io/badge/Version-v0.0.6-blue)
 ![Vue 3](https://img.shields.io/badge/Vue-3.5-4FC08D?logo=vue.js)
 ![Vite 7](https://img.shields.io/badge/Vite-7.2-646CFF?logo=vite)
 
@@ -26,7 +26,7 @@
 
 ## 📜 更新日誌 (Changelog)
 
-### [v0.0.5] - 2025-12-12 ~ NOW
+### [v0.0.6] - 2025-12-12 ~ NOW
 
 #### 測試版開發中
 
@@ -37,11 +37,12 @@
 ### 🏰 樓層與階段設計
 
 - 預計完成 **50 層** 精心設計的階段關卡
-- **當前進度**：第 7 層 (持續開拓中 ⚒️)(第一區域完工)
+- **當前進度**：第 8 層 (持續開拓中 ⚒️)
 
 ### 🎲 事件與奇遇
 
 - **百種隨機事件**：開發超過 **100 種** 隨機事件
+- **當前進度**：(10/100)
 
 ### 🔮 神奇機制
 

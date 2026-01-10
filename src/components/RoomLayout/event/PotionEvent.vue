@@ -4,7 +4,7 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
 import {computed, ref} from "vue";
-import {GameState} from "@/enums/enums";
+import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {getRandomElements} from "@/utils/math";
 import {UserStatus} from "@/constants/status/user-status";
 import {StatusEffect} from "@/types";
@@ -68,7 +68,7 @@ const drinkPotion = () => {
       playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + healAmount);
       resultMsg.value = `味道意外地清甜！恢復了 <span style="color: #4caf50; font-weight: bold;">${healAmount} HP</span>。`;
 
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER']) {
+      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
         resultMsg.value += `<br/>你想起手上的空瓶,順手用這乾淨的液體裝了滿了它。`
         gameStateStore.otherRecord['WATER'] = 2
       }
@@ -77,7 +77,7 @@ const drinkPotion = () => {
       resultType.value = 'neutral';
       resultMsg.value = `喝完之後你的皮膚變成了 <span style="color: #9c27b0; font-weight: bold;">紫色</span>，雖然感覺沒什麼用，但你覺得自己變帥了。`;
 
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER']) {
+      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
         resultMsg.value += `<br/>你想起手上的空瓶,順手用這奇怪的液體裝了滿了它。`
         gameStateStore.otherRecord['WATER'] = 2
       }
@@ -93,7 +93,7 @@ const drinkPotion = () => {
 
       resultMsg.value = `嘔... 味道怪怪的！你感到身體產生異樣，獲得狀態 <span style="color: #ff4d4f; font-weight: bold;">${randomStatus.name}</span>。`;
 
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER']) {
+      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
         resultMsg.value += `<br/>你想起手上的空瓶,順手用這奇怪的液體裝了滿了它。`
         gameStateStore.otherRecord['WATER'] = 3
       }

@@ -188,6 +188,11 @@ watch(
             <p><strong>進階戰鬥：</strong> 有機率遭遇 <span class="highlight-elite">[菁英]</span> 敵人。它們極其強大，但等級更高且<strong>必定掉落</strong>專屬獎勵。
             </p>
           </div>
+          <div class="rule-item">
+            <span class="rule-icon">✨</span>
+            <p><strong>技能強化：</strong> 技能採用熟練度強化,每次使用可提升1點熟練度,最高100(MAX)
+            </p>
+          </div>
         </section>
 
         <div class="rule-footer">
