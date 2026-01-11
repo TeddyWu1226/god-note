@@ -105,7 +105,8 @@ export const ScorchedSandsMonster = {
         dropGold: 90,
         chaseIncrease: 30,
         drop: [
-            {item: Material.VultureFeather, chance: 0.2},
+            {item: Material.VultureFeather, chance: 0.3},
+            {item: Material.VultureSilverFeather, chance: 0.1},
             {item: Material.LowerNormal, chance: 0.1},
         ],
     } as MonsterType,
@@ -126,6 +127,7 @@ export const ScorchedSandsMonster = {
         dropGold: 25,
         drop: [
             {item: Material.DesertRabbitMeat, chance: 0.5},
+            {item: Material.DesertRabbitLeg, chance: 0.1},
             {item: Material.LowerNormal, chance: 0.1},
         ]
     } as MonsterType,
@@ -169,6 +171,7 @@ export const ScorchedSandsMonster = {
         dropGold: 20,
         drop: [
             {item: Material.SandWormBloodClot, chance: 0.5},
+            {item: Material.SandWormBloodHeart, chance: 0.1},
             {item: Material.LowerNormal, chance: 0.1},
         ]
     } as MonsterType,
@@ -190,7 +193,7 @@ export const ScorchedSandsMonster = {
         onAttack: 'desertScorpionOnAttack',
         drop: [
             {item: Material.ScorpionShell, chance: 0.2},
-            {item: Material.ScorpionBlackShell, chance: 0.05},
+            {item: Material.ScorpionBlackShell, chance: 0.1},
             {item: Material.LowerNormal, chance: 0.1},
         ],
     } as MonsterType,

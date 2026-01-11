@@ -6,6 +6,7 @@ import {MistyForestMonster} from "@/constants/monsters/monster-info/1-misty-fore
 import {create} from "@/utils/create";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SandstormPassWeights} from "@/constants/stage-monster-weights";
+import {Boss} from "@/constants/monsters/boss-info";
 
 
 export const MonsterOnStart: Record<string, (params: MonsterActionParams) => void> = {
@@ -149,5 +150,18 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
                 color: 'green'
             }
         );
+    },
+    pyramidEntranceOnStart: ({playerStore, gameStateStore, targetElement}) => {
+        // 額外動畫演示
+        useFloatingMessage(
+            '接受我們的考驗吧，凡人!',
+            targetElement,
+            {
+                duration: 2000,
+                color: 'red'
+            }
+        );
+        let m = create(Boss.PyramidEntrance2)
+        gameStateStore.currentEnemy.push(create(m))
     },
 };

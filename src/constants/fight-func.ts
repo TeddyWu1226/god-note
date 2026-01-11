@@ -100,8 +100,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
 	const damageTaken = damageOutput.totalDamage
 	if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
 		// 直接修改 Store 裡的原始數據 info.hp
-		const newHP = playerStore.info.hp - damageTaken;
-		playerStore.info.hp = Math.max(0, newHP);
+		playerStore.info.hp = playerStore.info.hp - damageTaken;
 
 		// 更新同步 (讓 defender 變數也拿到最新值用於回傳 outcome)
 		defender.hp = playerStore.info.hp;

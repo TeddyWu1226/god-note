@@ -7,6 +7,8 @@ import {SpecialItem} from "@/constants/items/special-item-info";
 import {create} from "@/utils/create";
 import {Material} from "@/constants/items/material/material-info";
 import {UserStatus} from "@/constants/status/user-status";
+import {Boss} from "@/constants/monsters/boss-info";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 
 /**
  * 怪物受傷後判斷
@@ -81,6 +83,60 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
             // 掉落鱗片
             playerStore.gainItem(Material.BehemothScales)
             logStore.logger.add(`你從巨獸身上得到了一個鱗片`);
+        }
+    },
+    pyramidEntranceOnAttacked: ({monster, gameStateStore, targetElement, logStore}) => {
+        // 石像召喚
+        if (!monster.tick) {
+            monster.tick = {};
+        }
+        const currentHpRate = Math.round(monster.hp / monster.hpLimit * 100)
+        let trigger = false
+        if (!monster.tick['pyramidEntrance1'] && currentHpRate <= 50) {
+            monster.tick['pyramidEntrance1'] = 1
+            trigger = true
+        }
+        if (gameStateStore.currentEnemy.length === 2) {
+            return
+        }
+        if (trigger) {
+            useFloatingMessage(
+                '起來吧!',
+                targetElement,
+                {
+                    duration: 2000,
+                    color: 'red'
+                }
+            );
+            let m = create(Boss.PyramidEntrance2)
+            gameStateStore.currentEnemy.push(create(m))
+        }
+    },
+    pyramidEntrance2OnAttacked: ({monster, gameStateStore, targetElement, logStore}) => {
+        // 石像召喚
+        if (!monster.tick) {
+            monster.tick = {};
+        }
+        const currentHpRate = Math.round(monster.hp / monster.hpLimit * 100)
+        let trigger = false
+        if (!monster.tick['pyramidEntrance2'] && currentHpRate <= 50) {
+            monster.tick['pyramidEntrance2'] = 1
+            trigger = true
+        }
+        if (gameStateStore.currentEnemy.length === 2) {
+            return
+        }
+        if (trigger) {
+            useFloatingMessage(
+                '起來吧!',
+                targetElement,
+                {
+                    duration: 2000,
+                    color: 'red'
+                }
+            );
+            let m = create(Boss.PyramidEntrance)
+            gameStateStore.currentEnemy.push(create(m))
         }
     },
 };

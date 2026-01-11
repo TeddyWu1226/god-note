@@ -9,23 +9,19 @@ export const FusionUsableList = [
     {
         target: Potions.Heal1,
         requirements: [
-            {item: Material.DesertRabbitMeat, count: 2},
-            {item: Material.SandWormBloodClot, count: 2},
-
+            {item: Material.LowerNormal, count: 3},
         ]
     } as FusionListType,
     {
         target: Potions.Magic1,
         requirements: [
-            {item: Material.DesertRabbitMeat, count: 2},
-            {item: Material.CactusMeat, count: 2},
+            {item: Material.LowerNormal, count: 3},
         ]
     } as FusionListType,
     {
         target: Potions.UnPoisonPotion,
         requirements: [
-            {item: Material.BeeStinger, count: 2},
-            {item: Material.SandWormBloodClot, count: 2},
+            {item: Material.LowerNormal, count: 3},
         ]
     } as FusionListType,
 ]
