@@ -2,7 +2,8 @@ import {
     AncientRootsWeights,
     BeginForestWeights,
     FairyBarrierWeights, TwilightWeights,
-    SunkenGroveWeights, ScorchingDunesWeights, MirageOasisWeights, SandstormPassWeights, PyramidEntranceWeights
+    SunkenGroveWeights, ScorchingDunesWeights, MirageOasisWeights, SandstormPassWeights, PyramidEntranceWeights,
+    PharaohsRestWeights
 } from "@/constants/stage-monster-weights";
 import {EquipmentType} from "@/types";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
@@ -20,4 +21,5 @@ export const stageMonsterWeightsMap: Record<number, Record<string, number>> = {
     7: MirageOasisWeights,
     8: SandstormPassWeights,
     9: PyramidEntranceWeights,
+    10: PharaohsRestWeights
 }

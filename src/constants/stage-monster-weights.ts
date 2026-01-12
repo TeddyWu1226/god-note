@@ -101,6 +101,18 @@ export const PyramidEntranceWeights: Record<string, number> = {
 };
 
 /**
+ * 區域 2-5: 金字塔深處(PharaohsRest)
+ */
+export const PharaohsRestWeights: Record<string, number> = {
+    DesertScorpion2: 5,
+    Mummy: 20,
+    PyramidGuard1: 1,
+    PyramidGuard2: 1,
+    PyramidGuard3: 1,
+    PyramidGuard4: 1,
+};
+
+/**
  * 無盡區域
  */
 export const EndlessWeights: Record<string, number> = {

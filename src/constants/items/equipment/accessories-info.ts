@@ -8,7 +8,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 0,
-		defendIncrease: 2
+		defendIncrease: 3
 	} as EquipmentType,
 	DefendRing1: {
 		name: '防禦戒指',
@@ -16,7 +16,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 1,
-		defendIncrease: 4
+		defendIncrease: 6
 	} as EquipmentType,
 	DefendRing2: {
 		name: '精緻的防禦戒指',
@@ -24,7 +24,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 2,
-		defendIncrease: 6
+		defendIncrease: 9
 	} as EquipmentType,
 	DefendRing3: {
 		name: '藍寶石的防禦戒指',
@@ -32,7 +32,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 3,
-		defendIncrease: 8,
+		defendIncrease: 12,
 		hpLimit: 50
 	} as EquipmentType,
 	DefendRing4: {
@@ -41,7 +41,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 4,
-		defendIncrease: 10,
+		defendIncrease: 15,
 		hpLimit: 100
 	} as EquipmentType,
 	DefendRing5: {
@@ -50,7 +50,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 5,
-		defendIncrease: 12,
+		defendIncrease: 20,
 		hpLimit: 200
 	} as EquipmentType,
 	HitRing0: {
@@ -101,7 +101,7 @@ export const Accessory1 = {
 		icon: '💍',
 		position: EquipmentPosition.ACCESSORY1,
 		quality: 5,
-		hit: 30,
+		hit: 35,
 		critRate: 12
 	} as EquipmentType,
 	HeartAmulet: {

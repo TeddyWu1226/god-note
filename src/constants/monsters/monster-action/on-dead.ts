@@ -29,7 +29,7 @@ export const MonsterOnDead: Record<string, (params: MonsterActionParams) => void
         if (monster.apDefend <= 0) {
             return
         }
-        showEffect(targetElement, "🧻", "buff");
+        showEffect(targetElement, "✟✟✟", "buff");
         logStore.logger.add('木乃伊又復活了')
         monster.hp = getEffectiveStats(monster).hpLimit
         monster.adDefend -= 10
