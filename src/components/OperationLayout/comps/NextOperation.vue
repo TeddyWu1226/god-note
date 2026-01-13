@@ -46,7 +46,10 @@ const goNextStage = () => {
   gameStateStore.nextRooms = []
   if (gameStateStore.currentStage === 6) {
     playerStore.addStatus(EvnStatus.Sandstorm)
-    useEpicSubtitle("沙塵暴席捲整個峽谷...", 2000);
+    useEpicSubtitle("沙塵暴席捲整個地區...", 2000);
+  }
+  if(gameStateStore.currentStage > 8){
+    playerStore.removeStatus(EvnStatus.Sandstorm.name)
   }
 }
 onMounted(() => {

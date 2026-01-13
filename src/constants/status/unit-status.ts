@@ -113,4 +113,10 @@ export const UnitStatus = {
             adDefend: -5
         }
     } as StatusEffect,
+    EatMummy: {
+        name: '力量吸收倒數',
+        icon: '🍽️',
+        duration: 8,
+        description: '當倒數計時結束時,他會吸收場上所有木乃伊轉化為自身血量',
+    } as StatusEffect,
 }

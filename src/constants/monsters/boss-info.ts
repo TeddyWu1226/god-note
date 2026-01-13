@@ -212,24 +212,27 @@ export const Boss = {
 	} as MonsterType,
 	PharaohsRest: {
 		icon: '👑',
-		name: '腐敗的王者',
+		name: '腐敗的法老',
 		class: 'boss big',
 		description: '從永恆睡眠中甦醒，帶著詛咒砂礫的帝王，被施加腐臭標記的人無法傷害他分毫。',
-		ad: 55,
+		ad: 50,
 		critIncrease: 150,
 		critRate: 20,
 		adDefend: 10,
 		apDefend: 10,
 		dodge: 30,
 		hit: 15,
-		hp: 1000,
-		hpLimit: 1000,
+		hp: 800,
+		hpLimit: 800,
 		level: 20,
 		dropGold: 1200,
 		onStart: 'pharaohsRestOnStart',
 		onDead: 'pharaohsRestOnDead',
 		onAttack: 'pharaohsRestOnAttack',
 		onAttacked: 'pharaohsRestOnAttacked',
+		drop: [
+			{item: Material.LowerLarge, chance: 1},
+		]
 	} as MonsterType,
 	// ==========================================
 	// --- 區域 3: 冰雪高地 (Icy Plateau) ---
