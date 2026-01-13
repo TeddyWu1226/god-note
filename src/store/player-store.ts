@@ -4,6 +4,7 @@ import type {UserType, Equipment, EquipmentType, StatusEffect} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
+import {Potions} from "@/constants/items/usalbe-item/potion-info";
 
 const MAX_SKILLS = 5
 export const usePlayerStore = defineStore('player-info', () => {
@@ -134,19 +135,24 @@ export const usePlayerStore = defineStore('player-info', () => {
 	/**
 	 * 獲得物品 (存入 items 背包)
 	 */
-	const gainItem = (item: any) => {
+	const gainItem = (item: any, amount = 1) => {
 		info.value.items = info.value.items || [];
 		info.value.equipments = info.value.equipments || [];
 		info.value.consumeItems = info.value.consumeItems || [];
-		const newItem = create(item);
-		// 分類加入
-		if (item?.position) {
-			info.value.equipments.push(newItem)
-		} else if (item?.usable) {
-			info.value.consumeItems.push(newItem)
-		} else {
-			info.value.items.push(newItem)
-		}
+		Array.from({length: amount}).forEach(
+			() => {
+				let newItem = create(item);
+				// 分類加入
+				if (item?.position) {
+					info.value.equipments.push(newItem)
+				} else if (item?.usable) {
+					info.value.consumeItems.push(newItem)
+				} else {
+					info.value.items.push(newItem)
+				}
+			}
+		)
+		;
 	};
 
 	/**

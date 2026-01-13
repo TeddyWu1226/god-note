@@ -10,29 +10,32 @@ import {getEffectiveStats} from "@/store/game-state-store";
 
 
 export const MonsterOnDead: Record<string, (params: MonsterActionParams) => void> = {
-    mandragoraOnDead: ({playerStore, targetElement, logStore}) => {
-        playerStore.addStatus(UnitStatus.MandragoraScared)
-        logStore.logger.add(`你受到驚嚇了。`);
-        showEffect(targetElement, "阿!~~~~", "debuff");
-    },
-    twilightOnDead: ({playerStore, gameStateStore, targetElement}) => {
-        useEpicSubtitle("「希望...與汝再...舞一曲...」", 3000);
-        // 清掉休止符
-        playerStore.removeItem(SpecialItem.PauseToken.name, -1)
-    },
-    duneBeastOnDead: ({playerStore, targetElement, logStore}) => {
-        logStore.logger.add(`沙塵暴平息了。`);
-        playerStore.removeStatus(EvnStatus.Sandstorm.name)
+	mandragoraOnDead: ({playerStore, targetElement, logStore}) => {
+		playerStore.addStatus(UnitStatus.MandragoraScared)
+		logStore.logger.add(`你受到驚嚇了。`);
+		showEffect(targetElement, "阿!~~~~", "debuff");
+	},
+	twilightOnDead: ({playerStore, gameStateStore, targetElement}) => {
+		useEpicSubtitle("「希望...與汝再...舞一曲...」", 3000);
+		// 清掉休止符
+		playerStore.removeItem(SpecialItem.PauseToken.name, -1)
+	},
+	duneBeastOnDead: ({playerStore, targetElement, logStore}) => {
+		logStore.logger.add(`沙塵暴平息了。`);
+		playerStore.removeStatus(EvnStatus.Sandstorm.name)
 
-    },
-    mummyOnDead: ({monster, playerStore, targetElement, logStore}) => {
-        if (monster.apDefend <= 0) {
-            return
-        }
-        showEffect(targetElement, "✟✟✟", "buff");
-        logStore.logger.add('木乃伊又復活了')
-        monster.hp = getEffectiveStats(monster).hpLimit
-        monster.adDefend -= 10
-        monster.apDefend -= 10
-    },
+	},
+	mummyOnDead: ({monster, playerStore, targetElement, logStore}) => {
+		if (monster.apDefend <= 0) {
+			return
+		}
+		showEffect(targetElement, "✟✟✟", "buff");
+		logStore.logger.add('木乃伊又復活了')
+		monster.hp = getEffectiveStats(monster).hpLimit
+		monster.adDefend -= 10
+		monster.apDefend -= 10
+	},
+	pharaohsRestOnDead: ({playerStore, gameStateStore, targetElement}) => {
+		useEpicSubtitle("「我...我的王朝...」", 2000);
+	},
 };

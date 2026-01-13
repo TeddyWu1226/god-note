@@ -95,6 +95,7 @@ const getAvailableEvents = () => {
   return allowEvent
       .filter(event => !gameStateStore.isEventClose(event.type))
       .filter(event => event.canAppear())
+      .filter(event => event.type !== gameStateStore.lastEventType)
       .map(event => event.type);
 };
 

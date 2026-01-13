@@ -73,7 +73,8 @@ const STAGE_GOALS: Record<number, {
   7: {type: QuestType.COLLECT, target: SpecialItem.ClearMirror.name, need: 1, label: '收集'},
   8: {type: QuestType.SURVIVE, target: '40天', need: 40, label: '生存'},
   9: {type: QuestType.KILL, need: 50, label: '狩獵'},
-  10: {type: QuestType.SURVIVE, target: '999天', need: 999, label: '生存(待開發)'},
+  10: {type: QuestType.SURVIVE, target: '30天', need: 30, label: '生存'},
+  11: {type: QuestType.SURVIVE, target: '999天', need: 999, label: '生存(待開發)'},
 };
 // 獲取當前階段的進度數據
 const stageProgress = computed(() => {
