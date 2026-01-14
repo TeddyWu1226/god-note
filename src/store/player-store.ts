@@ -5,6 +5,9 @@ import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
+import {Warrior1SkillEvolutionMap} from "@/constants/skill/warrior-skill";
+import {CharEnum} from "@/enums/char-enum";
+import {Wizard1SkillEvolutionMap} from "@/constants/skill/wizard-skill";
 
 const MAX_SKILLS = 5
 export const usePlayerStore = defineStore('player-info', () => {
@@ -411,6 +414,27 @@ export const usePlayerStore = defineStore('player-info', () => {
 			return
 		}
 		skillProficiency.value[skillKey] = Math.min((skillProficiency.value[skillKey] || 0) + value, 100)
+		if (skillProficiency.value[skillKey] == 100) {
+			let evolutionMap: any
+			if (info.value.char === CharEnum.Warrior.value) {
+				evolutionMap = Warrior1SkillEvolutionMap
+			} else if (info.value.char === CharEnum.Wizard.value) {
+				evolutionMap = Wizard1SkillEvolutionMap
+			}
+			if (!evolutionMap) {
+				return;
+			}
+			const nextSkills = evolutionMap[skillKey] as string[]
+			if (!nextSkills) {
+				return;
+			}
+			const logStore = useLogStore();
+			logStore.logger.add('[升級]在你熟練技能使用後,獲得新技能!');
+			nextSkills.forEach(nextSkill => {
+
+				addSkill(nextSkill)
+			})
+		}
 	}
 	/**
 	 * 等級提升(每階100點)

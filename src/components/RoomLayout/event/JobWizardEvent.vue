@@ -40,8 +40,8 @@ const handleJobChange = () => {
     playerStore.info.sp += 20;
     playerStore.info.char = CharEnum.Wizard.value
 
-    // 習得技能：改為魔法類技能 (例如：火球術或魔法彈)
-    playerStore.addSkill(Skills.FireBall.id)
+    // 習得技能
+    playerStore.addSkill(Skills.MagicBall.id)
 
     gameStateStore.eventAction = 3;
     isLearning.value = false

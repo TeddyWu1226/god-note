@@ -486,7 +486,7 @@ export const checkHpThresholds = (entity: Entity, thresholds = [75, 50, 25]) => 
     let isTrigger = false
     thresholds.forEach(threshold => {
         // 如果目前血量低於門檻，且該門檻尚未被觸發
-        if (hpPercent <= threshold && !entity.triggeredThresholds.has(threshold)) {
+        if (hpPercent <= threshold && !entity.triggeredThresholds?.has(threshold)) {
             entity.triggeredThresholds.add(threshold); // 標記為已觸發
             isTrigger = true
         }

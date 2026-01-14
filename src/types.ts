@@ -296,6 +296,7 @@ export interface SkillType {
 	costSp?: number;
 	costHp?: number;
 	use: (prop: SkillParams) => Promise<boolean> | boolean; // 回傳技能是否施展成功
+	proficiency?: number // 每次使用加多少熟練度 沒有就1
 }
 
 

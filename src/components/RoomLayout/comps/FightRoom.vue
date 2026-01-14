@@ -322,7 +322,7 @@ const onSkill = async (skillKey: string) => {
       return
     }
     // 熟練度增加
-    playerStore.addSkillProficiency(useSkill.id)
+    playerStore.addSkillProficiency(useSkill.id, useSkill?.proficiency ?? 1)
     if (useSkill?.costSp) {
       const newSP = playerStore.info.sp - useSkill.costSp;
       playerStore.info.sp = Math.max(0, newSP)

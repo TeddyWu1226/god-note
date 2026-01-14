@@ -27,11 +27,11 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  gameStateStore.currentStage = 6
-  playerStore.gainExp({amount: 700})
-  playerStore.addSkill(Skills.FireBall.id)
-  playerStore.addSkill(Skills.CommonHeal.id)
-  playerStore.addSkillProficiency(Skills.FireBall.id, 100)
+  // gameStateStore.currentStage = 6
+  // playerStore.gainExp({amount: 700})
+  // playerStore.addSkill(Skills.FireBall.id)
+  playerStore.addSkill(Skills.MagicDefend.id)
+  playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
 }
 const give = () => {
   playerStore.addGold(1000)
@@ -48,6 +48,7 @@ const give = () => {
 }
 const heal = () => {
   playerStore.healFull()
+  playerStore.addSkillProficiency('DoubleHit', 100)
 }
 
 const setRoom = () => {
