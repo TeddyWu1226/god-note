@@ -162,7 +162,7 @@ export interface MonsterType extends UnitType {
 	onAttacked?: MonsterOnAttackedType // 怪物被攻擊後觸發
 	onDead?: MonsterOnDeadType// 怪物死亡時觸發
 	lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
-	tick?: Record<string, number | Set<any>> // 行動計數器
+	tick?: Record<string, number | any[]> // 行動計數器
 }
 
 /**

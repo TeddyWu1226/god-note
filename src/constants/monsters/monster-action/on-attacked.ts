@@ -147,12 +147,12 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 			monster.tick = {}
 		}
 		if (!monster.tick['pharaohsRestSum']) {
-			monster.tick['pharaohsRestSum'] = new Set()
+			monster.tick['pharaohsRestSum'] = []
 		}
 		const entity = {
 			hp: monster.hp,
 			maxHp: monster.hpLimit,
-			triggeredThresholds: monster.tick['pharaohsRestSum'] as Set<number>,
+			triggeredThresholds: monster.tick['pharaohsRestSum'] as number[],
 		}
 
 		let trigger = checkHpThresholds(entity)
