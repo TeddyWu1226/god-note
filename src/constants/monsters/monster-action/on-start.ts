@@ -167,13 +167,5 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
 	},
 	pharaohsRestOnStart: ({playerStore, gameStateStore, targetElement}) => {
 		useEpicSubtitle("「好久沒有活人了，但你也將成為死人並臣服於我。」", 4000);
-		let m = create(Monster.Mummy);
-		const strengthening = 1 + gameStateStore.days * 0.015
-		// 基本階段強化
-		m.hpLimit = Math.round(m.hpLimit * strengthening);
-		m.hp = m.hpLimit;
-		m.ad = Math.round(m.ad * strengthening);
-		gameStateStore.currentEnemy.unshift(create(m))
-		gameStateStore.currentEnemy.push(create(m))
 	},
 };

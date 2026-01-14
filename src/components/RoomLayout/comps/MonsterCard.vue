@@ -47,10 +47,10 @@ defineExpose({
 });
 
 const valueClass = (valueKey: string) => {
-  if (finalStats[valueKey] > props.info[valueKey]) {
+  if (finalStats.value[valueKey] > props.info[valueKey]) {
     return 'buff'
   }
-  if (finalStats[valueKey] < props.info[valueKey]) {
+  if (finalStats.value[valueKey] < props.info[valueKey]) {
     return 'debuff'
   }
 }

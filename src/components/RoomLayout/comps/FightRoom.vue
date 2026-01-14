@@ -153,6 +153,10 @@ const handleMonsterSelect = (index: number) => {
 
 const monsterMove = () => {
   gameStateStore.currentEnemy?.forEach((selectedMonster, index) => {
+    // 被暈眩
+    if (selectedMonster.status?.some(stats => stats.type === 'stuck')) {
+      return
+    }
     // 特殊效果
     if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
       // 執行對應的函式

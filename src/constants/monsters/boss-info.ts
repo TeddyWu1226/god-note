@@ -214,7 +214,7 @@ export const Boss = {
 		icon: '👑',
 		name: '腐敗的法老',
 		class: 'boss big',
-		description: '從永恆睡眠中甦醒，帶著詛咒砂礫的帝王，被施加腐臭標記的人無法傷害他分毫。',
+		description: '從永恆睡眠中甦醒，帶著詛咒砂礫的帝王，會召喚他的隨從一同戰鬥。',
 		ad: 50,
 		critIncrease: 150,
 		critRate: 20,
