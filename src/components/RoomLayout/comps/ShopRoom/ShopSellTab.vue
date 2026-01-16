@@ -3,140 +3,178 @@ import './shop.css'
 import {computed} from 'vue';
 import {usePlayerStore} from "@/store/player-store";
 import {ElMessage, ElMessageBox} from "element-plus";
-import {UsableType, EquipmentType, ItemType} from "@/types";
-import {EQUIP_BASE_PRICE, MATERIAL_BASE_PRICE} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
+import {EQUIP_BASE_PRICE} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 
 const playerStore = usePlayerStore();
 
-type StackedItem = (EquipmentType | UsableType) & {
+// 定義顯示用的統一型別
+type ShopDisplayItem = {
+  item: any;
   count: number;
-  originalIndices: number[];
   bagType: 'items' | 'equipments' | 'consumeItems';
 };
 
-// 聚合計算移到這裡
+// 🌟 修正：針對不同結構的背包進行聚合
 const stackedBags = computed(() => {
-  const bags: Record<string, StackedItem[]> = {items: [], equipments: [], consumeItems: []};
-  const bagTypes = ['items', 'equipments', 'consumeItems'] as const;
+  const bags: Record<string, ShopDisplayItem[]> = {items: [], equipments: [], consumeItems: []};
 
-  bagTypes.forEach(type => {
-    const map = new Map<string, StackedItem>();
-    (playerStore.info[type] || []).forEach((item, index) => {
-      if (!item) return;
-      if (item.unsellable) return;
-      if (map.has(item.name)) {
-        const existing = map.get(item.name)!;
-        existing.count++;
-        existing.originalIndices.push(index);
-      } else {
-        map.set(item.name, {...item, count: 1, originalIndices: [index], bagType: type});
-      }
-    });
-    bags[type] = Array.from(map.values()).sort((a, b) => (a.quality || 0) - (b.quality || 0));
+  // 1. 處理堆疊背包 (items, consumeItems) -> 直接取出
+  const stackedKeys = ['items', 'consumeItems'] as const;
+  stackedKeys.forEach(key => {
+    bags[key] = (playerStore.info[key] || [])
+        .filter(entry => !entry.item.unsellable)
+        .map(entry => ({
+          item: entry.item,
+          count: entry.count,
+          bagType: key
+        }));
   });
-  return bags
+
+  // 2. 處理不堆疊背包 (equipments) -> 組件內暫時聚合顯示
+  const equipMap = new Map<string, ShopDisplayItem>();
+  (playerStore.info.equipments || []).forEach((item) => {
+    if (item.unsellable) return;
+    if (equipMap.has(item.name)) {
+      equipMap.get(item.name)!.count++;
+    } else {
+      equipMap.set(item.name, {item, count: 1, bagType: 'equipments'});
+    }
+  });
+  bags.equipments = Array.from(equipMap.values());
+
+  // 最後統一排序
+  Object.keys(bags).forEach(key => {
+    bags[key].sort((a, b) => (b.item.quality || 0) - (a.item.quality || 0));
+  });
+
+  return bags;
 });
 
-const getSellPrice = (item: StackedItem) => {
-  if (item['position']) {
+const getSellPrice = (item: any) => {
+  // 如果是裝備（有部位設定）
+  if (item.position) {
     return Math.floor((EQUIP_BASE_PRICE[item.quality] || 50) * 0.25);
   }
-  return Math.floor((item?.price || 1));
+  // 否則使用物品預設價格
+  return Math.floor(item?.price || 1);
 };
 
-const handleSell = (item: StackedItem) => {
-  const price = getSellPrice(item);
-  playerStore.addGold(price);
-  const realIndex = item.originalIndices.pop();
-  if (realIndex !== undefined) {
-    playerStore.info[item.bagType].splice(realIndex, 1);
-    ElMessage.success(`賣出了 ${item.name}，獲得了 ${price} G`);
+const handleSell = (entry: ShopDisplayItem) => {
+  const price = getSellPrice(entry.item);
+
+  // 呼叫 store 的通用移除方法，這會處理堆疊 count 或陣列 splice
+  const success = playerStore.removeItem(entry.item.name, 1);
+
+  if (success) {
+    playerStore.addGold(price);
+    ElMessage.success(`賣出了 ${entry.item.name}，獲得了 💰 ${price}`);
   }
 };
-const onTouchHandleSell = createDoubleTapHandler((slotKey: StackedItem) => {
-  handleSell(slotKey);
+
+const onTouchHandleSell = createDoubleTapHandler((entry: ShopDisplayItem) => {
+  handleSell(entry);
 }, 350)
 
 const handleSellAll = (type: 'items' | 'equipments') => {
-  const bag = playerStore.info[type];
-  if (!bag || bag.length === 0) return;
+  const list = stackedBags.value[type];
+  if (!list || list.length === 0) return;
 
-  // 計算預計收益
+  // 計算總收益：遍歷聚合後的清單，價格 * 數量
   let totalGold = 0;
-  bag.forEach((item: StackedItem) => {
-    if (item.unsellable) {
-      return
-    }
-    if (item) {
-      // 複用你寫好的 getSellPrice
-      totalGold += getSellPrice(item as StackedItem);
-    }
+  list.forEach(entry => {
+    totalGold += getSellPrice(entry.item) * entry.count;
   });
 
-  const typeName = type === 'equipments' ? '所有裝備' : '所有道具';
+  const typeName = type === 'equipments' ? '所有裝備' : '所有雜物';
 
-  // 使用 ElMessageBox 代替原生 confirm
   ElMessageBox.confirm(
       `確定要賣出背包內「${typeName}」嗎？<br/>共可獲得 💰 ${totalGold} G`,
-      '一鍵販賣確認',
+      '一鍵清倉',
       {
-        confirmButtonText: '確認販賣',
+        confirmButtonText: '全部賣掉',
         cancelButtonText: '再想想',
         dangerouslyUseHTMLString: true,
         type: 'warning',
-        buttonSize: 'default',
         center: true,
       }
   ).then(() => {
-    // 使用者點擊確認
     playerStore.addGold(totalGold);
-    playerStore.info[type] = playerStore.info[type].filter(item => item.unsellable) as EquipmentType[];
 
-    ElMessage({
-      type: 'success',
-      message: `清倉完畢！收穫了 ${totalGold} G`,
-      duration: 2000
-    });
+    // 執行清空邏輯
+    if (type === 'equipments') {
+      // 裝備：保留不可販賣的
+      playerStore.info.equipments = playerStore.info.equipments.filter(i => i.unsellable);
+    } else {
+      // items：保留不可販賣的
+      playerStore.info.items = playerStore.info.items.filter(entry => entry.item.unsellable);
+    }
+
+    ElMessage.success(`清倉完畢！收穫了 ${totalGold} G`);
   }).catch(() => {
-    // 使用者點擊取消或關閉視窗，不做處理
   });
+};
+
+const handleSellStack = (entry: ShopDisplayItem) => {
+  const singlePrice = getSellPrice(entry.item);
+  const totalPrice = singlePrice * entry.count;
+
+  // 呼叫 removeItem，數量傳入 entry.count 即可整組移除
+  const success = playerStore.removeItem(entry.item.name, entry.count);
+
+  if (success) {
+    playerStore.addGold(totalPrice);
+    ElMessage.success(`賣出了全部 ${entry.item.name} x${entry.count}，獲得了 💰 ${totalPrice}`);
+  }
 };
 </script>
 
 <template>
   <div class="sell-container">
     <div v-for="type in (['items', 'equipments'] as const)" :key="type" class="bag-section">
-      <h4 v-if="stackedBags[type].length">
-        {{ type === 'equipments' ? '裝備' : '道具' }}
-        <el-button
-            size="small"
-            type="danger"
-            style="margin-left: 5px"
-            plain
-            @click="handleSellAll(type)"
-        >
-          一鍵販賣
-        </el-button>
-      </h4>
-      <div class="shop-grid">
-        <div v-for="item in stackedBags[type]"
-             :key="item.name"
-             class="item-card sell-card"
-             @dblclick="handleSell(item)"
-             @touchend="onTouchHandleSell(item)"
-        >
-          <div class="item-badge" v-if="item.count > 1">x{{ item.count }}</div>
-          <div class="item-icon">{{ item.icon }}</div>
-          <div class="item-name" :style="{color:getEnumColumn(QualityEnum,item.quality,'color')}">
-            {{ item.name }}
+      <template v-if="stackedBags[type].length">
+        <h4>
+          {{ type === 'equipments' ? '裝備' : '素材' }}
+          <el-button
+              size="small"
+              type="danger"
+              style="margin-left: 10px"
+              plain
+              @click="handleSellAll(type)"
+          >
+            一鍵清倉
+          </el-button>
+        </h4>
+        <div class="shop-grid">
+          <div v-for="entry in stackedBags[type]"
+               :key="entry.item.name"
+               class="item-card sell-card"
+               @dblclick="handleSell(entry)"
+               @touchend="onTouchHandleSell(entry)"
+          >
+            <div class="item-badge" v-if="entry.count > 1">x{{ entry.count }}</div>
+            <div class="item-icon">{{ entry.item.icon }}</div>
+            <div class="item-name" :style="{color:getEnumColumn(QualityEnum, entry.item.quality, 'color')}">
+              {{ entry.item.name }}
+            </div>
+            <div class="price-tag">回收價:💰 {{ getSellPrice(entry.item) }}</div>
+            <div class="sell-action-overlay">
+              <div class="overlay-text">雙擊販賣</div>
+              <el-button
+                  v-if="entry.count > 1"
+                  class="sell-stack-btn"
+                  size="small"
+                  type="warning"
+                  @click.stop="handleSellStack(entry)"
+              >
+                整組賣掉
+              </el-button>
+            </div>
           </div>
-          <div class="price-tag">回收價:💰 {{ getSellPrice(item) }}</div>
-          <div class="sell-action-overlay">雙擊販賣</div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -180,7 +218,26 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 /* 販賣時的遮罩效果 */
 .sell-action-overlay {
   background: rgba(245, 108, 108, 0.95);
-  font-size: 0.9rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  //background: rgba(0, 0, 0, 0.6); /* 稍微調暗背景，讓按鈕更明顯 */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none; /* 預設穿透 */
+}
+
+.overlay-text {
+  font-size: 0.8rem;
+  font-weight: bold;
+  pointer-events: none; /* 讓文字不影響雙擊 */
 }
 
 .sell-action-overlay {
@@ -201,7 +258,22 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 
 .sell-card:hover .sell-action-overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
+.sell-stack-btn {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 2px 6px !important;
+  font-size: 0.75rem;
+  height: 1.3rem;
+  z-index: 10;
+}
+
+/* 避免按鈕太醜，稍微修飾一下 */
+.sell-stack-btn:hover {
+  transform: scale(1.05);
+}
 
 </style>

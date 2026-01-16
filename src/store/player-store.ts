@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {ref, computed, nextTick} from 'vue';
-import type {UserType, Equipment, EquipmentType, StatusEffect} from '@/types';
+import type {UserType, Equipment, EquipmentType, StatusEffect, ItemStackType} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
@@ -88,74 +88,95 @@ export const usePlayerStore = defineStore('player-info', () => {
 	 * @param amount 需要的數量 (預設為 1)
 	 */
 	const hasItem = (itemName: string, amount: number = 1): [boolean, number] => {
-		// 合併所有背包並計算名稱相同的物件個數
-		const allItems = [
-			...(info.value.items || []),
-			...(info.value.equipments || []),
-			...(info.value.consumeItems || [])
-		];
+		// 裝備依舊是陣列長度
+		const equipCount = (info.value.equipments || []).filter(i => i.name === itemName).length;
 
-		const count = allItems.filter(item => item && item.name === itemName).length;
-		return [count >= amount, count]
+		// 堆疊物品則加總 count
+		const getStackCount = (list: ItemStackType[] = []) =>
+			list.filter(i => i.item.name === itemName).reduce((sum, i) => sum + i.count, 0);
+
+		const totalCount = equipCount + getStackCount(info.value.items) + getStackCount(info.value.consumeItems);
+
+		return [totalCount >= amount, totalCount];
 	};
 	/**
 	 * 移除指定名稱的道具
 	 * @param itemName 道具名稱
 	 * @param amount 要移除的個數，傳入 -1 則移除所有同名道具
 	 */
-	const removeItem = (itemName: string, amount: number = 1): boolean => {
-		// 如果不是全刪 (-1)，則先檢查數量是否足夠
-		if (amount !== -1 && !hasItem(itemName, amount)[0]) {
-			return false;
-		}
+    const removeItem = (itemName: string, amount: number = 1): boolean => {
+        const isRemoveAll = amount === -1;
+        if (!isRemoveAll && !hasItem(itemName, amount)[0]) return false;
 
-		const isRemoveAll = amount === -1;
-		let removedCount = 0;
-		const bagKeys: ('consumeItems' | 'items' | 'equipments')[] = ['consumeItems', 'items', 'equipments'];
+        let remainingToRemove = amount;
 
-		for (const key of bagKeys) {
-			const bag = info.value[key];
-			if (!bag) continue;
+        // 1. 先從 裝備背包 移除 (非堆疊)
+        if (info.value.equipments) {
+            for (let i = info.value.equipments.length - 1; i >= 0; i--) {
+                if (info.value.equipments[i].name === itemName) {
+                    info.value.equipments.splice(i, 1);
+                    if (!isRemoveAll) {
+                        remainingToRemove--;
+                        if (remainingToRemove <= 0) return true;
+                    }
+                }
+            }
+        }
 
-			// 從後往前搜尋，避免 splice 導致的索引偏移問題
-			for (let i = bag.length - 1; i >= 0; i--) {
-				if (bag[i] && bag[i].name === itemName) {
-					bag.splice(i, 1);
-					removedCount++;
+        // 2. 從 堆疊背包 (items, consumeItems) 移除
+        const stackBags: ('items' | 'consumeItems')[] = ['consumeItems', 'items'];
+        for (const key of stackBags) {
+            const bag = info.value[key] as ItemStackType[];
+            if (!bag) continue;
 
-					// 如果不是全刪模式，且達到目標數量，則完成任務
-					if (!isRemoveAll && removedCount >= amount) {
-						return true;
-					}
-				}
-			}
-		}
+            for (let i = bag.length - 1; i >= 0; i--) {
+                if (bag[i].item.name === itemName) {
+                    if (isRemoveAll) {
+                        bag.splice(i, 1);
+                    } else {
+                        const canTake = Math.min(bag[i].count, remainingToRemove);
+                        bag[i].count -= canTake;
+                        remainingToRemove -= canTake;
 
-		// 全刪模式下，只要有刪除到東西（或是名稱不存在）就回傳 true
-		// 非全刪模式下，檢查最後刪除總數是否達標
-		return isRemoveAll ? true : removedCount >= amount;
-	};
+                        if (bag[i].count <= 0) bag.splice(i, 1);
+                        if (remainingToRemove <= 0) return true;
+                    }
+                }
+            }
+        }
+
+        return isRemoveAll || remainingToRemove <= 0;
+    };
 	/**
-	 * 獲得物品 (存入 items 背包)
+	 * 獲得物品 (自動分類存入 背包)
 	 */
 	const gainItem = (item: any, amount = 1) => {
-		info.value.items = info.value.items || [];
-		info.value.equipments = info.value.equipments || [];
-		info.value.consumeItems = info.value.consumeItems || [];
-		Array.from({length: amount}).forEach(
-			() => {
-				let newItem = create(item);
-				// 分類加入
-				if (item?.position) {
-					info.value.equipments.push(newItem)
-				} else if (item?.usable) {
-					info.value.consumeItems.push(newItem)
-				} else {
-					info.value.items.push(newItem)
-				}
-			}
-		)
-		;
+		if (!item) return;
+
+		// 裝備處理 (不堆疊，維持原樣)
+		if (item.position) {
+			info.value.equipments = info.value.equipments || [];
+			Array.from({ length: amount }).forEach(() => {
+				info.value.equipments.push(create(item));
+			});
+			return;
+		}
+
+		// 消耗品或雜項處理 (堆疊)
+		const targetBagKey = item.usable ? 'consumeItems' : 'items';
+		if (!info.value[targetBagKey]) info.value[targetBagKey] = [];
+
+		const bag = info.value[targetBagKey] as ItemStackType[];
+		const existingStack = bag.find(s => s.item.name === item.name);
+
+		if (existingStack) {
+			existingStack.count += amount;
+		} else {
+			bag.push({
+				item: create(item),
+				count: amount
+			});
+		}
 	};
 
 	/**
