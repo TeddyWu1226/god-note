@@ -125,4 +125,32 @@ export const UnitStatus = {
 			apDefend: 10
 		}
 	} as StatusEffect,
+	Cold: {
+		name: '寒冷',
+		icon: '🔵',
+		duration: 5,
+		description: '降低 5 點 閃避值與命中值',
+		bonus: {
+			dodge: -5,
+			hit: -5
+		}
+	} as StatusEffect,
+	Frostbite: {
+		name: '凍傷',
+		icon: '❄️',
+		duration: 5,
+		description: '每回合扣除 20 點生命',
+		type: 'damage',
+		value: 20
+	} as StatusEffect,
+	Frozen: {
+		name: '冰凍',
+		icon: '🥶',
+		duration: 2,
+		description: '被冰凍住了,無法行動外還會扣除 10 點防禦',
+		type: 'stuck',
+		bonus: {
+			adDefend: -10
+		}
+	} as StatusEffect,
 }

@@ -18,6 +18,7 @@ export const IcyPlateauMonster = {
 		critRate: 10,
 		critIncrease: 200,
 		dropGold: 35,
+		onAttack: 'frozenOnAttack',
 		drop: [{item: Material.LowerNormal, chance: 0.1}],
 	} as MonsterType,
 	SnowBird: {
@@ -54,8 +55,8 @@ export const IcyPlateauMonster = {
 		critIncrease: 150,
 		dropGold: 45,
 		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		onAttack: 'frozenOnAttack',
 	} as MonsterType,
-
 	FrozenSkull: {
 		icon: '💀',
 		name: '冰凍骷髏',
@@ -72,6 +73,7 @@ export const IcyPlateauMonster = {
 		critIncrease: 200,
 		dropGold: 50,
 		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		onAttack: 'frozenOnAttack',
 	} as MonsterType,
 	IceSlime2: {
 		icon: '🔵',
@@ -89,6 +91,7 @@ export const IcyPlateauMonster = {
 		critIncrease: 200,
 		dropGold: 50,
 		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		onAttack: 'frozenOnAttack',
 	} as MonsterType,
 	SnowBird2: {
 		icon: '🦢',
@@ -124,8 +127,8 @@ export const IcyPlateauMonster = {
 		critIncrease: 150,
 		dropGold: 60,
 		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		onAttack: 'frozenOnAttack',
 	} as MonsterType,
-
 
 	IceCrystalGargoyle: {
 		icon: '🗿',
