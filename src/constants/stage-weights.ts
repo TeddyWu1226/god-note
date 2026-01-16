@@ -1,25 +1,35 @@
 import {
-    AncientRootsWeights,
-    BeginForestWeights,
-    FairyBarrierWeights, TwilightWeights,
-    SunkenGroveWeights, ScorchingDunesWeights, MirageOasisWeights, SandstormPassWeights, PyramidEntranceWeights,
-    PharaohsRestWeights
+	AncientRootsWeights,
+	BeginForestWeights,
+	FairyBarrierWeights,
+	TwilightWeights,
+	SunkenGroveWeights,
+	ScorchingDunesWeights,
+	MirageOasisWeights,
+	SandstormPassWeights,
+	PyramidEntranceWeights,
+	PharaohsRestWeights,
+	SnowyFoothillsWeights,
+	FrozenCliffsWeights,
+	WindHowlRidgeWeights,
+	FrozenCaveWeights,
+	IceDungeonWeights
 } from "@/constants/stage-monster-weights";
-import {EquipmentType} from "@/types";
-import {Weapon} from "@/constants/items/equipment/weapon-info";
-import {Armor} from "@/constants/items/equipment/armor-info";
-import {Head} from "@/constants/items/equipment/head-info";
-import {Offhand} from "@/constants/items/equipment/offhand-info";
 
 export const stageMonsterWeightsMap: Record<number, Record<string, number>> = {
-    1: BeginForestWeights,
-    2: SunkenGroveWeights,
-    3: AncientRootsWeights,
-    4: FairyBarrierWeights,
-    5: TwilightWeights,
-    6: ScorchingDunesWeights,
-    7: MirageOasisWeights,
-    8: SandstormPassWeights,
-    9: PyramidEntranceWeights,
-    10: PharaohsRestWeights
+	1: BeginForestWeights,
+	2: SunkenGroveWeights,
+	3: AncientRootsWeights,
+	4: FairyBarrierWeights,
+	5: TwilightWeights,
+	6: ScorchingDunesWeights,
+	7: MirageOasisWeights,
+	8: SandstormPassWeights,
+	9: PyramidEntranceWeights,
+	10: PharaohsRestWeights,
+	11: SnowyFoothillsWeights,
+	12: FrozenCliffsWeights,
+	13: WindHowlRidgeWeights,
+	14: FrozenCaveWeights,
+	15: IceDungeonWeights
 }
