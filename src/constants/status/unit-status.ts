@@ -129,7 +129,7 @@ export const UnitStatus = {
 		name: '寒冷',
 		icon: '🔵',
 		duration: 5,
-		description: '降低 5 點 閃避值與命中值',
+		description: '降低 5 點閃避值與命中值，可堆疊。當寒冷達一定程度後會額外造成凍傷效果,以及可能造成冰凍而無法行動',
 		bonus: {
 			dodge: -5,
 			hit: -5
@@ -138,7 +138,7 @@ export const UnitStatus = {
 	Frostbite: {
 		name: '凍傷',
 		icon: '❄️',
-		duration: 5,
+		duration: 3,
 		description: '每回合扣除 20 點生命',
 		type: 'damage',
 		value: 20
@@ -146,8 +146,8 @@ export const UnitStatus = {
 	Frozen: {
 		name: '冰凍',
 		icon: '🥶',
-		duration: 2,
-		description: '被冰凍住了,無法行動外還會扣除 10 點防禦',
+		duration: 1,
+		description: '被凍住了,無法行動外還會扣除 10 點防禦',
 		type: 'stuck',
 		bonus: {
 			adDefend: -10

@@ -113,12 +113,12 @@ export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => 
 			currentStatus.bonus.dodge -= 5
 			currentStatus.bonus.hit -= 5
 			currentStatus.duration = 5
-			currentStatus.description = currentStatus.description.replace(/\d+/, currentStatus.value.toString())
+			currentStatus.description = currentStatus.description.replace(/\d+/, Math.abs(currentStatus.bonus.dodge).toString())
 			if (currentStatus.bonus.dodge < -30) {
 				playerStore.addStatus(UnitStatus.Frostbite)
 				logStore.logger.add(`你凍傷了。`);
 			}
-			if (currentStatus.bonus.dodge < -50) {
+			if (currentStatus.bonus.dodge < -70) {
 				if (checkProbability(0.2)) {
 					return
 				}

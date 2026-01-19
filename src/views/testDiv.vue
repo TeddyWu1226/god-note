@@ -27,21 +27,21 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  // gameStateStore.currentStage = 6
-  // playerStore.gainExp({amount: 700})
+  gameStateStore.currentStage = 11
+  playerStore.gainExp({amount: 1300})
   // playerStore.addSkill(Skills.FireBall.id)
-  playerStore.addSkill(Skills.MagicDefend.id)
-  playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
+  // playerStore.addSkill(Skills.MagicDefend.id)
+  // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
 }
 const give = () => {
-  playerStore.addGold(1000)
-  playerStore.gainItem(Potions.Heal1, 5)
+  playerStore.addGold(10000)
+  playerStore.gainItem(Potions.Heal1, 10)
   playerStore.gainItem(Accessory2.SoulAnchor)
+  playerStore.gainItem(Head.HpHead2)
+  playerStore.gainItem(Armor.Armor2)
+  playerStore.gainItem(Offhand.Shield2)
+  playerStore.gainItem(Weapon.Sword2)
   // playerStore.gainItem(Weapon.MagicStick1)
-  // playerStore.gainItem(Weapon.Sword1)
-  // playerStore.gainItem(Head.HpHead1)
-  // playerStore.gainItem(Armor.Armor1)
-  // playerStore.gainItem(Offhand.Shield1)
   // playerStore.gainItem(Offhand.Book1)
   // playerStore.info.hpLimit = 130
 
