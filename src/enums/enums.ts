@@ -35,6 +35,7 @@ export enum SpecialEventEnum {
     Gamble = 'Gamble',    // 賭博
     Chest = 'Chest',    // 寶箱事件
     Potion = 'Potion', // 藥水事件
+    BushSearch = 'BushSearch', // 草叢翻找事件
 
     // 休息跳轉事件
     Storyteller = 'Storyteller',

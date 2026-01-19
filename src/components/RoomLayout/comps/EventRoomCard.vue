@@ -26,10 +26,6 @@ const GeneralEvent = [
     canAppear: () => true
   },
   {
-    type: SpecialEventEnum.Potion,
-    canAppear: () => true
-  },
-  {
     type: SpecialEventEnum.GetFruit, // 魔樹事件
     canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
   },
@@ -52,6 +48,7 @@ const GeneralEvent = [
     }
   },
 ];
+
 
 // 第二區域才開放的事件(stage >=6)
 const ScorchedSandsEvent = [
@@ -82,6 +79,8 @@ const ScorchedSandsEvent = [
     }
   }
 ]
+// 第三區才有
+const IcyPlateauEvent = []
 
 /**
  * 獲取當前允許的所有隨機事件
@@ -89,9 +88,23 @@ const ScorchedSandsEvent = [
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
   let allowEvent = [...GeneralEvent]
-  if (gameStateStore.currentStage >= 6) {
+  if (gameStateStore.currentStage >= 6 && gameStateStore.currentStage <= 10) {
     allowEvent = allowEvent.concat(ScorchedSandsEvent)
   }
+
+  if (gameStateStore.currentStage >= 11 && gameStateStore.currentStage <= 16) {
+    allowEvent = allowEvent.concat(IcyPlateauEvent)
+  }
+
+
+  if (gameStateStore.currentStage >= 11) {
+    // 山區開始提供樹叢事件
+    allowEvent.push({
+      type: SpecialEventEnum.BushSearch,
+      canAppear: () => gameStateStore.currentStage >= 11
+    })
+  }
+
   return allowEvent
       .filter(event => !gameStateStore.isEventClose(event.type))
       .filter(event => event.canAppear())

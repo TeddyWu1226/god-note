@@ -128,4 +128,10 @@ export const UserStatus = {
 			adDefend: 5
 		}
 	} as StatusEffect,
+	Warming: {
+		name: '溫暖',
+		icon: '🤗',
+		duration: 5,
+		description: '身體感受到溫暖,暫時不會受到寒冷狀態',
+	} as StatusEffect,
 }

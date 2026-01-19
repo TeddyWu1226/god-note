@@ -7,6 +7,7 @@ import {MistyForestMonster} from "@/constants/monsters/monster-info/1-misty-fore
 import {create} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {UserStatus} from "@/constants/status/user-status";
 
 
 export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => void> = {
@@ -104,6 +105,9 @@ export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => 
 		}
 	},
 	frozenOnAttack: ({playerStore, logStore}) => {
+		if (playerStore.hasStatus(UserStatus.Warming.name)) {
+			return;
+		}
 		if (checkProbability(0.3)) {
 			return
 		}
