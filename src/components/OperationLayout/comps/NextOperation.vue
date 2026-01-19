@@ -33,8 +33,10 @@ const createNextRooms = () => {
 
 const selectRoom = (roomValue: number) => {
   gameStateStore.setRoom(roomValue)
-  gameStateStore.days += 1
-  trackerStore.achievementsCount.peaceDay += 1
+  if (roomValue !== RoomEnum.Event.value) {
+    gameStateStore.days += 1
+    trackerStore.achievementsCount.peaceDay += 1
+  }
   gameStateStore.nextRooms = []
 };
 
@@ -48,7 +50,7 @@ const goNextStage = () => {
     playerStore.addStatus(EvnStatus.Sandstorm)
     useEpicSubtitle("沙塵暴席捲整個地區...", 2000);
   }
-  if(gameStateStore.currentStage > 8){
+  if (gameStateStore.currentStage > 8) {
     playerStore.removeStatus(EvnStatus.Sandstorm.name)
   }
 }
