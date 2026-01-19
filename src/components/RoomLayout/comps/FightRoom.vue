@@ -89,10 +89,11 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 const getWeightByStage = () => {
   const monsterMap = stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
-  if (trackStore.getKillCount(Monster.DuneBeast.name, 'current') > 0) {
+  if (trackStore.getKillCount(Monster.DuneBeast.name, 'total') > 0) {
+    console.log('刪掉了')
     delete monsterMap.DuneBeast;
   }
-  return stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
+  return monsterMap || EndlessWeights;
 }
 
 //生成菁英戰鬥
