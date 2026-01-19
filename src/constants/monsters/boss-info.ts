@@ -146,6 +146,7 @@ export const Boss = {
 		hpLimit: 600,
 		level: 12,
 		dropGold: 750,
+		chaseIncrease: 200,
 		onStart: 'mirageOasisOnStart',
 		onAttacked: 'mirageOasisOnAttacked',
 		drop: [
@@ -168,6 +169,7 @@ export const Boss = {
 		hpLimit: 400,
 		level: 13,
 		dropGold: 900,
+		chaseIncrease: 100,
 		onStart: 'sandstormPassOnStart',
 		onAttacked: 'cactusSpiritOnAttacked',
 		drop: [
@@ -190,6 +192,7 @@ export const Boss = {
 		hpLimit: 500,
 		level: 15,
 		dropGold: 500,
+		chaseIncrease: 200,
 		onStart: 'pyramidEntranceOnStart',
 		onAttacked: 'pyramidEntranceOnAttacked',
 	} as MonsterType,
@@ -208,7 +211,8 @@ export const Boss = {
 		hp: 500,
 		hpLimit: 500,
 		level: 15,
-		dropGold: 500
+		dropGold: 500,
+		chaseIncrease: 200,
 	} as MonsterType,
 	PharaohsRest: {
 		icon: '👑',
@@ -226,6 +230,7 @@ export const Boss = {
 		hpLimit: 800,
 		level: 20,
 		dropGold: 1200,
+		chaseIncrease: 200,
 		onStart: 'pharaohsRestOnStart',
 		onDead: 'pharaohsRestOnDead',
 		onAttack: 'pharaohsRestOnAttack',

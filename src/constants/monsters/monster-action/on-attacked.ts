@@ -177,5 +177,5 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 				gameStateStore.currentEnemy.push(create(m))
 			}
 		}
-	},
+	}
 };

@@ -127,7 +127,7 @@ export const UnitStatus = {
 	} as StatusEffect,
 	Cold: {
 		name: '寒冷',
-		icon: '🔵',
+		icon: '🔵5',
 		duration: 5,
 		description: '降低 5 點閃避值與命中值，可堆疊。當寒冷達一定程度後會額外造成凍傷效果,以及可能造成冰凍而無法行動',
 		bonus: {

@@ -6,7 +6,7 @@ export const IcyPlateauMonster = {
 	IceSlime: {
 		icon: '🔵',
 		name: '冰霜史萊姆',
-		description: '寒冷冰氣的冰屬性史萊姆，被攻擊的話有機會會被凍結。',
+		description: '寒冷冰氣的冰屬性史萊姆，被攻擊的話有機率造成寒冷狀態。',
 		level: 16,
 		hp: 60,
 		hpLimit: 60,
@@ -42,7 +42,7 @@ export const IcyPlateauMonster = {
 	SmallSnowGolem: {
 		icon: '☃️',
 		name: '小雪怪',
-		description: '魔力吸引而生成的雪像魔物,有一定威脅性',
+		description: '魔力吸引而生成的雪像魔物,有一定威脅性，被攻擊的話有機率造成寒冷狀態',
 		level: 17,
 		ad: 18,
 		hp: 100,
@@ -60,7 +60,7 @@ export const IcyPlateauMonster = {
 	FrozenSkull: {
 		icon: '💀',
 		name: '冰凍骷髏',
-		description: '被凍死在高原上的冒險者遺骸，靈魂因寒冷而痛苦不堪。',
+		description: '被凍死在高原上的冒險者遺骸，靈魂因寒冷而痛苦不堪，被攻擊的話有機率造成寒冷狀態。',
 		level: 18,
 		hp: 85,
 		hpLimit: 85,

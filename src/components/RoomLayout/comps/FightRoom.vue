@@ -21,7 +21,6 @@ import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/monsters/boss-info";
-import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
 import {useLogStore} from "@/store/log-store";
 import {MonsterOnStart} from "@/constants/monsters/monster-action/on-start";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
@@ -29,7 +28,6 @@ import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {Skills} from "@/constants/skill/skill";
-import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 import {checkProbability} from "@/utils/math";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {Monster} from "@/constants/monsters/monster-info";
@@ -44,7 +42,7 @@ const currentRoomValue = computed(() => {
     }
 )
 
-const monsterCardRefs = ref<MonsterCardExposed[]>([]);
+const MonsterCardRefs = ref<MonsterCardExposed[]>([]);
 const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 特殊掉落
@@ -90,7 +88,6 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 const getWeightByStage = () => {
   const monsterMap = stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
   if (trackStore.getKillCount(Monster.DuneBeast.name, 'total') > 0) {
-    console.log('刪掉了')
     delete monsterMap.DuneBeast;
   }
   return monsterMap || EndlessWeights;
@@ -153,43 +150,15 @@ const handleMonsterSelect = (index: number) => {
  */
 
 const monsterMove = () => {
-  gameStateStore.currentEnemy?.forEach((selectedMonster, index) => {
-    // 被暈眩
-    if (selectedMonster.status?.some(stats => stats.type === 'stuck')) {
-      return
-    }
-    // 特殊效果
-    if (selectedMonster.onAttack && MonsterOnAttack[selectedMonster.onAttack]) {
-      // 執行對應的函式
-      const targetElement = monsterCardRefs.value[index];
-      MonsterOnAttack[selectedMonster.onAttack]({
-        monster: selectedMonster,
-        monsterIndex: index,
-        playerStore: playerStore,
-        gameStateStore: gameStateStore,
-        logStore: logStore,
-        targetElement: targetElement.$el
-      });
-    }
-    // 傷害計算
-    applyAttackDamage(getEffectiveStats(selectedMonster), playerStore.finalStats, selectedMonster);
+  Object.values(MonsterCardRefs.value).forEach((card) => {
+    card?.monsterMove()
   })
 }
 
-const whenMonsterDead = (selectedMonster: MonsterType) => {
-  // 觸發死亡被動
-  if (selectedMonster.onDead && MonsterOnDead[selectedMonster.onDead]) {
-    // 執行對應的函式
-    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
-    MonsterOnDead[selectedMonster.onDead]({
-      monster: selectedMonster,
-      playerStore: playerStore,
-      gameStateStore: gameStateStore,
-      logStore: logStore,
-      targetElement: targetElement.$el
-    });
-  }
-  if (selectedMonster.hp > 0) {
+const whenMonsterDead = (monsterIndex: number) => {
+  const selectedMonster = gameStateStore.currentEnemy[monsterIndex]
+  if (!selectedMonster) {
+    console.error('找不到對應的怪物資訊', monsterIndex)
     return
   }
   // 紀錄擊殺
@@ -210,20 +179,17 @@ const whenMonsterDead = (selectedMonster: MonsterType) => {
   // 特殊掉落道具
   specialExtraDrop()
   // 移除死亡怪
-  gameStateStore.currentEnemy.splice(selectedMonsterIndex.value, 1);
+  gameStateStore.currentEnemy.splice(monsterIndex, 1);
+  MonsterCardRefs.value.splice(monsterIndex, 1);
   // 確保選中狀態同步：如果選中的怪物被移除了，則取消選中
-  if (selectedMonsterIndex.value >= gameStateStore.currentEnemy.length) {
-    selectedMonsterIndex.value = null;
+  if (monsterIndex >= gameStateStore.currentEnemy.length) {
+    monsterIndex = null;
   }
+  // 檢查怪物是否都死亡
+  checkAllMonsterDead()
 }
 
 const checkAllMonsterDead = () => {
-  //檢查每個怪物血量是否死亡
-  gameStateStore.currentEnemy.forEach((monster) => {
-    if (monster.hp <= 0) {
-      whenMonsterDead(monster)
-    }
-  })
   // 怪物全部死亡
   if (gameStateStore.currentEnemy.length === 0) {
     gameStateStore.setBattleWon(true)
@@ -269,15 +235,11 @@ const onAttack = () => {
         getEffectiveStats(selectedMonster), selectedMonster)
   }
 
-  // 檢查怪物是否死亡
-  checkAllMonsterDead()
   // 怪物行動
   monsterMove()
+  // 回合結束判定
   gameStateStore.tickAllMonsters()
-  // 玩家回合結束判定
   onPlayerTurnEnd()
-  // 檢查怪物是否死亡
-  checkAllMonsterDead()
 }
 // 物品使用
 const onItemSkill = ({skillKey, callback, el}) => {
@@ -296,8 +258,6 @@ const onItemSkill = ({skillKey, callback, el}) => {
         targetElement: el
       }
   )
-  // 檢查怪物是否死亡
-  checkAllMonsterDead()
 }
 const isUsing = ref(false)
 // 技能使用
@@ -307,7 +267,7 @@ const onSkill = async (skillKey: string) => {
   if (isUsing.value) return
   isUsing.value = true
   if (!isPlayerStuck()) {
-    const targetElement = monsterCardRefs.value[selectedMonsterIndex.value];
+    const targetElement = MonsterCardRefs.value[selectedMonsterIndex.value];
     // 加上 await 確保技能動作執行完畢
     const useSkill = Skills[skillKey] as SkillType
     const success = await useSkill.use({
@@ -333,15 +293,11 @@ const onSkill = async (skillKey: string) => {
       playerStore.info.hp = Math.max(0, newHP)
     }
   }
-  // 檢查怪物是否死亡
-  checkAllMonsterDead()
   // 怪物行動
   monsterMove()
   gameStateStore.tickAllMonsters()
   // 玩家回合結束判定
   onPlayerTurnEnd()
-  // 檢查怪物是否死亡
-  checkAllMonsterDead()
   isUsing.value = false
 };
 // 逃跑
@@ -351,7 +307,6 @@ const onRun = () => {
     emit('runFailed', true)
     monsterMove()
     gameStateStore.tickAllMonsters()
-    checkAllMonsterDead()
   } else {
     isEscape.value = true
     gameStateStore.setBattleWon(true)
@@ -405,7 +360,7 @@ const init = () => {
           playerStore: playerStore,
           gameStateStore: gameStateStore,
           logStore: logStore,
-          targetElement: monsterCardRefs.value[index].$el,
+          targetElement: MonsterCardRefs.value[index].$el,
         });
       }
     })
@@ -420,12 +375,14 @@ if (!gameStateStore.isBattleWon) {
 <template>
   <div class="fight">
     <MonsterCard
-        :ref="(el) => { if (el) monsterCardRefs[index] = el as MonsterCardExposed }"
+        :ref="(el) => { if (el) MonsterCardRefs[index] = el as MonsterCardExposed }"
         v-for="(monster,index) in gameStateStore.currentEnemy"
         :key="index"
         :info="monster"
+        :index="index"
         :is-selected="selectedMonsterIndex === index"
         @select="handleMonsterSelect(index)"
+        @monster-die="whenMonsterDead(index)"
     />
     <div CLASS="victory-container" v-if="gameStateStore.isBattleWon">
       <span v-if="isEscape" class="run-message">你成功逃跑了!</span>

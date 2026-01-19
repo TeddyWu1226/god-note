@@ -5,16 +5,25 @@ import {computed, PropType, ref, watch} from 'vue';
 import {BattleOutcome, MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
-import {triggerDamageEffect} from "@/constants/fight-func";
+import {
+  applyAttackDamage,
+  applyRandomFloatAndRound,
+  getLootFromTable,
+  triggerDamageEffect
+} from "@/constants/fight-func";
 import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
+import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
+import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 
 const props = defineProps({
   info: {type: Object as PropType<MonsterType>},
-  isSelected: {type: Boolean, default: false} // ⭐️ 新增：接收選中狀態
+  index: {type: Number},
+  isSelected: {type: Boolean, default: false} //選中狀態,
+
 });
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'monsterDie']);
 const handleClick = () => {
   emit('select', props.info);
 };
@@ -42,9 +51,6 @@ const shake = (time = 500) => {
   }, time);
 };
 
-defineExpose({
-  shake
-});
 
 const valueClass = (valueKey: string) => {
   if (finalStats.value[valueKey] > props.info[valueKey]) {
@@ -56,6 +62,42 @@ const valueClass = (valueKey: string) => {
 }
 const CardRef = ref(null);
 
+/**
+ * 怪物行動
+ */
+
+const monsterMove = () => {
+  // 被暈眩
+  if (props.info.status?.some(stats => stats.type === 'stuck')) {
+    return
+  }
+  if (props.info.hp <= 0) {
+    return;
+  }
+  monsterAttack()
+}
+
+// 怪物攻擊
+const monsterAttack = () => {
+
+  // 特殊效果
+  if (props.info.onAttack && MonsterOnAttack[props.info.onAttack]) {
+    // 執行對應的函式
+    MonsterOnAttack[props.info.onAttack]({
+      monster: props.info,
+      monsterIndex: props.index,
+      playerStore: playerStore,
+      gameStateStore: gameStateStore,
+      logStore: logStore,
+      targetElement: CardRef.value
+    });
+  }
+  // 傷害計算
+  applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
+}
+/**
+ * 怪物被攻擊
+ */
 const onMonsterAttacked = (damageOutput: BattleOutcome) => {
   if (props.info.onAttacked && MonsterOnAttacked[props.info.onAttacked]) {
     MonsterOnAttacked[props.info.onAttacked]({
@@ -68,8 +110,42 @@ const onMonsterAttacked = (damageOutput: BattleOutcome) => {
     });
   }
 }
+/**
+ * 怪物死亡
+ */
+const onMonsterDie = () => {
+  // 觸發死亡被動
+  if (props.info.onDead && MonsterOnDead[props.info.onDead]) {
+    // 執行對應的函式
+    MonsterOnDead[props.info.onDead]({
+      monster: props.info,
+      playerStore: playerStore,
+      gameStateStore: gameStateStore,
+      logStore: logStore,
+      targetElement: CardRef.value
+    });
+  }
+  if (props.info.hp > 0) {
+    return
+  }
+  // 確實死亡後觸發
+  emit('monsterDie', props.index)
+}
 
-// 核心監控邏輯
+// 監控是否死亡
+watch(() => props.info?.hp, (newResult) => {
+  if (props.info?.hp <= 0) {
+    onMonsterDie()
+  }
+}, {deep: true});
+
+defineExpose({
+  shake,
+  monsterMove,
+  monsterAttack
+});
+
+// 監控是否受到傷害
 watch(() => props.info.lastDamageResult, (newResult) => {
   if (newResult && CardRef.value) {
     triggerDamageEffect(newResult, CardRef.value.$el);
@@ -81,6 +157,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     }
   }
 }, {deep: true});
+
+
 </script>
 
 <template>
@@ -110,7 +188,7 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     </div>
     <el-tooltip>
       <template #content>
-        <p>{{ props.info.name }} Lv.{{ props.info.level}}</p>
+        <p>{{ props.info.name }} Lv.{{ props.info.level }}</p>
         <p>{{ props.info.description }}</p>
       </template>
       <el-row v-if="isDead" style="width: 100%" justify="center">
@@ -153,9 +231,10 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 </template>
 
 <style scoped>
-.monster-icon{
+.monster-icon {
   font-size: 1.8rem;
 }
+
 .monster-card {
   display: flex;
   align-items: center;
@@ -194,7 +273,6 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 p {
   line-height: 1;
 }
-
 
 
 /* ------------------- 抖動特效 (@keyframes) ------------------- */
@@ -256,7 +334,8 @@ p {
 .is-debuff {
   filter: drop-shadow(0 0 2px red);
 }
-:deep(.el-card__body){
+
+:deep(.el-card__body) {
   padding: 1rem;
 }
 </style>

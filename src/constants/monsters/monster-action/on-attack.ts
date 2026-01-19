@@ -80,6 +80,8 @@ export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => 
 		logStore.logger.add(`你被腐臭破防了。`);
 	},
 	pharaohsRestOnAttack: ({playerStore, monster, gameStateStore, logStore, targetElement}) => {
+		playerStore.addStatus(UnitStatus.MummyRancid)
+		logStore.logger.add(`你被腐臭破防了。`);
 		if (!monster.tick) {
 			monster.tick = {}
 			monster.tick['pharaohsRest'] = 0
@@ -113,6 +115,7 @@ export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => 
 			currentStatus.bonus.dodge -= 5
 			currentStatus.bonus.hit -= 5
 			currentStatus.duration = 5
+			currentStatus.icon = currentStatus.icon.replace(/\d+/, Math.abs(currentStatus.bonus.dodge).toString())
 			currentStatus.description = currentStatus.description.replace(/\d+/, Math.abs(currentStatus.bonus.dodge).toString())
 			if (currentStatus.bonus.dodge < -30) {
 				playerStore.addStatus(UnitStatus.Frostbite)
