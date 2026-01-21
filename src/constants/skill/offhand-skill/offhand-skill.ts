@@ -31,4 +31,23 @@ export const OffhandSkill = {
 			return true
 		}
 	} as SkillType,
+	MagicRegain: {
+		id: 'MagicRegain',
+		name: "法力恢復",
+		icon: "🌱",
+		description: ({playerStore}) => {
+			const value = (playerStore.info.equips.offhand.spLimit ?? 0) / 4
+			return `喚起書中魔力文字,立刻恢復 ${value} 點法力`;
+		},
+		costSp: 0,
+		use: async ({monster, playerStore}) => {
+			const value = (playerStore.info.equips.offhand.spLimit ?? 0) / 4
+			playerStore.info.sp = Math.min(playerStore.info.sp + value, playerStore.finalStats.spLimit)
+			useFullScreenEffect({
+				message: '法力恢復',
+				color: 'blue'
+			});
+			return true
+		}
+	} as SkillType,
 }
