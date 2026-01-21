@@ -6,8 +6,8 @@ import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {getRandomElements} from "@/utils/math";
-import {UserStatus} from "@/constants/status/user-status";
 import {StatusEffect} from "@/types";
+import EvnStatus from "@/constants/status/evn-status";
 
 /**
  * 狀態控制 (eventAction)
@@ -85,7 +85,7 @@ const drinkPotion = () => {
       // 45% 機率：獲得狀態效果 (Buff/Debuff)
       resultType.value = 'debuff';
       const randomStatus = getRandomElements([
-        UserStatus.Focus, UserStatus.Excited, UserStatus.Blind, UserStatus.Weak, UserStatus.Poison
+        EvnStatus.Focus, EvnStatus.Excited, EvnStatus.Blind, EvnStatus.Weak, EvnStatus.Poison
       ], 1)[0];
 
       buff.value = randomStatus;

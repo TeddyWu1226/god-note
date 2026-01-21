@@ -2,11 +2,12 @@ import {NoneMonsterItemSkillParams, SpecifyMonsterItemSkillParams} from "@/types
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {GameState} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {UserStatus} from "@/constants/status/user-status";
+import {ItemStatus} from "@/constants/status/item-status";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {Boss} from "@/constants/monsters/boss-info";
 import {useSaveStore} from "@/store/save-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
+import EvnStatus from "@/constants/status/evn-status";
 
 export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | SpecifyMonsterItemSkillParams) => void> = {
 	// 選擇回合使用
@@ -46,7 +47,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 	useSmokeBomb: ({playerStore, gameStateStore, callback, targetElement}) => {
 		const isFightRoom = gameStateStore.roomIs([RoomEnum.Fight.value, RoomEnum.EliteFight.value])
 		if (isFightRoom && gameStateStore.stateIs(GameState.EVENT_PHASE)) {
-			playerStore.addStatus(UserStatus.SmokeBomb)
+			playerStore.addStatus(ItemStatus.SmokeBomb)
 			showEffect(targetElement, "😶‍🌫️😶‍🌫️😶‍🌫️", "fullscreen")
 			callback(true)
 			return
@@ -57,7 +58,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 	useCamouflageGrass: ({playerStore, gameStateStore, callback, targetElement}) => {
 		const isFightRoom = gameStateStore.roomIs([RoomEnum.Fight.value, RoomEnum.EliteFight.value])
 		if (isFightRoom && gameStateStore.stateIs(GameState.EVENT_PHASE)) {
-			playerStore.addStatus(UserStatus.CamouflageGrass)
+			playerStore.addStatus(ItemStatus.CamouflageGrass)
 			showEffect(targetElement, "🫣🫣🫣", "fullscreen")
 			callback(true)
 			return
@@ -75,7 +76,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 				return
 			}
 			if (monster) {
-				gameStateStore.addEffectToMonster(monsterIndex, UserStatus.OnBurn)
+				gameStateStore.addEffectToMonster(monsterIndex, ItemStatus.OnBurn)
 				callback(true)
 				return
 			}
@@ -138,7 +139,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 	},
 	useWarmFruit: (params: SpecifyMonsterItemSkillParams) => {
 		const {playerStore, callback, targetElement} = params;
-		playerStore.addStatus(UserStatus.Warming)
+		playerStore.addStatus(ItemStatus.Warming)
 		callback(true)
 		return;
 	},
@@ -146,7 +147,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 		const {playerStore, callback, targetElement} = params;
 		playerStore.removeStatus('寒冷');
 		showEffect(targetElement, "寒冷狀態已消除,但中毒了", 'buff')
-		playerStore.addStatus(UserStatus.Poison)
+		playerStore.addStatus(EvnStatus.Poison)
 		callback(true)
 		return;
 

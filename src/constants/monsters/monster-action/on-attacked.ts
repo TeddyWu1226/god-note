@@ -6,7 +6,7 @@ import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {create} from "@/utils/create";
 import {Material} from "@/constants/items/material/material-info";
-import {UserStatus} from "@/constants/status/user-status";
+import {ItemStatus} from "@/constants/status/item-status";
 import {Boss} from "@/constants/monsters/boss-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {Monster} from "@/constants/monsters/monster-info";
@@ -41,7 +41,7 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
 		}
 	},
 	cactusSpiritOnAttacked: ({monster, playerStore, targetElement, logStore}) => {
-		if (monster.status?.some((status) => status.name === UserStatus.OnBurn.name)) {
+		if (monster.status?.some((status) => status.name === ItemStatus.OnBurn.name)) {
 			logStore.logger.add(`仙人掌的尖刺被燒掉了,無法對你噴射尖刺`);
 			return
 		}

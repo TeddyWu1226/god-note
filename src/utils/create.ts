@@ -1,4 +1,4 @@
-import {EquipmentType, UsableType, RoomWeights} from "@/types";
+import {EquipmentType, UsableType, RoomWeights, StatusEffect, BonusType} from "@/types";
 
 /**
  * 建立物件
@@ -7,15 +7,15 @@ import {EquipmentType, UsableType, RoomWeights} from "@/types";
  * @returns 一個新的、深度獨立物件。
  */
 export function create<T extends object>(source: T): T {
-    let deepCopy: T;
-    try {
-        deepCopy = JSON.parse(JSON.stringify(source)) as T;
-    } catch (e) {
-        console.error("深複製失敗，可能存在循環引用或無法序列化的特殊結構。", e);
-        // 如果深複製失敗，退回到淺複製（這可能會導致部分屬性仍有引用關聯）
-        deepCopy = {...source};
-    }
-    return deepCopy as T;
+	let deepCopy: T;
+	try {
+		deepCopy = JSON.parse(JSON.stringify(source)) as T;
+	} catch (e) {
+		console.error("深複製失敗，可能存在循環引用或無法序列化的特殊結構。", e);
+		// 如果深複製失敗，退回到淺複製（這可能會導致部分屬性仍有引用關聯）
+		deepCopy = {...source};
+	}
+	return deepCopy as T;
 }
 
 
@@ -28,45 +28,45 @@ export function create<T extends object>(source: T): T {
  * @returns 包含隨機道具的陣列
  */
 export const getRandomItemsByQuality = (
-    count: number,
-    quality: number,
-    allowDuplicate: boolean = true,
-    ...dataSources: Record<string, EquipmentType | UsableType>[]
+	count: number,
+	quality: number,
+	allowDuplicate: boolean = true,
+	...dataSources: Record<string, EquipmentType | UsableType>[]
 ): (EquipmentType | UsableType)[] => {
-    // 1. 合併並過濾出符合品質的道具池
-    const pool = dataSources
-        .flatMap(source => Object.values(source))
-        .filter(item => item.quality === quality);
+	// 1. 合併並過濾出符合品質的道具池
+	const pool = dataSources
+		.flatMap(source => Object.values(source))
+		.filter(item => item.quality === quality);
 
-    if (pool.length === 0) {
-        console.warn(`未找到品質為 ${quality} 的道具。`);
-        return [];
-    }
+	if (pool.length === 0) {
+		console.warn(`未找到品質為 ${quality} 的道具。`);
+		return [];
+	}
 
-    const results: (EquipmentType | UsableType)[] = [];
+	const results: (EquipmentType | UsableType)[] = [];
 
-    if (allowDuplicate) {
-        // --- 情況 A: 允許重複 ---
-        for (let i = 0; i < count; i++) {
-            const randomIndex = Math.floor(Math.random() * pool.length);
-            results.push(create(pool[randomIndex]) as EquipmentType | UsableType);
-        }
-    } else {
-        // --- 情況 B: 不允許重複 ---
-        // 如果要求的數量超過池子總數，強制下修數量以免死循環
-        const finalCount = Math.min(count, pool.length);
+	if (allowDuplicate) {
+		// --- 情況 A: 允許重複 ---
+		for (let i = 0; i < count; i++) {
+			const randomIndex = Math.floor(Math.random() * pool.length);
+			results.push(create(pool[randomIndex]) as EquipmentType | UsableType);
+		}
+	} else {
+		// --- 情況 B: 不允許重複 ---
+		// 如果要求的數量超過池子總數，強制下修數量以免死循環
+		const finalCount = Math.min(count, pool.length);
 
-        // 拷貝一份池子用來做「抽取後刪除」
-        const tempPool = [...pool];
-        for (let i = 0; i < finalCount; i++) {
-            const randomIndex = Math.floor(Math.random() * tempPool.length);
-            // 使用 splice 移除已抽中的項
-            const selectedItem = tempPool.splice(randomIndex, 1)[0];
-            results.push(create(selectedItem) as EquipmentType | UsableType);
-        }
-    }
+		// 拷貝一份池子用來做「抽取後刪除」
+		const tempPool = [...pool];
+		for (let i = 0; i < finalCount; i++) {
+			const randomIndex = Math.floor(Math.random() * tempPool.length);
+			// 使用 splice 移除已抽中的項
+			const selectedItem = tempPool.splice(randomIndex, 1)[0];
+			results.push(create(selectedItem) as EquipmentType | UsableType);
+		}
+	}
 
-    return results;
+	return results;
 };
 
 /**
@@ -76,21 +76,21 @@ export const getRandomItemsByQuality = (
  * @returns 隨機挑選出的 Enum Value
  */
 export function getRandomFromArray<T>(
-    array: T[],
-    excludeList: T[] = []
+	array: T[],
+	excludeList: T[] = []
 ): T {
-    // 1. 過濾掉排除清單中的值
-    const filteredValues = array.filter(value => !excludeList.includes(value));
+	// 1. 過濾掉排除清單中的值
+	const filteredValues = array.filter(value => !excludeList.includes(value));
 
-    // 2. 安全檢查：如果過濾後沒東西了
-    if (filteredValues.length === 0) {
-        console.warn("getRandomFromEnumArray: 過濾後沒有可選的值，回傳原始陣列首項");
-        return array[0];
-    }
+	// 2. 安全檢查：如果過濾後沒東西了
+	if (filteredValues.length === 0) {
+		console.warn("getRandomFromEnumArray: 過濾後沒有可選的值，回傳原始陣列首項");
+		return array[0];
+	}
 
-    // 3. 隨機產生索引並回傳
-    const randomIndex = Math.floor(Math.random() * filteredValues.length);
-    return filteredValues[randomIndex];
+	// 3. 隨機產生索引並回傳
+	const randomIndex = Math.floor(Math.random() * filteredValues.length);
+	return filteredValues[randomIndex];
 }
 
 
@@ -101,33 +101,33 @@ export function getRandomFromArray<T>(
  */
 export function getRandomLabelByWeight(weights: RoomWeights): number {
 
-    // 1. 建立權重累積數組 (Cumulative Weight Array)
-    const weightedChoices: number[] = [];
-    let totalWeight = 0;
+	// 1. 建立權重累積數組 (Cumulative Weight Array)
+	const weightedChoices: number[] = [];
+	let totalWeight = 0;
 
-    // 遍歷權重，為每個標記建立多個條目，數量等於其權重
-    for (const [label, weight] of Object.entries(weights)) {
-        const labelValue = parseInt(label);
-        const weightValue = weight;
+	// 遍歷權重，為每個標記建立多個條目，數量等於其權重
+	for (const [label, weight] of Object.entries(weights)) {
+		const labelValue = parseInt(label);
+		const weightValue = weight;
 
-        for (let i = 0; i < weightValue; i++) {
-            weightedChoices.push(labelValue);
-        }
-        totalWeight += weightValue;
-    }
+		for (let i = 0; i < weightValue; i++) {
+			weightedChoices.push(labelValue);
+		}
+		totalWeight += weightValue;
+	}
 
-    if (totalWeight === 0) {
-        // 如果沒有定義權重，返回預設值 0 或拋出錯誤
-        console.warn("權重總和為零，返回預設值 0。");
-        return 0;
-    }
+	if (totalWeight === 0) {
+		// 如果沒有定義權重，返回預設值 0 或拋出錯誤
+		console.warn("權重總和為零，返回預設值 0。");
+		return 0;
+	}
 
-    // 2. 隨機選擇
-    // 生成一個從 0 到 (totalWeight - 1) 的隨機索引
-    const randomIndex = Math.floor(Math.random() * totalWeight);
+	// 2. 隨機選擇
+	// 生成一個從 0 到 (totalWeight - 1) 的隨機索引
+	const randomIndex = Math.floor(Math.random() * totalWeight);
 
-    // 3. 返回該索引對應的標記值
-    return weightedChoices[randomIndex];
+	// 3. 返回該索引對應的標記值
+	return weightedChoices[randomIndex];
 }
 
 /**
@@ -138,34 +138,80 @@ export function getRandomLabelByWeight(weights: RoomWeights): number {
  * @returns 隨機選出的實例
  */
 export const getRandomItemByWeight = <T extends object>(
-    weightMap: Record<string, number>,
-    dataPool: Record<string, T>,
-    shouldClone: boolean = true
+	weightMap: Record<string, number>,
+	dataPool: Record<string, T>,
+	shouldClone: boolean = true
 ): T => {
-    const keys = Object.keys(weightMap);
+	const keys = Object.keys(weightMap);
 
-    // 1. 過濾掉 dataPool 中不存在的 key，避免 undefined 型別問題
-    const validKeys = keys.filter(key => key in dataPool);
+	// 1. 過濾掉 dataPool 中不存在的 key，避免 undefined 型別問題
+	const validKeys = keys.filter(key => key in dataPool);
 
-    if (validKeys.length === 0) {
-        throw new Error("getRandomItemByWeight: No valid keys found in dataPool");
-    }
+	if (validKeys.length === 0) {
+		throw new Error("getRandomItemByWeight: No valid keys found in dataPool");
+	}
 
-    const totalWeight = validKeys.reduce((sum, key) => sum + weightMap[key], 0);
-    let randomNum = Math.random() * totalWeight;
+	const totalWeight = validKeys.reduce((sum, key) => sum + weightMap[key], 0);
+	let randomNum = Math.random() * totalWeight;
 
-    for (const key of validKeys) {
-        if (randomNum < weightMap[key]) {
-            const item = dataPool[key]; // 此時 TS 知道 item 必為 T
-            return shouldClone ? create<T>(item) : item;
-        }
-        randomNum -= weightMap[key];
-    }
+	for (const key of validKeys) {
+		if (randomNum < weightMap[key]) {
+			const item = dataPool[key]; // 此時 TS 知道 item 必為 T
+			return shouldClone ? create<T>(item) : item;
+		}
+		randomNum -= weightMap[key];
+	}
 
-    // 2. 兜底處理
-    const fallbackItem = dataPool[validKeys[0]];
-    return shouldClone ? create<T>(fallbackItem) : fallbackItem;
+	// 2. 兜底處理
+	const fallbackItem = dataPool[validKeys[0]];
+	return shouldClone ? create<T>(fallbackItem) : fallbackItem;
 };
 
 
 export const Sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+
+interface CustomStatus {
+	base: StatusEffect
+	bonus?: BonusType
+	duration?: number
+}
+
+export const genCustomStatus = (source: CustomStatus): StatusEffect => {
+    // 1. 深拷貝基礎模板，避免修改到原始的 StatusEffect 物件
+    const newStatus: StatusEffect = JSON.parse(JSON.stringify(source.base));
+
+    // 2. 更新回合數 (優先順序：傳入的 round > 基礎模板的 duration)
+    const finalRound = source.duration ?? newStatus.duration;
+    newStatus.duration = finalRound;
+
+    // 3. 更新數值 (Bonus)
+    // 這裡會將 source.bonus 的內容合併到 newStatus.bonus 中
+    if (source.bonus) {
+        newStatus.bonus = {
+            ...newStatus.bonus,
+            ...source.bonus
+        };
+    }
+
+    // 4. 動態替換描述中的標籤 (例如 %adDefend%, %round% 等)
+    if (newStatus.description) {
+        let updatedDesc = newStatus.description;
+
+        // 替換回合數標籤
+        updatedDesc = updatedDesc.replace(/%duration%/g, finalRound.toString());
+
+        // 遍歷所有 bonus 鍵值，動態替換對應標籤
+        // 這樣能支援 BonusType 裡面所有的屬性 (ad, adDefend, hpLimit 等)
+        if (newStatus.bonus) {
+            Object.entries(newStatus.bonus).forEach(([key, value]) => {
+                const regex = new RegExp(`%${key}%`, 'g');
+                updatedDesc = updatedDesc.replace(regex, value.toString());
+            });
+        }
+
+        newStatus.description = updatedDesc;
+    }
+
+    return newStatus;
+};

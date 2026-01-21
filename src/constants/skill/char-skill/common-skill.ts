@@ -2,7 +2,7 @@ import {SkillType} from "@/types";
 import {applySkillDamage} from "@/constants/fight-func";
 import {ColorText} from "@/utils/color";
 import {checkProbability, formatPrecision} from "@/utils/math";
-import {UserStatus} from "@/constants/status/user-status";
+import {ItemStatus} from "@/constants/status/item-status";
 
 export const CommonSkill = {
 	CommonHeal: {

@@ -5,9 +5,9 @@ import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import {Warrior1SkillEvolutionMap} from "@/constants/skill/warrior-skill";
+import {Warrior1SkillEvolutionMap} from "@/constants/skill/char-skill/warrior-skill";
 import {CharEnum} from "@/enums/char-enum";
-import {Wizard1SkillEvolutionMap} from "@/constants/skill/wizard-skill";
+import {Wizard1SkillEvolutionMap} from "@/constants/skill/char-skill/wizard-skill";
 
 const MAX_SKILLS = 5
 export const usePlayerStore = defineStore('player-info', () => {

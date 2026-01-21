@@ -5,9 +5,10 @@ import {usePlayerStore} from "@/store/player-store";
 import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
-import {UserStatus} from "@/constants/status/user-status";
+import {ItemStatus} from "@/constants/status/item-status";
 import {ElMessage} from 'element-plus';
 import {getRandomFromArray} from "@/utils/create";
+import EvnStatus from "@/constants/status/evn-status";
 
 /**
  * 狀態控制 (eventAction)
@@ -60,7 +61,7 @@ const listenToStory = () => {
   // 移除舊的BUFF
   playerStore.statusEffects = playerStore.statusEffects.filter(status => !status.name.includes('悠揚'))
   // 獲得BUFF
-  const rewardStatus = getRandomFromArray([UserStatus.SongHeal, UserStatus.SongDefend, UserStatus.SongAgile])
+  const rewardStatus = getRandomFromArray([EvnStatus.SongHeal, EvnStatus.SongDefend, EvnStatus.SongAgile])
   playerStore.addStatus(rewardStatus);
 
   resultMsg.value = `

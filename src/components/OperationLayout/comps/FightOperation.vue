@@ -6,6 +6,7 @@ import {escapePercent} from "@/constants/fight-func";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import SkillButton from "@/components/OperationLayout/comps/SkillButton.vue";
+import OffHandSkillButton from "@/components/OperationLayout/comps/OffHandSkillButton.vue";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -48,6 +49,7 @@ watch(
     <el-button type="primary" @click="emit('attack',true)">
       攻擊
     </el-button>
+    <OffHandSkillButton @click="(skillKey)=>{emit('skill',skillKey)}"/>
     <el-button
         v-if="playerStore.info.skills?.length"
         type="success"

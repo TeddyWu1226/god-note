@@ -2,9 +2,11 @@ import {SkillType} from "@/types";
 import {applySkillDamage} from "@/constants/fight-func";
 import {ColorText} from "@/utils/color";
 import {checkProbability, formatPrecision} from "@/utils/math";
-import {UserStatus} from "@/constants/status/user-status";
-import {create} from "@/utils/create";
+import {ItemStatus} from "@/constants/status/item-status";
+import {create, genCustomStatus} from "@/utils/create";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {SkillStatus} from "@/constants/status/skill-status";
+import {UsualStatus} from "@/constants/status/usual-status";
 
 export const WizardSkill = {
 	MagicBall: {
@@ -44,7 +46,7 @@ export const WizardSkill = {
 			if (monster.lastDamageResult.isHit) {
 				const percent = formatPrecision(0.1 + proficiency * 0.007, 3)
 				if (checkProbability(percent)) {
-					gameStateStore.addEffectToMonster(monsterIndex, UserStatus.OnBurn)
+					gameStateStore.addEffectToMonster(monsterIndex, ItemStatus.OnBurn)
 				}
 			}
 
@@ -63,10 +65,15 @@ export const WizardSkill = {
 		proficiency: 5,
 		use: async ({monster, playerStore}) => {
 			const defend = 5 + Math.floor(playerStore.getSkillProficiency('MagicDefend') * 0.2)
-			const status = create(UserStatus.MagicDefend)
-			status.bonus.adDefend = defend
-			status.description = `提升自身 ${defend} 點防禦，持續 3 回合`;
-			playerStore.addStatus(status)
+			playerStore.addStatus(genCustomStatus(
+				{
+					base: SkillStatus.MagicDefend,
+					bonus: {
+						adDefend: defend
+					},
+					duration: 3
+				}
+			))
 			useFullScreenEffect({
 				message: '防禦提升',
 				color: 'blue'

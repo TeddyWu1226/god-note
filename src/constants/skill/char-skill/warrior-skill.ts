@@ -2,9 +2,10 @@ import {SkillType} from "@/types";
 import {applySkillDamage} from "@/constants/fight-func";
 import {create, Sleep} from "@/utils/create";
 import {ColorText} from "@/utils/color";
-import {UserStatus} from "@/constants/status/user-status";
+import {ItemStatus} from "@/constants/status/item-status";
 import {CharEnum} from "@/enums/char-enum";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 export const WarriorSkill = {
 	DoubleHit: {
@@ -45,7 +46,7 @@ export const WarriorSkill = {
 		proficiency: 5,
 		use: async ({monster, playerStore}) => {
 			const remain = 4 + Math.floor(playerStore.getSkillProficiency('SwordMind') * 0.07)
-			const status = create(UserStatus.SwordMind)
+			const status = create(SkillStatus.SwordMind)
 			status.duration = remain
 			playerStore.addStatus(status)
 			useFullScreenEffect({
