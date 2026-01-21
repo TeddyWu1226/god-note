@@ -1,6 +1,16 @@
 import {StatusEffect} from "@/types";
 
 export const ItemStatus = {
+	Block: {
+		name: '格擋',
+		icon: '🛡️',
+		duration: 1,
+		isBuff: true,
+		description: `格擋`,
+		bonus: {
+			adDefend: 5
+		}
+	} as StatusEffect,
 	SmokeBomb: {
 		name: '煙霧迷漫',
 		icon: '😶‍🌫️',

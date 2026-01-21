@@ -21,9 +21,8 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
   <div v-if="skill" class="skill-container">
     <el-button
         class="skill-btn"
-        :type="!canAfford ? 'info' : skill?.costHp?'danger':'primary'"
+        :type="!canAfford ? 'info' : 'warning'"
         :disabled="!canAfford"
-        plain
         @click="emit('click',skill?.id)"
     >
       <span class="skill-icon">{{ skill?.icon }}</span>

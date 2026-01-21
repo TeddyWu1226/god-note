@@ -9,8 +9,8 @@ export const Offhand = {
 		position: EquipmentPosition.OFFHAND,
 		quality: 0,
 		dodge: -10,
-		adDefend: 1,
-		skill: 'HeavyDoor'
+		adDefend: 2,
+		skill: 'ShieldBlock'
 	} as EquipmentType,
 	Shield1: {
 		name: '木盾',

@@ -3,14 +3,19 @@
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {EquipmentType, ItemType, UsableType, statLabels} from "@/types";
-import {PropType} from "vue";
+import {PropType, ref} from "vue";
 import {StatEnum} from "@/enums/enums";
+import {OffhandSkill} from "../../../constants/skill/offhand-skill/offhand-skill";
+import {usePlayerStore} from "@/store/player-store";
 
+const playerStore = usePlayerStore()
 const props = defineProps({
   item: {
     type: Object as PropType<ItemType | EquipmentType | UsableType>,
   }
 })
+
+const skill = ref(props.item['skill'])
 </script>
 
 <template>
@@ -21,7 +26,14 @@ const props = defineProps({
     </h3>
 
     <p class="detail-desc">{{ props.item.description }}</p>
-
+    <template v-if="skill && OffhandSkill[skill]">
+      <el-divider content-position="left">
+        副手能力
+      </el-divider>
+      <div style="display:flex;flex-wrap: wrap">
+        {{ OffhandSkill[skill].description({playerStore: playerStore}) }}
+      </div>
+    </template>
     <el-divider v-if="props.item.usable || props.item['position']" content-position="left">
       {{ props.item.usable ? '可使用' : '裝備屬性' }}
     </el-divider>

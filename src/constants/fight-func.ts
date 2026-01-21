@@ -5,6 +5,8 @@ import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
 import {getRandomItemByWeight} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
+import {ItemStatus} from "@/constants/status/item-status";
+import {UsualStatus} from "@/constants/status/usual-status";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -104,6 +106,10 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
 
 		// 更新同步 (讓 defender 變數也拿到最新值用於回傳 outcome)
 		defender.hp = playerStore.info.hp;
+		// 額外效果
+		if(outcome.isCrit && playerStore.hasStatus(ItemStatus.Block.name)){
+			monster.status.push(UsualStatus.Stuck)
+		}
 	} else {
 		// 普通怪物的邏輯 (假設怪物是普通的 reactive 物件)
 		monster.hp = Math.max(0, monster.hp - damageTaken);

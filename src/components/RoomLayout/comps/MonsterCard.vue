@@ -7,8 +7,6 @@ import {HpProgress} from "@/components/Shared/Progress";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
 import {
   applyAttackDamage,
-  applyRandomFloatAndRound,
-  getLootFromTable,
   triggerDamageEffect
 } from "@/constants/fight-func";
 import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";

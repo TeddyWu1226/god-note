@@ -1,6 +1,13 @@
 import {StatusEffect} from "@/types";
 
 export const UsualStatus = {
+	Stuck: {
+		name: '暈眩',
+		icon: '😵‍💫',
+		duration: 2,
+		description: `這個單位暈眩中,無法行動`,
+		type: 'stuck'
+	} as StatusEffect,
 	AdDefendInCrease: {
 		name: '防禦提升',
 		icon: '🛡️',

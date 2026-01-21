@@ -35,12 +35,17 @@ const onTest = () => {
 }
 const give = () => {
   playerStore.addGold(10000)
-  playerStore.gainItem(Potions.Heal1, 10)
-  playerStore.gainItem(Accessory2.SoulAnchor)
-  playerStore.gainItem(Head.HpHead2)
-  playerStore.gainItem(Armor.Armor2)
+  // playerStore.gainItem(Potions.Heal1, 10)
+  // playerStore.gainItem(Accessory2.SoulAnchor)
+  // playerStore.gainItem(Head.HpHead2)
+  // playerStore.gainItem(Armor.Armor2)
+  playerStore.gainItem(Offhand.Shield0)
+  playerStore.gainItem(Offhand.Shield1)
   playerStore.gainItem(Offhand.Shield2)
-  playerStore.gainItem(Weapon.Sword2)
+  playerStore.gainItem(Offhand.Shield3)
+  playerStore.gainItem(Offhand.Shield4)
+  playerStore.gainItem(Offhand.Shield5)
+  // playerStore.gainItem(Weapon.Sword2)
   // playerStore.gainItem(Weapon.MagicStick1)
   // playerStore.gainItem(Offhand.Book1)
   // playerStore.info.hpLimit = 130
