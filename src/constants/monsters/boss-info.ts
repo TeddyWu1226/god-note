@@ -243,13 +243,13 @@ export const Boss = {
 	// --- 區域 3: 冰雪高地 (Icy Plateau) ---
 	// ==========================================
 	SnowyFoothills: {
-		icon: '🐻',
+		icon: '🐻‍❄️',
 		name: '冷冽的看守者',
-		description: '在嚴寒中生存的頂級獵食者,在發怒時會武裝魔力凝聚的白色外衣,大幅提升破壞力與附加寒冷效果。',
+		description: '在嚴寒中生存的巨型魔物,在發怒時會武裝魔力凝聚的白色外衣,大幅提升破壞力與附加寒冷效果。',
 		class: 'boss big',
 		ad: 35,
-		critIncrease: 200,
-		critRate: 10,
+		critIncrease: 150,
+		critRate: 15,
 		adDefend: 20,
 		apDefend: 10,
 		dodge: 15,
@@ -257,6 +257,8 @@ export const Boss = {
 		hp: 700,
 		hpLimit: 700,
 		level: 22,
+		onStart: 'snowyFoothillsOnStart',
+		onAttacked:'snowyFoothillsOnAttacked',
 		dropGold: 1500
 	} as MonsterType,
 	FrozenCliffs: {

@@ -35,10 +35,10 @@ export const MonsterOnAttack: Record<string, (params: MonsterOnAttackParams) => 
 			logStore.logger.add(`你被綑綁了。`);
 		}
 	},
-	spiderOnAttack: ({gameStateStore, monsterIndex, playerStore}) => {
+	spiderOnAttack: ({gameStateStore, monster, playerStore}) => {
 		// 獲得針對被綑綁的玩家必定爆擊的一回合效果
 		if (playerStore.statusEffects?.find(e => e.name === '綑綁')) {
-			gameStateStore.addEffectToMonster(monsterIndex, UnitStatus.SpiderHunter)
+			gameStateStore.addEffectToMonster(monster, UnitStatus.SpiderHunter)
 		}
 	},
 	twilightOnAttack: ({monster, playerStore, targetElement, logStore}) => {

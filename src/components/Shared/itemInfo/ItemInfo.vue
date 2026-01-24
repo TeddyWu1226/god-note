@@ -31,7 +31,7 @@ const skill = ref(props.item['skill'])
         副手能力
       </el-divider>
       <div style="display:flex;flex-wrap: wrap">
-        {{ OffhandSkill[skill].description({playerStore: playerStore}) }}
+        {{ OffhandSkill[skill]?.itemDescription }}
       </div>
     </template>
     <el-divider v-if="props.item.usable || props.item['position']" content-position="left">

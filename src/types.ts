@@ -303,6 +303,7 @@ export interface SkillType {
 	id: string;
 	name: string;
 	icon: string;
+	itemDescription?: string;
 	description: (prop: SkillDescriptionParams) => string; // 敘述
 	costSp?: number;
 	costHp?: number;

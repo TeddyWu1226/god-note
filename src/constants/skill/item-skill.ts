@@ -76,7 +76,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 				return
 			}
 			if (monster) {
-				gameStateStore.addEffectToMonster(monsterIndex, ItemStatus.OnBurn)
+				gameStateStore.addEffectToMonster(monster, ItemStatus.OnBurn)
 				callback(true)
 				return
 			}

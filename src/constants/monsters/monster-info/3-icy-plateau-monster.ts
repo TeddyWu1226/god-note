@@ -19,11 +19,14 @@ export const IcyPlateauMonster = {
 		critIncrease: 200,
 		dropGold: 35,
 		onAttack: 'frozenOnAttack',
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.IceSlimeItem, chance: 0.33},
+			{item: Material.LowerNormal, chance: 0.1}
+		],
 	} as MonsterType,
 	SnowBird: {
 		icon: '🦢',
-		name: '雪域冰鳥',
+		name: '雪域白鷹',
 		description: '與雪色相同潔白的羽色來隱藏自己的行蹤,從高衝甫落下來刺殺敵人。',
 		level: 16,
 		hp: 45,
@@ -36,7 +39,10 @@ export const IcyPlateauMonster = {
 		critRate: 25,
 		critIncrease: 200,
 		dropGold: 30,
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.SnowBirdItem, chance: 0.33},
+			{item: Material.LowerNormal, chance: 0.1}
+		],
 	} as MonsterType,
 
 	SmallSnowGolem: {
@@ -54,7 +60,10 @@ export const IcyPlateauMonster = {
 		critRate: 25,
 		critIncrease: 150,
 		dropGold: 45,
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.SmallSnowGolemItem, chance: 0.1},
+			{item: Material.LowerNormal, chance: 0.1}
+		],
 		onAttack: 'frozenOnAttack',
 	} as MonsterType,
 	FrozenSkull: {
@@ -90,12 +99,15 @@ export const IcyPlateauMonster = {
 		critRate: 10,
 		critIncrease: 200,
 		dropGold: 50,
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.IceSlimeItem, chance: 0.5},
+			{item: Material.LowerNormal, chance: 0.15}
+		],
 		onAttack: 'frozenOnAttack',
 	} as MonsterType,
 	SnowBird2: {
 		icon: '🦢',
-		name: '極地冰鳥',
+		name: '極地白鷹',
 		description: '與雪色相同潔白的羽色來隱藏自己的行蹤,從高衝甫落下來刺殺敵人。',
 		level: 18,
 		hp: 80,
@@ -108,7 +120,10 @@ export const IcyPlateauMonster = {
 		critRate: 25,
 		critIncrease: 200,
 		dropGold: 50,
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.SnowBirdItem, chance: 0.5},
+			{item: Material.LowerNormal, chance: 0.15}
+		],
 	} as MonsterType,
 
 	SmallSnowGolem2: {
@@ -126,12 +141,15 @@ export const IcyPlateauMonster = {
 		critRate: 25,
 		critIncrease: 150,
 		dropGold: 60,
-		drop: [{item: Material.LowerNormal, chance: 0.1}],
+		drop: [
+			{item: Material.SmallSnowGolemItem, chance: 0.2},
+			{item: Material.LowerNormal, chance: 0.15}
+		],
 		onAttack: 'frozenOnAttack',
 	} as MonsterType,
 
 	IceCrystalGargoyle: {
-		icon: '🗿',
+		icon: '𖤍',
 		name: '冰晶石像鬼',
 		description: '守護著冰雪遺跡的守衛，表皮覆蓋著堅硬的冰層。',
 		level: 20,

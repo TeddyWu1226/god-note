@@ -200,8 +200,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	}
 
 	// 施加怪物狀態
-	function addEffectToMonster(monsterIndex: number, effect: StatusEffect) {
-		const monster = currentEnemy.value[monsterIndex]
+	function addEffectToMonster(monster: MonsterType, effect: StatusEffect) {
 		const logStore = useLogStore();
 		if (!monster) return;
 		logStore.logger.add(`${monster.name} 受到 [${effect.name}] 效果。`);

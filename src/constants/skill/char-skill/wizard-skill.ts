@@ -46,7 +46,7 @@ export const WizardSkill = {
 			if (monster.lastDamageResult.isHit) {
 				const percent = formatPrecision(0.1 + proficiency * 0.007, 3)
 				if (checkProbability(percent)) {
-					gameStateStore.addEffectToMonster(monsterIndex, ItemStatus.OnBurn)
+					gameStateStore.addEffectToMonster(monster, ItemStatus.OnBurn)
 				}
 			}
 

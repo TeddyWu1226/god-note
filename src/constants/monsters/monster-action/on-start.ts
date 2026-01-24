@@ -168,4 +168,15 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
 	pharaohsRestOnStart: ({playerStore, gameStateStore, targetElement}) => {
 		useEpicSubtitle("「好久沒有活人了，但你也將成為死人並臣服於我。」", 4000);
 	},
+	snowyFoothillsOnStart: ({playerStore, gameStateStore, targetElement}) => {
+		// 額外動畫演示
+		useFloatingMessage(
+			'(發出警告的低吼)',
+			targetElement,
+			{
+				duration: 2000,
+				color: 'red'
+			}
+		);
+	},
 };
