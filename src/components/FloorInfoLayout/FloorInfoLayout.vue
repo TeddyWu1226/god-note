@@ -74,11 +74,11 @@ const STAGE_GOALS: Record<number, {
   8: {type: QuestType.SURVIVE, target: '40天', need: 40, label: '生存'},
   9: {type: QuestType.KILL, need: 50, label: '狩獵'},
   10: {type: QuestType.SURVIVE, target: '30天', need: 30, label: '生存'},
-  11: {type: QuestType.COLLECT, target: Material.SmallSnowGolemItem.name, need: 3, label: '收集'},
-  12: {type: QuestType.COLLECT, target: Material.SmallSnowGolemItem.name, need: 6, label: '收集'},
-  13: {type: QuestType.COLLECT, target: Material.SmallSnowGolemItem.name, need: 9, label: '收集'},
-  14: {type: QuestType.COLLECT, target: Material.SmallSnowGolemItem.name, need: 12, label: '收集'},
-  15: {type: QuestType.COLLECT, target: Material.SmallSnowGolemItem.name, need: 15, label: '收集'},
+  11: {type: QuestType.COLLECT, target: Material.MagicSnowStone.name, need: 3, label: '收集'},
+  12: {type: QuestType.COLLECT, target: Material.MagicSnowStone.name, need: 6, label: '收集'},
+  13: {type: QuestType.COLLECT, target: Material.MagicSnowStone.name, need: 9, label: '收集'},
+  14: {type: QuestType.COLLECT, target: Material.MagicSnowStone.name, need: 12, label: '收集'},
+  15: {type: QuestType.COLLECT, target: Material.MagicSnowStone.name, need: 15, label: '收集'},
   16: {type: QuestType.SURVIVE, target: '999天', need: 999, label: '生存(待開發)'},
 };
 // 獲取當前階段的進度數據

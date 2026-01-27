@@ -166,4 +166,14 @@ export const UnitStatus = {
             apDefend: 10
         }
     } as StatusEffect,
+    Flying: {
+        name: '飛行',
+        icon: '🪽',
+        duration: 3,
+        description: '這個單位正在飛行,大幅提升閃避機率',
+        isBuff: true,
+        bonus: {
+            dodge: 80
+        }
+    } as StatusEffect,
 }

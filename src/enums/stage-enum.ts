@@ -15,7 +15,7 @@ export const StageEnum = {
 
 	// --- 區域 3: 冰雪高地 (Icy Plateau) ---
 	SnowyFoothills: {value: 11, label: '雪域山麓地帶🏔️'},
-	FrozenCliffs: {value: 12, label: '結冰峭壁區🧊'},
+	FrozenCliffs: {value: 12, label: '結冰峭壁🧊'},
 	WindHowlRidge: {value: 13, label: '風嘯山脊地🗻'},
 	FrozenCave: {value: 14, label: '冰封洞窟🪨'},
 	IceDungeon: {value: 15, label: '冰霜地城🏰'},

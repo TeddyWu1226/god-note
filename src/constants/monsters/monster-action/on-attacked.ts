@@ -205,5 +205,18 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
             );
             gameStateStore.addEffectToMonster(monster, UnitStatus.WhiteAngry)
         }
+    },
+    frozenCliffsOnAttacked: ({monster, gameStateStore, targetElement, logStore}) => {
+        if (checkProbability(0.3)) {
+            useFloatingMessage(
+                '(拍動翅膀)',
+                targetElement,
+                {
+                    duration: 2000,
+                    color: 'blue'
+                }
+            );
+            gameStateStore.addEffectToMonster(monster, UnitStatus.Flying)
+        }
     }
 };

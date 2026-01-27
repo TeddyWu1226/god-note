@@ -15,10 +15,10 @@ export const IcyPlateauMaterial = {
         quality: 0,
         price: 20
     } as ItemType,
-    SmallSnowGolemItem: {
-        name: '魔力雪塊',
+    MagicSnowStone: {
+        name: '魔力雪晶',
         icon: '🪨',
-        description: '從雪怪身上掉落的石塊,上面附有魔力驅動的刻印。',
+        description: '上面附有魔力的雪色結晶,主要用來開啟這個地區王關的大門。',
         quality: 2,
         price: 55
     } as ItemType,

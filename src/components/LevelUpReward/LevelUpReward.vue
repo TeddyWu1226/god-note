@@ -73,6 +73,10 @@ watch(
     () => playerStore.pendingLevelUpRewards,
     (newCount) => {
       // 如果有次數且目前遮罩是關閉的，就觸發顯示
+      console.log('升等了', newCount)
+      if (newCount < 0) {
+        playerStore.pendingLevelUpRewards = 0
+      }
       if (newCount > 0 && !isShow.value) {
         if (playerStore.remainingLevelUpRewards.length === 0) {
           startRewardSequence();
