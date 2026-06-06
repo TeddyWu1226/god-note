@@ -899,3 +899,26 @@ export const Boss = {
 		dropGold: 999999999
 	} as MonsterType
 };
+
+export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType }> = {
+	1: {
+		mini: Boss.AncientRoots, // Region 1 Mini Boss (Day 50)
+		main: Boss.Twilight      // Region 1 Main Boss (Day 100)
+	},
+	2: {
+		mini: Boss.PyramidEntrance, // Region 2 Mini Boss (Day 50)
+		main: Boss.PharaohsRest     // Region 2 Main Boss (Day 100)
+	},
+	3: {
+		mini: Boss.WindHowlRidge, // Region 3 Mini Boss (Day 50)
+		main: Boss.FrozenThroneKnight // Region 3 Main Boss (Day 100)
+	},
+	4: {
+		mini: Boss.SunkenCity,    // Region 4 Mini Boss (Day 50)
+		main: Boss.LichDomain     // Region 4 Main Boss (Day 100)
+	},
+	5: {
+		mini: Boss.ElementalHabitat, // Region 5 Mini Boss (Day 50)
+		main: Boss.VolcanoCrater    // Region 5 Main Boss (Day 100)
+	}
+};

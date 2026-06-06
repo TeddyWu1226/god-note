@@ -46,6 +46,17 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
   handleUnequip(slotKey);
 }, 350)
 
+const isUpgradeable = (statValue: string) => {
+  return ['hp', 'sp', 'ad', 'ap'].includes(statValue);
+};
+
+const allocatePoint = (statValue: string) => {
+  let targetKey = statValue;
+  if (statValue === 'hp') targetKey = 'hpLimit';
+  if (statValue === 'sp') targetKey = 'spLimit';
+  playerStore.allocateStatPoint(targetKey as any);
+};
+
 </script>
 
 <template>
@@ -60,7 +71,7 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
       @mousedown.stop="handleStart"
       @touchstart.stop="handleStart"
   >
-    <el-progress type="circle" :percentage="playerStore.info.currentExp">
+    <el-progress type="circle" :percentage="playerStore.currentExpPercentage">
       <template #default>
         <span style="font-size: 0.6rem;font-weight: bold">Lv.</span>
         <span style="font-size: 1rem;font-weight: bold">{{ playerStore.info.level}}</span>
@@ -74,14 +85,29 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
       append-to-body
   >
     <div class="stats-container">
+      <div v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0" class="stat-points-banner">
+        <span>你有 <strong>{{ playerStore.info.statPoints }}</strong> 點未分配的屬性點</span>
+      </div>
       <div class="stats-grid">
         <div v-for="stat in StatEnum" :key="stat.value" class="stat-item">
-          {{ stat.icon }} {{ stat.label }}:
-          {{ playerStore.finalStats[stat.value] }}
-          <template v-if="(stat as any)?.maxKey">
-            / {{ playerStore.finalStats[(stat as any)?.maxKey] }}
-          </template>
-          {{ stat.unit }}
+          <div class="stat-info">
+            {{ stat.icon }} {{ stat.label }}:
+            {{ playerStore.finalStats[stat.value] }}
+            <template v-if="(stat as any)?.maxKey">
+              / {{ playerStore.finalStats[(stat as any)?.maxKey] }}
+            </template>
+            {{ stat.unit }}
+          </div>
+          <el-button
+              v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0 && isUpgradeable(stat.value)"
+              size="small"
+              type="warning"
+              circle
+              class="upgrade-btn"
+              @click="allocatePoint(stat.value)"
+          >
+            +
+          </el-button>
         </div>
       </div>
 
@@ -162,11 +188,48 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
 }
 
 .stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   font-size: 0.95rem;
   border-left: 3px solid #e6a23c;
+}
+
+.stat-info {
+  flex-grow: 1;
+}
+
+.upgrade-btn {
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+.stat-points-banner {
+  background: rgba(230, 162, 60, 0.15);
+  border: 1px dashed #e6a23c;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #e6a23c;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(230, 162, 60, 0.2);
+  }
+  100% {
+    opacity: 0.8;
+  }
 }
 
 .equipment-slots {

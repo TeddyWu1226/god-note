@@ -16,8 +16,7 @@ const MAX_SKILLS = 5
 export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
     const info = ref<UserType>(JSON.parse(JSON.stringify(DEFAULT_USER_INFO)));
-    const pendingLevelUpRewards = ref(0); // 升級獎勵次數
-    const remainingLevelUpRewards = ref([]);
+
     const stopValueChangeAnimation = ref<boolean>(false);
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
@@ -26,6 +25,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     const totalBonus = computed(() => {
         const bonus: Record<string, number> = {
             ad: 0,
+            ap: 0,
             critIncrease: 0,
             critRate: 0,
             adDefend: 0,
@@ -70,6 +70,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         return {
             ...info.value,
             ad: Math.max(0, info.value.ad + b.ad),
+            ap: Math.max(0, (info.value.ap || 0) + b.ap),
             adDefend: Math.max(0, info.value.adDefend + b.adDefend),
             dodge: info.value.dodge + b.dodge,
             critRate: info.value.critRate + b.critRate,
@@ -84,6 +85,11 @@ export const usePlayerStore = defineStore('player-info', () => {
             lifeSteal: info.value.lifeSteal + b.lifeSteal,
             actionValue: Math.max(0, (info.value.actionValue ?? 50) + b.actionValue),
         };
+    });
+
+    const currentExpPercentage = computed(() => {
+        const nextExp = getNextLevelExp(info.value.level)
+        return Math.min(100, Math.round((info.value.currentExp / nextExp) * 100));
     });
 
     // --- Actions ---
@@ -300,7 +306,6 @@ export const usePlayerStore = defineStore('player-info', () => {
      */
     const init = () => {
         info.value = JSON.parse(JSON.stringify(DEFAULT_USER_INFO));
-        pendingLevelUpRewards.value = 0; // 增加待領取次數
         statusEffects.value = []
         skillProficiency.value = {}
     };
@@ -482,39 +487,59 @@ export const usePlayerStore = defineStore('player-info', () => {
      * 等級提升(每階100點)
      * 等差>=1 : 10, >=2 以上 每等額外+10
      */
+    const getNextLevelExp = (level: number) => {
+        return 10 + 10 * level;
+    };
+
     const gainExp = (source: { monsterLevel?: number; amount?: number }) => {
+        let earnedExp: number
         if (source.monsterLevel) {
-            const levelDiff = source.monsterLevel - info.value.level;
-            // 1. 基礎判斷：如果等級低於自身，不獲得經驗
-            if (levelDiff < -1) {
-                return;
-            }
-            let earnedExp: number
-            if (levelDiff === -1) {
-                earnedExp = 2;
-            } else {
-                earnedExp = 10 + (levelDiff * 10);
-            }
-            // 3. 增加經驗
-            info.value.currentExp += earnedExp;
+            earnedExp = Math.max(0, -1 + source.monsterLevel * 3);
         } else {
-            info.value.currentExp += (source.amount || 0);
+            earnedExp = source.amount || 0;
         }
 
+        info.value.currentExp += earnedExp;
 
-        // 4. 固定 100 經驗升等，使用 while 處理可能跨級的情況
-        while (info.value.currentExp >= 100) {
-            info.value.currentExp -= 100;
+        // 4. 線性經驗需求升等，使用 while 處理可能跨級的情況
+        let nextExp = getNextLevelExp(info.value.level);
+        while (info.value.currentExp >= nextExp) {
+            info.value.currentExp -= nextExp;
             info.value.level += 1;
-            pendingLevelUpRewards.value += 1
+            // 每次升級獲得 5 點升級點數
+            info.value.statPoints = (info.value.statPoints || 0) + 5;
+            nextExp = getNextLevelExp(info.value.level);
         }
+    };
+
+    /**
+     * 分配屬性點數
+     */
+    const allocateStatPoint = (statKey: 'ad' | 'ap' | 'hpLimit' | 'spLimit') => {
+        if (!info.value.statPoints || info.value.statPoints <= 0) return false;
+
+        info.value.statPoints -= 1;
+
+        if (statKey === 'ad') {
+            info.value.ad += 1;
+        } else if (statKey === 'ap') {
+            info.value.ap = (info.value.ap || 0) + 1;
+        } else if (statKey === 'hpLimit') {
+            info.value.hpLimit += 10;
+            info.value.hp += 10;
+        } else if (statKey === 'spLimit') {
+            info.value.spLimit += 5;
+            info.value.sp += 5;
+        }
+
+        return true;
     };
     return {
         info, skillProficiency,
-        pendingLevelUpRewards, remainingLevelUpRewards,
         stopValueChangeAnimation,
         totalBonus,
         finalStats,
+        currentExpPercentage,
         statusEffects,
         equipItem, hasEquip,
         gainItem, hasItem, removeItem,
@@ -523,7 +548,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addSkill, removeSkill, replaceSkill, hasSkill,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
-        gainExp
+        gainExp, allocateStatPoint
     };
 }, {
     persist: {

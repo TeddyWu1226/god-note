@@ -20,7 +20,7 @@ import {create} from "@/utils/create";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
-import {Boss} from "@/constants/monsters/boss-info";
+import {Boss, StageBosses} from "@/constants/monsters/boss-info";
 import {useLogStore} from "@/store/log-store";
 import { Monster as MonsterClass } from "@/models/monster";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
@@ -28,8 +28,6 @@ import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {Skills} from "@/constants/skill/skill";
-import {checkProbability} from "@/utils/math";
-import {SpecialItem} from "@/constants/items/special-item-info";
 import {Monster} from "@/constants/monsters/monster-info";
 
 const emit = defineEmits(['runFailed'])
@@ -45,37 +43,6 @@ const currentRoomValue = computed(() => {
 const MonsterCardRefs = ref<Record<string, MonsterCardExposed>>({});
 const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
-// 特殊掉落
-const specialExtraDrop = () => {
-  // 特殊掉落道具
-  if (gameStateStore.currentRoomValue === RoomEnum.Boss.value) {
-    return
-  }
-  switch (gameStateStore.currentStage) {
-    case 5:
-      if (!playerStore.hasItem(SpecialItem.TwilightKey.name)[0]) {
-        const percent = 0.05 + (gameStateStore.days * 0.01)
-        if (checkProbability(percent)) {
-          playerStore.gainItem(SpecialItem.TwilightKey);
-          monsterDropItems.value.push(SpecialItem.TwilightKey)
-        }
-      }
-      break;
-    case 7:
-      if (!playerStore.hasItem(SpecialItem.ClearMirror.name)[0] && !(playerStore.hasItem(SpecialItem.ClearMirrorFragment.name)[1] >= 10)) {
-        const percent = gameStateStore.days * 0.01
-        if (checkProbability(percent)) {
-          playerStore.gainItem(SpecialItem.ClearMirrorFragment);
-          monsterDropItems.value.push(SpecialItem.ClearMirrorFragment)
-        }
-      }
-      break
-    default:
-      break;
-  }
-
-}
-
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
   const strengthening = 1 + gameStateStore.days * 0.01
@@ -86,7 +53,11 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 
 const getWeightByStage = () => {
-  const monsterMap = stageMonsterWeightsMap[gameStateStore.currentStage] || EndlessWeights;
+  const day = Math.max(1, gameStateStore.days)
+  const subZoneIdx = Math.min(4, Math.floor((day - 1) / 20))
+  const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
+  const originalMap = stageMonsterWeightsMap[oldStageIndex] || EndlessWeights
+  const monsterMap = { ...originalMap }
   if (trackStore.getKillCount(Monster.DuneBeast.name, 'total') > 0) {
     delete monsterMap.DuneBeast;
   }
@@ -122,8 +93,19 @@ const getStageKeyByValue = (value: number): string | undefined => {
 };
 const createBoss = () => {
   let newMonsters: MonsterType[]
-  const currentStageKey = getStageKeyByValue(gameStateStore.currentStage)
-  const boss = Boss[currentStageKey] ?? Boss.Error
+  const stageBoss = StageBosses[gameStateStore.currentStage]
+  let boss: MonsterType
+  if (stageBoss) {
+    if (gameStateStore.days === 50) {
+      boss = stageBoss.mini
+    } else if (gameStateStore.days === 100) {
+      boss = stageBoss.main
+    } else {
+      boss = stageBoss.main
+    }
+  } else {
+    boss = Boss.Error
+  }
   newMonsters = [create(boss)]
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -176,8 +158,6 @@ const whenMonsterDead = (monsterIndex: number) => {
     playerStore.gainItem(item);
     monsterDropItems.value.push(item)
   });
-  // 特殊掉落道具
-  specialExtraDrop()
   // 移除死亡怪
   gameStateStore.currentEnemy.splice(monsterIndex, 1);
   // 確保選中狀態同步

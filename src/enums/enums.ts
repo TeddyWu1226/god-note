@@ -115,8 +115,14 @@ export const StatEnum = {
     },
     ad: {
         value: 'ad',
-        label: '攻擊',
+        label: '物傷',
         icon: '⚔️',
+        unit: ''
+    },
+    ap: {
+        value: 'ap',
+        label: '法傷',
+        icon: '🔮',
         unit: ''
     },
     adIncrease: {

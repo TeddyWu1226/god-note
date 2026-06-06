@@ -7,6 +7,7 @@ export const DEFAULT_USER_INFO: UserType = {
     name: '玩家',
     icon: '🌟',
     ad: 10,
+    ap: 0,
     adDefend: 0,
     apDefend: 0,
     critIncrease: WorldDefault.critIncrease,
@@ -28,7 +29,8 @@ export const DEFAULT_USER_INFO: UserType = {
     chaseIncrease: 0,
     skills: [],
     currentExp: 0,
-    actionValue: 50
+    actionValue: 50,
+    statPoints: 0
 }
 
 // 房間類型權重

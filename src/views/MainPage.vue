@@ -15,7 +15,6 @@ import {StageTransition} from "@/components/StageTransition";
 import DeadPage from "@/views/DeadPage.vue";
 import IntroPage from "@/views/IntroPage.vue";
 import AchievementDialog from "@/components/FloorInfoLayout/comps/AchievementDialog/AchievementDialog.vue";
-import {LevelUpReward} from "@/components/LevelUpReward";
 
 const gameStateStore = useGameStateStore()
 const isDead = computed(() => gameStateStore.isDead);
@@ -99,7 +98,7 @@ const StageTransitionRef = ref()
 watch(
     () => gameStateStore.currentStage,
     (val) => {
-      if (val === StageEnum.BeginForest.value) {
+      if (val === StageEnum.MistyForest.value) {
         return
       }
       StageTransitionRef.value.playTransition(getEnumColumn(StageEnum, gameStateStore.currentStage));
@@ -205,7 +204,6 @@ watch(
       </div>
     </el-dialog>
     <AchievementDialog v-model="isShowAchievementDialog"/>
-    <LevelUpReward/>
   </el-config-provider>
 </template>
 
