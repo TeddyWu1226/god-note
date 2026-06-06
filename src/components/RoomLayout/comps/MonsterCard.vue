@@ -9,11 +9,9 @@ import {
   applyAttackDamage,
   triggerDamageEffect
 } from "@/constants/fight-func";
-import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
+import {Monster} from "@/models/monster";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
-import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
-import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 
 const props = defineProps({
   info: {type: Object as PropType<MonsterType>},
@@ -35,6 +33,23 @@ const finalStats = computed(() => getEffectiveStats(props.info));
 const isShaking = ref(false);
 
 const isDead = computed(() => props.info?.hp === 0)
+
+const isImageIcon = computed(() => {
+  const icon = props.info?.icon;
+  if (!icon) return false;
+  return icon.includes('/') || icon.includes('.') || icon.startsWith('data:image');
+});
+
+const resolveIconPath = (icon: string) => {
+  if (!icon) return '';
+  if (icon.startsWith('http') || icon.startsWith('data:image')) {
+    return icon;
+  }
+  const cleanIcon = icon.startsWith('/') ? icon.slice(1) : icon;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const formattedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${formattedBase}${cleanIcon}`;
+};
 
 /**
  * 外部調用：啟動卡片抖動動畫
@@ -79,10 +94,8 @@ const monsterMove = () => {
 const monsterAttack = () => {
 
   // 特殊效果
-  if (props.info.onAttack && MonsterOnAttack[props.info.onAttack]) {
-    // 執行對應的函式
-    MonsterOnAttack[props.info.onAttack]({
-      monster: props.info,
+  if (props.info instanceof Monster) {
+    props.info.triggerOnAttack({
       monsterIndex: props.index,
       playerStore: playerStore,
       gameStateStore: gameStateStore,
@@ -97,12 +110,11 @@ const monsterAttack = () => {
  * 怪物被攻擊
  */
 const onMonsterAttacked = (damageOutput: BattleOutcome) => {
-  if (props.info.onAttacked && MonsterOnAttacked[props.info.onAttacked]) {
-    MonsterOnAttacked[props.info.onAttacked]({
-      monster: props.info,
+  if (props.info instanceof Monster) {
+    props.info.triggerOnAttacked({
       gameStateStore: gameStateStore,
       playerStore: playerStore,
-      targetElement: CardRef.value.$el,
+      targetElement: CardRef.value?.$el,
       logStore: logStore,
       damage: damageOutput,
     });
@@ -113,10 +125,8 @@ const onMonsterAttacked = (damageOutput: BattleOutcome) => {
  */
 const onMonsterDie = () => {
   // 觸發死亡被動
-  if (props.info.onDead && MonsterOnDead[props.info.onDead]) {
-    // 執行對應的函式
-    MonsterOnDead[props.info.onDead]({
-      monster: props.info,
+  if (props.info instanceof Monster) {
+    props.info.triggerOnDead({
       playerStore: playerStore,
       gameStateStore: gameStateStore,
       logStore: logStore,
@@ -202,7 +212,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
       </el-row>
       <el-row v-else style="width: 100%" justify="space-between">
         <el-col style="text-align: center" :span="24">
-          <span class="monster-icon">{{ props.info.icon }}</span>
+          <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon" alt="monster icon" />
+          <span v-else class="monster-icon">{{ props.info.icon }}</span>
         </el-col>
         <el-col style="text-align: center;" :span="24">
           <span class="monster-name">{{ props.info.name }}</span>
@@ -231,6 +242,15 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 <style scoped>
 .monster-icon {
   font-size: 1.8rem;
+}
+
+.monster-image-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  margin: 0.1rem auto;
 }
 
 .monster-card {

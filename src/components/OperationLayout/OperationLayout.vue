@@ -11,7 +11,7 @@ import LeaveOperation from "@/components/OperationLayout/comps/LeaveOperation.vu
 import BlessOperation from "@/components/OperationLayout/comps/BlessOperation.vue";
 
 
-const emit = defineEmits(['attack', 'rest', 'cancel', 'run', 'skill']);
+const emit = defineEmits(['attack', 'rest', 'cancel', 'run', 'skill', 'endTurn']);
 const gameStateStore = useGameStateStore()
 /**戰鬥相關操作**/
 const onAttack = () => {
@@ -71,6 +71,7 @@ defineExpose({
       @skill="onSkill"
       @attack="onAttack"
       @run="onRun"
+      @end-turn="emit('endTurn')"
   />
   <RestOperation
       v-else-if="gameStateStore.roomIs([RoomEnum.Rest.value,RoomEnum.Fusion.value]) &&

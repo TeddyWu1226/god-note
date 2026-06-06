@@ -32,6 +32,7 @@ export interface qualityType {
 	runIncrease?: number // 額外逃跑值
 	// 吸血
 	lifeSteal?: number // 生命偷取(%)
+	actionValue?: number // 行動值
 }
 
 // 用來動態顯示屬性名稱的字典 (可選，讓顯示更友善)
@@ -52,6 +53,7 @@ export const statLabels: Record<keyof qualityType | 'heal' | 'magic', string> = 
 	defendIncrease: '抗性',
 	lifeSteal: '吸血',
 	runIncrease: '逃跑值',
+	actionValue: '行動值',
 };
 
 export interface ItemType {
@@ -163,17 +165,19 @@ type MonsterOnAttackedType = keyof typeof MonsterOnAttacked;
 type MonsterOnDeadType = keyof typeof MonsterOnDead;
 
 export interface MonsterType extends UnitType {
+	id?: string // 唯一識別碼
 	description?: string //介紹
 	class?: string // 卡片的特殊特效
 	drop?: DropEntry[]
 	dropGold?: number
 	status?: StatusEffect[]
-	onStart?: MonsterOnStartType // 回合開始時觸發
-	onAttack?: MonsterOnAttackType, // 怪物攻擊前觸發
-	onAttacked?: MonsterOnAttackedType // 怪物被攻擊後觸發
-	onDead?: MonsterOnDeadType// 怪物死亡時觸發
+	onStart?: MonsterOnStartType | ((params: MonsterActionParams) => void) // 回合開始時觸發
+	onAttack?: MonsterOnAttackType | ((params: MonsterOnAttackParams) => void), // 怪物攻擊前觸發
+	onAttacked?: MonsterOnAttackedType | ((params: MonsterActionParams) => void) // 怪物被攻擊後觸發
+	onDead?: MonsterOnDeadType | ((params: MonsterActionParams) => void)// 怪物死亡時觸發
 	lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
 	tick?: Record<string, number | any[]> // 行動計數器
+	roundBehavior?: string // 獨特回合行動習性
 }
 
 /**
@@ -307,6 +311,7 @@ export interface SkillType {
 	description: (prop: SkillDescriptionParams) => string; // 敘述
 	costSp?: number;
 	costHp?: number;
+	costAction?: number; // 消耗行動點數/行動值 (預設為 1)
 	use: (prop: SkillParams) => Promise<boolean> | boolean; // 回傳技能是否施展成功
 	proficiency?: number // 每次使用加多少熟練度 沒有就1
 }

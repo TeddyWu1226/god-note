@@ -10,7 +10,7 @@ import OffHandSkillButton from "@/components/OperationLayout/comps/OffHandSkillB
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
-const emit = defineEmits(['attack', 'run', 'skill']);
+const emit = defineEmits(['attack', 'run', 'skill', 'endTurn']);
 const props = defineProps({
   disabled: Boolean,
 })
@@ -56,6 +56,9 @@ watch(
         :disabled="props.disabled"
         @click="changeStatus(operationStatusEnum.Skill)">
       技能
+    </el-button>
+    <el-button type="warning" plain :disabled="props.disabled" @click="emit('endTurn')">
+      結束回合
     </el-button>
     <el-button type="danger" :disabled="props.disabled" @click="emit('run',true)">
       逃跑({{ escapeRate }}%)

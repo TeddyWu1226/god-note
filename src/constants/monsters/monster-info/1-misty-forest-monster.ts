@@ -4,7 +4,7 @@ import {Material} from "@/constants/items/material/material-info";
 
 export const MistyForestMonster = {
     Slime: {
-        icon: '🟢',
+        icon: '/monsters/slime.png',
         name: '史萊姆',
         description: '森林中最常見的粘稠生物，帶有淡淡的草本氣味',
         ad: 5,
@@ -23,7 +23,7 @@ export const MistyForestMonster = {
         onAttack: 'slimeOnAttack'
     } as MonsterType,
     ForestSprout: {
-        icon: '🌱',
+        icon: '/monsters/sprout.png',
         name: '小樹人',
         description: '被魔力扭曲的植物，雖然不會移動但生命力頑強',
         ad: 3,

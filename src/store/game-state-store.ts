@@ -2,11 +2,17 @@ import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
 import {MonsterType, StatusEffect} from "@/types";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
+import {Monster} from "@/models/monster";
+import {usePlayerStore} from "@/store/player-store";
 
 export const getEffectiveStats = (monster: MonsterType): MonsterType => {
+	if (monster instanceof Monster) {
+		return monster.getEffectiveStats();
+	}
+
 	// 基礎數值作為基底
 	const finalStats = {
 		icon: monster.icon,
@@ -68,7 +74,30 @@ export const useGameStateStore = defineStore('game-state', () => {
 	const thisStageAppear = ref<string[]>([])
 	const switchEnemy = ref<MonsterType[]>([]);
 	const difficulty = ref(DifficultyEnum.Normal.value);
-	const otherRecord = ref<Record<string, any>>({}) // 額外記錄表
+	const otherRecord = ref<Record<string, any>>({}); // 額外記錄表
+	const battleRound = ref(1); // 戰鬥回合數
+	const playerActionPoints = ref(0); // 玩家當前行動點數
+
+	// 深度監聽敵怪數據，自動重構為 Class 實例
+	watch(currentEnemy, (newVal) => {
+		if (newVal) {
+			for (let i = 0; i < newVal.length; i++) {
+				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+					newVal[i] = new Monster(newVal[i]);
+				}
+			}
+		}
+	}, { deep: true, immediate: true });
+
+	watch(switchEnemy, (newVal) => {
+		if (newVal) {
+			for (let i = 0; i < newVal.length; i++) {
+				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+					newVal[i] = new Monster(newVal[i]);
+				}
+			}
+		}
+	}, { deep: true, immediate: true });
 
 	// --- Getters (用 computed 代替) ---
 	/**
@@ -103,6 +132,8 @@ export const useGameStateStore = defineStore('game-state', () => {
 		isBattleWon.value = false;
 		currentEnemy.value = [];
 		currentEventType.value = null;
+		battleRound.value = 1;
+		playerActionPoints.value = 0;
 		lastEventType.value = null;
 		eventAction.value = 0
 		if (restart) {
@@ -119,7 +150,14 @@ export const useGameStateStore = defineStore('game-state', () => {
 		currentState.value = GameState.EVENT_PHASE;
 		// 重製事件
 		currentEventType.value = null;
-		eventAction.value = 0
+		eventAction.value = 0;
+		battleRound.value = 1;
+		playerActionPoints.value = 0;
+	}
+
+	function refillActionPoints(): void {
+		const playerStore = usePlayerStore();
+		playerActionPoints.value = Math.floor((playerStore.finalStats.actionValue ?? 50) / 50);
 	}
 
 	/**
@@ -201,18 +239,22 @@ export const useGameStateStore = defineStore('game-state', () => {
 
 	// 施加怪物狀態
 	function addEffectToMonster(monster: MonsterType, effect: StatusEffect) {
-		const logStore = useLogStore();
 		if (!monster) return;
-		logStore.logger.add(`${monster.name} 受到 [${effect.name}] 效果。`);
-		// 邏輯：如果已有同名狀態，則更新持續時間，否則新增
-		if (!monster.status) {
-			monster.status = []
-		}
-		const existingIdx = monster.status.findIndex(e => e.name === effect.name);
-		if (existingIdx > -1) {
-			monster.status[existingIdx].duration = effect.duration;
+		if (monster instanceof Monster) {
+			monster.addEffect(effect, useLogStore());
 		} else {
-			monster.status.push({...effect});
+			const logStore = useLogStore();
+			logStore.logger.add(`${monster.name} 受到 [${effect.name}] 效果。`);
+			// 邏輯：如果已有同名狀態，則更新持續時間，否則新增
+			if (!monster.status) {
+				monster.status = []
+			}
+			const existingIdx = monster.status.findIndex(e => e.name === effect.name);
+			if (existingIdx > -1) {
+				monster.status[existingIdx].duration = effect.duration;
+			} else {
+				monster.status.push({...effect});
+			}
 		}
 	}
 
@@ -222,32 +264,41 @@ export const useGameStateStore = defineStore('game-state', () => {
 	function tickAllMonsters() {
 		const logStore = useLogStore();
 		currentEnemy.value.forEach(monster => {
-
 			if (monster.hp <= 0) return;
 
-			// 1. 處理每回合跳血/回血 (DoT/HoT)
-			monster.status?.forEach(eff => {
-				let logMessage: string | undefined
-				if (eff.type === 'damage' && eff.value) {
-					logMessage = `${monster.name} 因[${eff.name}]受到了 ${eff.value} 點傷害。`;
-					monster.hp = Math.max(0, monster.hp - eff.value);
-				} else if (eff.type === 'heal' && eff.value) {
-					const finalStats = getEffectiveStats(monster); // 計算包含 buff 的上限
-					monster.hp = Math.min(finalStats.hpLimit, monster.hp + eff.value);
-					logMessage = `${monster.name} 因[${eff.name}]回復了 ${eff.value} 點生命。`;
-				}
-				if (logMessage) {
-					logStore.logger.add(logMessage);
-				}
-			});
+			if (monster instanceof Monster) {
+				// 處理 DoT/HoT 等狀態效果
+				monster.tickEffects(logStore);
+				// 處理回合習性行為
+				monster.executeRoundBehavior(battleRound.value, logStore);
+			} else {
+				// 1. 處理每回合跳血/回血 (DoT/HoT)
+				monster.status?.forEach(eff => {
+					let logMessage: string | undefined
+					if (eff.type === 'damage' && eff.value) {
+						logMessage = `${monster.name} 因[${eff.name}]受到了 ${eff.value} 點傷害。`;
+						monster.hp = Math.max(0, monster.hp - eff.value);
+					} else if (eff.type === 'heal' && eff.value) {
+						const finalStats = getEffectiveStats(monster); // 計算包含 buff 的上限
+						monster.hp = Math.min(finalStats.hpLimit, monster.hp + eff.value);
+						logMessage = `${monster.name} 因[${eff.name}]回復了 ${eff.value} 點生命。`;
+					}
+					if (logMessage) {
+						logStore.logger.add(logMessage);
+					}
+				});
 
-			// 2. 減少持續時間並過濾掉已結束的狀態
-			monster.status = monster.status?.map(eff => ({
-				...eff,
-				duration: eff.duration === -1 ? -1 : eff.duration - 1
-			}))
-				.filter(eff => eff.duration !== 0);
+				// 2. 減少持續時間並過濾掉已結束的狀態
+				monster.status = monster.status?.map(eff => ({
+					...eff,
+					duration: eff.duration === -1 ? -1 : eff.duration - 1
+				}))
+					.filter(eff => eff.duration !== 0);
+			}
 		});
+
+		// 增加回合數
+		battleRound.value += 1;
 	}
 
 	function recordThisStageAppear(key: string) {
@@ -276,6 +327,9 @@ export const useGameStateStore = defineStore('game-state', () => {
 		stateIs,
 		roomIs,
 		eventAction,
+		battleRound,
+		playerActionPoints,
+		refillActionPoints,
 		init, transitionToNextState,
 		setRoom, switchToFightRoom, switchToEventRoom, takeSwitchEnemy,
 		setCurrentEnemy, setBattleWon,

@@ -42,6 +42,10 @@ const onRun = () => {
   FightRoomRef.value?.onRun()
 }
 
+const onEndTurn = () => {
+  FightRoomRef.value?.onEndTurn()
+}
+
 const onItemSkill = ({skillKey, callback, el}) => {
   const specifySkill = [
     Usable.Campfire.skill, Usable.GodNotePage.skill, Usable.ShabbyTent.skill,
@@ -88,7 +92,8 @@ defineExpose({
   onRun,
   onRest,
   onCancel,
-  onItemSkill
+  onItemSkill,
+  onEndTurn
 })
 
 /** 初始化刷新 **/

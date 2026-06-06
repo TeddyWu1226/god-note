@@ -76,6 +76,9 @@ const onRun = () => {
 const onRest = () => {
   RoomLayoutRef.value?.onRest()
 }
+const onEndTurn = () => {
+  RoomLayoutRef.value?.onEndTurn()
+}
 const onCancel = () => {
   RoomLayoutRef.value?.onCancel()
 }
@@ -138,6 +141,7 @@ watch(
               @rest="onRest"
               @cancel="onCancel"
               @skill="onSkill"
+              @end-turn="onEndTurn"
           />
           <UserValueLayout/>
           <UserLayout class="user-layout" @on-item-skill="onItemSkill"/>

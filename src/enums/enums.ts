@@ -173,5 +173,11 @@ export const StatEnum = {
         label: '吸血',
         icon: '🩸',
         unit: '%'
+    },
+    actionValue: {
+        value: 'actionValue',
+        label: '行動值',
+        icon: '⚡',
+        unit: ''
     }
 };

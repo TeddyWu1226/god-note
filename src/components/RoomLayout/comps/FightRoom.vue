@@ -22,7 +22,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/monsters/boss-info";
 import {useLogStore} from "@/store/log-store";
-import {MonsterOnStart} from "@/constants/monsters/monster-action/on-start";
+import { Monster as MonsterClass } from "@/models/monster";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
@@ -42,7 +42,7 @@ const currentRoomValue = computed(() => {
     }
 )
 
-const MonsterCardRefs = ref<MonsterCardExposed[]>([]);
+const MonsterCardRefs = ref<Record<string, MonsterCardExposed>>({});
 const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 特殊掉落
@@ -180,10 +180,11 @@ const whenMonsterDead = (monsterIndex: number) => {
   specialExtraDrop()
   // 移除死亡怪
   gameStateStore.currentEnemy.splice(monsterIndex, 1);
-  MonsterCardRefs.value.splice(monsterIndex, 1);
-  // 確保選中狀態同步：如果選中的怪物被移除了，則取消選中
-  if (monsterIndex >= gameStateStore.currentEnemy.length) {
-    monsterIndex = null;
+  // 確保選中狀態同步
+  if (selectedMonsterIndex.value === monsterIndex) {
+    selectedMonsterIndex.value = null;
+  } else if (selectedMonsterIndex.value !== null && selectedMonsterIndex.value > monsterIndex) {
+    selectedMonsterIndex.value--;
   }
   // 檢查怪物是否都死亡
   checkAllMonsterDead()
@@ -218,8 +219,29 @@ const isPlayerStuck = () => {
 const onPlayerTurnEnd = () => {
   playerStore.nextTurnStatus()
 }
+
+const resolveRoundEnd = () => {
+  // 怪物行動
+  monsterMove()
+  // 回合結束判定
+  gameStateStore.tickAllMonsters()
+  // 玩家狀態結算
+  onPlayerTurnEnd()
+  // 補滿行動點數
+  gameStateStore.refillActionPoints()
+}
+
+const onEndTurn = () => {
+  resolveRoundEnd()
+}
+
 // 攻擊
 const onAttack = () => {
+  if (gameStateStore.playerActionPoints < 1) {
+    ElMessage.warning('行動點數不足！')
+    return
+  }
+
   // 指定怪物
   if (!selectedMonsterIndex.value) {
     selectedMonsterIndex.value = 0
@@ -229,17 +251,20 @@ const onAttack = () => {
     ElMessage.warning('無攻擊目標!')
     return
   }
+
+  // 扣除行動點數
+  gameStateStore.playerActionPoints -= 1
+
   // 傷害計算
   if (!isPlayerStuck()) {
     selectedMonster.lastDamageResult = applyAttackDamage(playerStore.finalStats,
         getEffectiveStats(selectedMonster), selectedMonster)
   }
 
-  // 怪物行動
-  monsterMove()
-  // 回合結束判定
-  gameStateStore.tickAllMonsters()
-  onPlayerTurnEnd()
+  // 檢查是否回合結束
+  if (gameStateStore.playerActionPoints <= 0) {
+    resolveRoundEnd()
+  }
 }
 // 物品使用
 const onItemSkill = ({skillKey, callback, el}) => {
@@ -265,11 +290,20 @@ const onSkill = async (skillKey: string) => {
   if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
   if (isUsing.value) return
+
+  const useSkill = Skills[skillKey] as SkillType
+  const costAction = useSkill?.costAction ?? 1
+
+  if (gameStateStore.playerActionPoints < costAction) {
+    ElMessage.warning('行動點數不足！')
+    return
+  }
+
   isUsing.value = true
   if (!isPlayerStuck()) {
-    const targetElement = MonsterCardRefs.value[selectedMonsterIndex.value];
+    const monsterId = selectedMonsterIndex.value !== null ? gameStateStore.currentEnemy[selectedMonsterIndex.value]?.id : null;
+    const targetElement = monsterId ? MonsterCardRefs.value[monsterId] : null;
     // 加上 await 確保技能動作執行完畢
-    const useSkill = Skills[skillKey] as SkillType
     const success = await useSkill.use({
       monster: selectedMonster,
       monsterIndex: selectedMonsterIndex.value,
@@ -282,6 +316,10 @@ const onSkill = async (skillKey: string) => {
       isUsing.value = false
       return
     }
+
+    // 扣除行動點數
+    gameStateStore.playerActionPoints -= costAction
+
     // 熟練度增加
     playerStore.addSkillProficiency(useSkill.id, useSkill?.proficiency ?? 1)
     if (useSkill?.costSp) {
@@ -293,12 +331,13 @@ const onSkill = async (skillKey: string) => {
       playerStore.info.hp = Math.max(0, newHP)
     }
   }
-  // 怪物行動
-  monsterMove()
-  gameStateStore.tickAllMonsters()
-  // 玩家回合結束判定
-  onPlayerTurnEnd()
+
   isUsing.value = false
+
+  // 檢查是否回合結束
+  if (gameStateStore.playerActionPoints <= 0) {
+    resolveRoundEnd()
+  }
 };
 // 逃跑
 const isEscape = ref(false)
@@ -320,7 +359,8 @@ defineExpose({
   onAttack,
   onSkill,
   onRun,
-  onItemSkill
+  onItemSkill,
+  onEndTurn
 })
 
 // --- 初始化邏輯 (讀檔機制) ---
@@ -331,8 +371,14 @@ const init = () => {
 
   // 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取
   if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {
+    if (gameStateStore.playerActionPoints <= 0) {
+      gameStateStore.refillActionPoints();
+    }
     return;
   }
+
+  // 初始化行動點數
+  gameStateStore.refillActionPoints();
 
   // 檢查是否有突襲怪物
   if (gameStateStore.switchEnemy && gameStateStore.switchEnemy.length > 0) {
@@ -353,14 +399,12 @@ const init = () => {
   // 回合開始的觸發
   nextTick().then(() => {
     gameStateStore.currentEnemy.forEach((monster, index) => {
-      if (monster.onStart && MonsterOnStart[monster.onStart]) {
-        // 執行對應的函式
-        MonsterOnStart[monster.onStart]({
-          monster: monster,
+      if (monster instanceof MonsterClass) {
+        monster.triggerOnStart({
           playerStore: playerStore,
           gameStateStore: gameStateStore,
           logStore: logStore,
-          targetElement: MonsterCardRefs.value[index].$el,
+          targetElement: MonsterCardRefs.value[monster.id]?.$el,
         });
       }
     })
@@ -374,10 +418,17 @@ if (!gameStateStore.isBattleWon) {
 
 <template>
   <div class="fight">
+    <!-- 戰鬥回合數顯示 -->
+    <div class="battle-round-badge" v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0">
+      <span>第 {{ gameStateStore.battleRound }} 回合</span>
+      <span class="round-separator">|</span>
+      <span class="action-points-text">行動點: {{ gameStateStore.playerActionPoints }}</span>
+    </div>
+
     <MonsterCard
-        :ref="(el) => { if (el) MonsterCardRefs[index] = el as MonsterCardExposed }"
+        :ref="(el) => { if (el) { MonsterCardRefs[monster.id] = el as MonsterCardExposed } else { delete MonsterCardRefs[monster.id] } }"
         v-for="(monster,index) in gameStateStore.currentEnemy"
-        :key="index"
+        :key="monster.id"
         :info="monster"
         :index="index"
         :is-selected="selectedMonsterIndex === index"
@@ -407,6 +458,32 @@ if (!gameStateStore.isBattleWon) {
   display: flex;
   justify-content: space-around;
   position: relative;
+}
+
+.battle-round-badge {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--el-color-primary);
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--el-color-primary);
+  box-shadow: 0 0 10px rgba(64, 158, 255, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.round-separator {
+  margin: 0 8px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.action-points-text {
+  color: #e6a23c;
 }
 
 

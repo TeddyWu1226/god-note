@@ -27,7 +27,8 @@ export const DEFAULT_USER_INFO: UserType = {
     runIncrease: 0,
     chaseIncrease: 0,
     skills: [],
-    currentExp: 0
+    currentExp: 0,
+    actionValue: 50
 }
 
 // 房間類型權重
