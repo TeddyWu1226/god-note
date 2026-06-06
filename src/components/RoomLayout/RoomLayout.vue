@@ -138,4 +138,10 @@ watch(() => gameStateStore.days,
 .title {
   font-size: 1.2rem;
 }
+.room-layout :deep(.el-card__body) {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
 </style>

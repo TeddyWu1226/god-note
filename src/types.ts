@@ -15,6 +15,8 @@ import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 export interface qualityType {
 	ad?: number // 物理攻擊力
 	ap?: number // 魔法攻擊力/法傷
+	heal?: number // 回復生命
+	magic?: number // 回復法力
 	critIncrease?: number // 爆擊增傷(200%)
 	critRate?: number // 爆擊率(100%)
 	// 有關防禦
@@ -37,7 +39,7 @@ export interface qualityType {
 }
 
 // 用來動態顯示屬性名稱的字典 (可選，讓顯示更友善)
-export const statLabels: Record<keyof qualityType | 'heal' | 'magic', string> = {
+export const statLabels: Record<keyof qualityType, string> = {
 	ad: '物傷',
 	ap: '法傷',
 	critRate: '暴擊率',
@@ -100,6 +102,8 @@ export interface UnitType {
 	// 有關輸出
 	ad: number // 物理攻擊力
 	ap: number // 魔法攻擊力/法傷
+	heal: number // 回復生命
+	magic: number // 回復法力
 	critIncrease: number // 爆擊增傷(200%)
 	critRate: number // 爆擊率(%)
 	// 有關防禦

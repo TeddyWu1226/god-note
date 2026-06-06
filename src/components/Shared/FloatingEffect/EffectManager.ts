@@ -15,6 +15,15 @@ export const showEffect = (
 
     // 3. 建立掛載容器
     const mountNode = document.createElement('div');
+    // ⭐️ 核心修正：將動態容器設為 fixed，寬高為 0，且不影響佈局與滾動條
+    mountNode.style.position = 'fixed';
+    mountNode.style.top = '0';
+    mountNode.style.left = '0';
+    mountNode.style.width = '0';
+    mountNode.style.height = '0';
+    mountNode.style.overflow = 'visible';
+    mountNode.style.pointerEvents = 'none';
+    mountNode.style.zIndex = '9999';
     document.body.appendChild(mountNode);
 
     // 4. 渲染組件

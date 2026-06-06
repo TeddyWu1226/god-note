@@ -9,6 +9,15 @@ export function useFloatingMessage(
 ) {
     // 1. 創建一個 DOM 容器
     const container = document.createElement('div');
+    // ⭐️ 核心修正：將動態容器設為 fixed，寬高為 0，且不影響佈局與滾動條
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '0';
+    container.style.height = '0';
+    container.style.overflow = 'visible';
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '9999';
     document.body.appendChild(container);
 
     let positionStyle = {};
@@ -16,10 +25,10 @@ export function useFloatingMessage(
     if (targetElement) {
         const rect = targetElement.getBoundingClientRect();
         positionStyle = {
-            top: `${rect.top + window.scrollY}px`,
-            left: `${rect.right + window.scrollX}px`,
+            top: `${rect.top}px`,
+            left: `${rect.right}px`,
             transform: 'translate(10px, -50%)',
-            position: 'absolute',
+            position: 'fixed',
             width: 'auto',
             minWidth: '5rem',
             zIndex: 9999, // 確保在最上層

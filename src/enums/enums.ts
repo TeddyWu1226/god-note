@@ -113,6 +113,18 @@ export const StatEnum = {
         icon: '✨',
         unit: ''
     },
+    heal: {
+        value: 'heal',
+        label: '生命回復',
+        icon: '❤️‍🩹',
+        unit: ''
+    },
+    magic: {
+        value: 'magic',
+        label: '回復法力',
+        icon: '💜',
+        unit: ''
+    },
     ad: {
         value: 'ad',
         label: '物傷',
@@ -131,17 +143,35 @@ export const StatEnum = {
         icon: '💪🏻',
         unit: '%'
     },
+    apIncrease: {
+        value: 'apIncrease',
+        label: '法術增傷',
+        icon: '💫',
+        unit: '%'
+    },
     adDefend: {
         value: 'adDefend',
         label: '防禦',
         icon: '🛡️',
         unit: ''
     },
+    lifeSteal: {
+        value: 'lifeSteal',
+        label: '吸血',
+        icon: '🩸',
+        unit: '%'
+    },
     defendIncrease: {
         value: 'defendIncrease',
         label: '抗性',
         icon: '🔰',
         unit: '%'
+    },
+    actionValue: {
+        value: 'actionValue',
+        label: '行動值',
+        icon: '⚡',
+        unit: ''
     },
     critRate: {
         value: 'critRate',
@@ -167,23 +197,4 @@ export const StatEnum = {
         icon: '💨',
         unit: ''
     },
-
-    apIncrease: {
-        value: 'apIncrease',
-        label: '法術增傷',
-        icon: '💫',
-        unit: '%'
-    },
-    lifeSteal: {
-        value: 'lifeSteal',
-        label: '吸血',
-        icon: '🩸',
-        unit: '%'
-    },
-    actionValue: {
-        value: 'actionValue',
-        label: '行動值',
-        icon: '⚡',
-        unit: ''
-    }
 };

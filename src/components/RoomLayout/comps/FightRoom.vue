@@ -438,6 +438,9 @@ if (!gameStateStore.isBattleWon) {
   display: flex;
   justify-content: space-around;
   position: relative;
+  flex-grow: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .battle-round-badge {
@@ -497,13 +500,16 @@ if (!gameStateStore.isBattleWon) {
 
 .log {
   position: absolute;
-  left: 0;
-  top: 14rem;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: calc(100% - 2rem);
 }
 
 @media (max-width: 767px) {
   .log {
-    top: 12rem;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    max-width: calc(100% - 1rem);
   }
 }
 

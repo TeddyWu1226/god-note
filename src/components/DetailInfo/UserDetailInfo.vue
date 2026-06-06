@@ -63,7 +63,10 @@ const allocatePoint = (statValue: string) => {
   <div
       ref="fabRef"
       class="floating-bag"
-      :class="{ 'is-snapping': isSnapping }"
+      :class="{ 
+        'is-snapping': isSnapping,
+        'has-points': playerStore.info.statPoints && playerStore.info.statPoints > 0
+      }"
       :style="{
       left: `${position.x}px`,
       top: `${position.y}px`
@@ -77,6 +80,13 @@ const allocatePoint = (statValue: string) => {
         <span style="font-size: 1rem;font-weight: bold">{{ playerStore.info.level}}</span>
       </template>
     </el-progress>
+    <!-- 升級提示標章 -->
+    <div
+        v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0"
+        class="upgrade-badge"
+    >
+      !
+    </div>
   </div>
   <el-dialog
       v-model="isShowStats"
@@ -92,11 +102,26 @@ const allocatePoint = (statValue: string) => {
         <div v-for="stat in StatEnum" :key="stat.value" class="stat-item">
           <div class="stat-info">
             {{ stat.icon }} {{ stat.label }}:
-            {{ playerStore.finalStats[stat.value] }}
             <template v-if="(stat as any)?.maxKey">
-              / {{ playerStore.finalStats[(stat as any)?.maxKey] }}
+              {{ playerStore.finalStats[stat.value] }} / {{ playerStore.info[(stat as any).maxKey] }}
+              <span 
+                  v-if="playerStore.totalBonus[(stat as any).maxKey]" 
+                  class="stat-bonus" 
+                  :class="{ 'is-positive': playerStore.totalBonus[(stat as any).maxKey] > 0, 'is-negative': playerStore.totalBonus[(stat as any).maxKey] < 0 }"
+              >
+                ({{ playerStore.totalBonus[(stat as any).maxKey] > 0 ? '+' : '' }}{{ playerStore.totalBonus[(stat as any).maxKey] }})
+              </span>
             </template>
-            {{ stat.unit }}
+            <template v-else>
+              {{ playerStore.info[stat.value] || 0 }}{{ stat.unit }}
+              <span 
+                  v-if="playerStore.totalBonus[stat.value]" 
+                  class="stat-bonus" 
+                  :class="{ 'is-positive': playerStore.totalBonus[stat.value] > 0, 'is-negative': playerStore.totalBonus[stat.value] < 0 }"
+              >
+                ({{ playerStore.totalBonus[stat.value] > 0 ? '+' : '' }}{{ playerStore.totalBonus[stat.value] }}{{ stat.unit }})
+              </span>
+            </template>
           </div>
           <el-button
               v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0 && isUpgradeable(stat.value)"
@@ -160,6 +185,53 @@ const allocatePoint = (statValue: string) => {
   touch-action: none;
   transition: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 升級發光與驚嘆號小紅點樣式 */
+.floating-bag.has-points {
+  animation: bag-glow 2s infinite ease-in-out;
+}
+
+@keyframes bag-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(230, 162, 60, 0.4), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(230, 162, 60, 0.8), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.floating-bag .upgrade-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: #f56c6c;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 8px rgba(245, 108, 108, 0.8);
+  animation: badge-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes badge-pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(245, 108, 108, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0);
+  }
 }
 
 :deep(.el-progress-circle) {
@@ -233,16 +305,21 @@ const allocatePoint = (statValue: string) => {
 }
 
 .equipment-slots {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 5px 2px;
   margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .equip-slot {
-  width: 65px;
-  height: 65px;
+  flex: 1 0 calc(16.66% - 12px);
+  min-width: 48px;
+  max-width: 65px;
+  height: 58px;
   background: #1a1a1a;
   border: 2px solid #444;
   border-radius: 12px;
@@ -251,6 +328,18 @@ const allocatePoint = (statValue: string) => {
   align-items: center;
   position: relative;
   transition: transform 0.2s;
+}
+
+.stat-bonus {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-left: 4px;
+}
+.stat-bonus.is-positive {
+  color: #67c23a;
+}
+.stat-bonus.is-negative {
+  color: #f56c6c;
 }
 
 .equip-item-icon {

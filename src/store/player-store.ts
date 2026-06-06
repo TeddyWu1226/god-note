@@ -26,6 +26,8 @@ export const usePlayerStore = defineStore('player-info', () => {
         const bonus: Record<string, number> = {
             ad: 0,
             ap: 0,
+            heal: 0,
+            magic: 0,
             critIncrease: 0,
             critRate: 0,
             adDefend: 0,
@@ -71,6 +73,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             ...info.value,
             ad: Math.max(0, info.value.ad + b.ad),
             ap: Math.max(0, (info.value.ap || 0) + b.ap),
+            heal: Math.max(0, (info.value.heal || 0) + b.heal),
+            magic: Math.max(0, (info.value.magic || 0) + b.magic),
             adDefend: Math.max(0, info.value.adDefend + b.adDefend),
             dodge: info.value.dodge + b.dodge,
             critRate: info.value.critRate + b.critRate,
@@ -503,12 +507,21 @@ export const usePlayerStore = defineStore('player-info', () => {
 
         // 4. 線性經驗需求升等，使用 while 處理可能跨級的情況
         let nextExp = getNextLevelExp(info.value.level);
+        let leveledUp = false;
         while (info.value.currentExp >= nextExp) {
             info.value.currentExp -= nextExp;
             info.value.level += 1;
             // 每次升級獲得 5 點升級點數
             info.value.statPoints = (info.value.statPoints || 0) + 5;
             nextExp = getNextLevelExp(info.value.level);
+            leveledUp = true;
+        }
+
+        if (leveledUp) {
+            info.value.hp = finalStats.value.hpLimit;
+            info.value.sp = finalStats.value.spLimit;
+            const logStore = useLogStore();
+            logStore.logger.add(`[升級] 恭喜升到 Lv.${info.value.level}！生命值與法力值已完全回復！`);
         }
     };
 
