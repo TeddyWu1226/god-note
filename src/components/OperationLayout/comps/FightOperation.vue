@@ -52,7 +52,7 @@ watch(
     </el-button>
     <OffHandSkillButton @click="(skillKey)=>{emit('skill',skillKey)}"/>
     <el-button
-        v-if="playerStore.info.skills?.length"
+        v-if="playerStore.info.skills?.filter((skill)=>skill.type === 'active').length"
         type="success"
         :disabled="props.disabled"
         @click="changeStatus(operationStatusEnum.Skill)">
