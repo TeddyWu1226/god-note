@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {ref, computed, nextTick} from 'vue';
+import {ref, computed, nextTick, watch} from 'vue';
 import type {UserType, Equipment, EquipmentType, StatusEffect, ItemStackType} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
@@ -11,8 +11,9 @@ import {Wizard1SkillEvolutionMap} from "@/constants/skill/char-skill/wizard-skil
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability} from "@/utils/math";
 import {ItemStatus} from "@/constants/status/item-status";
+import {Skill, SkillFactory} from "@/models/skill";
 
-const MAX_SKILLS = 5
+const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
     const info = ref<UserType>(JSON.parse(JSON.stringify(DEFAULT_USER_INFO)));
@@ -20,6 +21,31 @@ export const usePlayerStore = defineStore('player-info', () => {
     const stopValueChangeAnimation = ref<boolean>(false);
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
+
+    // 💡 監聽並自動將 plain object 技能或 string 技能還原成 Skill 類別實例
+    watch(
+        () => info.value.skills,
+        (newSkills) => {
+            if (!newSkills) return;
+            let changed = false;
+            const restored = newSkills.map(s => {
+                if (s && typeof s === 'object' && 'id' in s && !(s instanceof Skill)) {
+                    changed = true;
+                    return SkillFactory.createSkill(s.id, s);
+                }
+                if (typeof s === 'string') {
+                    changed = true;
+                    const prof = skillProficiency.value[s] || 0;
+                    return SkillFactory.createSkill(s, { level: 1, proficiency: prof, currentCd: 0 });
+                }
+                return s;
+            });
+            if (changed) {
+                info.value.skills = restored;
+            }
+        },
+        { immediate: true, deep: true }
+    );
 
     // --- Getters ---
     const totalBonus = computed(() => {
@@ -64,6 +90,19 @@ export const usePlayerStore = defineStore('player-info', () => {
                 });
             }
         });
+        // 💡 計算被動技能加成
+        if (info.value.skills) {
+            info.value.skills.forEach(s => {
+                if (s && s instanceof Skill && s.type === 'passive') {
+                    const skillBonus = s.getPassiveBonus();
+                    Object.keys(skillBonus).forEach(key => {
+                        if (typeof bonus[key] === 'number') {
+                            bonus[key] += skillBonus[key];
+                        }
+                    });
+                }
+            });
+        }
         return bonus;
     });
 
@@ -414,6 +453,15 @@ export const usePlayerStore = defineStore('player-info', () => {
         });
 
         statusEffects.value = remainingEffects;
+
+        // 💡 減少技能冷卻 CD
+        if (info.value.skills) {
+            info.value.skills.forEach(skill => {
+                if (skill instanceof Skill && skill.currentCd > 0) {
+                    skill.currentCd--;
+                }
+            });
+        }
     };
 
     const healFull = () => {
@@ -424,33 +472,42 @@ export const usePlayerStore = defineStore('player-info', () => {
             info.value.sp = finalStats.value.spLimit
         }
         statusEffects.value = statusEffects.value.filter(effect => effect.isBuff || effect.duration === -1)
+
+        // 💡 重置技能冷卻 CD
+        if (info.value.skills) {
+            info.value.skills.forEach(skill => {
+                if (skill instanceof Skill) {
+                    skill.currentCd = 0;
+                }
+            });
+        }
     }
 
     const addSkill = (skillKey: string) => {
-        if (info.value.skills.includes(skillKey)) return true
+        if (info.value.skills.some(s => s.id === skillKey)) return true;
         // 檢查技能欄位是否已滿
         if (info.value.skills.length >= MAX_SKILLS) {
             return false;
         }
-        info.value.skills.push(skillKey);
-        return true
+        info.value.skills.push(SkillFactory.createSkill(skillKey));
+        return true;
     }
     const removeSkill = (skillKey: string) => {
-        const index = info.value.skills.indexOf(skillKey);
+        const index = info.value.skills.findIndex(s => s.id === skillKey);
         if (index > -1) {
             info.value.skills.splice(index, 1);
         }
     }
 
     const replaceSkill = (oldKey: string, newKey: string) => {
-        const index = info.value.skills.indexOf(oldKey);
+        const index = info.value.skills.findIndex(s => s.id === oldKey);
         if (index > -1) {
-            info.value.skills[index] = newKey;
+            info.value.skills[index] = SkillFactory.createSkill(newKey);
         }
     }
 
     const hasSkill = (skillKey: string): boolean => {
-        return info.value.skills.includes(skillKey);
+        return info.value.skills.some(s => s.id === skillKey);
     }
 
     /**
@@ -458,33 +515,26 @@ export const usePlayerStore = defineStore('player-info', () => {
      * 技能熟練度最高 100
      */
     const getSkillProficiency = (skillKey: string) => {
-        return skillProficiency.value[skillKey] || 0;
+        const skill = info.value.skills.find(s => s.id === skillKey);
+        return skill ? skill.proficiency : (skillProficiency.value[skillKey] || 0);
     }
     const addSkillProficiency = (skillKey: string, value = 1) => {
-        if ((skillProficiency.value[skillKey] || 0) >= 100) {
-            return
-        }
-        skillProficiency.value[skillKey] = Math.min((skillProficiency.value[skillKey] || 0) + value, 100)
-        if (skillProficiency.value[skillKey] == 100) {
-            let evolutionMap: any
-            if (info.value.char === CharEnum.Warrior.value) {
-                evolutionMap = Warrior1SkillEvolutionMap
-            } else if (info.value.char === CharEnum.Wizard.value) {
-                evolutionMap = Wizard1SkillEvolutionMap
+        const skill = info.value.skills.find(s => s.id === skillKey);
+        if (skill) {
+            if (skill.proficiency >= 100) return;
+            skill.proficiency = Math.min(skill.proficiency + value, 100);
+            if (skill.proficiency >= 100) {
+                skill.level += 1;
+                skill.proficiency = 0;
+                const logStore = useLogStore();
+                logStore.logger.add(`[技能升級] 您的技能 [${skill.name}] 提升到了 Lv.${skill.level}！`);
             }
-            if (!evolutionMap) {
-                return;
+        } else {
+            // fallback
+            if ((skillProficiency.value[skillKey] || 0) >= 100) {
+                return
             }
-            const nextSkills = evolutionMap[skillKey] as string[]
-            if (!nextSkills) {
-                return;
-            }
-            const logStore = useLogStore();
-            logStore.logger.add('[升級]在你熟練技能使用後,獲得新技能!');
-            nextSkills.forEach(nextSkill => {
-
-                addSkill(nextSkill)
-            })
+            skillProficiency.value[skillKey] = Math.min((skillProficiency.value[skillKey] || 0) + value, 100)
         }
     }
     /**
@@ -508,6 +558,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 4. 線性經驗需求升等，使用 while 處理可能跨級的情況
         let nextExp = getNextLevelExp(info.value.level);
         let leveledUp = false;
+        const startLevel = info.value.level;
         while (info.value.currentExp >= nextExp) {
             info.value.currentExp -= nextExp;
             info.value.level += 1;
@@ -520,8 +571,24 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (leveledUp) {
             info.value.hp = finalStats.value.hpLimit;
             info.value.sp = finalStats.value.spLimit;
+            
+            // 💡 核心新增：每 5 等可獲得技能點數
+            let skillPointsGained = 0;
+            for (let lvl = startLevel + 1; lvl <= info.value.level; lvl++) {
+                if (lvl % 5 === 0) {
+                    skillPointsGained++;
+                }
+            }
+            if (skillPointsGained > 0) {
+                info.value.pendingSkillPoints = (info.value.pendingSkillPoints || 0) + skillPointsGained;
+            }
+
             const logStore = useLogStore();
-            logStore.logger.add(`[升級] 恭喜升到 Lv.${info.value.level}！生命值與法力值已完全回復！`);
+            let logMsg = `[升級] 恭喜升到 Lv.${info.value.level}！生命值與法力值已完全回復！`;
+            if (skillPointsGained > 0) {
+                logMsg += ` 獲得了 ${skillPointsGained} 點技能學習機會！`;
+            }
+            logStore.logger.add(logMsg);
         }
     };
 

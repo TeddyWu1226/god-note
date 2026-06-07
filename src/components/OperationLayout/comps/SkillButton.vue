@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {Skills} from "@/constants/skill/skill";
 import {usePlayerStore} from "@/store/player-store";
-import {SkillType} from "@/types";
+import {Skill} from "@/models/skill";
 
 const emit = defineEmits(['click'])
 const props = defineProps({
-  skillKey: {type: String, required: true},
+  skill: {type: Object, required: true},
 })
 
 const playerStore = usePlayerStore();
-const skill = computed<SkillType>(() => Skills[props.skillKey]);
+const skill = computed<Skill>(() => props.skill as Skill);
 
-const proficiency = computed(() => playerStore.getSkillProficiency(skill.value.id));
-// 判斷是否可用
-const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0));
+const proficiency = computed(() => skill.value.proficiency);
+// 判斷是否可用與冷卻狀態
+const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0) && skill.value.currentCd === 0);
 
 </script>
 
@@ -22,14 +21,17 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
   <div class="skill-container">
     <el-button
         class="skill-btn"
-        :type="!canAfford ? 'info' : skill?.costHp?'danger':'primary'"
-        :disabled="!canAfford"
+        :type="skill.currentCd > 0 ? 'info' : !canAfford ? 'info' : skill?.costHp?'danger':'primary'"
+        :disabled="!canAfford || skill.currentCd > 0"
         plain
         @click="emit('click')"
     >
       <span class="skill-icon">{{ skill?.icon }}</span>
       <div class="skill-info">
-        <span class="skill-name">{{ skill?.name }}</span>
+        <span class="skill-name">
+          {{ skill?.name }}
+          <span v-if="skill.currentCd > 0" class="skill-cd-text">({{ skill.currentCd }}回)</span>
+        </span>
         <span v-if="skill?.costSp" class="skill-cost">SP: {{ skill.costSp }}</span>
         <span v-if="skill?.costHp" class="skill-cost">HP: {{ skill.costHp }}</span>
       </div>
@@ -45,8 +47,9 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         <div class="info-trigger">i</div>
       </template>
       <div class="skill-desc">
+        <div>等級: Lv.{{ skill.level }}</div>
         <div>熟練度: {{ proficiency === 100 ? 'MAX' : proficiency}}</div>
-        <div v-html="skill.description({playerStore})"/>
+        <div v-html="skill.description(playerStore)"/>
       </div>
     </el-popover>
   </div>
@@ -108,5 +111,11 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
 .skill-cost {
   font-size: 0.7rem;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.skill-cd-text {
+  font-size: 0.7rem;
+  color: #ff9f43;
+  margin-left: 4px;
 }
 </style>

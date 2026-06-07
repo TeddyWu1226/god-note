@@ -35,12 +35,13 @@ watch(
 
 <template>
   <div v-if="Operation.current===operationStatusEnum.Skill" class="flex">
-    <SkillButton
-        v-for="skillKey in playerStore.info.skills"
-        :key="skillKey"
-        :skill-key="skillKey"
-        @click="emit('skill',skillKey)"
-    />
+    <template v-for="skill in playerStore.info.skills" :key="skill.id">
+      <SkillButton
+          v-if="skill.type === 'active'"
+          :skill="skill"
+          @click="emit('skill', skill.id)"
+      />
+    </template>
     <el-button type="info" plain :disabled="props.disabled" @click="changeStatus">
       返回
     </el-button>

@@ -149,9 +149,10 @@ export interface UserType extends UnitType {
 	items?: ItemStackType[]  // 雜項
 	equipments?: EquipmentType[] // 裝備
 	consumeItems?: UsableItemStackType[] // 消耗品
-	skills: string[] // 技能ID列
+	skills: any[] // 技能實例或 ID 列表
 	currentExp?: number
 	statPoints?: number // 升級點數
+	pendingSkillPoints?: number // 待分配的技能點數
 	actionValue?:number
 }
 

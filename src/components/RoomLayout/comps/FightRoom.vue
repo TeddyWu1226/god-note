@@ -26,8 +26,7 @@ import { Monster as MonsterClass } from "@/models/monster";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
-import {ItemSkill} from "@/constants/skill/item-skill";
-import {Skills} from "@/constants/skill/skill";
+import {SkillFactory, Skill} from "@/models/skill";
 import {Monster} from "@/constants/monsters/monster-info";
 
 const emit = defineEmits(['runFailed'])
@@ -271,7 +270,7 @@ const onSkill = async (skillKey: string) => {
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
   if (isUsing.value) return
 
-  const useSkill = Skills[skillKey] as SkillType
+  const useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
   const costAction = useSkill?.costAction ?? 1
 
   if (gameStateStore.playerActionPoints < costAction) {
@@ -301,7 +300,7 @@ const onSkill = async (skillKey: string) => {
     gameStateStore.playerActionPoints -= costAction
 
     // 熟練度增加
-    playerStore.addSkillProficiency(useSkill.id, useSkill?.proficiency ?? 1)
+    playerStore.addSkillProficiency(useSkill.id, 1)
     if (useSkill?.costSp) {
       const newSP = playerStore.info.sp - useSkill.costSp;
       playerStore.info.sp = Math.max(0, newSP)
@@ -348,6 +347,15 @@ defineExpose({
 const init = () => {
   isEscape.value = false;
   selectedMonsterIndex.value = null;
+
+  // 💡 重置技能冷卻時間
+  if (playerStore.info.skills) {
+    playerStore.info.skills.forEach((skill: any) => {
+      if (skill instanceof Skill) {
+        skill.currentCd = 0;
+      }
+    });
+  }
 
   // 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取
   if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {

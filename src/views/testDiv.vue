@@ -27,7 +27,6 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  gameStateStore.currentStage = 11
   playerStore.gainExp({amount: 1300})
   // playerStore.addSkill(Skills.FireBall.id)
   // playerStore.addSkill(Skills.MagicDefend.id)

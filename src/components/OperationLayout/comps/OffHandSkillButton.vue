@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
-import {EquipmentType, SkillType} from "@/types";
-import {OffhandSkill} from "@/constants/skill/offhand-skill/offhand-skill";
+import {EquipmentType} from "@/types";
+import {Skill, SkillFactory} from "@/models/skill";
 
 const emit = defineEmits(['click'])
 
@@ -10,7 +10,7 @@ const playerStore = usePlayerStore();
 const offhand = computed<EquipmentType | undefined>(() => {
   return playerStore.info.equips?.offhand
 })
-const skill = computed<SkillType>(() => offhand && offhand.value?.skill ? OffhandSkill[offhand.value?.skill] : undefined);
+const skill = computed<Skill | undefined>(() => offhand.value?.skill ? SkillFactory.createSkill(offhand.value.skill) : undefined);
 
 // 判斷是否可用
 const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0));
@@ -43,7 +43,7 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         <div class="info-trigger">i</div>
       </template>
       <div class="skill-desc">
-        <div v-html="skill.description({playerStore})"/>
+        <div v-html="skill.description(playerStore)"/>
       </div>
     </el-popover>
   </div>

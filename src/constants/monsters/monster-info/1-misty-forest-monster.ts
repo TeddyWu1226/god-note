@@ -164,7 +164,6 @@ export const MistyForestMonster = {
         drop: [
             {item: Material.MandrakeRoot, chance: 0.1}
         ],
-        onDead: 'mandragoraOnDead'
     } as MonsterType,
     FierceWolf: {
         icon: '🐺',
