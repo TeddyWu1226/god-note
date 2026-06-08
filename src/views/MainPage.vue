@@ -212,16 +212,34 @@ watch(
 .common-layout {
   position: relative;
   background-color: #303133;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
+:deep(.el-container) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .el-main {
   padding-top: 0 !important;
+  padding-bottom: 0.5rem !important;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .el-main > * {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  flex-shrink: 0;
 }
 
 .header {
@@ -231,11 +249,15 @@ watch(
   font-size: 16px;
   font-weight: bold;
   height: 5vh;
+  min-height: 2.5rem;
+  flex-shrink: 0;
 }
 
 
 .user-layout {
   height: 20vh;
+  min-height: 140px;
+  flex-shrink: 0;
 }
 
 .rule-container {

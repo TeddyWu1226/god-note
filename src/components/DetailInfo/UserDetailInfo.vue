@@ -321,14 +321,6 @@ const cancelReplaceMode = () => {
             </template>
           </div>
         </div>
-
-        <!-- 學習技能按鈕 -->
-        <div v-if="playerStore.info.pendingSkillPoints && playerStore.info.pendingSkillPoints > 0"
-             class="learn-skill-banner">
-          <el-button type="success" class="learn-skill-btn" @click="openLearnSkill" round>
-            🔮 學習新技能 (可用技能點: {{ playerStore.info.pendingSkillPoints }})
-          </el-button>
-        </div>
       </div>
 
     </div>
@@ -340,6 +332,7 @@ const cancelReplaceMode = () => {
       title="🔮 獲得新的感悟：學習新技能"
       width="620px"
       append-to-body
+      top="5vh"
       custom-class="learn-skill-dialog"
       :close-on-click-modal="false"
       :show-close="false"

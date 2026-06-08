@@ -39,8 +39,12 @@ const restartGame = async () => {
 <style scoped>
 
 .dead {
-  height: 82vh;
-  padding-bottom: 15vh;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .other-btn {

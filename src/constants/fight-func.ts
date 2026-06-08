@@ -419,8 +419,8 @@ export const spawnMonsters = (
 	weight: Record<string, number>,
 	strengthening: number = 1,
 	eliteBoost = false
-): MonsterType[] => {
-	const newMonsters: MonsterType[] = [];
+): MonsterClass[] => {
+	const newMonsters: MonsterClass[] = [];
 
 	for (let i = 0; i < count; i++) {
 		let m = getRandomItemByWeight(weight, Monster);

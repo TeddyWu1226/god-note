@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <div class="shop-layout">
-    <div style="width: 100%" v-if="!isExited">
+    <div style="width: 100%; display: flex; flex-direction: column; height: 100%;" v-if="!isExited">
       <div class="header">
         <h2>🧌 地精商店</h2>
         <el-radio-group
@@ -40,9 +40,11 @@ onMounted(() => {
           <el-radio-button label="sell">販賣</el-radio-button>
         </el-radio-group>
       </div>
-      <keep-alive>
-        <component :is="activeTab === 'buy' ? ShopBuyTab : ShopSellTab" :items="itemList"/>
-      </keep-alive>
+      <el-scrollbar class="shop-content-scroll">
+        <keep-alive>
+          <component :is="activeTab === 'buy' ? ShopBuyTab : ShopSellTab" :items="itemList"/>
+        </keep-alive>
+      </el-scrollbar>
     </div>
     <div v-else class="run-text">商人已經離開了...</div>
   </div>
@@ -52,10 +54,19 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   text-align: center;
+  flex-shrink: 0;
+}
+.shop-content-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 .run-text {

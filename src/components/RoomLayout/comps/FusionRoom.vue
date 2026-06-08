@@ -110,7 +110,7 @@ const onCraft = (recipe: FusionListType) => {
         可合成
       </el-checkbox>
     </div>
-    <el-scrollbar max-height="24vh">
+    <el-scrollbar class="craft-scroll">
       <div class="recipe-container">
 
         <div v-if="filteredList.length === 0" class="empty-hint">
@@ -165,11 +165,19 @@ const onCraft = (recipe: FusionListType) => {
 
 <style scoped>
 .craft-room {
-  height: auto;
-  padding: 1rem;
+  height: 100%;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.craft-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 /* 類別分頁樣式 */
@@ -204,12 +212,11 @@ const onCraft = (recipe: FusionListType) => {
 
 .recipe-container {
   display: flex;
-  min-width: 33rem;
+  width: 100%;
+  box-sizing: border-box;
   flex-wrap: wrap;
-  gap: 1rem;
-  overflow-y: auto;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
+  gap: 0.8rem;
+  padding: 0.2rem;
   margin-top: 0.5rem;
 }
 

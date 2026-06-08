@@ -258,7 +258,9 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   align-items: center;
   justify-content: center;
   max-width: 10rem;
+  max-height: 16rem;
   font-size: 1rem;
+
 }
 
 @media (max-width: 767px) {

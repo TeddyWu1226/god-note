@@ -120,7 +120,8 @@ const continueGame = () => {
 
 /* 首頁背景與佈局 */
 .start-view {
-  height: 90vh;
+  height: 100%;
+  box-sizing: border-box;
   background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
   display: flex;
   align-items: center;

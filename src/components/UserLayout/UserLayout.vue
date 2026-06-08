@@ -47,7 +47,6 @@ watch(activeName, (val) => {
 <template>
   <el-card class="inventory-card">
     <el-tabs v-model="activeName" stretch>
-
       <el-tab-pane name="item">
         <template #label>
           <el-badge class="tab-badge" :hidden="!hasNew.item" is-dot :offset="[10, 5]">消耗</el-badge>
@@ -61,14 +60,6 @@ watch(activeName, (val) => {
         </template>
         <EquipmentTab/>
       </el-tab-pane>
-
-      <el-tab-pane name="other">
-        <template #label>
-          <el-badge class="tab-badge" :hidden="!hasNew.other" is-dot :offset="[10, 5]">其他</el-badge>
-        </template>
-        <MaterialTab/>
-      </el-tab-pane>
-
     </el-tabs>
   </el-card>
 </template>
