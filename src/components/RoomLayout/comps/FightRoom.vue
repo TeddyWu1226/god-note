@@ -6,7 +6,7 @@ import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
 import {computed, nextTick, ref} from "vue";
-import {ItemType, MonsterType, SkillType} from "@/types";
+import {ItemType, MonsterType} from "@/types";
 import {
   applyAttackDamage,
   applyRandomFloatAndRound,
@@ -22,12 +22,13 @@ import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss, StageBosses} from "@/constants/monsters/boss-info";
 import {useLogStore} from "@/store/log-store";
-import { Monster as MonsterClass } from "@/models/monster";
+import {Monster as MonsterClass} from "@/models/monster";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
-import {SkillFactory, Skill} from "@/models/skill";
+import {Skill, SkillFactory} from "@/models/skill";
 import {Monster} from "@/constants/monsters/monster-info";
+import {ItemSkill} from "@/constants/skill/item-skill";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -38,6 +39,18 @@ const currentRoomValue = computed(() => {
       return gameStateStore.currentRoomValue
     }
 )
+
+const maxActionPoints = computed((): number => {
+  return Math.max(1, Math.floor((playerStore.finalStats.actionValue ?? 50) / 50));
+})
+
+const strokeDasharray = 2 * Math.PI * 24; // 150.796
+const strokeDashoffset = computed((): number => {
+  const percent = maxActionPoints.value > 0
+      ? (gameStateStore.playerActionPoints / maxActionPoints.value)
+      : 0;
+  return strokeDasharray * (1 - percent);
+})
 
 const MonsterCardRefs = ref<Record<string, MonsterCardExposed>>({});
 const monsterDropGold = ref(0)
@@ -56,7 +69,7 @@ const getWeightByStage = () => {
   const subZoneIdx = Math.min(4, Math.floor((day - 1) / 20))
   const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
   const originalMap = stageMonsterWeightsMap[oldStageIndex] || EndlessWeights
-  const monsterMap = { ...originalMap }
+  const monsterMap = {...originalMap}
   if (trackStore.getKillCount(Monster.DuneBeast.name, 'total') > 0) {
     delete monsterMap.DuneBeast;
   }
@@ -87,12 +100,10 @@ const StageValueMap = Object.fromEntries(
 /**
  * 高效率查詢
  */
-const getStageKeyByValue = (value: number): string | undefined => {
-  return StageValueMap[value];
-};
+
 const createBoss = () => {
-  let newMonsters: MonsterType[]
-  
+  let newMonsters: MonsterClass[]
+
   if (gameStateStore.currentStage === 6) {
     let boss: MonsterType
     if (gameStateStore.stageDays === 5) {
@@ -102,7 +113,7 @@ const createBoss = () => {
     } else {
       boss = Boss.TowerVoid
     }
-    newMonsters = [create(boss)]
+    newMonsters = [new MonsterClass(boss)]
   } else {
     const stageBoss = StageBosses[gameStateStore.currentStage]
     let boss: MonsterType
@@ -117,9 +128,9 @@ const createBoss = () => {
     } else {
       boss = Boss.Error
     }
-    newMonsters = [create(boss)]
+    newMonsters = [new MonsterClass(boss)]
   }
-  
+
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
 }
@@ -427,8 +438,6 @@ if (!gameStateStore.isBattleWon) {
     <!-- 戰鬥回合數顯示 -->
     <div class="battle-round-badge" v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0">
       <span>第 {{ gameStateStore.battleRound }} 回合</span>
-      <span class="round-separator">|</span>
-      <span class="action-points-text">行動點: {{ gameStateStore.playerActionPoints }}</span>
     </div>
 
     <MonsterCard
@@ -455,6 +464,41 @@ if (!gameStateStore.isBattleWon) {
       </span>
     </div>
     <LogView class="log"></LogView>
+
+    <!-- 戰鬥房間右下角的行動點數圓形徽章 -->
+    <div
+        v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0"
+        class="action-points-badge-container"
+    >
+      <div class="action-points-badge">
+        <svg class="progress-ring" width="56" height="56">
+          <circle
+              class="progress-ring__track"
+              stroke="rgba(57, 255, 20, 0.1)"
+              stroke-width="4"
+              fill="transparent"
+              r="24"
+              cx="28"
+              cy="28"
+          />
+          <circle
+              class="progress-ring__circle"
+              stroke="#39FF14"
+              stroke-width="4"
+              fill="transparent"
+              r="24"
+              cx="28"
+              cy="28"
+              :stroke-dasharray="strokeDasharray"
+              :stroke-dashoffset="strokeDashoffset"
+          />
+        </svg>
+        <div class="badge-content">
+          <span class="energy-icon">⚡</span>
+          <span class="badge-value">{{ gameStateStore.playerActionPoints }}/{{ maxActionPoints }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -486,16 +530,6 @@ if (!gameStateStore.isBattleWon) {
   z-index: 10;
 }
 
-.round-separator {
-  margin: 0 8px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.action-points-text {
-  color: #e6a23c;
-}
-
-
 .victory-container {
   width: 100%;
   display: flex;
@@ -521,9 +555,95 @@ if (!gameStateStore.isBattleWon) {
 }
 
 /* ---------------------------------------------------- */
+/* ⭐️ 行動點數圓形徽章 (貼齊戰鬥房間右下角) */
+/* ---------------------------------------------------- */
+.action-points-badge-container {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.25rem;
+  z-index: 20;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .action-points-badge-container {
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+.action-points-badge {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background: rgba(18, 18, 18, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5),
+  0 0 10px rgba(57, 255, 20, 0.15),
+  inset 0 0 8px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg); /* 從上方開始旋轉 */
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 0 3px rgba(57, 255, 20, 0.8));
+  stroke-linecap: round;
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.energy-icon {
+  font-size: 0.85rem;
+  color: #39FF14;
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.8);
+  line-height: 1;
+  margin-bottom: 2px;
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+.badge-value {
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-family: 'Outfit', 'Inter', monospace;
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  line-height: 1;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 2px rgba(57, 255, 20, 0.5));
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(57, 255, 20, 0.9));
+  }
+}
+
+/* ---------------------------------------------------- */
 /* ⭐️ 懸浮日誌視窗樣式 (無背景/邊框) */
 /* ---------------------------------------------------- */
-
 .log {
   position: absolute;
   left: 1rem;
@@ -538,5 +658,4 @@ if (!gameStateStore.isBattleWon) {
     max-width: calc(100% - 1rem);
   }
 }
-
 </style>

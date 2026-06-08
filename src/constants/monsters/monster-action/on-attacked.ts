@@ -10,6 +10,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {Boss} from "@/constants/monsters/boss-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {Monster} from "@/constants/monsters/monster-info";
+import { Monster as MonsterClass } from "@/models/monster";
 import {checkHpThresholds} from "@/constants/fight-func";
 
 /**
@@ -68,14 +69,14 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
             logStore.logger.add(`幻象巨蟒在水霧中出現了多個!破壞力也更加強大!`)
             monster.status = []
             monster.ad += 5
-            const fakeClone = create(monster);
+            const fakeClone = new MonsterClass(monster);
             fakeClone.defendIncrease = -1000
             fakeClone.onAttacked = undefined
             fakeClone.dropGold = 0
             fakeClone.drop = undefined
             fakeClone.level = 1
-            gameStateStore.currentEnemy.push(create(fakeClone))
-            gameStateStore.currentEnemy.push(create(fakeClone))
+            gameStateStore.currentEnemy.push(new MonsterClass(fakeClone))
+            gameStateStore.currentEnemy.push(new MonsterClass(fakeClone))
             gameStateStore.currentEnemy = shuffleArray(gameStateStore.currentEnemy)
         }
 
@@ -110,8 +111,8 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
                     color: 'red'
                 }
             );
-            let m = create(Boss.PyramidEntrance2)
-            gameStateStore.currentEnemy.push(create(m))
+            let m = new MonsterClass(Boss.PyramidEntrance2)
+            gameStateStore.currentEnemy.push(m)
         }
     },
     pyramidEntrance2OnAttacked: ({monster, gameStateStore, targetElement, logStore}) => {
@@ -137,8 +138,8 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
                     color: 'red'
                 }
             );
-            let m = create(Boss.PyramidEntrance)
-            gameStateStore.currentEnemy.push(create(m))
+            let m = new MonsterClass(Boss.PyramidEntrance)
+            gameStateStore.currentEnemy.push(m)
         }
     },
 
@@ -167,14 +168,14 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
             monster.status.push(UnitStatus.EatMummy)
             monster.tick['pharaohsRest'] = 0
             if (gameStateStore.currentEnemy.length === 1) {
-                let m = create(Monster.Mummy);
+                let m = new MonsterClass(Monster.Mummy);
                 const strengthening = 1 + gameStateStore.days * 0.0075
                 // 基本階段強化
                 m.hpLimit = Math.round(m.hpLimit * strengthening);
                 m.hp = m.hpLimit;
                 m.ad = Math.round(m.ad * strengthening);
-                gameStateStore.currentEnemy.unshift(create(m))
-                gameStateStore.currentEnemy.push(create(m))
+                gameStateStore.currentEnemy.unshift(new MonsterClass(m))
+                gameStateStore.currentEnemy.push(new MonsterClass(m))
             }
         }
     },

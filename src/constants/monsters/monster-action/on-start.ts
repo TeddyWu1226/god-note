@@ -8,6 +8,7 @@ import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle"
 import {SandstormPassWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/monsters/boss-info";
 import {Monster} from "@/constants/monsters/monster-info";
+import { Monster as MonsterClass } from "@/models/monster";
 
 
 export const MonsterOnStart: Record<string, (params: MonsterActionParams) => void> = {
@@ -89,8 +90,8 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
 		m.hpLimit = Math.round(m.hpLimit * strengthening);
 		m.hp = m.hpLimit;
 		m.ad = Math.round(m.ad * strengthening);
-		gameStateStore.currentEnemy.unshift(create(m))
-		gameStateStore.currentEnemy.push(create(m))
+		gameStateStore.currentEnemy.unshift(new MonsterClass(m))
+		gameStateStore.currentEnemy.push(new MonsterClass(m))
 	},
 	twilightOnStart: ({playerStore, gameStateStore, targetElement}) => {
 		useEpicSubtitle("「餘暉已候多時，只為繼續沈溺在這曲無盡的舞。而你－－蟲子，太吵了。」", 4000);
@@ -163,7 +164,7 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
 			}
 		);
 		let m = create(Boss.PyramidEntrance2)
-		gameStateStore.currentEnemy.push(create(m))
+		gameStateStore.currentEnemy.push(new MonsterClass(m))
 	},
 	pharaohsRestOnStart: ({playerStore, gameStateStore, targetElement}) => {
 		useEpicSubtitle("「好久沒有活人了，但你也將成為死人並臣服於我。」", 4000);

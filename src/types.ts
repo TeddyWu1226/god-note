@@ -9,6 +9,7 @@ import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
 import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 import {Skill} from "@/models/skill";
+import type { Monster } from "@/models/monster";
 
 /**
  * 物品相關
@@ -102,9 +103,9 @@ export interface UnitType {
 	name: string // 名稱
 	// 有關輸出
 	ad: number // 物理攻擊力
-	ap: number // 魔法攻擊力/法傷
+	ap?: number // 魔法攻擊力/法傷
 	heal: number // 回復生命
-	magic: number // 回復法力
+	magic?: number // 回復法力
 	critIncrease: number // 爆擊增傷(200%)
 	critRate: number // 爆擊率(%)
 	// 有關防禦
@@ -247,7 +248,7 @@ export type AchievementStoreType = ReturnType<typeof useAchievementStore>;
 
 //
 export interface MonsterActionParams {
-	monster?: MonsterType;
+	monster?: Monster;
 	playerStore?: PlayerStoreType;
 	gameStateStore?: GameStateStoreType
 	logStore?: logStoreType;
@@ -256,7 +257,7 @@ export interface MonsterActionParams {
 }
 
 export interface MonsterOnAttackParams {
-	monster?: MonsterType;
+	monster?: Monster;
 	monsterIndex?: number;
 	playerStore?: PlayerStoreType;
 	gameStateStore?: GameStateStoreType
@@ -275,7 +276,7 @@ export interface NoneMonsterItemSkillParams {
 }
 
 export interface SpecifyMonsterItemSkillParams {
-	monster?: MonsterType;
+	monster?: Monster;
 	monsterIndex?: number;
 	playerStore?: PlayerStoreType;
 	gameStateStore?: GameStateStoreType
@@ -303,7 +304,7 @@ export interface AchievementType {
  * 技能
  */
 export interface SkillParams {
-	monster?: MonsterType;
+	monster?: Monster;
 	monsterIndex?: number;
 	targetElement?: HTMLElement // 怪物的 html元素
 	playerStore?: PlayerStoreType;

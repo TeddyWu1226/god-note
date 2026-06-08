@@ -14,7 +14,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
 
 const props = defineProps({
-  info: {type: Object as PropType<MonsterType>},
+  info: {type: Object as PropType<Monster>},
   index: {type: Number},
   isSelected: {type: Boolean, default: false} //選中狀態,
 

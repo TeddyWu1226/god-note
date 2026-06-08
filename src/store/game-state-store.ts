@@ -1,58 +1,15 @@
 import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {MonsterType, StatusEffect, UnitType} from "@/types";
+import {MonsterType, StatusEffect} from "@/types";
 import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {Monster} from "@/models/monster";
 import {usePlayerStore} from "@/store/player-store";
 
-export const getEffectiveStats = (monster: MonsterType): MonsterType => {
-	if (monster instanceof Monster) {
-		return monster.getEffectiveStats();
-	}
-
-	// 基礎數值作為基底
-	const finalStats = {
-		icon: monster.icon,
-		name: monster.name,
-		description: monster.description,
-		level: monster.level,
-		hp: monster.hp,
-		ad: monster.ad || 0,
-		adDefend: monster.adDefend || 0,
-		apDefend: monster.apDefend || 0,
-		hpLimit: monster.hpLimit || 0,
-		dodge: monster.dodge || 0,
-		hit: monster.hit || 0,
-		critRate: monster.critRate || 0,
-		critIncrease: monster.critIncrease || 0,
-		adIncrease: monster.adIncrease || 0,
-		apIncrease: monster.apIncrease || 0,
-		defendIncrease: monster.defendIncrease || 0,
-		lifeSteal: monster.lifeSteal || 0,
-	} as any;
-
-	// 遍歷所有狀態，疊加 Bonus
-	if (!monster.status) {
-		monster.status = []
-	}
-	monster.status?.forEach(eff => {
-		if (eff.bonus) {
-			(Object.keys(eff.bonus) as Array<keyof typeof eff.bonus>).forEach(key => {
-				const val = eff.bonus![key];
-				if (typeof val === 'number') {
-					// 根據 key 加上對應的數值
-					if (key in finalStats) {
-						(finalStats as any)[key] += val;
-					}
-				}
-			});
-		}
-	});
-
-	return finalStats;
+export const getEffectiveStats = (monster: Monster): Monster => {
+	return monster.getEffectiveStats();
 };
 
 export const useGameStateStore = defineStore('game-state', () => {
@@ -68,14 +25,14 @@ export const useGameStateStore = defineStore('game-state', () => {
 	// 回合/戰鬥用數據
 	const currentState = ref<GameState>(GameState.INITIAL);
 	const isBattleWon = ref(false);
-	const currentEnemy = ref<MonsterType[]>([]);
+	const currentEnemy = ref<Monster[]>([]);
 	// 事件相關紀錄
 	const currentEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
 	const lastEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
 	const eventProcess = ref<Record<SpecialEventEnum, number>>({} as Record<SpecialEventEnum, number>);
 	const eventAction = ref(0)
 	const thisStageAppear = ref<string[]>([])
-	const switchEnemy = ref<MonsterType[]>([]);
+	const switchEnemy = ref<Monster[]>([]);
 	const difficulty = ref(DifficultyEnum.Normal.value);
 	const otherRecord = ref<Record<string, any>>({}); // 額外記錄表
 	const battleRound = ref(1); // 戰鬥回合數
@@ -200,7 +157,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	 * @param roomValue
 	 * @param monsters
 	 */
-	function switchToFightRoom(roomValue: number, monsters?: MonsterType[]): void {
+	function switchToFightRoom(roomValue: number, monsters?: Monster[]): void {
 		if (monsters) {
 			switchEnemy.value = monsters;
 		}
@@ -217,12 +174,12 @@ export const useGameStateStore = defineStore('game-state', () => {
 		currentEventType.value = event;
 	}
 
-	function setCurrentEnemy(monsters: MonsterType[]): void {
+	function setCurrentEnemy(monsters: Monster[]): void {
 		currentEnemy.value = monsters
 	}
 
 
-	function takeSwitchEnemy(): MonsterType[] {
+	function takeSwitchEnemy(): Monster[] {
 		const enemy = [...switchEnemy.value]
 		switchEnemy.value = []
 		return enemy

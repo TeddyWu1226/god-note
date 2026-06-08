@@ -80,7 +80,7 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
  * @param monster 怪物原本的物件(用於更新血量)
  * @returns 包含戰鬥結果的 BattleOutcome 物件
  */
-export function applyAttackDamage(attacker: UnitType, defender: UnitType, monster: MonsterType): BattleOutcome {
+export function applyAttackDamage(attacker: UnitType, defender: UnitType, monster: MonsterClass): BattleOutcome {
 	const logStore = useLogStore();
 	const playerStore = usePlayerStore();
 	// 1. 執行傷害計算
