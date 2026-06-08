@@ -84,7 +84,7 @@ export const MonsterOnStart: Record<string, (params: MonsterActionParams) => voi
 			}
 		);
 		let m = create(MistyForestMonster.FairyGuard)
-		const strengthening = 1 + gameStateStore.days * 0.015
+		const strengthening = 1 + gameStateStore.days * 0.0075
 		// 基本階段強化
 		m.hpLimit = Math.round(m.hpLimit * strengthening);
 		m.hp = m.hpLimit;

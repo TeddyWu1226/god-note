@@ -16,6 +16,7 @@ import {ElMessageBox, ElNotification} from "element-plus";
 import {StageTransition} from "@/components/StageTransition";
 import DeadPage from "@/views/DeadPage.vue";
 import IntroPage from "@/views/IntroPage.vue";
+import VictoryPage from "@/views/VictoryPage.vue";
 import AchievementDialog from "@/components/FloorInfoLayout/comps/AchievementDialog/AchievementDialog.vue";
 
 const gameStateStore = useGameStateStore()
@@ -122,7 +123,8 @@ watch(
 <template>
   <el-config-provider :card="cardConfig" :button="buttonConfig" :message="{max:3}">
     <div class="common-layout">
-      <DeadPage v-if="isDead"/>
+      <VictoryPage v-if="gameStateStore.isVictory"/>
+      <DeadPage v-else-if="isDead"/>
       <IntroPage v-else-if="gameStateStore.stateIs(GameState.INITIAL)"/>
       <el-container v-else>
         <el-header class="header">

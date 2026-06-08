@@ -168,7 +168,7 @@ export const MonsterOnAttacked: Record<string, (params: MonsterActionParams) => 
             monster.tick['pharaohsRest'] = 0
             if (gameStateStore.currentEnemy.length === 1) {
                 let m = create(Monster.Mummy);
-                const strengthening = 1 + gameStateStore.days * 0.015
+                const strengthening = 1 + gameStateStore.days * 0.0075
                 // 基本階段強化
                 m.hpLimit = Math.round(m.hpLimit * strengthening);
                 m.hp = m.hpLimit;

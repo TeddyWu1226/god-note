@@ -44,7 +44,7 @@ const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
-  const strengthening = 1 + gameStateStore.days * 0.01
+  const strengthening = 1 + gameStateStore.days * 0.005
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -52,7 +52,7 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 
 const getWeightByStage = () => {
-  const day = Math.max(1, gameStateStore.days)
+  const day = Math.max(1, gameStateStore.stageDays)
   const subZoneIdx = Math.min(4, Math.floor((day - 1) / 20))
   const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
   const originalMap = stageMonsterWeightsMap[oldStageIndex] || EndlessWeights
@@ -92,20 +92,34 @@ const getStageKeyByValue = (value: number): string | undefined => {
 };
 const createBoss = () => {
   let newMonsters: MonsterType[]
-  const stageBoss = StageBosses[gameStateStore.currentStage]
-  let boss: MonsterType
-  if (stageBoss) {
-    if (gameStateStore.days === 50) {
-      boss = stageBoss.mini
-    } else if (gameStateStore.days === 100) {
-      boss = stageBoss.main
+  
+  if (gameStateStore.currentStage === 6) {
+    let boss: MonsterType
+    if (gameStateStore.stageDays === 5) {
+      boss = Boss.GodsRealm
+    } else if (gameStateStore.stageDays === 10) {
+      boss = Boss.TowerVoid
     } else {
-      boss = stageBoss.main
+      boss = Boss.TowerVoid
     }
+    newMonsters = [create(boss)]
   } else {
-    boss = Boss.Error
+    const stageBoss = StageBosses[gameStateStore.currentStage]
+    let boss: MonsterType
+    if (stageBoss) {
+      if (gameStateStore.stageDays === 50) {
+        boss = stageBoss.mini
+      } else if (gameStateStore.stageDays === 100) {
+        boss = stageBoss.main
+      } else {
+        boss = stageBoss.main
+      }
+    } else {
+      boss = Boss.Error
+    }
+    newMonsters = [create(boss)]
   }
-  newMonsters = [create(boss)]
+  
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
 }
@@ -172,7 +186,11 @@ const whenMonsterDead = (monsterIndex: number) => {
 const checkAllMonsterDead = () => {
   // 怪物全部死亡
   if (gameStateStore.currentEnemy.length === 0) {
-    gameStateStore.setBattleWon(true)
+    if (gameStateStore.currentStage === 6 && gameStateStore.stageDays === 10) {
+      gameStateStore.isVictory = true
+    } else {
+      gameStateStore.setBattleWon(true)
+    }
   }
 }
 

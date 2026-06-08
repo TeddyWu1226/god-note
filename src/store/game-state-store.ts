@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {MonsterType, StatusEffect} from "@/types";
+import {MonsterType, StatusEffect, UnitType} from "@/types";
 import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
@@ -32,7 +32,7 @@ export const getEffectiveStats = (monster: MonsterType): MonsterType => {
 		apIncrease: monster.apIncrease || 0,
 		defendIncrease: monster.defendIncrease || 0,
 		lifeSteal: monster.lifeSteal || 0,
-	};
+	} as any;
 
 	// 遍歷所有狀態，疊加 Bonus
 	if (!monster.status) {
@@ -61,6 +61,9 @@ export const useGameStateStore = defineStore('game-state', () => {
 	const isDead = ref(false)
 	// 無限挑戰制所需參數
 	const days = ref(0);
+	const stageDays = ref(0);
+	const maxClearedStage = ref(0);
+	const isVictory = ref(false);
 	const nextRooms = ref<number[]>([])
 	// 回合/戰鬥用數據
 	const currentState = ref<GameState>(GameState.INITIAL);
@@ -84,6 +87,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+					// @ts-ignore
 					newVal[i] = new Monster(newVal[i]);
 				}
 			}
@@ -94,6 +98,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+					// @ts-ignore
 					newVal[i] = new Monster(newVal[i]);
 				}
 			}
@@ -122,12 +127,15 @@ export const useGameStateStore = defineStore('game-state', () => {
 
 	// --- Actions ---
 	function init(stageNum = 1, restart = false): void {
-		if (stageNum === 1) {
+		if (stageNum === 1 || restart) {
 			currentState.value = GameState.INITIAL;
-			isDead.value = false
+			isDead.value = false;
+			isVictory.value = false;
+			days.value = 0;
+			maxClearedStage.value = 0;
 			currentRoomValue.value = RoomEnum.Rest.value;
 		}
-		days.value = 0
+		stageDays.value = 0;
 		thisStageAppear.value = []
 		currentStage.value = stageNum;
 		isBattleWon.value = false;
@@ -143,6 +151,22 @@ export const useGameStateStore = defineStore('game-state', () => {
 		}
 		bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
 		console.log('遊戲狀態已重置');
+	}
+
+	function enterJudgmentStage(): void {
+		days.value = 1001;
+		stageDays.value = 0;
+		currentStage.value = 6;
+		currentRoomValue.value = RoomEnum.Bless.value;
+		isBattleWon.value = false;
+		currentEnemy.value = [];
+		currentEventType.value = null;
+		battleRound.value = 1;
+		playerActionPoints.value = 0;
+		lastEventType.value = null;
+		eventAction.value = 0;
+		nextRooms.value = [];
+		thisStageAppear.value = [];
 	}
 
 	function setRoom(roomValue: number): void {
@@ -325,7 +349,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	// --- 記得導出所有要在組件中使用的東西 ---
 	return {
 		currentRoomValue, difficulty, isDead,
-		days, nextRooms,
+		days, stageDays, maxClearedStage, isVictory, nextRooms,
 		currentStage,
 		currentState,
 		isBattleWon,
@@ -348,7 +372,8 @@ export const useGameStateStore = defineStore('game-state', () => {
 		setCurrentEnemy, setBattleWon,
 		setEvent, isEventClose,
 		addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
-		addEffectToMonster, tickAllMonsters
+		addEffectToMonster, tickAllMonsters,
+		enterJudgmentStage
 	};
 }, {
 	persist: true // 持久化依然有效
