@@ -34,30 +34,30 @@ watch(
 </script>
 
 <template>
-  <div v-if="Operation.current===operationStatusEnum.Skill" class="flex">
-    <template v-for="skill in playerStore.info.skills" :key="skill.id">
-      <SkillButton
-          v-if="skill.type === 'active'"
-          :skill="skill"
-          @click="emit('skill', skill.id)"
-      />
-    </template>
-    <el-button type="info" plain :disabled="props.disabled" @click="changeStatus">
-      返回
-    </el-button>
-  </div>
-  <div v-else class="flex">
+  <div class="flex">
     <el-button type="primary" @click="emit('attack',true)">
       攻擊
     </el-button>
     <OffHandSkillButton @click="(skillKey)=>{emit('skill',skillKey)}"/>
+    
+    <!-- 補給與技能按鈕共用位置，按下方版面狀態進行切換 -->
     <el-button
-        v-if="playerStore.info.skills?.filter((skill)=>skill.type === 'active').length"
+        v-if="gameStateStore.bottomPanelMode === 'skills'"
         type="success"
         :disabled="props.disabled"
-        @click="changeStatus(operationStatusEnum.Skill)">
+        @click="gameStateStore.bottomPanelMode = 'backpack'"
+    >
+      補給
+    </el-button>
+    <el-button
+        v-else-if="playerStore.info.skills?.filter((skill)=>skill.type === 'active').length"
+        type="success"
+        :disabled="props.disabled"
+        @click="gameStateStore.bottomPanelMode = 'skills'"
+    >
       技能
     </el-button>
+
     <el-button type="warning" plain :disabled="props.disabled" @click="emit('endTurn')">
       結束回合
     </el-button>

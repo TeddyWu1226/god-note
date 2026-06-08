@@ -5,6 +5,8 @@ import {UserLayout} from "@/components/UserLayout";
 import {OperationLayout} from "@/components/OperationLayout";
 import {FloorInfoLayout} from "@/components/FloorInfoLayout";
 import {useGameStateStore} from "@/store/game-state-store";
+import CombatSkillsLayout from "@/components/UserLayout/comps/CombatSkillsLayout.vue";
+import {RoomEnum} from "@/enums/room-enum";
 import {GameState} from "@/enums/enums";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
@@ -18,6 +20,17 @@ import AchievementDialog from "@/components/FloorInfoLayout/comps/AchievementDia
 
 const gameStateStore = useGameStateStore()
 const isDead = computed(() => gameStateStore.isDead);
+
+// 判斷當前是否處於戰鬥房間
+const isCombatRoom = computed(() => {
+  const battleRooms = [
+    RoomEnum.Fight.value,
+    RoomEnum.EliteFight.value,
+    RoomEnum.Boss.value,
+    RoomEnum.SpecialBoss.value
+  ];
+  return battleRooms.includes(gameStateStore.currentRoomValue);
+});
 const cardConfig = ref({
   shadow: 'never',
 })
@@ -143,7 +156,16 @@ watch(
               @end-turn="onEndTurn"
           />
           <UserValueLayout/>
-          <UserLayout class="user-layout" @on-item-skill="onItemSkill"/>
+          <UserLayout
+              v-if="gameStateStore.bottomPanelMode === 'backpack' || !isCombatRoom"
+              class="user-layout"
+              @on-item-skill="onItemSkill"
+          />
+          <CombatSkillsLayout
+              v-else
+              class="user-layout"
+              @on-skill="onSkill"
+          />
         </el-main>
       </el-container>
       <UserDetailInfo v-if="!gameStateStore.stateIs(GameState.INITIAL)"/>

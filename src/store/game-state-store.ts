@@ -77,6 +77,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	const otherRecord = ref<Record<string, any>>({}); // 額外記錄表
 	const battleRound = ref(1); // 戰鬥回合數
 	const playerActionPoints = ref(0); // 玩家當前行動點數
+	const bottomPanelMode = ref<'backpack' | 'skills'>('skills'); // 下方區塊模式: backpack (背包) 或 skills (技能)
 
 	// 深度監聽敵怪數據，自動重構為 Class 實例
 	watch(currentEnemy, (newVal) => {
@@ -140,6 +141,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 			eventProcess.value = {} as Record<SpecialEventEnum, number>;
 			otherRecord.value = {}
 		}
+		bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
 		console.log('遊戲狀態已重置');
 	}
 
@@ -153,6 +155,15 @@ export const useGameStateStore = defineStore('game-state', () => {
 		eventAction.value = 0;
 		battleRound.value = 1;
 		playerActionPoints.value = 0;
+		// 進入房間時判定：如果是戰鬥房間且玩家擁有主動技能，預設開啟技能面板，否則開啟背包面板
+		const playerStore = usePlayerStore();
+		const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value, RoomEnum.SpecialBoss.value];
+		const hasActiveSkills = playerStore.info.skills?.some((s: any) => s.type === 'active');
+		if (battleRooms.includes(roomValue) && hasActiveSkills) {
+			bottomPanelMode.value = 'skills';
+		} else {
+			bottomPanelMode.value = 'backpack';
+		}
 	}
 
 	function refillActionPoints(): void {
@@ -200,6 +211,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 			if (won) {
 				currentEnemy.value = [];
 				currentState.value = GameState.SELECTION_PHASE;
+				bottomPanelMode.value = 'backpack'; // 戰鬥勝利結算時，切換回背包模式以查看掉落物
 			}
 		}
 	}
@@ -330,6 +342,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 		battleRound,
 		playerActionPoints,
 		refillActionPoints,
+		bottomPanelMode,
 		init, transitionToNextState,
 		setRoom, switchToFightRoom, switchToEventRoom, takeSwitchEnemy,
 		setCurrentEnemy, setBattleWon,
