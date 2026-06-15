@@ -128,7 +128,7 @@ watch(
       <IntroPage v-else-if="gameStateStore.stateIs(GameState.INITIAL)"/>
       <el-container v-else>
         <el-header class="header">
-          <span>𝄞神祇記事𝄞</span>
+          <span>𝄞締造𝄞</span>
           <div>
             <el-button type="warning" style="height: 2rem" size="small" @click="showAchievement" plain>
               🏆 成就

@@ -2,13 +2,13 @@
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {RoomEnum} from "@/enums/room-enum";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
-import {DifficultyEnum} from "@/enums/difficulty-enum";
-import {computed} from "vue";
+import {ref, computed} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
+import {CharEnum} from "@/enums/char-enum";
+import {Dagger} from "@/constants/items/equipment/weapon-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -16,31 +16,52 @@ const trackStore = useTrackerStore()
 const achievementStore = useAchievementStore()
 const saveStore = useSaveStore();
 
-// ⭐️ 判斷是否有存檔：檢查 savedSlots[0] 是否有內容
+const showClassSelect = ref(false)
+const selectedClass = ref<string>('')
+
+// ⭐️ 判斷是否有存盤：檢查 savedSlots[0] 是否有內容
 const hasSave = computed(() => {
   return !!saveStore.savedSlots[0];
 });
 
-const initAll = async () => {
+const classOptions = [
+  {value: 'Merchant', label: '商人', icon: '🪙', desc: '初始金額比較多，開局獲得 300 💰。'},
+  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '初始獲得「小刀」武器，但開局只有總生命的一半。'},
+  {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '啥都沒有的普通人，完全依靠自身實力。'},
+  {value: 'Cleric', label: '聖職者', icon: '🛐', desc: '開局學會主動技能「治療術」。'}
+]
+
+const confirmClassSelection = async () => {
+  if (!selectedClass.value) return;
+
   playerStore.init();
   saveStore.clearSaves()
   gameStateStore.init(1, true);
-  if (gameStateStore.difficulty === DifficultyEnum.Easy.value) {
-    playerStore.gainItem(Usable.SmokeBomb);
-    playerStore.gainItem(Usable.SmokeBomb);
-    playerStore.gainItem(Usable.SmokeBomb);
+
+  // 設定玩家選擇的職業
+  playerStore.info.char = selectedClass.value;
+
+  // 套用職業初始獎勵
+  if (selectedClass.value === 'Merchant') {
+    playerStore.info.gold = 300;
+  } else if (selectedClass.value === 'Thief') {
+    playerStore.gainItem(Dagger.Dagger1);
+    playerStore.info.hp = Math.round(playerStore.finalStats.hpLimit / 2);
+  } else if (selectedClass.value === 'Cleric') {
+    playerStore.addSkill('CommonHeal');
   }
+
   trackStore.init();
   achievementStore.tryTime += 1;
   gameStateStore.setRoom(RoomEnum.Bless.value);
-};
+}
 
-// ⭐️ 重新開始：如果有舊存檔，先跳出詢問
+// ⭐️ 點擊開始遊戲：如果有舊存檔，先跳出詢問
 const startGame = async () => {
   if (hasSave.value) {
     try {
       await ElMessageBox.confirm(
-          '重新開始將會覆蓋現有的神祇記事存檔，確定要抹除過去的輪迴嗎？',
+          '重新開始將會覆蓋現有的【締造】存檔，確定要抹除過去的輪迴嗎？',
           '命運警告',
           {
             confirmButtonText: '確定抹除',
@@ -49,12 +70,14 @@ const startGame = async () => {
             center: true,
           }
       );
-      await initAll();
+      selectedClass.value = '';
+      showClassSelect.value = true;
     } catch {
       // 點擊取消，不做任何動作
     }
   } else {
-    await initAll();
+    selectedClass.value = '';
+    showClassSelect.value = true;
   }
 };
 
@@ -63,61 +86,79 @@ const continueGame = () => {
   saveStore.loadAll(0);
 };
 
-
 </script>
 
 <template>
   <el-card class="start-view">
     <div class="content-wrapper">
-      <h1 class="game-title">神祇記事</h1>
-      <h2 class="game-subtitle">~無盡之塔~</h2>
+      <template v-if="!showClassSelect">
+        <h1 class="game-title">締造</h1>
+        <h2 class="game-subtitle">~諸神黃昏~</h2>
 
-      <div class="story-box">
-        <p class="typewriter">傳說，高塔之巔棲息著能實現一切願望的神明</p>
-        <p class="typewriter delay-1">千年來，無數勇者化作枯骨，卻無人能觸及雲端</p>
-        <p class="typewriter delay-2">陌生的登塔者啊，你是命運的第幾次輪迴？</p>
-      </div>
-      <div class="difficulty-selection">
-        <p class="select-title">—— 選擇命運的難度 ——</p>
-        <div class="diff-cards">
-          <div
-              v-for="opt in DifficultyEnum"
-              :key="opt.value"
-              class="diff-card"
-              :class="{ active: gameStateStore.difficulty === opt.value }"
-              :style="{ '--diff-color': opt.color }"
-              @click="gameStateStore.difficulty = opt.value"
+        <div class="story-box">
+          <p class="typewriter">當諸神的星圖軌跡交匯，千日後的黃昏將是萬物的終局。</p>
+          <p class="typewriter delay-1">垂憐世人的星辰悄然墜落，於凡軀之中刻下弒神升華的印記。</p>
+          <p class="typewriter delay-2">沙漏無聲流逝，在千夜盡頭，唯有締造半神，對抗命運。</p>
+        </div>
+
+        <div class="action-zone">
+          <el-button
+              v-if="hasSave"
+              class="continue-btn"
+              @click="continueGame"
           >
-            <div class="diff-icon">{{ opt.icon }}</div>
-            <div class="diff-label">{{ opt.label }}</div>
-            <div class="diff-desc">{{ opt.desc }}</div>
+            從紀錄開始
+          </el-button>
+
+          <el-button
+              :class="hasSave ? 'restart-btn' : 'start-btn'"
+              @click="startGame"
+          >
+            {{ hasSave ? '重新開始' : '選擇勇者' }}
+          </el-button>
+        </div>
+      </template>
+
+      <template v-else>
+        <h1 class="select-class-title">選擇你的初始職業</h1>
+        <p class="select-class-subtitle">這將決定你踏入高塔時的起點與能力</p>
+
+        <div class="class-cards">
+          <div
+              v-for="cls in classOptions"
+              :key="cls.value"
+              class="class-card"
+              :class="{ active: selectedClass === cls.value }"
+              @click="selectedClass = cls.value"
+          >
+            <div class="class-icon">{{ cls.icon }}</div>
+            <div class="class-label">{{ cls.label }}</div>
+            <div class="class-desc">{{ cls.desc }}</div>
           </div>
         </div>
-      </div>
-      <div class="action-zone">
-        <el-button
-            v-if="hasSave"
-            class="continue-btn"
-            @click="continueGame"
-        >
-          從紀錄開始
-        </el-button>
 
-        <el-button
-            :class="hasSave ? 'restart-btn' : 'start-btn'"
-            @click="startGame"
-        >
-          {{ hasSave ? '抹除並重新開始' : '登上旅途' }}
-        </el-button>
-      </div>
+        <div class="action-zone" style="margin-top: 3rem;">
+          <el-button
+              class="confirm-btn"
+              :disabled="!selectedClass"
+              @click="confirmClassSelection"
+          >
+            開始締造之旅
+          </el-button>
+          <el-button
+              class="back-btn"
+              @click="showClassSelect = false"
+          >
+            返回
+          </el-button>
+        </div>
+      </template>
     </div>
   </el-card>
 </template>
 
 
 <style scoped>
-
-
 /* 首頁背景與佈局 */
 .start-view {
   height: 100%;
@@ -212,6 +253,127 @@ const continueGame = () => {
   box-shadow: 0 0 20px rgba(255, 214, 0, 0.6);
 }
 
+/* 職業選擇標題與排版 */
+.select-class-title {
+  font-size: 2.2rem;
+  color: #ffd700;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.2rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.select-class-subtitle {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.1rem;
+}
+
+.class-cards {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.class-card {
+  width: 140px;
+  padding: 1.5rem 0.75rem;
+  border: 1px solid #333;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.class-card:hover {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.03);
+  transform: translateY(-5px);
+}
+
+.class-card.active {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.08);
+  box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2), 0 5px 15px rgba(255, 215, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.class-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.class-label {
+  color: #eee;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+
+.class-card.active .class-label {
+  color: #ffd700;
+}
+
+.class-desc {
+  font-size: 0.8rem;
+  color: #777;
+  line-height: 1.4;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.class-card.active .class-desc {
+  color: #ccc;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #ffd700 0%, #aa8000 100%) !important;
+  border: none !important;
+  color: #120e0b !important;
+  font-size: 1.3rem !important;
+  font-weight: bold !important;
+  padding: 2.2rem 4.5rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+  letter-spacing: 0.2rem;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffffff 0%, #ffd700 100%) !important;
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5) !important;
+  transform: translateY(-2px);
+}
+
+.confirm-btn:disabled {
+  background: #333 !important;
+  color: #666 !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.back-btn {
+  background: transparent !important;
+  border: 1px solid #444 !important;
+  color: #888 !important;
+  font-size: 1rem !important;
+  padding: 1.8rem 3rem !important;
+  transition: all 0.3s !important;
+}
+
+.back-btn:hover {
+  border-color: #ffd700 !important;
+  color: #ffd700 !important;
+  background: rgba(255, 215, 0, 0.02) !important;
+}
 
 /* 動畫定義 */
 @keyframes typing {
@@ -227,79 +389,6 @@ const continueGame = () => {
   to {
     opacity: 1;
   }
-}
-
-
-.difficulty-selection {
-  margin-bottom: 3rem;
-  animation: fade-in 2s forwards;
-  animation-delay: 1.5s;
-  opacity: 0;
-}
-
-.select-title {
-  color: #888;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.2rem;
-}
-
-
-:root {
-  --diff-color: #fff
-}
-
-.diff-cards {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.diff-card {
-  width: 140px;
-  padding: 1.25rem 0.625rem;
-  border: 1px solid #333;
-  background: rgba(255, 255, 255, 0.05);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 4px;
-}
-
-.diff-card:hover {
-  border-color: #666;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.diff-card.active {
-  border-color: var(--diff-color);
-  background: rgba(var(--diff-color), 0.1);
-  box-shadow: inset 0 0 15px var(--diff-color);
-  transform: translateY(-5px);
-}
-
-.diff-label {
-  color: #eee;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.diff-desc {
-  font-size: 0.75rem;
-  color: #777;
-  line-height: 1.4;
-}
-
-.diff-card.active .diff-label {
-  color: var(--diff-color);
-}
-
-.diff-card.active .diff-desc {
-  color: #ccc;
-}
-
-.diff-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .action-zone {

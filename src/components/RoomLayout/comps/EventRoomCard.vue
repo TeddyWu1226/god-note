@@ -29,24 +29,6 @@ const GeneralEvent = [
     type: SpecialEventEnum.GetFruit, // 魔樹事件
     canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
   },
-  {
-    type: SpecialEventEnum.JobWarrior, // 劍士轉職事件
-    canAppear: () => {
-      if (playerStore.info.char !== CharEnum.Beginner.value) {
-        return false;
-      }
-      return trackerStore.getKillCount("USE_SWORD", 'total') >= 10;
-    }
-  },
-  {
-    type: SpecialEventEnum.JobWizard, // 法師轉職事件
-    canAppear: () => {
-      if (playerStore.info.char !== CharEnum.Beginner.value) {
-        return false;
-      }
-      return playerStore.finalStats.apIncrease > 10
-    }
-  },
 ];
 
 

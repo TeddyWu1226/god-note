@@ -97,7 +97,7 @@ export class Skill {
 export const SKILL_TEMPLATES: Record<string, any> = {
     CommonHeal: {
         id: 'CommonHeal',
-        name: "初級治療",
+        name: "治療術",
         icon: "💕",
         type: 'active',
         rarity: 'common',

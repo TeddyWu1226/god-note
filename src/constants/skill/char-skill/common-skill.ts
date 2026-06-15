@@ -1,13 +1,10 @@
 import {SkillType} from "@/types";
-import {applySkillDamage} from "@/constants/fight-func";
 import {ColorText} from "@/utils/color";
-import {checkProbability, formatPrecision} from "@/utils/math";
-import {ItemStatus} from "@/constants/status/item-status";
 
 export const CommonSkill = {
 	CommonHeal: {
 		id: 'CommonHeal',
-		name: "初級治療",
+		name: "治療術",
 		icon: "💕",
 		description: ({playerStore}) => {
 			const proficiency = playerStore.getSkillProficiency('CommonHeal')

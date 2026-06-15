@@ -1,7 +1,19 @@
 export const CharEnum = {
-    Beginner: {
-        value: 'Beginner',
-        label: '登塔者'
+    Merchant: {
+        value: 'Merchant',
+        label: '商人'
+    },
+    Thief: {
+        value: 'Thief',
+        label: '貧賊'
+    },
+    Villager: {
+        value: 'Villager',
+        label: '村民'
+    },
+    Cleric: {
+        value: 'Cleric',
+        label: '聖職者'
     },
     //戰士
     Warrior: {

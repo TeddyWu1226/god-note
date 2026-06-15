@@ -73,12 +73,13 @@ export const checkAchievements = (
         if (key.startsWith('BeginnerKillGod')) {
             const kill = trackerStore.getKillCount(Boss.Twilight.name, 'total');
             if (key === 'BeginnerKillGod0' &&
-                playerStore.info.char === CharEnum.Beginner.value &&
+                playerStore.info.char !== CharEnum.Warrior.value &&
+                playerStore.info.char !== CharEnum.Wizard.value &&
                 kill > 0
             ) isConditionMet = true;
         }
         // --- 轉職 ---
-        if (key === 'ThisGameHasJob' && playerStore.info.char !== CharEnum.Beginner.value) {
+        if (key === 'ThisGameHasJob' && (playerStore.info.char === CharEnum.Warrior.value || playerStore.info.char === CharEnum.Wizard.value)) {
             isConditionMet = true;
         }
         /** 隱藏成就 **/

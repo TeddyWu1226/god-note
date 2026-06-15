@@ -21,7 +21,7 @@ export const DEFAULT_USER_INFO: UserType = {
     sp: 100,
     spLimit: 100,
     level: 1,
-    char: CharEnum.Beginner.value,
+    char: CharEnum.Villager.value,
     gold: 0,
     adIncrease: 0,
     apIncrease: 0,
