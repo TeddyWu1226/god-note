@@ -114,7 +114,7 @@ const continueGame = () => {
               :class="hasSave ? 'restart-btn' : 'start-btn'"
               @click="startGame"
           >
-            {{ hasSave ? '重新開始' : '選擇勇者' }}
+            {{ hasSave ? '重新開始' : '開始' }}
           </el-button>
         </div>
       </template>

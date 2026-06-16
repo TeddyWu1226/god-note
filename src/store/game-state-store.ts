@@ -8,8 +8,13 @@ import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {Monster} from "@/models/monster";
 import {usePlayerStore} from "@/store/player-store";
 
-export const getEffectiveStats = (monster: Monster): Monster => {
-	return monster.getEffectiveStats();
+export const getEffectiveStats = (monster: any): Monster => {
+	if (!monster) return monster;
+	if (monster instanceof Monster) {
+		return monster.getEffectiveStats();
+	}
+	const instance = new Monster(monster);
+	return instance.getEffectiveStats();
 };
 
 export const useGameStateStore = defineStore('game-state', () => {
