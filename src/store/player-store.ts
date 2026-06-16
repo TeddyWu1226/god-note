@@ -1,13 +1,9 @@
 import {defineStore} from 'pinia';
-import {ref, computed, nextTick, watch} from 'vue';
-import type {UserType, Equipment, EquipmentType, StatusEffect, ItemStackType} from '@/types';
+import {computed, nextTick, ref, watch} from 'vue';
+import type {Equipment, EquipmentType, ItemStackType, StatusEffect, UserType} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
-import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import {Warrior1SkillEvolutionMap} from "@/constants/skill/learned-skill/warrior-learned-skill";
-import {CharEnum} from "@/enums/char-enum";
-import {Wizard1SkillEvolutionMap} from "@/constants/skill/learned-skill/wizard-learned-skill";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability} from "@/utils/math";
 import {ItemStatus} from "@/constants/status/item-status";
@@ -37,7 +33,7 @@ export const usePlayerStore = defineStore('player-info', () => {
                 if (typeof s === 'string') {
                     changed = true;
                     const prof = skillProficiency.value[s] || 0;
-                    return SkillFactory.createSkill(s, { level: 1, proficiency: prof, currentCd: 0 });
+                    return SkillFactory.createSkill(s, {level: 1, proficiency: prof, currentCd: 0});
                 }
                 return s;
             });
@@ -45,7 +41,7 @@ export const usePlayerStore = defineStore('player-info', () => {
                 info.value.skills = restored;
             }
         },
-        { immediate: true, deep: true }
+        {immediate: true, deep: true}
     );
 
     // --- Getters ---
@@ -519,23 +515,23 @@ export const usePlayerStore = defineStore('player-info', () => {
         const skill = info.value.skills.find(s => s.id === skillKey);
         return skill ? skill.proficiency : (skillProficiency.value[skillKey] || 0);
     }
-    const addSkillProficiency = (skillKey: string, value = 1) => {
+    const addSkillProficiency = (skillKey: string, value?: number) => {
         const skill = info.value.skills.find(s => s.id === skillKey);
         if (skill) {
-            if (skill.proficiency >= 100) return;
-            skill.proficiency = Math.min(skill.proficiency + value, 100);
-            if (skill.proficiency >= 100) {
-                skill.level += 1;
-                skill.proficiency = 0;
-                const logStore = useLogStore();
-                logStore.logger.add(`[技能升級] 您的技能 [${skill.name}] 提升到了 Lv.${skill.level}！`);
-            }
+            const gain = value ?? skill.proficiencyGain ?? 1;
+            const maxProf = skill.maxProficiency ?? 100;
+            if (skill.proficiency >= maxProf) return;
+
+            skill.proficiency = Math.min(skill.proficiency + gain, maxProf);
+
         } else {
             // fallback
-            if ((skillProficiency.value[skillKey] || 0) >= 100) {
+            const fallbackMax = 100;
+            const gain = value ?? 1;
+            if ((skillProficiency.value[skillKey] || 0) >= fallbackMax) {
                 return
             }
-            skillProficiency.value[skillKey] = Math.min((skillProficiency.value[skillKey] || 0) + value, 100)
+            skillProficiency.value[skillKey] = Math.min((skillProficiency.value[skillKey] || 0) + gain, fallbackMax)
         }
     }
     /**
@@ -572,7 +568,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (leveledUp) {
             info.value.hp = finalStats.value.hpLimit;
             info.value.sp = finalStats.value.spLimit;
-            
+
             // 💡 核心新增：每 5 等可獲得技能點數
             let skillPointsGained = 0;
             for (let lvl = startLevel + 1; lvl <= info.value.level; lvl++) {

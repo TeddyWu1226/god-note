@@ -5,13 +5,16 @@ import {useGameStateStore} from '@/store/game-state-store';
 import {SkillModel} from '@/models/skill-model';
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
+import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
 
 const emit = defineEmits(['on-learned-skill']);
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore();
 
 const sortedSkills = computed(() => {
-  return playerStore.info.skills || [];
+  // 戰鬥面板僅顯示主動技能，過濾掉被動技能
+  const skills = playerStore.info.skills || [];
+  return skills.filter((s: SkillModel) => s.type === 'active');
 });
 
 const getRarityColor = (rarity: string) => {
@@ -86,16 +89,25 @@ const clickSkill = (skill: SkillModel) => {
                   </span>
                 </div>
                 <div class="costs">
-                  <span v-if="skill.costSp">SP 消耗: {{ skill.costSp }} | </span>
-                  <span v-if="skill.costHp">HP 消耗: {{ skill.costHp }} | </span>
-                  <span>冷卻: {{ skill.cd }} 回合</span>
+                  <span v-if="skill.costSp">SP 消耗: {{ skill.costSp }}</span>
+                  <span v-if="skill.costHp && skill.costSp" style="margin: 0 4px">|</span>
+                  <span v-if="skill.costHp">HP 消耗: {{ skill.costHp }}</span>
+                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp)" style="margin: 0 4px">|</span>
+                  <template v-if="skill.type === 'active'">
+                    <span>冷卻: {{ skill.cd }} 回合</span>
+                    <span style="margin: 0 4px">|</span>
+                    <span>熟練度: {{ skill.proficiency }}/{{ skill.maxProficiency }}</span>
+                  </template>
                 </div>
                 <div class="desc" v-html="skill.description(playerStore)"/>
               </div>
             </template>
 
             <div class="skill-inner">
-              <span class="icon">{{ skill.icon }}</span>
+              <span class="icon">
+                <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon" alt="skill icon" />
+                <template v-else>{{ skill.icon }}</template>
+              </span>
               <div class="info">
                 <div class="name-row">
                   <span class="name">{{ skill.name }}</span>
@@ -175,6 +187,15 @@ const clickSkill = (skill: SkillModel) => {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.skill-image-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .icon {

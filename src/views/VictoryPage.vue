@@ -4,6 +4,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {getEnumColumn} from "@/utils/enum";
 import {CharEnum} from "@/enums/char-enum";
 import {computed} from "vue";
+import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -114,7 +115,10 @@ const finalSkills = computed(() => {
         <h3 class="panel-title">☄️ 繼承之神格技能 ☄️</h3>
         <div class="skills-grid">
           <div v-for="skill in finalSkills" :key="skill.id" class="skill-icon-box">
-            <div class="skill-icon" :title="skill.name">{{ skill.icon }}</div>
+            <div class="skill-icon" :title="skill.name">
+              <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon-small" alt="skill icon" />
+              <template v-else>{{ skill.icon }}</template>
+            </div>
             <div class="skill-name">{{ skill.name }}</div>
           </div>
         </div>
@@ -290,6 +294,14 @@ const finalSkills = computed(() => {
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.skill-image-icon-small {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
 }
 
 .skill-name {

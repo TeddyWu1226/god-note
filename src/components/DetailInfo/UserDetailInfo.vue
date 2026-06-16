@@ -12,6 +12,7 @@ import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {SkillModel} from "@/models/skill-model";
 import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
+import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
 
 
 const playerStore = usePlayerStore();
@@ -360,7 +361,10 @@ const cancelReplaceMode = () => {
                :style="{ borderColor: getRarityColor(skill.rarity), color: getRarityColor(skill.rarity) }">
             {{ getRarityName(skill.rarity) }}
           </div>
-          <div class="card-icon">{{ skill.icon }}</div>
+          <div class="card-icon">
+            <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon" alt="skill icon" />
+            <template v-else>{{ skill.icon }}</template>
+          </div>
           <div class="card-name">{{ skill.name }}</div>
           <div class="card-type">{{ skill.type === 'active' ? '主動' : '被動' }}</div>
           <div class="card-desc" v-html="skill.description(playerStore)"/>
@@ -380,7 +384,9 @@ const cancelReplaceMode = () => {
           新學習技能:
           <span class="preview-badge"
                 :style="{ color: getRarityColor(selectedNewSkill.rarity), borderColor: getRarityColor(selectedNewSkill.rarity) }">
-            {{ selectedNewSkill.icon }} {{ selectedNewSkill.name }}
+            <img v-if="isImageIcon(selectedNewSkill.icon)" :src="resolveIconPath(selectedNewSkill.icon)" class="skill-image-icon-small" alt="skill icon" />
+            <template v-else>{{ selectedNewSkill.icon }}</template>
+            {{ selectedNewSkill.name }}
           </span>
         </div>
 
@@ -391,7 +397,10 @@ const cancelReplaceMode = () => {
               class="replace-item-row"
               @click="confirmReplacement(skill.id)"
           >
-            <span class="replace-icon">{{ skill.icon }}</span>
+            <span class="replace-icon">
+              <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon-small" alt="skill icon" />
+              <template v-else>{{ skill.icon }}</template>
+            </span>
             <div class="replace-meta">
               <span class="replace-name">{{ skill.name }} (Lv.{{ skill.level }})</span>
               <span class="replace-type">{{ skill.type === 'active' ? '主動' : '被動' }}</span>
@@ -819,6 +828,26 @@ const cancelReplaceMode = () => {
   margin-top: 10px;
   margin-bottom: 10px;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skill-image-icon {
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+}
+
+.skill-image-icon-small {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .card-name {

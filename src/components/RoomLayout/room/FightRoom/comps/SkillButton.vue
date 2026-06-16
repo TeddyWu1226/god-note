@@ -2,6 +2,7 @@
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {SkillModel} from "@/models/skill-model";
+import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
 
 const emit = defineEmits(['click'])
 const props = defineProps({
@@ -26,7 +27,10 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         plain
         @click="emit('click')"
     >
-      <span class="skill-icon">{{ skill?.icon }}</span>
+      <span class="skill-icon">
+        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon" alt="skill icon" />
+        <template v-else>{{ skill?.icon }}</template>
+      </span>
       <div class="skill-info">
         <span class="skill-name">
           {{ skill?.name }}
@@ -93,6 +97,15 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
   margin-right: 10px;
   /* 讓圖示看起來更有立體感 */
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+.skill-image-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .skill-info {

@@ -8,17 +8,19 @@ export class CommonHeal extends SkillModel {
         super({
             id: 'CommonHeal',
             name: "治療術",
-            icon: "💕",
+            icon: "skills/heal_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 2,
             costSp: 25,
-            costAction: 1
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
         });
     }
 
     get healVal(): number {
-        return Math.floor(30 + this.level * 15 + this.proficiency * 0.7);
+        return Math.round(30 + this.level * 15 + this.proficiency * 0.7);
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -42,19 +44,20 @@ export class MagicBall extends SkillModel {
         super({
             id: 'MagicBall',
             name: "法力彈",
-            icon: "🔵",
+            icon: "skills/magic_ball_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
             costSp: 10,
-            costAction: 1
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
         });
     }
 
-    // 💡 統一的數值公式
     getDamage(playerStore: PlayerStoreType): number {
         const apIncrease = playerStore?.finalStats?.apIncrease ?? 0;
-        return Math.floor(
+        return Math.round(
             (5 + this.level * 5 + this.proficiency * 0.15) *
             (1 + apIncrease / 100)
         );
@@ -87,17 +90,18 @@ export class PhysiqueBoost extends SkillModel {
         super({
             id: 'PhysiqueBoost',
             name: "強健體魄",
-            icon: "🏋️",
+            icon: "skills/physique_icon.svg",
             type: 'passive',
             rarity: 'common',
             maxCd: 0,
             costSp: 0,
             costHp: 0,
-            costAction: 0
+            costAction: 0,
+            maxProficiency: 50,
+            proficiencyGain: 2
         });
     }
 
-    // 💡 統一的數值公式
     get hpBonus(): number {
         return 20 * this.level;
     }
@@ -114,5 +118,145 @@ export class PhysiqueBoost extends SkillModel {
         return {
             hpLimit: this.hpBonus
         };
+    }
+}
+
+export class VerticalSlash extends SkillModel {
+    constructor() {
+        super({
+            id: 'VerticalSlash',
+            name: "豎擊",
+            icon: "skills/vertical_slash_icon.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 0,
+            costSp: 5,
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
+        });
+    }
+
+    get extraDamage(): number {
+        return Math.round(this.proficiency / 5);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        const total = ad + this.extraDamage;
+        return `由上往下攻擊, 額外獲得 ${ColorText.ad(this.extraDamage)} 物理傷害，總計造成 ${ColorText.ad(total)} 物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        const monster = params.monster;
+        if (!playerStore || !monster) return false;
+
+        const totalDmg = playerStore.finalStats.ad + this.extraDamage;
+        monster.lastDamageResult = applySkillDamage(
+            playerStore.finalStats,
+            monster,
+            totalDmg,
+            'ad',
+            '豎擊'
+        );
+        return true;
+    }
+}
+
+export class HorizontalSlash extends SkillModel {
+    constructor() {
+        super({
+            id: 'HorizontalSlash',
+            name: "橫擊",
+            icon: "skills/horizontal_slash_icon.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 0,
+            costSp: 15,
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.round(((50 + this.proficiency) / 100) * ad);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const dmg = this.getDamage(playerStore);
+        return `橫揮手中武器, 造成全部敵人 ${ColorText.ad(dmg)} 的物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        const gameStateStore = params.gameStateStore;
+        if (!playerStore || !gameStateStore) return false;
+
+        const enemies = gameStateStore.currentEnemy || [];
+        if (enemies.length === 0) return false;
+
+        const dmg = this.getDamage(playerStore);
+        enemies.forEach((enemy) => {
+            enemy.lastDamageResult = applySkillDamage(
+                playerStore.finalStats,
+                enemy,
+                dmg,
+                'ad',
+                '橫擊'
+            );
+        });
+        return true;
+    }
+}
+
+export class Thrust extends SkillModel {
+    constructor() {
+        super({
+            id: 'Thrust',
+            name: "刺擊",
+            icon: "skills/thrust_icon.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 0,
+            costSp: 10,
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.round(ad * 1.5 + this.proficiency * 0.6);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const dmg = this.getDamage(playerStore);
+        return `蓄力向前刺擊，造成較高物理傷害，但降低 30% 命中率。造成 ${ColorText.ad(dmg)} 的物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        const monster = params.monster;
+        if (!playerStore || !monster) return false;
+
+        const dmg = this.getDamage(playerStore);
+        
+        const adjustedAttacker = {
+            ...playerStore.finalStats,
+            hit: (playerStore.finalStats.hit || 0) - 30
+        } as any;
+
+        monster.lastDamageResult = applySkillDamage(
+            adjustedAttacker,
+            monster,
+            dmg,
+            'ad',
+            '刺擊'
+        );
+        return true;
     }
 }

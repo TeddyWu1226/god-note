@@ -7,7 +7,7 @@ export const OffhandSkill = {
 	ShieldBlock: {
 		id: 'ShieldBlock',
 		name: "格擋",
-		icon: "🛡",
+		icon: "skills/shield_block.svg",
 		itemDescription:'舉起盾牌進行防禦,本回合內提升防禦力以抵擋傷害,如果敵方爆擊,則額外造成對方暫時暈眩',
 		description: ({playerStore}) => {
 			const shield = (playerStore.info.equips.offhand.adDefend ?? 0)
@@ -35,7 +35,7 @@ export const OffhandSkill = {
 	MagicRegain: {
 		id: 'MagicRegain',
 		name: "法力恢復",
-		icon: "🌱",
+		icon: "skills/magic_regain.svg",
 		itemDescription:'喚起書中魔力文字,立刻恢復部分點法力',
 		description: ({playerStore}) => {
 			const value = (playerStore.info.equips.offhand.spLimit ?? 0) / 4

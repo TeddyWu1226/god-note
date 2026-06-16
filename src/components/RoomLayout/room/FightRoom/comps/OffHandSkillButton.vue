@@ -4,6 +4,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {EquipmentType} from "@/types";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
+import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
 
 const emit = defineEmits(['click'])
 
@@ -26,7 +27,10 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         :disabled="!canAfford"
         @click="emit('click',skill?.id)"
     >
-      <span class="skill-icon">{{ skill?.icon }}</span>
+      <span class="skill-icon">
+        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon" alt="skill icon" />
+        <template v-else>{{ skill?.icon }}</template>
+      </span>
       <div class="skill-info">
         <span class="skill-name">{{ skill?.name }}</span>
         <span v-if="skill?.costSp" class="skill-cost">SP: {{ skill.costSp }}</span>
@@ -88,6 +92,15 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
   margin-right: 10px;
   /* 讓圖示看起來更有立體感 */
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+.skill-image-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .skill-info {

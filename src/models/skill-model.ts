@@ -4,32 +4,36 @@ export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
 
 export abstract class SkillModel {
-    id: string;
-    name: string;
-    icon: string;
-    type: SkillTypeCategory;
-    rarity: SkillRarity;
-    level: number;
-    proficiency: number;
-    currentCd: number;
-    maxCd: number;
-    costSp: number;
-    costHp: number;
-    costAction: number;
+    id: string;              // 技能唯一的識別碼 (ID)
+    name: string;            // 技能的中文顯示名稱
+    icon: string;            // 技能的圖示 (例如 Emoji 字元或圖片路徑)
+    type: SkillTypeCategory;  // 技能的分類類型：'active' (主動技能) 或 'passive' (被動技能)
+    rarity: SkillRarity;     // 技能的稀有度分類：'common' (普通) | 'rare' (稀有) | 'legendary' (傳奇) | 'unique' (唯一)
+    level: number;           // 技能的當前等級
+    proficiency: number;     // 技能的當前熟練度 (通常為 0 ~ maxProficiency)
+    maxProficiency: number;  // 技能的熟練度上限 (預設為 100)
+    proficiencyGain: number; // 每次使用技能時提升的熟練度 (預設為 1)
+    currentCd: number;       // 當前剩餘的冷卻回合數 (0 代表可立即施展)
+    maxCd: number;           // 技能的最大冷卻回合數 (0 代表無 CD)
+    costSp: number;          // 施放技能所消耗的魔法值 (SP)
+    costHp: number;          // 施放技能所消耗的生命值 (HP)
+    costAction: number;      // 施放技能所消耗的行動點數 (AP)
 
     constructor(data: {
-        id: string;
-        name: string;
-        icon: string;
-        type: SkillTypeCategory;
-        rarity: SkillRarity;
-        level?: number;
-        proficiency?: number;
-        currentCd?: number;
-        maxCd?: number;
-        costSp?: number;
-        costHp?: number;
-        costAction?: number;
+        id: string;              // 技能唯一的識別碼 (ID)
+        name: string;            // 技能的中文顯示名稱
+        icon: string;            // 技能的圖示
+        type: SkillTypeCategory;  // 技能的分類類型
+        rarity: SkillRarity;     // 技能的稀有度分類
+        level?: number;          // 技能的當前等級 (選填，預設為 1)
+        proficiency?: number;    // 技能的當前熟練度 (選填，預設為 0)
+        maxProficiency?: number; // 技能的熟練度上限 (選填，預設為 100)
+        proficiencyGain?: number;// 每次使用技能時提升的熟練度 (選填，預設為 1)
+        currentCd?: number;      // 當前剩餘的冷卻回合數 (選填，預設為 0)
+        maxCd?: number;          // 技能的最大冷卻回合數 (選填，預設為 0)
+        costSp?: number;         // 施放技能所消耗的魔法值 (選填，預設為 0)
+        costHp?: number;         // 施放技能所消耗的生命值 (選填，預設為 0)
+        costAction?: number;     // 施放技能所消耗的行動點數 (選填，預設為 1)
     }) {
         this.id = data.id;
         this.name = data.name;
@@ -38,6 +42,8 @@ export abstract class SkillModel {
         this.rarity = data.rarity;
         this.level = data.level ?? 1;
         this.proficiency = data.proficiency ?? 0;
+        this.maxProficiency = data.maxProficiency ?? 100;
+        this.proficiencyGain = data.proficiencyGain ?? 1;
         this.currentCd = data.currentCd ?? 0;
         this.maxCd = data.maxCd ?? 0;
         this.costSp = data.costSp ?? 0;
@@ -68,6 +74,11 @@ export abstract class SkillModel {
         return {};
     }
 
+    // 💡 為了相容於原本 UI 讀取 .cd 的地方
+    get cd(): number {
+        return this.maxCd;
+    }
+
     // 序列化為 JSON，用於 Pinia 儲存
     toJSON() {
         return {
@@ -81,26 +92,28 @@ export abstract class SkillModel {
 
 // 💡 舊資料結構 / 臨時動態技能 的相容包裝類別
 export class GenericSkill extends SkillModel {
-    private _descFn: (playerStore: any, self: SkillModel) => string;
-    private _useFn: (params: SkillParams, self: SkillModel) => Promise<boolean> | boolean;
-    private _passiveBonusFn?: (self: SkillModel) => Record<string, number>;
+    private _descFn: (playerStore: any, self: SkillModel) => string;                        // 臨時描述函數
+    private _useFn: (params: SkillParams, self: SkillModel) => Promise<boolean> | boolean;   // 臨時使用函數
+    private _passiveBonusFn?: (self: SkillModel) => Record<string, number>;                 // 臨時被動加成函數
 
     constructor(data: {
-        id: string;
-        name: string;
-        icon: string;
-        type: SkillTypeCategory;
-        rarity: SkillRarity;
-        level?: number;
-        proficiency?: number;
-        currentCd?: number;
-        maxCd?: number;
-        costSp?: number;
-        costHp?: number;
-        costAction?: number;
-        description: (playerStore: any, self: SkillModel) => string;
-        use: (params: SkillParams, self: SkillModel) => Promise<boolean> | boolean;
-        passiveBonus?: (self: SkillModel) => Record<string, number>;
+        id: string;              // 技能唯一的識別碼 (ID)
+        name: string;            // 技能的中文顯示名稱
+        icon: string;            // 技能的圖示
+        type: SkillTypeCategory;  // 技能的分類類型
+        rarity: SkillRarity;     // 技能的稀有度分類
+        level?: number;          // 技能等級
+        proficiency?: number;    // 技能熟練度
+        maxProficiency?: number; // 熟練度上限
+        proficiencyGain?: number;// 每次使用提升的熟練度
+        currentCd?: number;      // 當前冷卻
+        maxCd?: number;          // 最大冷卻
+        costSp?: number;         // 消耗 SP
+        costHp?: number;         // 消耗 HP
+        costAction?: number;     // 消耗行動點數
+        description: (playerStore: any, self: SkillModel) => string;                        // 描述函數
+        use: (params: SkillParams, self: SkillModel) => Promise<boolean> | boolean;         // 使用函數
+        passiveBonus?: (self: SkillModel) => Record<string, number>;                        // 被動加成函數
     }) {
         super(data);
         this._descFn = data.description;

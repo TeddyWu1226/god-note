@@ -315,7 +315,7 @@ const onSkill = async (skillKey: string) => {
     gameStateStore.playerActionPoints -= costAction
 
     // 熟練度增加
-    playerStore.addSkillProficiency(useSkill.id, 1)
+    playerStore.addSkillProficiency(useSkill.id)
     if (useSkill?.costSp) {
       const newSP = playerStore.info.sp - useSkill.costSp;
       playerStore.info.sp = Math.max(0, newSP)

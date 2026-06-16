@@ -34,7 +34,6 @@ const give = () => {
 }
 const heal = () => {
   playerStore.healFull()
-  playerStore.addSkillProficiency('DoubleHit', 100)
 }
 
 const setRoom = () => {
