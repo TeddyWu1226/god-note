@@ -45,5 +45,7 @@ const gameStateStore = useGameStateStore();
 .room-body {
   height: calc(100% - 3.2rem);
   overflow-y: auto;
+  container-type: size;
+  container-name: room-body;
 }
 </style>
