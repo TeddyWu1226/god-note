@@ -133,7 +133,7 @@ export function getRandomLabelByWeight(weights: RoomWeights): number {
 /**
  * 通用權重隨機選取工具
  * @param weightMap 權重對照表 (例如 { 'Slime': 70, 'Wolf': 30 })
- * @param dataPool 資料來源池 (例如 Monster 物件、Equipment 物件)
+ * @param dataPool 資料來源池 (例如 MonsterModel 物件、Equipment 物件)
  * @param shouldClone 是否需要深拷貝 (預設為 true)
  * @returns 隨機選出的實例
  */

@@ -2,23 +2,10 @@
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {ref} from "vue";
-import {UnitStatus} from "@/constants/status/unit-status";
-import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
-import {Skills} from "@/constants/skill/skill";
-import {SpecialEventEnum} from "@/enums/enums";
+import {Accessory2} from "@/constants/items/equipment/accessories-info";
 import {RoomEnum} from "@/enums/room-enum";
-import {Weapon} from "@/constants/items/equipment/weapon-info";
-import {Head} from "@/constants/items/equipment/head-info";
-import {Armor} from "@/constants/items/equipment/armor-info";
-import {Offhand} from "@/constants/items/equipment/offhand-info";
-import {SpecialItem} from "@/constants/items/special-item-info";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
-import {Material} from "@/constants/items/material/material-info";
-import {CharEnum} from "@/enums/char-enum";
-import {ScorchedSandsMaterial} from "@/constants/items/material/2-scorched-sands";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()

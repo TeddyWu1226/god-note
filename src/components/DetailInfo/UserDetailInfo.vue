@@ -10,7 +10,9 @@ import {useDraggable} from "@/components/DetailInfo/useDraggble";
 import type {Equipment} from "@/types";
 import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
-import {SKILL_TEMPLATES, SkillFactory, Skill} from "@/models/skill";
+import {SkillModel} from "@/models/skill-model";
+import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
+
 
 const playerStore = usePlayerStore();
 
@@ -62,9 +64,9 @@ const allocatePoint = (statValue: string) => {
  * 學習新技能與技能管理邏輯
  */
 const isShowLearnSkill = ref(false);
-const drawnSkills = ref<Skill[]>([]);
+const drawnSkills = ref<SkillModel[]>([]);
 const replaceMode = ref(false);
-const selectedNewSkill = ref<Skill | null>(null);
+const selectedNewSkill = ref<SkillModel | null>(null);
 
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
@@ -102,7 +104,7 @@ const openLearnSkill = () => {
   const shuffled = candidates.sort(() => 0.5 - Math.random());
   const selectedIds = shuffled.slice(0, Math.min(3, shuffled.length));
 
-  // 轉化為 Skill 類別實例
+  // 轉化為 SkillModel 類別實例
   drawnSkills.value = selectedIds.map(id => SkillFactory.createSkill(id));
 
   replaceMode.value = false;
@@ -129,7 +131,7 @@ const skipLearn = () => {
   ElMessage.info('您放棄了本次學習新技能的機會。');
 };
 
-const selectSkill = (skill: Skill) => {
+const selectSkill = (skill: SkillModel) => {
   if (!playerStore.info.skills) {
     playerStore.info.skills = [];
   }

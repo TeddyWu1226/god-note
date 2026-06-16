@@ -5,13 +5,14 @@ import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import {Warrior1SkillEvolutionMap} from "@/constants/skill/char-skill/warrior-skill";
+import {Warrior1SkillEvolutionMap} from "@/constants/skill/learned-skill/warrior-learned-skill";
 import {CharEnum} from "@/enums/char-enum";
-import {Wizard1SkillEvolutionMap} from "@/constants/skill/char-skill/wizard-skill";
+import {Wizard1SkillEvolutionMap} from "@/constants/skill/learned-skill/wizard-learned-skill";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability} from "@/utils/math";
 import {ItemStatus} from "@/constants/status/item-status";
-import {Skill, SkillFactory} from "@/models/skill";
+import {SkillModel} from "@/models/skill-model";
+import {SkillFactory} from "@/constants/skill/learned-skill";
 
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
@@ -22,14 +23,14 @@ export const usePlayerStore = defineStore('player-info', () => {
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
 
-    // 💡 監聽並自動將 plain object 技能或 string 技能還原成 Skill 類別實例
+    // 💡 監聽並自動將 plain object 技能或 string 技能還原成 SkillModel 類別實例
     watch(
         () => info.value.skills,
         (newSkills) => {
             if (!newSkills) return;
             let changed = false;
             const restored = newSkills.map(s => {
-                if (s && typeof s === 'object' && 'id' in s && !(s instanceof Skill)) {
+                if (s && typeof s === 'object' && 'id' in s && !(s instanceof SkillModel)) {
                     changed = true;
                     return SkillFactory.createSkill(s.id, s);
                 }
@@ -93,7 +94,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 💡 計算被動技能加成
         if (info.value.skills) {
             info.value.skills.forEach(s => {
-                if (s && s instanceof Skill && s.type === 'passive') {
+                if (s && s instanceof SkillModel && s.type === 'passive') {
                     const skillBonus = s.getPassiveBonus();
                     Object.keys(skillBonus).forEach(key => {
                         if (typeof bonus[key] === 'number') {
@@ -457,7 +458,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 💡 減少技能冷卻 CD
         if (info.value.skills) {
             info.value.skills.forEach(skill => {
-                if (skill instanceof Skill && skill.currentCd > 0) {
+                if (skill instanceof SkillModel && skill.currentCd > 0) {
                     skill.currentCd--;
                 }
             });
@@ -476,7 +477,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 💡 重置技能冷卻 CD
         if (info.value.skills) {
             info.value.skills.forEach(skill => {
-                if (skill instanceof Skill) {
+                if (skill instanceof SkillModel) {
                     skill.currentCd = 0;
                 }
             });

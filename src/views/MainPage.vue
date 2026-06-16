@@ -156,7 +156,7 @@ watch(
           <CombatSkillsLayout
               v-else
               class="user-layout"
-              @on-skill="onSkill"
+              @on-learned-skill="onSkill"
           />
         </el-main>
       </el-container>

@@ -15,7 +15,7 @@ const props = defineProps({
   }
 })
 
-const skill = ref(props.item['skill'])
+const skill = ref(props.item['learned-skill'])
 </script>
 
 <template>

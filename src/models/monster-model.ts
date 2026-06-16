@@ -4,7 +4,7 @@ import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
 import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
 import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 
-export class Monster implements MonsterType {
+export class MonsterModel implements MonsterType {
     id: string;
     icon: string;
     name: string;
@@ -79,7 +79,7 @@ export class Monster implements MonsterType {
     /**
      * 計算包含 Buff/Debuff 狀態後的實際屬性值
      */
-    getEffectiveStats(): Monster {
+    getEffectiveStats(): MonsterModel {
         const finalStats: MonsterType = {
             id: this.id,
             icon: this.icon,
@@ -129,7 +129,7 @@ export class Monster implements MonsterType {
             }
         });
 
-        return new Monster(finalStats);
+        return new MonsterModel(finalStats);
     }
 
     /**
@@ -269,7 +269,7 @@ export class Monster implements MonsterType {
  */
 export const MonsterRoundBehaviors: Record<
     string,
-    (monster: Monster, battleRound: number, logStore: any) => void
+    (monster: MonsterModel, battleRound: number, logStore: any) => void
 > = {
     slimeStrengthen: (monster, round, logStore) => {
         if (round === 3) {

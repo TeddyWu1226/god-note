@@ -10,7 +10,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {Boss} from "@/constants/monsters/boss-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {Monster} from "@/constants/monsters/monster-info";
-import { Monster as MonsterClass } from "@/models/monster";
+import { MonsterModel as MonsterClass } from "@/models/monster-model";
 import {checkHpThresholds} from "@/constants/fight-func";
 
 /**

@@ -5,7 +5,7 @@ import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
 import {getRandomItemByWeight} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
-import {Monster as MonsterClass} from "@/models/monster";
+import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 

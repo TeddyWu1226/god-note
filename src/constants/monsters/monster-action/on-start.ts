@@ -8,7 +8,7 @@ import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle"
 import {SandstormPassWeights} from "@/constants/stage-monster-weights";
 import {Boss} from "@/constants/monsters/boss-info";
 import {Monster} from "@/constants/monsters/monster-info";
-import { Monster as MonsterClass } from "@/models/monster";
+import { MonsterModel as MonsterClass } from "@/models/monster-model";
 
 
 export const MonsterOnStart: Record<string, (params: MonsterActionParams) => void> = {

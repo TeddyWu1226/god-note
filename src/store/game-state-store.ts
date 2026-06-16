@@ -5,15 +5,15 @@ import {MonsterType, StatusEffect} from "@/types";
 import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
-import {Monster} from "@/models/monster";
+import {MonsterModel} from "@/models/monster-model";
 import {usePlayerStore} from "@/store/player-store";
 
-export const getEffectiveStats = (monster: any): Monster => {
+export const getEffectiveStats = (monster: any): MonsterModel => {
 	if (!monster) return monster;
-	if (monster instanceof Monster) {
+	if (monster instanceof MonsterModel) {
 		return monster.getEffectiveStats();
 	}
-	const instance = new Monster(monster);
+	const instance = new MonsterModel(monster);
 	return instance.getEffectiveStats();
 };
 
@@ -30,14 +30,14 @@ export const useGameStateStore = defineStore('game-state', () => {
 	// 回合/戰鬥用數據
 	const currentState = ref<GameState>(GameState.INITIAL);
 	const isBattleWon = ref(false);
-	const currentEnemy = ref<Monster[]>([]);
+	const currentEnemy = ref<MonsterModel[]>([]);
 	// 事件相關紀錄
 	const currentEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
 	const lastEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
 	const eventProcess = ref<Record<SpecialEventEnum, number>>({} as Record<SpecialEventEnum, number>);
 	const eventAction = ref(0)
 	const thisStageAppear = ref<string[]>([])
-	const switchEnemy = ref<Monster[]>([]);
+	const switchEnemy = ref<MonsterModel[]>([]);
 	const difficulty = ref(DifficultyEnum.Normal.value);
 	const otherRecord = ref<Record<string, any>>({}); // 額外記錄表
 	const battleRound = ref(1); // 戰鬥回合數
@@ -48,9 +48,9 @@ export const useGameStateStore = defineStore('game-state', () => {
 	watch(currentEnemy, (newVal) => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
-				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = new Monster(newVal[i]);
+					newVal[i] = new MonsterModel(newVal[i]);
 				}
 			}
 		}
@@ -59,9 +59,9 @@ export const useGameStateStore = defineStore('game-state', () => {
 	watch(switchEnemy, (newVal) => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
-				if (newVal[i] && !(newVal[i] instanceof Monster)) {
+				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = new Monster(newVal[i]);
+					newVal[i] = new MonsterModel(newVal[i]);
 				}
 			}
 		}
@@ -162,7 +162,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	 * @param roomValue
 	 * @param monsters
 	 */
-	function switchToFightRoom(roomValue: number, monsters?: Monster[]): void {
+	function switchToFightRoom(roomValue: number, monsters?: MonsterModel[]): void {
 		if (monsters) {
 			switchEnemy.value = monsters;
 		}
@@ -179,12 +179,12 @@ export const useGameStateStore = defineStore('game-state', () => {
 		currentEventType.value = event;
 	}
 
-	function setCurrentEnemy(monsters: Monster[]): void {
+	function setCurrentEnemy(monsters: MonsterModel[]): void {
 		currentEnemy.value = monsters
 	}
 
 
-	function takeSwitchEnemy(): Monster[] {
+	function takeSwitchEnemy(): MonsterModel[] {
 		const enemy = [...switchEnemy.value]
 		switchEnemy.value = []
 		return enemy
@@ -238,7 +238,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	// 施加怪物狀態
 	function addEffectToMonster(monster: MonsterType, effect: StatusEffect) {
 		if (!monster) return;
-		if (monster instanceof Monster) {
+		if (monster instanceof MonsterModel) {
 			monster.addEffect(effect, useLogStore());
 		} else {
 			const logStore = useLogStore();
@@ -264,7 +264,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 		currentEnemy.value.forEach(monster => {
 			if (monster.hp <= 0) return;
 
-			if (monster instanceof Monster) {
+			if (monster instanceof MonsterModel) {
 				// 處理 DoT/HoT 等狀態效果
 				monster.tickEffects(logStore);
 				// 處理回合習性行為

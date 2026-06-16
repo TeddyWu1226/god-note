@@ -21,11 +21,12 @@ import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss, StageBosses} from "@/constants/monsters/boss-info";
 import {useLogStore} from "@/store/log-store";
-import {Monster as MonsterClass} from "@/models/monster";
+import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
-import {Skill, SkillFactory} from "@/models/skill";
+import {SkillModel} from "@/models/skill-model";
+import {SkillFactory} from "@/constants/skill/learned-skill";
 import {Monster} from "@/constants/monsters/monster-info";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
@@ -365,7 +366,7 @@ const init = () => {
   // 💡 重置技能冷卻時間
   if (playerStore.info.skills) {
     playerStore.info.skills.forEach((skill: any) => {
-      if (skill instanceof Skill) {
+      if (skill instanceof SkillModel) {
         skill.currentCd = 0;
       }
     });

@@ -2,7 +2,8 @@
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {EquipmentType} from "@/types";
-import {Skill, SkillFactory} from "@/models/skill";
+import {SkillModel} from "@/models/skill-model";
+import {SkillFactory} from "@/constants/skill/learned-skill";
 
 const emit = defineEmits(['click'])
 
@@ -10,7 +11,7 @@ const playerStore = usePlayerStore();
 const offhand = computed<EquipmentType | undefined>(() => {
   return playerStore.info.equips?.offhand
 })
-const skill = computed<Skill | undefined>(() => offhand.value?.skill ? SkillFactory.createSkill(offhand.value.skill) : undefined);
+const skill = computed<SkillModel | undefined>(() => offhand.value?.skill ? SkillFactory.createSkill(offhand.value.skill) : undefined);
 
 // 判斷是否可用
 const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0));

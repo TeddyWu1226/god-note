@@ -2,11 +2,11 @@
 import {computed} from 'vue';
 import {usePlayerStore} from '@/store/player-store';
 import {useGameStateStore} from '@/store/game-state-store';
-import {Skill} from '@/models/skill';
+import {SkillModel} from '@/models/skill-model';
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 
-const emit = defineEmits(['on-skill']);
+const emit = defineEmits(['on-learned-skill']);
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore();
 
@@ -34,7 +34,7 @@ const getRarityName = (rarity: string) => {
   return names[rarity] || '普通';
 };
 
-const canAfford = (skill: Skill) => {
+const canAfford = (skill: SkillModel) => {
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
   const actionCost = skill.costAction || 1;
@@ -44,13 +44,13 @@ const canAfford = (skill: Skill) => {
          gameStateStore.playerActionPoints >= actionCost;
 };
 
-const clickSkill = (skill: Skill) => {
+const clickSkill = (skill: SkillModel) => {
   if (skill.type === 'passive') return;
   // 檢查是否足夠點數和冷卻
   if (!canAfford(skill)) {
     return;
   }
-  emit('on-skill', skill.id);
+  emit('on-learned-skill', skill.id);
 };
 </script>
 

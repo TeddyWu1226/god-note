@@ -9,12 +9,12 @@ import {
   applyAttackDamage,
   triggerDamageEffect
 } from "@/constants/fight-func";
-import {Monster} from "@/models/monster";
+import {MonsterModel} from "@/models/monster-model";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
 
 const props = defineProps({
-  info: {type: Object as PropType<Monster>},
+  info: {type: Object as PropType<MonsterModel>},
   index: {type: Number},
   isSelected: {type: Boolean, default: false} //選中狀態,
 
@@ -94,7 +94,7 @@ const monsterMove = () => {
 const monsterAttack = () => {
 
   // 特殊效果
-  if (props.info instanceof Monster) {
+  if (props.info instanceof MonsterModel) {
     props.info.triggerOnAttack({
       monsterIndex: props.index,
       playerStore: playerStore,
@@ -110,7 +110,7 @@ const monsterAttack = () => {
  * 怪物被攻擊
  */
 const onMonsterAttacked = (damageOutput: BattleOutcome) => {
-  if (props.info instanceof Monster) {
+  if (props.info instanceof MonsterModel) {
     props.info.triggerOnAttacked({
       gameStateStore: gameStateStore,
       playerStore: playerStore,
@@ -125,7 +125,7 @@ const onMonsterAttacked = (damageOutput: BattleOutcome) => {
  */
 const onMonsterDie = () => {
   // 觸發死亡被動
-  if (props.info instanceof Monster) {
+  if (props.info instanceof MonsterModel) {
     props.info.triggerOnDead({
       playerStore: playerStore,
       gameStateStore: gameStateStore,
@@ -205,7 +205,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
           <span class="death-emoji">🪦</span>
         </template>
         <template v-else>
-          <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon" alt="monster icon" />
+          <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon"
+               alt="monster icon"/>
           <span v-else class="monster-icon">{{ props.info.icon }}</span>
         </template>
       </div>
@@ -427,25 +428,32 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   .monster-card {
     max-height: 8.5rem;
   }
+
   :deep(.el-card__body) {
     padding: 0.35rem 0.4rem;
   }
+
   .monster-icon {
     font-size: 1.6rem;
   }
+
   .monster-image-icon {
     max-height: 2.5rem;
   }
+
   .death-emoji {
     font-size: 1.6rem;
   }
+
   .monster-name {
     font-size: 0.76rem;
   }
+
   .monster-stats-row {
     font-size: 0.72rem;
     margin: 0.05rem 0;
   }
+
   .monster-hp-container {
     margin-top: 0.05rem;
   }
@@ -457,38 +465,48 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     max-height: 6.8rem;
     min-width: 6.5rem;
   }
+
   :deep(.el-card__body) {
     padding: 0.2rem 0.3rem;
   }
+
   .status-bar {
     top: 2px;
     left: 2px;
     gap: 1px;
   }
+
   .status-icon {
     font-size: 0.75rem;
   }
+
   .monster-icon {
     font-size: 1.25rem;
   }
+
   .monster-image-icon {
     max-height: 1.8rem;
   }
+
   .death-emoji {
     font-size: 1.25rem;
   }
+
   .monster-name {
     font-size: 0.7rem;
     margin: 0;
   }
+
   .death-text {
     font-size: 0.65rem;
     margin-top: 0;
   }
+
   .monster-stats-row {
     font-size: 0.65rem;
     margin: 0;
   }
+
   .monster-hp-container {
     margin-top: 0;
   }
@@ -500,25 +518,32 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     max-height: 5.2rem;
     min-width: 5.8rem;
   }
+
   :deep(.el-card__body) {
     padding: 0.1rem 0.2rem;
   }
+
   .monster-icon {
     font-size: 0.95rem;
   }
+
   .monster-image-icon {
     max-height: 1.2rem;
   }
+
   .death-emoji {
     font-size: 0.95rem;
   }
+
   .monster-name {
     font-size: 0.65rem;
   }
+
   /* 極限高度下隱藏數值圖標，僅保留文字或精簡以防溢出 */
   .monster-stats-row {
     font-size: 0.6rem;
   }
+
   .stat-col {
     gap: 0px;
   }
@@ -531,9 +556,17 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 }
 
 @keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-  40%, 60% { transform: translate3d(3px, 0, 0); }
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-3px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(3px, 0, 0);
+  }
 }
 </style>

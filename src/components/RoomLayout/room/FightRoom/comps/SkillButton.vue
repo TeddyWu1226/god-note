@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
-import {Skill} from "@/models/skill";
+import {SkillModel} from "@/models/skill-model";
 
 const emit = defineEmits(['click'])
 const props = defineProps({
@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 const playerStore = usePlayerStore();
-const skill = computed<Skill>(() => props.skill as Skill);
+const skill = computed<SkillModel>(() => props.skill as SkillModel);
 
 const proficiency = computed(() => skill.value.proficiency);
 // 判斷是否可用與冷卻狀態
