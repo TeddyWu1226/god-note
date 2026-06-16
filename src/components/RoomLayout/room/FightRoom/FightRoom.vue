@@ -28,8 +28,8 @@ import {useTrackerStore} from "@/store/track-store";
 import {Skill, SkillFactory} from "@/models/skill";
 import {Monster} from "@/constants/monsters/monster-info";
 import {ItemSkill} from "@/constants/skill/item-skill";
-import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
-import FightOperation from "@/components/RoomLayout/comps/FightRoom/FightOperation.vue";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
+import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
-import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {GameState} from "@/enums/enums";
 
 const gameStateStore = useGameStateStore()

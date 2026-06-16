@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '../room.css'
+import '../../room.css'
 import {ref, computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {ExtraFusionUsableItem, FusionUsableList} from "@/constants/items/fusion-list/fusion-usable-list";
@@ -12,6 +12,9 @@ import {FusionOtherList} from "@/constants/items/fusion-list/fusion-other-list";
 import {ItemInfo} from "@/components/Shared/itemInfo";
 import {SpecialEventEnum} from "@/enums/enums";
 import {useGameStateStore} from "@/store/game-state-store";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
+import BlessOperation from "@/components/RoomLayout/room/BlessRoom/BlessOperation.vue";
+import LeaveOperation from "@/components/RoomLayout/comps/LeaveOperation.vue";
 
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore();
@@ -80,87 +83,101 @@ const onCraft = (recipe: FusionListType) => {
   playerStore.gainItem(recipe.target);
   ElMessage.success(`合成「${recipe.target.name}」成功！`);
 };
+
+const emit = defineEmits(['cancel']);
+
+const cancel = (): void => {
+  emit('cancel');
+}
 </script>
 
 <template>
-  <div class="craft-room">
-    <div class="category-tabs">
-      <div
-          class="tab-item"
-          :class="{ active: activeCategory === 0 }"
-          @click="activeCategory = 0"
-      >
-        消耗品
-      </div>
-      <div
-          class="tab-item"
-          :class="{ active: activeCategory === 1 }"
-          @click="activeCategory = 1"
-      >
-        裝備
-      </div>
-      <div
-          class="tab-item"
-          :class="{ active: activeCategory === 2 }"
-          @click="activeCategory = 2"
-      >
-        其他
-      </div>
-      <el-checkbox v-model="onlyShowAvailable" border>
-        可合成
-      </el-checkbox>
-    </div>
-    <el-scrollbar class="craft-scroll">
-      <div class="recipe-container">
-
-        <div v-if="filteredList.length === 0" class="empty-hint">
-          目前沒有可用的配方...
+  <RoomTemplate title="休息之地">
+    <template #default>
+      <div class="craft-room">
+        <div class="category-tabs">
+          <div
+              class="tab-item"
+              :class="{ active: activeCategory === 0 }"
+              @click="activeCategory = 0"
+          >
+            消耗品
+          </div>
+          <div
+              class="tab-item"
+              :class="{ active: activeCategory === 1 }"
+              @click="activeCategory = 1"
+          >
+            裝備
+          </div>
+          <div
+              class="tab-item"
+              :class="{ active: activeCategory === 2 }"
+              @click="activeCategory = 2"
+          >
+            其他
+          </div>
+          <el-checkbox v-model="onlyShowAvailable" border>
+            可合成
+          </el-checkbox>
         </div>
+        <el-scrollbar class="craft-scroll">
+          <div class="recipe-container">
 
-        <el-row v-for="(recipe, index) in filteredList" :key="index" class="recipe-row">
-          <el-tooltip effect="light" trigger="click">
-            <template #content>
-              <ItemInfo :item="recipe.target" style="max-width: 20rem"/>
-            </template>
-            <el-col :span="18" class="target-block">
-              <div class="target-icon">{{ recipe.target.icon }}</div>
-              <div
-                  class="target-name"
-                  :style="{ color: getEnumColumn(QualityEnum, recipe.target.quality, 'color') }"
-              >
-                {{ recipe.target.name }}
-              </div>
-            </el-col>
-          </el-tooltip>
-          <el-col :span="6">
-            <el-button
-                type="primary"
-                style="width: 100%"
-                plain
-                :disabled="!canCraft(recipe)"
-                @click="onCraft(recipe)"
-            >
-              合成
-            </el-button>
-          </el-col>
-          <el-col :span="24" class="materials-block">
-            <div v-for="(req, idx) in recipe.requirements" :key="idx" class="material-tag">
-              <span class="m-icon">{{ req.item.icon }}</span>
-              <span
-                  class="m-name"
-                  :style="{ color: getEnumColumn(QualityEnum, req.item.quality, 'color') }"
-              >
+            <div v-if="filteredList.length === 0" class="empty-hint">
+              目前沒有可用的配方...
+            </div>
+
+            <el-row v-for="(recipe, index) in filteredList" :key="index" class="recipe-row">
+              <el-tooltip effect="light" trigger="click">
+                <template #content>
+                  <ItemInfo :item="recipe.target" style="max-width: 20rem"/>
+                </template>
+                <el-col :span="18" class="target-block">
+                  <div class="target-icon">{{ recipe.target.icon }}</div>
+                  <div
+                      class="target-name"
+                      :style="{ color: getEnumColumn(QualityEnum, recipe.target.quality, 'color') }"
+                  >
+                    {{ recipe.target.name }}
+                  </div>
+                </el-col>
+              </el-tooltip>
+              <el-col :span="6">
+                <el-button
+                    type="primary"
+                    style="width: 100%"
+                    plain
+                    :disabled="!canCraft(recipe)"
+                    @click="onCraft(recipe)"
+                >
+                  合成
+                </el-button>
+              </el-col>
+              <el-col :span="24" class="materials-block">
+                <div v-for="(req, idx) in recipe.requirements" :key="idx" class="material-tag">
+                  <span class="m-icon">{{ req.item.icon }}</span>
+                  <span
+                      class="m-name"
+                      :style="{ color: getEnumColumn(QualityEnum, req.item.quality, 'color') }"
+                  >
                 {{ req.item.name }}
               </span>
-              <span class="m-count" :class="{ 'insufficient': getOwnedCount(req.item.name) < req.count }">
+                  <span class="m-count" :class="{ 'insufficient': getOwnedCount(req.item.name) < req.count }">
                 {{ getOwnedCount(req.item.name) }}/{{ req.count }}
               </span>
-            </div>
-          </el-col>
-        </el-row>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-scrollbar>
       </div>
-    </el-scrollbar>
-  </div>
+    </template>
+    <template #button>
+      <LeaveOperation @cancel="cancel"/>
+    </template>
+  </RoomTemplate>
+
 </template>
 
 <style scoped>

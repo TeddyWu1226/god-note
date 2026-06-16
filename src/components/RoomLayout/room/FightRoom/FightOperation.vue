@@ -5,7 +5,7 @@ import {Operation} from "@/storage/operation-storage";
 import {escapePercent} from "@/constants/fight-func";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import OffHandSkillButton from "@/components/RoomLayout/comps/FightRoom/comps/OffHandSkillButton.vue";
+import OffHandSkillButton from "@/components/RoomLayout/room/FightRoom/comps/OffHandSkillButton.vue";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()

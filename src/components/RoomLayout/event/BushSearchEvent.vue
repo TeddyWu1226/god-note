@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {ref, reactive, computed} from "vue";
 import {GameState} from "@/enums/enums";
 import {ColdRegionFruits, NormalFruits} from "@/constants/items/usalbe-item/bush-info";

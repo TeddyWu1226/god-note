@@ -30,22 +30,20 @@ const cancel = (): void => {
 </script>
 
 <template>
-  <div class="flex">
-    <el-button type="success" :disabled="props.disabled" @click="rest">
-      休息一下
+  <el-button type="success" :disabled="props.disabled" @click="rest">
+    休息一下
+  </el-button>
+  <template v-if="gameStateStore.isEventClose(SpecialEventEnum.Fusion) && gameStateStore.roomIs(RoomEnum.Rest.value)">
+    <el-button
+        type="warning"
+        :disabled="props.disabled"
+        @click="fusion">
+      合成
     </el-button>
-    <template v-if="gameStateStore.isEventClose(SpecialEventEnum.Fusion) && gameStateStore.roomIs(RoomEnum.Rest.value)">
-      <el-button
-          type="warning"
-          :disabled="props.disabled"
-          @click="fusion">
-        合成
-      </el-button>
-    </template>
-    <el-button type="info" :disabled="props.disabled" @click="cancel">
-      繼續趕路
-    </el-button>
-  </div>
+  </template>
+  <el-button type="info" :disabled="props.disabled" @click="cancel">
+    繼續趕路
+  </el-button>
 </template>
 
 <style scoped>

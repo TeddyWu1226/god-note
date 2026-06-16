@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
 
+import {RoomEnum} from "@/enums/room-enum";
+import {GameState} from "@/enums/enums";
+
 const emit = defineEmits(['rest', 'cancel']);
 const props = defineProps({
   disabled: Boolean,
@@ -12,12 +15,9 @@ const cancel = (): void => {
 </script>
 
 <template>
-  <div class="flex">
-    <el-button type="info" :disabled="props.disabled" @click="cancel">
-      離開
-    </el-button>
-  </div>
+  <el-button type="info" :disabled="props.disabled" @click="cancel">
+    離開
+  </el-button>
 </template>
-
 <style scoped>
 </style>

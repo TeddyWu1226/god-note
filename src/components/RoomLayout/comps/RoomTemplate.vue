@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import './room.css'
+import '../room.css'
 import {GameState} from "@/enums/enums";
-import NextOperation from "@/components/OperationLayout/comps/NextOperation.vue";
+import NextOperation from "@/components/RoomLayout/comps/NextOperation.vue";
 import {useGameStateStore} from "@/store/game-state-store";
 
 const props = defineProps({

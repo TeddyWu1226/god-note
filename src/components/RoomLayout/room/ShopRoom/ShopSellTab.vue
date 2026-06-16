@@ -3,7 +3,7 @@ import './shop.css'
 import {computed} from 'vue';
 import {usePlayerStore} from "@/store/player-store";
 import {ElMessage, ElMessageBox} from "element-plus";
-import {EQUIP_BASE_PRICE} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
+import {EQUIP_BASE_PRICE} from "@/components/RoomLayout/room/ShopRoom/useShopLogic";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";

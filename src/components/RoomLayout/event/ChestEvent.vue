@@ -2,10 +2,10 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {ref} from "vue";
 import {GameState} from "@/enums/enums";
-import {useShopLogic} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
+import {useShopLogic} from "@/components/RoomLayout/room/ShopRoom/useShopLogic";
 import {getRandomItemsByQuality} from "@/utils/create";
 import {Armor} from "@/constants/items/equipment/armor-info";
 import {Head} from "@/constants/items/equipment/head-info";

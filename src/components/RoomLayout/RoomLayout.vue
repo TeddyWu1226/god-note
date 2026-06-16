@@ -4,17 +4,17 @@ import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {computed, ref, watch} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import RestRoom from "@/components/RoomLayout/comps/RestRoom.vue";
-import FightRoom from "@/components/RoomLayout/comps/FightRoom/FightRoom.vue";
+import RestRoom from "@/components/RoomLayout/room/RestRoom/RestRoom.vue";
+import FightRoom from "@/components/RoomLayout/room/FightRoom/FightRoom.vue";
 import EventRoomCard from "@/components/RoomLayout/comps/EventRoomCard.vue";
 import {useLogStore} from "@/store/log-store";
-import ShopRoom from "@/components/RoomLayout/comps/ShopRoom/ShopRoom.vue";
-import BlessRoom from "@/components/RoomLayout/comps/BlessRoom/BlessRoom.vue";
+import ShopRoom from "@/components/RoomLayout/room/ShopRoom/ShopRoom.vue";
+import BlessRoom from "@/components/RoomLayout/room/BlessRoom/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
-import FusionRoom from "@/components/RoomLayout/comps/FusionRoom.vue";
+import FusionRoom from "@/components/RoomLayout/room/FusionRoom/FusionRoom.vue";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -128,17 +128,24 @@ const gainFirstPower = () => {
       @run-failed="onRunFailed"
       :key="roomKeyCounter"
   />
-  <el-card v-else class="room-layout">
-    <div class="title">
-      {{ getEnumColumn(RoomEnum, currentRoomValue, 'icon') }}
-      {{ getEnumColumn(RoomEnum, currentRoomValue) }}
-    </div>
-    <el-scrollbar max-height="30vh">
-      <RestRoom ref="RestRoomRef" v-if="currentRoomValue === RoomEnum.Rest.value" :key="roomKeyCounter"/>
-      <ShopRoom ref="ShopRoomRef" v-if="currentRoomValue === RoomEnum.Shop.value" :key="roomKeyCounter"/>
-      <FusionRoom ref="FusionRoomRef" v-if="currentRoomValue === RoomEnum.Fusion.value" :key="roomKeyCounter"/>
-    </el-scrollbar>
-  </el-card>
+  <RestRoom
+      ref="RestRoomRef"
+      v-else-if="currentRoomValue === RoomEnum.Rest.value"
+      :key="roomKeyCounter"
+      @cancel="onCancel"
+  />
+  <ShopRoom
+      ref="ShopRoomRef"
+      v-else-if="currentRoomValue === RoomEnum.Shop.value"
+      :key="roomKeyCounter"
+      @cancel="onCancel"
+  />
+  <FusionRoom
+      ref="FusionRoomRef"
+      v-else-if="currentRoomValue === RoomEnum.Fusion.value"
+      :key="roomKeyCounter"
+      @cancel="onCancel"
+  />
 </template>
 
 <style scoped>

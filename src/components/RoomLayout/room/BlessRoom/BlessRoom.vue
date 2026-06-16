@@ -3,8 +3,8 @@
 import {ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import BlessOperation from "@/components/RoomLayout/comps/BlessRoom/BlessOperation.vue";
-import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
+import BlessOperation from "@/components/RoomLayout/room/BlessRoom/BlessOperation.vue";
+import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore()
@@ -37,9 +37,7 @@ defineExpose({
     <template #button>
       <BlessOperation></BlessOperation>
     </template>
-
   </RoomTemplate>
-
 </template>
 
 <style scoped>
