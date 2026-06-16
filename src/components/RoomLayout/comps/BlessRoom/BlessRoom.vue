@@ -4,7 +4,7 @@ import {ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import BlessOperation from "@/components/RoomLayout/comps/BlessRoom/BlessOperation.vue";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore()
@@ -22,7 +22,7 @@ defineExpose({
 </script>
 
 <template>
-  <EventTemplate title="起始之泉">
+  <RoomTemplate title="起始之泉">
     <template #default>
       <div class="general-event" style="padding: 1.5rem 1rem;">
         <div class="event-icon">⛲</div>
@@ -38,7 +38,7 @@ defineExpose({
       <BlessOperation></BlessOperation>
     </template>
 
-  </EventTemplate>
+  </RoomTemplate>
 
 </template>
 

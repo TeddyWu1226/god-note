@@ -43,18 +43,15 @@
 }
 
 .operation-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 0.5rem;
     width: 100%;
+    display: flex;
+    padding-bottom: 0.5rem;
 }
 
 .operation-layout > * {
-    height: 3rem;
-    margin: 0 !important;
-    width: 100%;
-    box-sizing: border-box;
-    flex: 1
+    flex: 1;
+    margin-right: 0.5rem !important;
+    margin-left: 0.5rem !important;
 }
 
 /* 2. 當螢幕寬度縮小（例如小於 600px）時，切換為手機模式 */

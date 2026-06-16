@@ -18,11 +18,9 @@ const gainFirstPower = () => {
 </script>
 
 <template>
-  <div class="operation-layout flex">
-    <el-button type="primary" :disabled="props.disabled" @click="gainFirstPower">
-      獲得第一份力量
-    </el-button>
-  </div>
+  <el-button type="primary" :disabled="props.disabled" @click="gainFirstPower">
+    獲得第一份力量
+  </el-button>
 </template>
 
 <style scoped>

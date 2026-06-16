@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
@@ -144,7 +144,7 @@ init()
 </script>
 
 <template>
-  <EventTemplate title="🪾神祕魔樹">
+  <RoomTemplate title="🪾神祕魔樹">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE) && gameStateStore.eventAction === 0">
@@ -222,7 +222,7 @@ init()
         <el-button type="info" @click="onLeave">快步離開</el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

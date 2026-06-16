@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
@@ -56,7 +56,7 @@ const onLeave = () => {
 </script>
 
 <template>
-  <EventTemplate title="⚔️ 轉職事件">
+  <RoomTemplate title="⚔️ 轉職事件">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -98,7 +98,7 @@ const onLeave = () => {
         <el-button type="info" @click="onLeave">暫時沒興趣</el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

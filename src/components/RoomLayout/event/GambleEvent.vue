@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState} from "@/enums/enums";
 import {ElMessage} from "element-plus";
@@ -79,7 +79,7 @@ const startGamble = (amount: number) => {
 </script>
 
 <template>
-  <EventTemplate title="賭博遊戲">
+  <RoomTemplate title="賭博遊戲">
     <template #default>
       <div class=" general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -149,7 +149,7 @@ const startGamble = (amount: number) => {
         </el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

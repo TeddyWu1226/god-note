@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {ref} from "vue";
 import {GameState} from "@/enums/enums";
 import {useShopLogic} from "@/components/RoomLayout/comps/ShopRoom/useShopLogic";
@@ -80,7 +80,7 @@ const openChest = () => {
 </script>
 
 <template>
-  <EventTemplate title="神秘寶箱">
+  <RoomTemplate title="神秘寶箱">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -130,7 +130,7 @@ const openChest = () => {
         </el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

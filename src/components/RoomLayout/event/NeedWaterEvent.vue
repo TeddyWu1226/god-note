@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {create} from "@/utils/create";
@@ -64,7 +64,7 @@ init()
 </script>
 
 <template>
-  <EventTemplate title="👦🏼 倒地的陌生男子">
+  <RoomTemplate title="👦🏼 倒地的陌生男子">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -126,5 +126,5 @@ init()
         <el-button type="info" @click="onLeave">快步離開</el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>

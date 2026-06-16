@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {GameState} from "@/enums/enums";
 
 const gameStateStore = useGameStateStore()
@@ -9,12 +9,12 @@ gameStateStore.currentState = GameState.SELECTION_PHASE;
 </script>
 
 <template>
-  <EventTemplate class="weird" title="一個空空如也的地方...">
+  <RoomTemplate class="weird" title="一個空空如也的地方...">
     <div class="ghost-room">
       你來到一個空無一物的地方<br/>
       但這裡不詳的氣息讓你不想在這多留...
     </div>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

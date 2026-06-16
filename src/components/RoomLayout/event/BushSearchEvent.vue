@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {ref, reactive, computed} from "vue";
 import {GameState} from "@/enums/enums";
 import {ColdRegionFruits, NormalFruits} from "@/constants/items/usalbe-item/bush-info";
@@ -69,7 +69,7 @@ const onLeave = () => {
 </script>
 
 <template>
-  <EventTemplate title="🌿神秘的草叢🌿">
+  <RoomTemplate title="🌿神秘的草叢🌿">
     <template #default>
       <div class="general-event">
         <div v-if="isRolling" class="dice-container">
@@ -127,7 +127,7 @@ const onLeave = () => {
         </el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

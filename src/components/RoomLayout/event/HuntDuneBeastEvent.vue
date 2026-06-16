@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
 import {create} from "@/utils/create";
@@ -57,7 +57,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <EventTemplate title="🏜️神秘的沙之民">
+  <RoomTemplate title="🏜️神秘的沙之民">
     <template #default>
       <div class="general-event">
         <div class="event-icon">👤</div>
@@ -122,5 +122,5 @@ onUnmounted(() => {
         <el-button type="success" @click="finishQuest">接過謝禮</el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>

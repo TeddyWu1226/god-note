@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {getRandomElements} from "@/utils/math";
@@ -109,7 +109,7 @@ const drinkPotion = () => {
 </script>
 
 <template>
-  <EventTemplate :title="eventConfig.title">
+  <RoomTemplate :title="eventConfig.title">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -156,7 +156,7 @@ const drinkPotion = () => {
         </el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

@@ -2,7 +2,7 @@
 import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ItemStatus} from "@/constants/status/item-status";
@@ -81,7 +81,7 @@ init()
 </script>
 
 <template>
-  <EventTemplate title="吟遊詩人出現">
+  <RoomTemplate title="吟遊詩人出現">
     <template #default>
       <div class="general-event">
         <template v-if="gameStateStore.eventAction === 0">
@@ -128,7 +128,7 @@ init()
         </el-button>
       </template>
     </template>
-  </EventTemplate>
+  </RoomTemplate>
 </template>
 
 <style scoped>

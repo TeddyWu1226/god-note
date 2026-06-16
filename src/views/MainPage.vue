@@ -147,16 +147,16 @@ watch(
               ref="RoomLayoutRef"
               @run-failed="onRunFailed"
           />
-          <OperationLayout
-              ref="OperationLayoutRef"
-              class="operation-layout"
-              @run="onRun"
-              @attack="onAttack"
-              @rest="onRest"
-              @cancel="onCancel"
-              @skill="onSkill"
-              @end-turn="onEndTurn"
-          />
+<!--          <OperationLayout-->
+<!--              ref="OperationLayoutRef"-->
+<!--              class="operation-layout"-->
+<!--              @run="onRun"-->
+<!--              @attack="onAttack"-->
+<!--              @rest="onRest"-->
+<!--              @cancel="onCancel"-->
+<!--              @skill="onSkill"-->
+<!--              @end-turn="onEndTurn"-->
+<!--          />-->
           <UserValueLayout/>
           <UserLayout
               v-if="gameStateStore.bottomPanelMode === 'backpack' || !isCombatRoom"
