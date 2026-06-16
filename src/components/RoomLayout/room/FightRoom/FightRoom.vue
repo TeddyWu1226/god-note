@@ -476,12 +476,15 @@ if (!gameStateStore.isBattleWon) {
 <style scoped>
 .fight {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
   position: relative;
   flex-grow: 1;
   width: 100%;
-  height: 90%;
+  height: auto;
+  min-height: 90%;
+  padding: 0.8rem 0;
   box-sizing: border-box;
 }
 

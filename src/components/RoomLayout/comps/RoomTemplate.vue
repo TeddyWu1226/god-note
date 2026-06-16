@@ -20,9 +20,11 @@ const gameStateStore = useGameStateStore();
       </template>
       <slot v-else name="title"></slot>
     </div>
-    <slot name="default"></slot>
-  </el-card>
+    <div class="room-body">
+      <slot name="default"></slot>
+    </div>
 
+  </el-card>
   <div class="operation-layout">
     <NextOperation v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
     <slot v-else-if="$slots.button" name="button"></slot>
@@ -38,5 +40,10 @@ const gameStateStore = useGameStateStore();
 
 .flex > * {
   flex: 1;
+}
+
+.room-body {
+  height: calc(100% - 3.2rem);
+  overflow-y: auto;
 }
 </style>

@@ -172,10 +172,10 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 <template>
   <el-card
       ref="CardRef"
+      class="monster-card"
       :class="[
           props.info.class,
           {
-      'monster-card': true,
       'is-selected': props.isSelected,
       'is-shaking': isShaking,
     }]"
@@ -194,129 +194,134 @@ watch(() => props.info.lastDamageResult, (newResult) => {
         </div>
       </el-tooltip>
     </div>
-    <el-tooltip>
-      <template #content>
-        <p>{{ props.info.name }} Lv.{{ props.info.level }}</p>
-        <p>{{ props.info.description }}</p>
-      </template>
-      <el-row v-if="isDead" style="width: 100%" justify="center">
-        <el-col style="text-align: center;font-size: 2rem" :span="24">
-          <span>🪦</span>
-        </el-col>
-        <el-col style="text-align: center;" :span="24">
-          <span class="monster-name">{{ props.info.name }}</span>
-        </el-col>
-        <el-col style="text-align: center;font-size: 20px;color:var(--el-color-danger)" :span="24">
-          <span>死亡</span>
-        </el-col>
-      </el-row>
-      <el-row v-else style="width: 100%" justify="space-between">
-        <el-col style="text-align: center" :span="24">
-          <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon" alt="monster icon" />
-          <span v-else class="monster-icon">{{ props.info.icon }}</span>
-        </el-col>
-        <el-col style="text-align: center;" :span="24">
-          <span class="monster-name">{{ props.info.name }}</span>
-        </el-col>
-        <el-col :span="8" :class="valueClass('ad')">
-          <span>⚔️</span>
-          <span>{{ finalStats.ad }}</span>
-        </el-col>
-        <el-col :span="8" :class="valueClass('adDefend')">
-          <span>🛡️</span>
-          <span>{{ finalStats.adDefend }}</span>
-        </el-col>
-        <el-col v-if="finalStats.apDefend" :span="8" :class="valueClass('apDefend')">
-          <span>🌐</span>
-          <span>{{ finalStats.apDefend }}</span>
-        </el-col>
-        <el-col :span="24">
-          <HpProgress :current-value="props.info.hp" :total-value="finalStats.hpLimit"/>
-        </el-col>
-      </el-row>
-    </el-tooltip>
+    <el-row v-if="isDead" style="width: 100%" justify="center">
+      <el-col style="text-align: center" class="death-emoji" :span="24">
+        <span>🪦</span>
+      </el-col>
+      <el-col style="text-align: center;" :span="24">
+        <span class="monster-name">{{ props.info.name }}</span>
+      </el-col>
+      <el-col style="text-align: center;" class="death-text" :span="24">
+        <span>死亡</span>
+      </el-col>
+    </el-row>
+    <el-row v-else style="width: 100%" justify="space-between">
+      <el-col style="text-align: center" :span="24">
+        <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon" alt="monster icon" />
+        <span v-else class="monster-icon">{{ props.info.icon }}</span>
+      </el-col>
+      <el-col style="text-align: center;" :span="24">
+        <span class="monster-name">{{ props.info.name }}</span>
+      </el-col>
+      <el-col :span="8" :class="valueClass('ad')">
+        <span>⚔️</span>
+        <span>{{ finalStats.ad }}</span>
+      </el-col>
+      <el-col :span="8" :class="valueClass('adDefend')">
+        <span>🛡️</span>
+        <span>{{ finalStats.adDefend }}</span>
+      </el-col>
+      <el-col v-if="finalStats.apDefend" :span="8" :class="valueClass('apDefend')">
+        <span>🌐</span>
+        <span>{{ finalStats.apDefend }}</span>
+      </el-col>
+      <el-col :span="24">
+        <HpProgress :current-value="props.info.hp" :total-value="finalStats.hpLimit"/>
+      </el-col>
+    </el-row>
 
   </el-card>
 </template>
 
 <style scoped>
+.monster-card {
+  position: relative; /* 為了讓狀態欄絕對定位參考卡片 */
+  flex: 1 1 9rem;
+  min-width: 7.5rem;
+  max-width: 8rem;
+  height: auto;
+  max-height: 10rem;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* 狀態欄不佔空間地定選在卡片上方 */
+.status-bar {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+}
+
+.status-icon {
+  position: relative;
+  font-size: 0.95rem;
+}
+
+.status-icon small {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 50%;
+  padding: 0 3px;
+  font-size: 9px;
+}
+
+.is-debuff {
+  filter: drop-shadow(0 0 2px red);
+}
+
 .monster-icon {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
+  display: inline-block;
+  margin-top: 0.2rem;
 }
 
 .monster-image-icon {
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 2.2rem;
+  height: 2.2rem;
   object-fit: contain;
   image-rendering: pixelated;
   display: inline-block;
-  margin: 0.1rem auto;
+  margin-top: 0.2rem;
 }
 
-.monster-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 10rem;
-  max-height: 16rem;
-  font-size: 1rem;
-
-}
-
-@media (max-width: 767px) {
-  .monster-card {
-    max-width: 13rem;
-  }
+.monster-name {
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0.2rem 0;
 }
 
 /* 高亮特效樣式 */
 .monster-card.is-selected {
-  /* 改變邊框顏色或陰影來強調選中狀態 */
-  border: 2px solid #00f3ff !important; /* 青藍色邊框 */
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.9), /* 強烈外發光 */ 0 0 5px rgba(0, 243, 255, 0.5); /* 內部細微光暈 */
-  transform: scale(1.02); /* 輕微放大以突出 */
+  border: 2px solid #00f3ff !important;
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.9), 0 0 4px rgba(0, 243, 255, 0.5);
+  transform: scale(1.02);
   cursor: pointer;
-  /* 確保過渡平滑 */
   transition: all 0.2s ease-in-out;
 }
 
-/* 確保 hover 效果依然存在 */
 .monster-card:hover:not(.is-selected) {
   box-shadow: 0 0 8px rgba(120, 255, 255, 0.4);
 }
 
 .el-col {
-  margin-top: 0.1rem;
-  margin-bottom: 0.1rem;
+  margin-top: 0.05rem;
+  margin-bottom: 0.05rem;
 }
 
-p {
-  line-height: 1;
-}
-
-
-/* ------------------- 抖動特效 (@keyframes) ------------------- */
-
-/* ⭐️ 應用抖動動畫的類別 */
-.monster-card.is-shaking {
-  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
-  transform: translate3d(0, 0, 0); /* 啟用硬體加速 */
-}
-
-@keyframes shake {
-  /* 輕微的、快速的水平位移 */
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
-  }
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
-  }
+:deep(.el-card__body) {
+  padding: 0.4rem 0.5rem;
+  box-sizing: border-box;
 }
 
 .buff {
@@ -327,35 +332,26 @@ p {
   color: var(--el-color-danger);
 }
 
-/* ------------------- 狀態效果列 ------------------- */
-.status-bar {
-  position: relative;
-  display: flex;
-  gap: 4px;
-  height: 24px;
+.death-emoji {
+  font-size: 1.5rem !important;
+  margin-top: 0.5rem;
 }
 
-.status-icon {
-  position: relative;
-  font-size: 1.2rem;
+.death-text {
+  font-size: 13px !important;
+  color: var(--el-color-danger);
 }
 
-.status-icon small {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-radius: 50%;
-  padding: 0 4px;
-  font-size: 10px;
+/* ------------------- 抖動特效 ------------------- */
+.monster-card.is-shaking {
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+  transform: translate3d(0, 0, 0);
 }
 
-.is-debuff {
-  filter: drop-shadow(0 0 2px red);
-}
-
-:deep(.el-card__body) {
-  padding: 1rem;
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
 }
 </style>
