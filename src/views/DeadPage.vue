@@ -22,7 +22,7 @@ const restartGame = async () => {
     <h1 style="color:var(--el-color-danger);text-align: center">
       你在無盡之塔中存活了 {{ gameStateStore.days }} 天
       <br/>
-      倒在了第 {{ gameStateStore.currentStage }} 階段 - {{
+      倒在了第 {{
         getEnumColumn(StageEnum, gameStateStore.currentStage)
       }} 的旅途上
     </h1>

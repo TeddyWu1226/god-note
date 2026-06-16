@@ -74,7 +74,7 @@ const selectRoom = (roomValue: number) => {
 
 const continueStage = () => {
   gameStateStore.isBattleWon = false
-  gameStateStore.setRoom(RoomEnum.Bless.value)
+  gameStateStore.setRoom(RoomEnum.Rest.value)
   gameStateStore.nextRooms = []
 }
 
@@ -94,7 +94,7 @@ const selectStage = (stageVal: number) => {
   gameStateStore.currentStage = stageVal
   gameStateStore.stageDays = 0
   gameStateStore.isBattleWon = false
-  gameStateStore.setRoom(RoomEnum.Bless.value)
+  gameStateStore.setRoom(RoomEnum.Rest.value)
   gameStateStore.nextRooms = []
 
   if (stageVal === 2) {

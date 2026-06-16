@@ -25,10 +25,10 @@ const hasSave = computed(() => {
 });
 
 const classOptions = [
-  {value: 'Merchant', label: '商人', icon: '🪙', desc: '初始金額比較多，開局獲得 300 💰。'},
-  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '初始獲得「小刀」武器，但開局只有總生命的一半。'},
   {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '啥都沒有的普通人，完全依靠自身實力。'},
-  {value: 'Cleric', label: '聖職者', icon: '🛐', desc: '開局學會主動技能「治療術」。'}
+  {value: 'Merchant', label: '商人', icon: '🪙', desc: '初始金額比較多，開局獲得 300 💰。'},
+  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '初始獲得「小刀」武器，且最大生命上限只有 50'},
+  {value: 'Cleric', label: '聖職者', icon: '🛐', desc: '擁有技能「治療」。'}
 ]
 
 const confirmClassSelection = async () => {
@@ -45,8 +45,8 @@ const confirmClassSelection = async () => {
   if (selectedClass.value === 'Merchant') {
     playerStore.info.gold = 300;
   } else if (selectedClass.value === 'Thief') {
-    playerStore.gainItem(Dagger.Dagger1);
-    playerStore.info.hp = Math.round(playerStore.finalStats.hpLimit / 2);
+    playerStore.equipItem(Dagger.Dagger1);
+    playerStore.info.hpLimit = 50;
   } else if (selectedClass.value === 'Cleric') {
     playerStore.addSkill('CommonHeal');
   }
@@ -183,9 +183,11 @@ const continueGame = () => {
   background: rgba(255, 215, 0, 0.05);
   filter: blur(80px);
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .content-wrapper {
+  position: relative;
   text-align: center;
   z-index: 1;
 }
@@ -270,17 +272,16 @@ const continueGame = () => {
 }
 
 .class-cards {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 240px));
   justify-content: center;
   gap: 1.2rem;
-  flex-wrap: wrap;
-  max-width: 700px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
 .class-card {
-  width: 140px;
-  padding: 1.5rem 0.75rem;
+  padding: 1.5rem 1.2rem;
   border: 1px solid #333;
   background: rgba(255, 255, 255, 0.03);
   cursor: pointer;

@@ -79,6 +79,14 @@ export abstract class SkillModel {
         return this.maxCd;
     }
 
+    // 💡 獲取熟練度顯示字串
+    get proficiencyText(): string {
+        if (this.proficiency >= this.maxProficiency) {
+            return "熟練度 Max";
+        }
+        return `熟練度: ${this.proficiency}/${this.maxProficiency}`;
+    }
+
     // 序列化為 JSON，用於 Pinia 儲存
     toJSON() {
         return {

@@ -198,17 +198,6 @@ export class MonsterModel implements MonsterType {
             }
         }
 
-        // 😡 菁英怪：在第 5 回合進入狂暴狀態，提升 50% 物理傷害，增加 20% 暴擊率
-        if (this.class === 'elite') {
-            if (battleRound === 5) {
-                this.ad = Math.round(this.ad * 1.5);
-                this.critRate = (this.critRate || 0) + 20;
-                if (logStore) {
-                    logStore.logger.add(`😡 [獨特習性] 菁英怪物 ${this.name} 陷入狂怒！攻擊力與暴擊率大幅提升！`);
-                }
-            }
-        }
-
         // 2. 映射表自定義：若有指定 roundBehavior 鍵值，則執行對應的註冊函式
         if (this.roundBehavior && MonsterRoundBehaviors[this.roundBehavior]) {
             MonsterRoundBehaviors[this.roundBehavior](this, battleRound, logStore);

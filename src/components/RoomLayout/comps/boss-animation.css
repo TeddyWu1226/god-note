@@ -23,6 +23,7 @@
     background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
     position: relative;
     overflow: hidden;
+    z-index: 0;
 }
 
 .elite::before {
@@ -34,6 +35,8 @@
     height: 200%;
     background: radial-gradient(circle, rgb(1, 76, 149) 0%, transparent 70%);
     animation: rotate-slow 10s linear infinite;
+    pointer-events: none;
+    z-index: -1;
 }
 
 

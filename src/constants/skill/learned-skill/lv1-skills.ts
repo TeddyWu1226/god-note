@@ -1,7 +1,7 @@
-import { SkillModel } from "@/models/skill-model";
-import { PlayerStoreType, SkillParams } from "@/types";
-import { ColorText } from "@/utils/color";
-import { applySkillDamage } from "@/constants/fight-func";
+import {SkillModel} from "@/models/skill-model";
+import {PlayerStoreType, SkillParams} from "@/types";
+import {ColorText} from "@/utils/color";
+import {applySkillDamage} from "@/constants/fight-func";
 
 export class CommonHeal extends SkillModel {
     constructor() {
@@ -144,7 +144,7 @@ export class VerticalSlash extends SkillModel {
     description(playerStore: PlayerStoreType): string {
         const ad = playerStore?.finalStats?.ad ?? 0;
         const total = ad + this.extraDamage;
-        return `由上往下攻擊, 額外獲得 ${ColorText.ad(this.extraDamage)} 物理傷害，總計造成 ${ColorText.ad(total)} 物理傷害。`;
+        return `由上往下攻擊，總計造成 ${ColorText.ad(total)} 。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -187,7 +187,7 @@ export class HorizontalSlash extends SkillModel {
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `橫揮手中武器, 造成全部敵人 ${ColorText.ad(dmg)} 的物理傷害。`;
+        return `橫揮手中武器，造成全部敵人 ${ColorText.ad(dmg)} 。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -230,12 +230,12 @@ export class Thrust extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 1.5 + this.proficiency * 0.6);
+        return Math.round(ad + 5 + this.proficiency * 0.6);
     }
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `蓄力向前刺擊，造成較高物理傷害，但降低 30% 命中率。造成 ${ColorText.ad(dmg)} 的物理傷害。`;
+        return `蓄力向前刺擊，造成較高的${ColorText.ad(dmg)}，但降低 30% 命中率。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -244,7 +244,7 @@ export class Thrust extends SkillModel {
         if (!playerStore || !monster) return false;
 
         const dmg = this.getDamage(playerStore);
-        
+
         const adjustedAttacker = {
             ...playerStore.finalStats,
             hit: (playerStore.finalStats.hit || 0) - 30

@@ -51,8 +51,7 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         <div class="info-trigger">i</div>
       </template>
       <div class="skill-desc">
-        <div>等級: Lv.{{ skill.level }}</div>
-        <div>熟練度: {{ proficiency === 100 ? 'MAX' : proficiency}}</div>
+        <div>{{ skill.proficiencyText }}</div>
         <div v-html="skill.description(playerStore)"/>
       </div>
     </el-popover>

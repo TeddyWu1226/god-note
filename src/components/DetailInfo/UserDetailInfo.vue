@@ -12,7 +12,7 @@ import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {SkillModel} from "@/models/skill-model";
 import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
-import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
+import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 
 const playerStore = usePlayerStore();
@@ -205,15 +205,23 @@ const cancelReplaceMode = () => {
   </div>
   <el-dialog
       v-model="isShowStats"
-      :title="`角色狀態 (${getEnumColumn(CharEnum,playerStore.info.char)})`"
       class="user-detail"
       append-to-body
       top="5vh"
   >
-    <div class="stats-container">
-      <div v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0" class="stat-points-banner">
-        <span>你有 <strong>{{ playerStore.info.statPoints }}</strong> 點未分配的屬性點</span>
+    <template #title>
+      <div class="flex items-center">
+        <span>
+        角色狀態 ({{ getEnumColumn(CharEnum, playerStore.info.char) }})
+      </span>
+        <div v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0" class="stat-points-banner">
+          <span>你有 <strong>{{ playerStore.info.statPoints }}</strong> 點未分配的屬性點</span>
+        </div>
       </div>
+
+    </template>
+    <div class="stats-container">
+
       <div class="stats-grid">
         <div v-for="stat in StatEnum" :key="stat.value" class="stat-item">
           <div class="stat-info">
@@ -304,15 +312,25 @@ const cancelReplaceMode = () => {
                     <div class="skill-tooltip-type">
                       類型: {{ playerStore.info.skills[i - 1].type === 'active' ? '主動技能' : '被動技能' }}
                     </div>
+                    <div v-if="playerStore.info.skills[i - 1].type === 'active'" class="skill-tooltip-proficiency">
+                      {{ playerStore.info.skills[i - 1].proficiencyText }}
+                    </div>
                     <div class="skill-tooltip-desc" v-html="playerStore.info.skills[i-1].description(playerStore)"/>
                   </div>
                 </template>
                 <div class="skill-slot-inner"
                      :style="{ borderColor: getRarityColor(playerStore.info.skills[i-1].rarity) }">
-                  <span class="skill-slot-icon">{{ playerStore.info.skills[i - 1].icon }}</span>
+                  <span class="skill-slot-icon">
+                    <img v-if="isImageIcon(playerStore.info.skills[i - 1].icon)"
+                         :src="resolveIconPath(playerStore.info.skills[i - 1].icon)" class="skill-slot-image-icon"
+                         alt="skill icon"/>
+                    <template v-else>{{ playerStore.info.skills[i - 1].icon }}</template>
+                  </span>
                   <div class="skill-slot-info">
                     <span class="skill-slot-name">{{ playerStore.info.skills[i - 1].name }}</span>
-                    <span class="skill-slot-level">Lv.{{ playerStore.info.skills[i - 1].level }}</span>
+                    <span v-if="playerStore.info.skills[i - 1].type === 'active'" class="skill-slot-level">
+                      {{ playerStore.info.skills[i - 1].proficiencyText }}
+                    </span>
                   </div>
                 </div>
               </el-tooltip>
@@ -362,7 +380,8 @@ const cancelReplaceMode = () => {
             {{ getRarityName(skill.rarity) }}
           </div>
           <div class="card-icon">
-            <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon" alt="skill icon" />
+            <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon"
+                 alt="skill icon"/>
             <template v-else>{{ skill.icon }}</template>
           </div>
           <div class="card-name">{{ skill.name }}</div>
@@ -384,7 +403,8 @@ const cancelReplaceMode = () => {
           新學習技能:
           <span class="preview-badge"
                 :style="{ color: getRarityColor(selectedNewSkill.rarity), borderColor: getRarityColor(selectedNewSkill.rarity) }">
-            <img v-if="isImageIcon(selectedNewSkill.icon)" :src="resolveIconPath(selectedNewSkill.icon)" class="skill-image-icon-small" alt="skill icon" />
+            <img v-if="isImageIcon(selectedNewSkill.icon)" :src="resolveIconPath(selectedNewSkill.icon)"
+                 class="skill-image-icon-small" alt="skill icon"/>
             <template v-else>{{ selectedNewSkill.icon }}</template>
             {{ selectedNewSkill.name }}
           </span>
@@ -398,11 +418,15 @@ const cancelReplaceMode = () => {
               @click="confirmReplacement(skill.id)"
           >
             <span class="replace-icon">
-              <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon-small" alt="skill icon" />
+              <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon-small"
+                   alt="skill icon"/>
               <template v-else>{{ skill.icon }}</template>
             </span>
             <div class="replace-meta">
-              <span class="replace-name">{{ skill.name }} (Lv.{{ skill.level }})</span>
+              <span class="replace-name">
+                {{ skill.name }}
+                <template v-if="skill.type === 'active'"> ({{ skill.proficiencyText }})</template>
+              </span>
               <span class="replace-type">{{ skill.type === 'active' ? '主動' : '被動' }}</span>
             </div>
             <span class="replace-rarity" :style="{ color: getRarityColor(skill.rarity) }">
@@ -534,9 +558,10 @@ const cancelReplaceMode = () => {
 .stat-points-banner {
   background: rgba(230, 162, 60, 0.15);
   border: 1px dashed #e6a23c;
-  padding: 10px;
+  margin-left: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
   border-radius: 6px;
-  margin-bottom: 15px;
   text-align: center;
   font-size: 0.95rem;
   color: #e6a23c;
@@ -663,6 +688,15 @@ const cancelReplaceMode = () => {
 .skill-slot-icon {
   font-size: 1.5rem;
   margin-right: 10px;
+}
+
+.skill-slot-image-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .skill-slot-info {

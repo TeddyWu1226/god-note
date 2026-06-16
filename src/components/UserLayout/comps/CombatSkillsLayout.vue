@@ -96,7 +96,7 @@ const clickSkill = (skill: SkillModel) => {
                   <template v-if="skill.type === 'active'">
                     <span>冷卻: {{ skill.cd }} 回合</span>
                     <span style="margin: 0 4px">|</span>
-                    <span>熟練度: {{ skill.proficiency }}/{{ skill.maxProficiency }}</span>
+                    <span>{{ skill.proficiencyText }}</span>
                   </template>
                 </div>
                 <div class="desc" v-html="skill.description(playerStore)"/>
@@ -116,7 +116,7 @@ const clickSkill = (skill: SkillModel) => {
                   </span>
                 </div>
                 <div class="sub-row">
-                  <span class="lv">Lv.{{ skill.level }}</span>
+                  <span v-if="skill.type === 'active'" class="lv">{{ skill.proficiencyText }}</span>
                   <span v-if="skill.type === 'passive'" class="passive-tag">被動</span>
                   <span v-else-if="skill.costSp" class="cost-tag">SP:{{ skill.costSp }}</span>
                   <span v-else-if="skill.costHp" class="cost-tag hp">HP:{{ skill.costHp }}</span>
