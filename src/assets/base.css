@@ -45,13 +45,13 @@
 .operation-layout {
     width: 100%;
     display: flex;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
 }
 
 .operation-layout > * {
     flex: 1;
-    margin-right: 0.5rem !important;
-    margin-left: 0.5rem !important;
+    height: 2.5rem !important;
+    margin: 2px 5px !important;
 }
 
 /* 2. 當螢幕寬度縮小（例如小於 600px）時，切換為手機模式 */

@@ -1,5 +1,5 @@
 // 常數定義
-import {BattleOutcome, DamageResult, MonsterType, UnitType} from "@/types";
+import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
@@ -341,7 +341,7 @@ export function applyRandomFloatAndRound(baseValue: number, minRate = 0.8, maxRa
 }
 
 
-export function escapePercent(runner: UnitType, chasers: UnitType[]): number {
+export function escapePercent(runner: UnitType, chasers: MonsterClass[]): number {
 	// 確保追擊方陣列非空
 	if (!chasers || chasers.length === 0) {
 		return 100;
@@ -388,7 +388,7 @@ export function escapePercent(runner: UnitType, chasers: UnitType[]): number {
  * @param chasers 追擊方陣列 (嘗試阻止逃跑的單位，敵人陣列)
  * @returns boolean - true 表示逃跑成功
  */
-export function canEscape(runner: UnitType, chasers: UnitType[]): boolean {
+export function canEscape(runner: UnitType, chasers: MonsterClass[]): boolean {
 	// 確保追擊方陣列非空
 	if (!chasers || chasers.length === 0) {
 		console.warn("追擊方陣列為空，逃跑自動成功。");

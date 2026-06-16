@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FightOperation from "@/components/OperationLayout/comps/FightOperation.vue";
+import FightOperation from "@/components/RoomLayout/comps/FightRoom/FightOperation.vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {RoomEnum} from "@/enums/room-enum";
 import NextOperation from "@/components/OperationLayout/comps/NextOperation.vue";

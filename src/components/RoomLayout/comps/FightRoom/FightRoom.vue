@@ -16,7 +16,6 @@ import {
 } from "@/constants/fight-func";
 import {ElMessage} from "element-plus";
 import {LogView} from "@/components/LogView";
-import {create} from "@/utils/create";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
@@ -29,6 +28,8 @@ import {useTrackerStore} from "@/store/track-store";
 import {Skill, SkillFactory} from "@/models/skill";
 import {Monster} from "@/constants/monsters/monster-info";
 import {ItemSkill} from "@/constants/skill/item-skill";
+import RoomTemplate from "@/components/RoomLayout/RoomTemplate.vue";
+import FightOperation from "@/components/RoomLayout/comps/FightRoom/FightOperation.vue";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -40,17 +41,6 @@ const currentRoomValue = computed(() => {
     }
 )
 
-const maxActionPoints = computed((): number => {
-  return Math.max(1, Math.floor((playerStore.finalStats.actionValue ?? 50) / 50));
-})
-
-const strokeDasharray = 2 * Math.PI * 24; // 150.796
-const strokeDashoffset = computed((): number => {
-  const percent = maxActionPoints.value > 0
-      ? (gameStateStore.playerActionPoints / maxActionPoints.value)
-      : 0;
-  return strokeDasharray * (1 - percent);
-})
 
 const MonsterCardRefs = ref<Record<string, MonsterCardExposed>>({});
 const monsterDropGold = ref(0)
@@ -91,11 +81,6 @@ const genEliteMonster = () => {
   }
 }
 
-// 生成BOSS
-// 建立一個反向查找的地圖 (在文件初始化時執行一次)
-const StageValueMap = Object.fromEntries(
-    Object.entries(StageEnum).map(([key, data]) => [data.value, key])
-);
 
 /**
  * 高效率查詢
@@ -431,103 +416,85 @@ const init = () => {
 if (!gameStateStore.isBattleWon) {
   init()
 }
+
 </script>
 
 <template>
-  <div class="fight">
-    <!-- 戰鬥回合數顯示 -->
-    <div class="battle-round-badge" v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0">
-      <span>第 {{ gameStateStore.battleRound }} 回合</span>
-    </div>
-
-    <MonsterCard
-        :ref="(el) => { if (el) { MonsterCardRefs[monster.id] = el as MonsterCardExposed } else { delete MonsterCardRefs[monster.id] } }"
-        v-for="(monster,index) in gameStateStore.currentEnemy"
-        :key="monster.id"
-        :info="monster"
-        :index="index"
-        :is-selected="selectedMonsterIndex === index"
-        @select="handleMonsterSelect(index)"
-        @monster-die="whenMonsterDead(index)"
-    />
-    <div CLASS="victory-container" v-if="gameStateStore.isBattleWon">
-      <span v-if="isEscape" class="run-message">你成功逃跑了!</span>
-      <span
-          v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
-          class="victory-message">
-        通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}!
-      </span>
-      <span v-else class="victory-message">勝利!</span>
-      <span v-if="monsterDropGold">獲得了 {{ monsterDropGold }} G!</span>
-      <span v-for="(item,index) in monsterDropItems" :key="index">
-        獲得了 <strong :style="{color:getEnumColumn(QualityEnum,item.quality,'color')}">{{ item.name }}</strong>
-      </span>
-    </div>
-    <LogView class="log"></LogView>
-
-    <!-- 戰鬥房間右下角的行動點數圓形徽章 -->
-    <div
-        v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0"
-        class="action-points-badge-container"
-    >
-      <div class="action-points-badge">
-        <svg class="progress-ring" width="56" height="56">
-          <circle
-              class="progress-ring__track"
-              stroke="rgba(57, 255, 20, 0.1)"
-              stroke-width="4"
-              fill="transparent"
-              r="24"
-              cx="28"
-              cy="28"
-          />
-          <circle
-              class="progress-ring__circle"
-              stroke="#39FF14"
-              stroke-width="4"
-              fill="transparent"
-              r="24"
-              cx="28"
-              cy="28"
-              :stroke-dasharray="strokeDasharray"
-              :stroke-dashoffset="strokeDashoffset"
-          />
-        </svg>
-        <div class="badge-content">
-          <span class="energy-icon">⚡</span>
-          <span class="badge-value">{{ gameStateStore.playerActionPoints }}/{{ maxActionPoints }}</span>
+  <RoomTemplate>
+    <template #title>
+      <div class="flex items-center">
+        <span style="padding-right: 1rem">
+          {{ getEnumColumn(RoomEnum, currentRoomValue) }}
+        </span>
+        <div class="battle-round-badge" v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0">
+          <span>第 {{ gameStateStore.battleRound }} 回合</span>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+    <template #default>
+      <div class="fight">
+        <MonsterCard
+            :ref="(el) => { if (el) { MonsterCardRefs[monster.id] = el as MonsterCardExposed } else { delete MonsterCardRefs[monster.id] } }"
+            v-for="(monster,index) in gameStateStore.currentEnemy"
+            :key="monster.id"
+            :info="monster"
+            :index="index"
+            :is-selected="selectedMonsterIndex === index"
+            @select="handleMonsterSelect(index)"
+            @monster-die="whenMonsterDead(index)"
+        />
+        <div class="victory-container" v-if="gameStateStore.isBattleWon">
+          <span v-if="isEscape" class="run-message">你成功逃跑了!</span>
+          <span
+              v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
+              class="victory-message">
+        通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}!
+      </span>
+          <span v-else class="victory-message">勝利!</span>
+          <span v-if="monsterDropGold">獲得了 {{ monsterDropGold }} G!</span>
+          <span v-for="(item,index) in monsterDropItems" :key="index">
+        獲得了 <strong :style="{color:getEnumColumn(QualityEnum,item.quality,'color')}">{{ item.name }}</strong>
+      </span>
+        </div>
+        <LogView class="log"></LogView>
+      </div>
+    </template>
+    <template #button>
+      <FightOperation
+          ref="FightOperationRef"
+          @skill="onSkill"
+          @attack="onAttack"
+          @run="onRun"
+          @end-turn="onEndTurn"
+      />
+    </template>
+
+  </RoomTemplate>
+
 </template>
 
 <style scoped>
 .fight {
-  padding: 2rem;
   display: flex;
+  align-items: center;
   justify-content: space-around;
   position: relative;
   flex-grow: 1;
   width: 100%;
+  height: 90%;
   box-sizing: border-box;
 }
 
 .battle-round-badge {
-  position: absolute;
-  top: -1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid var(--el-color-primary);
   border-radius: 20px;
-  padding: 4px 16px;
+  padding: 2px 14px;
   font-size: 0.9rem;
   font-weight: bold;
   color: var(--el-color-primary);
   box-shadow: 0 0 10px rgba(64, 158, 255, 0.3);
-  backdrop-filter: blur(4px);
-  z-index: 10;
 }
 
 .victory-container {
@@ -554,92 +521,6 @@ if (!gameStateStore.isBattleWon) {
   font-size: 2rem;
 }
 
-/* ---------------------------------------------------- */
-/* ⭐️ 行動點數圓形徽章 (貼齊戰鬥房間右下角) */
-/* ---------------------------------------------------- */
-.action-points-badge-container {
-  position: absolute;
-  bottom: 1rem;
-  right: 1.25rem;
-  z-index: 20;
-  pointer-events: none;
-}
-
-@media (max-width: 767px) {
-  .action-points-badge-container {
-    bottom: 0.75rem;
-    right: 0.75rem;
-  }
-}
-
-.action-points-badge {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  background: rgba(18, 18, 18, 0.8);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5),
-  0 0 10px rgba(57, 255, 20, 0.15),
-  inset 0 0 8px rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
-}
-
-.progress-ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: rotate(-90deg); /* 從上方開始旋轉 */
-}
-
-.progress-ring__circle {
-  transition: stroke-dashoffset 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 3px rgba(57, 255, 20, 0.8));
-  stroke-linecap: round;
-}
-
-.badge-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.energy-icon {
-  font-size: 0.85rem;
-  color: #39FF14;
-  text-shadow: 0 0 6px rgba(57, 255, 20, 0.8);
-  line-height: 1;
-  margin-bottom: 2px;
-  animation: pulse-glow 2s infinite ease-in-out;
-}
-
-.badge-value {
-  font-size: 0.75rem;
-  font-weight: 800;
-  font-family: 'Outfit', 'Inter', monospace;
-  color: #ffffff;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-  line-height: 1;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.9;
-    filter: drop-shadow(0 0 2px rgba(57, 255, 20, 0.5));
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 1;
-    filter: drop-shadow(0 0 6px rgba(57, 255, 20, 0.9));
-  }
-}
 
 /* ---------------------------------------------------- */
 /* ⭐️ 懸浮日誌視窗樣式 (無背景/邊框) */

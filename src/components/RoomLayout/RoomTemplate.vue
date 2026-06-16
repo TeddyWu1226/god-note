@@ -5,7 +5,7 @@ import NextOperation from "@/components/OperationLayout/comps/NextOperation.vue"
 import {useGameStateStore} from "@/store/game-state-store";
 
 const props = defineProps({
-  title: {type: String, required: true},
+  title: {type: String, required: false},
   titleClass: {type: String, required: false},
   class: {type: String, required: false, default: 'room-layout'},
 })
@@ -15,7 +15,10 @@ const gameStateStore = useGameStateStore();
 <template>
   <el-card :class="props.class">
     <div class="title" :class="props.titleClass">
-      {{ props.title }}
+      <template v-if="props.title">
+        {{ props.title }}
+      </template>
+      <slot v-else name="title"></slot>
     </div>
     <slot name="default"></slot>
   </el-card>
@@ -30,6 +33,7 @@ const gameStateStore = useGameStateStore();
 <style scoped>
 .title {
   font-size: 1.2rem;
+  padding-bottom: 1rem;
 }
 
 .flex > * {

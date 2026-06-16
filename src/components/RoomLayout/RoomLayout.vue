@@ -5,7 +5,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {computed, ref, watch} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import RestRoom from "@/components/RoomLayout/comps/RestRoom.vue";
-import FightRoom from "@/components/RoomLayout/comps/FightRoom.vue";
+import FightRoom from "@/components/RoomLayout/comps/FightRoom/FightRoom.vue";
 import EventRoomCard from "@/components/RoomLayout/comps/EventRoomCard.vue";
 import {useLogStore} from "@/store/log-store";
 import ShopRoom from "@/components/RoomLayout/comps/ShopRoom/ShopRoom.vue";
@@ -118,25 +118,24 @@ const gainFirstPower = () => {
 <template>
   <EventRoomCard v-if="currentRoomValue === RoomEnum.Event.value" :key="roomKeyCounter"/>
   <BlessRoom v-else-if="currentRoomValue === RoomEnum.Bless.value" :key="roomKeyCounter"/>
+  <FightRoom
+      ref="FightRoomRef"
+      v-else-if="currentRoomValue === RoomEnum.Fight.value ||
+        currentRoomValue === RoomEnum.EliteFight.value ||
+        currentRoomValue === RoomEnum.Boss.value||
+        currentRoomValue === RoomEnum.SpecialBoss.value
+"
+      @run-failed="onRunFailed"
+      :key="roomKeyCounter"
+  />
   <el-card v-else class="room-layout">
     <div class="title">
       {{ getEnumColumn(RoomEnum, currentRoomValue, 'icon') }}
       {{ getEnumColumn(RoomEnum, currentRoomValue) }}
     </div>
     <el-scrollbar max-height="30vh">
-      <FightRoom
-          ref="FightRoomRef"
-          v-if="currentRoomValue === RoomEnum.Fight.value ||
-        currentRoomValue === RoomEnum.EliteFight.value ||
-        currentRoomValue === RoomEnum.Boss.value||
-        currentRoomValue === RoomEnum.SpecialBoss.value
-"
-          @run-failed="onRunFailed"
-          :key="roomKeyCounter"
-      />
       <RestRoom ref="RestRoomRef" v-if="currentRoomValue === RoomEnum.Rest.value" :key="roomKeyCounter"/>
       <ShopRoom ref="ShopRoomRef" v-if="currentRoomValue === RoomEnum.Shop.value" :key="roomKeyCounter"/>
-
       <FusionRoom ref="FusionRoomRef" v-if="currentRoomValue === RoomEnum.Fusion.value" :key="roomKeyCounter"/>
     </el-scrollbar>
   </el-card>

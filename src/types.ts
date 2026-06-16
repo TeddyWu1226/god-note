@@ -104,7 +104,7 @@ export interface UnitType {
 	// 有關輸出
 	ad: number // 物理攻擊力
 	ap?: number // 魔法攻擊力/法傷
-	heal: number // 回復生命
+	heal?: number // 回復生命
 	magic?: number // 回復法力
 	critIncrease: number // 爆擊增傷(200%)
 	critRate: number // 爆擊率(%)
