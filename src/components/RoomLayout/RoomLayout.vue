@@ -9,7 +9,7 @@ import FightRoom from "@/components/RoomLayout/comps/FightRoom.vue";
 import EventRoomCard from "@/components/RoomLayout/comps/EventRoomCard.vue";
 import {useLogStore} from "@/store/log-store";
 import ShopRoom from "@/components/RoomLayout/comps/ShopRoom/ShopRoom.vue";
-import BlessRoom from "@/components/RoomLayout/comps/BlessRoom.vue";
+import BlessRoom from "@/components/RoomLayout/comps/BlessRoom/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
@@ -108,29 +108,37 @@ watch(() => gameStateStore.days,
       immediate: true,
       deep: true
     }) // 確保在組件第一次加載時也能觸發計數
+
+const gainFirstPower = () => {
+  playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 0) + 1;
+  gameStateStore.transitionToNextState();
+};
 </script>
 
 <template>
   <EventRoomCard v-if="currentRoomValue === RoomEnum.Event.value" :key="roomKeyCounter"/>
+  <BlessRoom v-else-if="currentRoomValue === RoomEnum.Bless.value" :key="roomKeyCounter"/>
   <el-card v-else class="room-layout">
     <div class="title">
       {{ getEnumColumn(RoomEnum, currentRoomValue, 'icon') }}
       {{ getEnumColumn(RoomEnum, currentRoomValue) }}
     </div>
-    <FightRoom
-        ref="FightRoomRef"
-        v-if="currentRoomValue === RoomEnum.Fight.value ||
+    <el-scrollbar max-height="30vh">
+      <FightRoom
+          ref="FightRoomRef"
+          v-if="currentRoomValue === RoomEnum.Fight.value ||
         currentRoomValue === RoomEnum.EliteFight.value ||
         currentRoomValue === RoomEnum.Boss.value||
         currentRoomValue === RoomEnum.SpecialBoss.value
 "
-        @run-failed="onRunFailed"
-        :key="roomKeyCounter"
-    />
-    <RestRoom ref="RestRoomRef" v-if="currentRoomValue === RoomEnum.Rest.value" :key="roomKeyCounter"/>
-    <ShopRoom ref="ShopRoomRef" v-if="currentRoomValue === RoomEnum.Shop.value" :key="roomKeyCounter"/>
-    <BlessRoom ref="ShopRoomRef" v-if="currentRoomValue === RoomEnum.Bless.value" :key="roomKeyCounter"/>
-    <FusionRoom ref="FusionRoomRef" v-if="currentRoomValue === RoomEnum.Fusion.value" :key="roomKeyCounter"/>
+          @run-failed="onRunFailed"
+          :key="roomKeyCounter"
+      />
+      <RestRoom ref="RestRoomRef" v-if="currentRoomValue === RoomEnum.Rest.value" :key="roomKeyCounter"/>
+      <ShopRoom ref="ShopRoomRef" v-if="currentRoomValue === RoomEnum.Shop.value" :key="roomKeyCounter"/>
+
+      <FusionRoom ref="FusionRoomRef" v-if="currentRoomValue === RoomEnum.Fusion.value" :key="roomKeyCounter"/>
+    </el-scrollbar>
   </el-card>
 </template>
 
@@ -138,6 +146,7 @@ watch(() => gameStateStore.days,
 .title {
   font-size: 1.2rem;
 }
+
 .room-layout :deep(.el-card__body) {
   height: 100%;
   box-sizing: border-box;

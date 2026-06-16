@@ -37,8 +37,8 @@ export const RoomEnum = {
 	},
 	Bless: {
 		value: 6,
-		label: '祈禱之像',
-		icon: '🗿',
+		label: '起始之泉',
+		icon: '⛲',
 		color: '#dda900',
 	},
 	SpecialBoss: {

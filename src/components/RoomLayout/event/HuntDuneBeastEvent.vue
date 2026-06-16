@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import './event-room.css'
+import '../room.css'
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
+import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
 import {create} from "@/utils/create";

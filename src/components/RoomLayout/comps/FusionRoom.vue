@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '../event/event-room.css'
+import '../room.css'
 import {ref, computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {ExtraFusionUsableItem, FusionUsableList} from "@/constants/items/fusion-list/fusion-usable-list";

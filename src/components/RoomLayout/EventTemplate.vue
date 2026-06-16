@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import './event-room.css'
+import './room.css'
 
 const props = defineProps({
   title: {type: String, required: true},

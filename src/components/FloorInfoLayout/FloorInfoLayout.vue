@@ -14,8 +14,13 @@ const isShowBackpack = ref(false);
 <template>
   <el-card body-class="flex justify-between items-center">
     <span style="font-size: 16px">
-      第 {{ gameStateStore.days }} 天 -
-      {{ getEnumColumn(StageEnum, gameStateStore.currentStage, 'label', '塔之後⏳') }}
+      <template v-if="gameStateStore.days === 0">
+        命運之始
+      </template>
+      <template v-else>
+        第 {{ gameStateStore.days }} 天 -
+        {{ getEnumColumn(StageEnum, gameStateStore.currentStage, 'label', '塔之後⏳') }}
+      </template>
     </span>
     <div class="flex items-center">
       <span class="gold">{{ playerStore.info.gold }}💰</span>

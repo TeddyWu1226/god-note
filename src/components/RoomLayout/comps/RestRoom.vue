@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '../event/event-room.css'
+import '../room.css'
 import {effect, ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";

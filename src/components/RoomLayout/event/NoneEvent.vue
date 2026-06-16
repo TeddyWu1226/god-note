@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
-import EventTemplate from "@/components/RoomLayout/event/EventTemplate.vue";
+import EventTemplate from "@/components/RoomLayout/EventTemplate.vue";
 import {GameState} from "@/enums/enums";
 
 const gameStateStore = useGameStateStore()
