@@ -54,9 +54,9 @@ const EvnStatus = {
 		icon: '💚',
 		duration: -1,
 		isBuff: true,
-		description: '每次行動恢復 5 HP',
+		description: '每次行動恢復 2 HP',
 		type: 'heal',
-		value: 5
+		value: 2
 	} as StatusEffect,
 	SongDefend: {
 		name: '悠揚:防禦提升',

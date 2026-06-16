@@ -5,7 +5,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
-import {computed, nextTick, ref} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {ItemType, MonsterType} from "@/types";
 import {
   applyAttackDamage,
@@ -15,7 +15,6 @@ import {
   spawnMonsters
 } from "@/constants/fight-func";
 import {ElMessage} from "element-plus";
-import {LogView} from "@/components/LogView";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
@@ -37,6 +36,29 @@ const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const logStore = useLogStore()
 const trackStore = useTrackerStore()
+
+const showLogDialog = ref(false)
+const logScrollRef = ref<HTMLElement | null>(null)
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (logScrollRef.value) {
+      logScrollRef.value.scrollTop = logScrollRef.value.scrollHeight
+    }
+  })
+}
+
+watch(showLogDialog, (newVal) => {
+  if (newVal) {
+    scrollToBottom()
+  }
+})
+
+watch(() => logStore.logs.length, () => {
+  if (showLogDialog.value) {
+    scrollToBottom()
+  }
+})
 const currentRoomValue = computed(() => {
       return gameStateStore.currentRoomValue
     }
@@ -219,6 +241,8 @@ const resolveRoundEnd = () => {
   monsterMove()
   // 回合結束判定
   gameStateStore.tickAllMonsters()
+  // 記錄後續回合日誌
+  logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   // 玩家狀態結算
   onPlayerTurnEnd()
   // 補滿行動點數
@@ -340,6 +364,8 @@ const onRun = () => {
     emit('runFailed', true)
     monsterMove()
     gameStateStore.tickAllMonsters()
+    // 記錄後續回合日誌
+    logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   } else {
     isEscape.value = true
     gameStateStore.setBattleWon(true)
@@ -412,6 +438,10 @@ const init = () => {
       }
     })
   })
+
+  // 新戰鬥開始，寫入第一回合日誌
+  logStore.logger.clear();
+  logStore.logger.add('<div style="color: #409eff; font-weight: bold; margin-top: 4px;">⚔️ === 第 1 回合 ===</div>');
 }
 
 if (!gameStateStore.isBattleWon) {
@@ -427,8 +457,12 @@ if (!gameStateStore.isBattleWon) {
         <span style="padding-right: 1rem">
           {{ getEnumColumn(RoomEnum, currentRoomValue) }}
         </span>
-        <div class="battle-round-badge" v-if="!gameStateStore.isBattleWon && gameStateStore.currentEnemy.length > 0">
-          <span>第 {{ gameStateStore.battleRound }} 回合</span>
+        <div
+            class="battle-round-badge"
+            @click="showLogDialog = true"
+            style="cursor: pointer;"
+        >
+          <span>第 {{ gameStateStore.battleRound }} 回合 📜</span>
         </div>
       </div>
     </template>
@@ -457,8 +491,36 @@ if (!gameStateStore.isBattleWon) {
         獲得了 <strong :style="{color:getEnumColumn(QualityEnum,item.quality,'color')}">{{ item.name }}</strong>
       </span>
         </div>
-        <LogView class="log"></LogView>
       </div>
+
+      <!-- 戰鬥日誌 Dialog -->
+      <el-dialog
+          v-model="showLogDialog"
+          title="📜 戰鬥詳細日誌"
+          width="500px"
+          append-to-body
+          destroy-on-close
+      >
+        <div class="combat-log-container">
+          <div v-if="logStore.logs.length === 0" class="no-logs">
+            暫無戰鬥日誌
+          </div>
+          <div v-else class="combat-log-scroll" ref="logScrollRef">
+            <div
+                v-for="log in logStore.logs"
+                :key="log.id"
+                class="log-item"
+            >
+              <span class="log-text" v-html="log.message"></span>
+            </div>
+          </div>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button type="primary" size="small" @click="showLogDialog = false">關閉</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </template>
     <template #button>
       <FightOperation
@@ -490,7 +552,6 @@ if (!gameStateStore.isBattleWon) {
 }
 
 .battle-round-badge {
-
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid var(--el-color-primary);
   border-radius: 20px;
@@ -499,6 +560,15 @@ if (!gameStateStore.isBattleWon) {
   font-weight: bold;
   color: var(--el-color-primary);
   box-shadow: 0 0 10px rgba(64, 158, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.battle-round-badge:hover {
+  background: var(--el-color-primary);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(64, 158, 255, 0.6);
+  transform: scale(1.05);
 }
 
 .victory-container {
@@ -527,20 +597,52 @@ if (!gameStateStore.isBattleWon) {
 
 
 /* ---------------------------------------------------- */
-/* ⭐️ 懸浮日誌視窗樣式 (無背景/邊框) */
+/* ⭐️ 戰鬥日誌 Dialog 內容樣式 */
 /* ---------------------------------------------------- */
-.log {
-  position: absolute;
-  left: 1rem;
-  bottom: 1rem;
-  max-width: calc(100% - 2rem);
+.combat-log-container {
+  padding: 5px 0;
 }
 
-@media (max-width: 767px) {
-  .log {
-    left: 0.5rem;
-    bottom: 0.5rem;
-    max-width: calc(100% - 1rem);
-  }
+.no-logs {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  font-size: 0.95rem;
+}
+
+.combat-log-scroll {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 12px;
+  background-color: #121214;
+  border: 1px solid #30303b;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+}
+
+.log-item {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-item:last-child {
+  border-bottom: none;
+}
+
+.log-text {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  word-break: break-all;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 </style>
