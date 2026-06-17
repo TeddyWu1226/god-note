@@ -53,16 +53,16 @@ export const UnitStatus = {
         value: 3
     } as StatusEffect,
     SpiderStuck: {
-        name: '綑綁',
+        name: '蜘蛛綑綁',
         icon: '🕸',
         duration: 5,
         description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
         type: 'stuck',
     } as StatusEffect,
     SmallSpiderStuck: {
-        name: '綑綁',
+        name: '蜘蛛綑綁',
         icon: '🕸',
-        duration: 3,
+        duration: 2,
         description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
         type: 'stuck',
     } as StatusEffect,

@@ -30,6 +30,7 @@ import {SkillFactory} from "@/constants/skill/learned-skill";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
+import {Sleep} from "@/utils/create";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -182,6 +183,7 @@ const whenMonsterDead = (monsterIndex: number) => {
   });
   // 移除死亡怪
   gameStateStore.currentEnemy.splice(monsterIndex, 1);
+  logStore.logger.add(`${selectedMonster.name} 死亡`)
   // 確保選中狀態同步
   if (selectedMonsterIndex.value === monsterIndex) {
     selectedMonsterIndex.value = null;
@@ -233,10 +235,13 @@ const resolveRoundEnd = () => {
   monsterMove()
   // 回合結束判定
   gameStateStore.tickAllMonsters()
-  // 記錄後續回合日誌
-  logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   // 玩家狀態結算
   onPlayerTurnEnd()
+  if (gameStateStore.isBattleWon) {
+    return
+  }
+  // 記錄後續回合日誌
+  logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   // 補滿行動點數
   gameStateStore.refillActionPoints()
 }
@@ -423,14 +428,12 @@ const init = () => {
   // 回合開始的觸發
   nextTick().then(() => {
     gameStateStore.currentEnemy.forEach((monster, index) => {
-      if (monster instanceof MonsterClass) {
-        monster.triggerOnStart({
-          playerStore: playerStore,
-          gameStateStore: gameStateStore,
-          logStore: logStore,
-          targetElement: MonsterCardRefs.value[monster.id]?.$el,
-        });
-      }
+      monster.triggerOnStart({
+        playerStore: playerStore,
+        gameStateStore: gameStateStore,
+        logStore: logStore,
+        targetElement: MonsterCardRefs.value[monster.id]?.$el,
+      });
     })
   })
 

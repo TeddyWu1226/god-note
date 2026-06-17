@@ -42,7 +42,7 @@ export class AncientSpider extends MonsterModel {
     }
 
     override onAttackHook({gameStateStore, playerStore}: any) {
-        if (playerStore.statusEffects?.find((e: any) => e.name === '綑綁')) {
+        if (playerStore.statusEffects?.find((e: any) => e.name === '蜘蛛綑綁')) {
             gameStateStore.addEffectToMonster(this, UnitStatus.SpiderHunter);
         }
     }

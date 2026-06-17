@@ -16,13 +16,12 @@ const onRest = () => {
   isRested.value = true
   playerStore.healFull()
   gameStateStore.transitionToNextState()
-  if (gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.Storyteller)) {
-    return
-  }
-  if (checkProbability(0.3)) {
-    gameStateStore.switchToEventRoom(SpecialEventEnum.Storyteller)
-  }
-
+  // if (gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.Storyteller)) {
+  //   return
+  // }
+  // if (checkProbability(0.3)) {
+  //   gameStateStore.switchToEventRoom(SpecialEventEnum.Storyteller)
+  // }
 }
 const emit = defineEmits(['cancel']);
 

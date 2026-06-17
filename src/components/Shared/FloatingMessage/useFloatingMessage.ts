@@ -39,6 +39,8 @@ export function useFloatingMessage(
             left: '50%',
             transform: 'translate(-50%, -50%)',
             position: 'fixed',
+            minWidth: '5rem',
+            width: 'auto',
             zIndex: 9999,
         };
     }
