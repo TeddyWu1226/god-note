@@ -46,6 +46,7 @@ const confirmClassSelection = async () => {
   } else if (selectedClass.value === 'Thief') {
     playerStore.equipItem(Dagger.Dagger1);
     playerStore.info.hpLimit = 50;
+    playerStore.info.hp = 50;
   } else if (selectedClass.value === 'Cleric') {
     playerStore.addSkill('CommonHeal');
   }

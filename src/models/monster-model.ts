@@ -1,8 +1,6 @@
 import {MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams} from "@/types";
-import {MonsterOnStart} from "@/constants/monsters/monster-action/on-start";
-import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
-import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
-import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
+
+
 
 export class MonsterModel implements MonsterType {
     id: string;
@@ -129,7 +127,10 @@ export class MonsterModel implements MonsterType {
             }
         });
 
-        return new MonsterModel(finalStats);
+        const Constructor = this.constructor as any;
+        const instance = new Constructor(finalStats);
+        Object.assign(instance, finalStats);
+        return instance;
     }
 
     /**
@@ -178,103 +179,57 @@ export class MonsterModel implements MonsterType {
             .filter(eff => eff.duration !== 0);
     }
 
+    // 子類別可覆寫的生命週期鉤子方法
+    onStartHook(params: Omit<MonsterActionParams, 'monster'>): void {
+    }
+
+    onAttackHook(params: Omit<MonsterOnAttackParams, 'monster'>): void {
+    }
+
+    onAttackedHook(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
+    }
+
+    onDeadHook(params: Omit<MonsterActionParams, 'monster'>): void {
+    }
+
+    onRoundBehaviorHook(battleRound: number, logStore: any): void {
+    }
+
     /**
      * 執行怪物在特定回合的獨特習性行為
      */
     executeRoundBehavior(battleRound: number, logStore: any) {
         if (this.hp <= 0) return;
-
-        // 1. 在 Class 內自定義：針對特定怪物的硬編碼行為 (方便直接在此調整)
-
-        // 🟢 史萊姆：在第 3 回合體型變大，獲得攻擊力與生命上限加成
-        if (this.name === '史萊姆' || this.name.includes('史萊姆')) {
-            if (battleRound === 3) {
-                this.ad += 3;
-                this.hpLimit += 10;
-                this.hp += 10;
-                if (logStore) {
-                    logStore.logger.add(`🟢 [獨特習性] ${this.name} 吸收了周圍的魔力，體型變大！攻擊力與生命上限提升！`);
-                }
-            }
-        }
-
-        // 2. 映射表自定義：若有指定 roundBehavior 鍵值，則執行對應的註冊函式
-        if (this.roundBehavior && MonsterRoundBehaviors[this.roundBehavior]) {
-            MonsterRoundBehaviors[this.roundBehavior](this, battleRound, logStore);
-        }
+        this.onRoundBehaviorHook(battleRound, logStore);
     }
 
     /**
      * 觸發回合開始被動/效果
      */
     triggerOnStart(params: Omit<MonsterActionParams, 'monster'>): void {
-        if (this.onStart) {
-            const fn = typeof this.onStart === 'function' ? this.onStart : (MonsterOnStart as Record<string, any>)[this.onStart];
-            if (fn) {
-                fn({...params, monster: this});
-            }
-        }
+        this.onStartHook(params);
     }
 
     /**
      * 觸發攻擊前被動/效果
      */
     triggerOnAttack(params: Omit<MonsterOnAttackParams, 'monster'>): void {
-        if (this.onAttack) {
-            const fn = typeof this.onAttack === 'function' ? this.onAttack : (MonsterOnAttack as Record<string, any>)[this.onAttack];
-            if (fn) {
-                fn({...params, monster: this});
-            }
-        }
+        this.onAttackHook(params);
     }
 
     /**
      * 觸發被攻擊後被動/效果
      */
     triggerOnAttacked(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
-        if (this.onAttacked) {
-            const fn = typeof this.onAttacked === 'function' ? this.onAttacked : (MonsterOnAttacked as Record<string, any>)[this.onAttacked];
-            if (fn) {
-                fn({...params, monster: this});
-            }
-        }
+        this.onAttackedHook(params);
     }
 
     /**
      * 觸發死亡被動/效果
      */
     triggerOnDead(params: Omit<MonsterActionParams, 'monster'>): void {
-        if (this.onDead) {
-            const fn = typeof this.onDead === 'function' ? this.onDead : (MonsterOnDead as Record<string, any>)[this.onDead];
-            if (fn) {
-                fn({...params, monster: this});
-            }
-        }
+        this.onDeadHook(params);
     }
 }
 
-/**
- * 外部自定義行為註冊表
- */
-export const MonsterRoundBehaviors: Record<
-    string,
-    (monster: MonsterModel, battleRound: number, logStore: any) => void
-> = {
-    slimeStrengthen: (monster, round, logStore) => {
-        if (round === 3) {
-            monster.ad += 5;
-            if (logStore) {
-                logStore.logger.add(`🧪 [獨特習性] 史萊姆產生化學反應，攻擊力提升 5 點！`);
-            }
-        }
-    },
-    decayByTime: (monster, round, logStore) => {
-        if (round >= 6) {
-            monster.ad = Math.max(1, monster.ad - 2);
-            monster.adDefend = Math.max(0, monster.adDefend - 1);
-            if (logStore) {
-                logStore.logger.add(`🍂 [獨特習性] ${monster.name} 隨著時間流逝肉體逐漸腐朽，攻擊與防禦降低。`);
-            }
-        }
-    }
-};
+

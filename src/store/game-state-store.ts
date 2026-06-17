@@ -6,6 +6,7 @@ import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {MonsterModel} from "@/models/monster-model";
+import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {usePlayerStore} from "@/store/player-store";
 
 export const getEffectiveStats = (monster: any): any => {
@@ -48,7 +49,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = new MonsterModel(newVal[i]);
+					newVal[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
 				}
 			}
 		}
@@ -59,7 +60,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = new MonsterModel(newVal[i]);
+					newVal[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
 				}
 			}
 		}

@@ -20,13 +20,13 @@ import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss, StageBosses} from "@/constants/monsters/boss-info";
 import {useLogStore} from "@/store/log-store";
-import {MonsterModel as MonsterClass} from "@/models/monster-model";
+import {MonsterModel as MonsterClass, GenericMonster} from "@/models/monster-model";
+import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
-import {Monster} from "@/constants/monsters/monster-info";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
@@ -83,9 +83,6 @@ const getWeightByStage = () => {
   const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
   const originalMap = stageMonsterWeightsMap[oldStageIndex] || EndlessWeights
   const monsterMap = {...originalMap}
-  if (trackStore.getKillCount(Monster.DuneBeast.name, 'total') > 0) {
-    delete monsterMap.DuneBeast;
-  }
   return monsterMap || EndlessWeights;
 }
 
@@ -121,7 +118,7 @@ const createBoss = () => {
     } else {
       boss = Boss.TowerVoid
     }
-    newMonsters = [new MonsterClass(boss)]
+    newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
   } else {
     const stageBoss = StageBosses[gameStateStore.currentStage]
     let boss: MonsterType
@@ -136,7 +133,7 @@ const createBoss = () => {
     } else {
       boss = Boss.Error
     }
-    newMonsters = [new MonsterClass(boss)]
+    newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
   }
 
   // 同步到 Store 做持久化緩存

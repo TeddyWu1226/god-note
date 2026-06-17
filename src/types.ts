@@ -1,13 +1,9 @@
 import {EquipmentPosition} from "@/enums/enums";
-import {MonsterOnAttack} from "@/constants/monsters/monster-action/on-attack";
-import {MonsterOnStart} from "@/constants/monsters/monster-action/on-start";
-import {MonsterOnAttacked} from "@/constants/monsters/monster-action/on-attacked";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
-import {MonsterOnDead} from "@/constants/monsters/monster-action/on-dead";
 import {SkillModel} from "@/models/skill-model";
 import type {MonsterModel} from "@/models/monster-model";
 
@@ -110,7 +106,7 @@ export interface UnitType {
     critRate: number // 爆擊率(%)
     // 有關防禦
     adDefend: number // 物理防禦值
-    apDefend: number // 魔法防禦值
+    apDefend?: number // 魔法防禦值
     // 有關是否命中
     dodge: number // 閃避值
     hit: number // 命中值
@@ -171,11 +167,6 @@ export interface DropEntry<T extends ItemType = ItemType> {
 /**
  * 怪物相關
  */
-type MonsterOnAttackType = keyof typeof MonsterOnAttack;
-type MonsterOnStartType = keyof typeof MonsterOnStart;
-type MonsterOnAttackedType = keyof typeof MonsterOnAttacked;
-type MonsterOnDeadType = keyof typeof MonsterOnDead;
-
 export interface MonsterType extends UnitType {
     id?: string // 唯一識別碼
     description?: string //介紹
@@ -183,10 +174,10 @@ export interface MonsterType extends UnitType {
     drop?: DropEntry[]
     dropGold?: number
     status?: StatusEffect[]
-    onStart?: MonsterOnStartType | ((params: MonsterActionParams) => void) // 回合開始時觸發
-    onAttack?: MonsterOnAttackType | ((params: MonsterOnAttackParams) => void), // 怪物攻擊前觸發
-    onAttacked?: MonsterOnAttackedType | ((params: MonsterActionParams) => void) // 怪物被攻擊後觸發
-    onDead?: MonsterOnDeadType | ((params: MonsterActionParams) => void)// 怪物死亡時觸發
+    onStart?: string | ((params: MonsterActionParams) => void) // 回合開始時觸發
+    onAttack?: string | ((params: MonsterOnAttackParams) => void), // 怪物攻擊前觸發
+    onAttacked?: string | ((params: MonsterActionParams) => void) // 怪物被攻擊後觸發
+    onDead?: string | ((params: MonsterActionParams) => void)// 怪物死亡時觸發
     lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
     tick?: Record<string, number | any[]> // 行動計數器
     roundBehavior?: string // 獨特回合行動習性

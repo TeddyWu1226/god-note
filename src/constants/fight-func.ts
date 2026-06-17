@@ -6,6 +6,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {getRandomItemByWeight} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {MonsterModel as MonsterClass} from "@/models/monster-model";
+import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 
@@ -424,24 +425,26 @@ export const spawnMonsters = (
 
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
+        // Create the correct subclass instance using MonsterFactory
+        let monsterInstance = MonsterFactory.createMonster(m.id || m.name, m);
         // 基本階段強化
-        m.hpLimit = Math.round(m.hpLimit * strengthening);
-        m.hp = m.hpLimit;
-        m.ad = Math.round(m.ad * strengthening);
-        // m.adDefend = Math.round(m.adDefend * strengthening);
+        monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * strengthening);
+        monsterInstance.hp = monsterInstance.hpLimit;
+        monsterInstance.ad = Math.round(monsterInstance.ad * strengthening);
+        // monsterInstance.adDefend = Math.round(monsterInstance.adDefend * strengthening);
         if (eliteBoost) {
             // 菁英強化
-            m.name = `【菁英】${m.name}`;
-            m.class = 'elite';
-            m.hpLimit = Math.round(m.hpLimit * 2);
-            m.hp = m.hpLimit;
-            m.ad = Math.round(m.ad * 1.5);
-            m.adDefend = Math.round((m.adDefend + 2) * 1.3);
-            m.apDefend = Math.round((m.apDefend + 2) * 1.3);
-            m.dropGold = Math.round((m.dropGold || 10) * 3);
-            m.level += 2;
+            monsterInstance.name = `【菁英】${monsterInstance.name}`;
+            monsterInstance.class = 'elite';
+            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * 2);
+            monsterInstance.hp = monsterInstance.hpLimit;
+            monsterInstance.ad = Math.round(monsterInstance.ad * 1.5);
+            monsterInstance.adDefend = Math.round((monsterInstance.adDefend + 2) * 1.3);
+            monsterInstance.apDefend = Math.round((monsterInstance.apDefend + 2) * 1.3);
+            monsterInstance.dropGold = Math.round((monsterInstance.dropGold || 10) * 3);
+            monsterInstance.level += 2;
         }
-        newMonsters.push(new MonsterClass(m));
+        newMonsters.push(monsterInstance);
     }
     return newMonsters;
 }
