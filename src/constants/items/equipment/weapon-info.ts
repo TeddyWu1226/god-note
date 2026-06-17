@@ -4,7 +4,7 @@ import {EquipmentPosition} from "@/enums/enums";
 
 export const Dagger = {
 	Dagger0: {
-		name: '生鏽匕首',
+		name: '生鏽小刀',
 		description: '雖然破舊，但依舊鋒利。',
 		icon: '🔪',
 		position: EquipmentPosition.WEAPON,

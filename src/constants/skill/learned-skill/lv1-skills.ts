@@ -260,3 +260,64 @@ export class Thrust extends SkillModel {
         return true;
     }
 }
+
+export class SwordMastery extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordMastery',
+            name: "劍術精通",
+            icon: "skills/sword_mastery.svg",
+            type: 'passive',
+            rarity: 'common',
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `【被動】裝備劍（名稱含有「劍」的武器）時，提升 10% 物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (weaponName.includes('劍')) {
+            return {
+                adIncrease: 10
+            };
+        }
+        return {};
+    }
+}
+
+export class BladeMastery extends SkillModel {
+    constructor() {
+        super({
+            id: 'BladeMastery',
+            name: "刀術精通",
+            icon: "skills/blade_mastery.svg",
+            type: 'passive',
+            rarity: 'common',
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `【被動】裝備刀（名稱含有「刀」的武器）時，提升 10% 物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (weaponName.includes('刀')) {
+            return {
+                adIncrease: 10
+            };
+        }
+        return {};
+    }
+}
+

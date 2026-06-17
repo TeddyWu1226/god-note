@@ -91,7 +91,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (info.value.skills) {
             info.value.skills.forEach(s => {
                 if (s && s instanceof SkillModel && s.type === 'passive') {
-                    const skillBonus = s.getPassiveBonus();
+                    const skillBonus = s.getPassiveBonus(info.value);
                     Object.keys(skillBonus).forEach(key => {
                         if (typeof bonus[key] === 'number') {
                             bonus[key] += skillBonus[key];

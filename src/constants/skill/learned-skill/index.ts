@@ -9,6 +9,8 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     VerticalSlash: SkillClasses.VerticalSlash,
     HorizontalSlash: SkillClasses.HorizontalSlash,
     Thrust: SkillClasses.Thrust,
+    SwordMastery: SkillClasses.SwordMastery,
+    BladeMastery: SkillClasses.BladeMastery,
 };
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
@@ -19,6 +21,8 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     VerticalSlash: new SkillClasses.VerticalSlash(),
     HorizontalSlash: new SkillClasses.HorizontalSlash(),
     Thrust: new SkillClasses.Thrust(),
+    SwordMastery: new SkillClasses.SwordMastery(),
+    BladeMastery: new SkillClasses.BladeMastery(),
 };
 
 export class SkillFactory {

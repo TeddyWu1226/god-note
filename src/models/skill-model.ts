@@ -70,7 +70,7 @@ export abstract class SkillModel {
     protected abstract execute(params: SkillParams): Promise<boolean> | boolean;
 
     // 💡 獲取被動加成數據 (預設為空，可由被動技能類別覆寫)
-    getPassiveBonus(): Record<string, number> {
+    getPassiveBonus(player?: any): Record<string, number> {
         return {};
     }
 
@@ -137,7 +137,7 @@ export class GenericSkill extends SkillModel {
         return this._useFn(params, this);
     }
 
-    override getPassiveBonus(): Record<string, number> {
+    override getPassiveBonus(player?: any): Record<string, number> {
         return this._passiveBonusFn ? this._passiveBonusFn(this) : {};
     }
 }
