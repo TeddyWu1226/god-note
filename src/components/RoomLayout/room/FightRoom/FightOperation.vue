@@ -9,7 +9,7 @@ import OffHandSkillButton from "@/components/RoomLayout/room/FightRoom/comps/Off
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
-const emit = defineEmits(['attack', 'run', 'learned-skill', 'endTurn']);
+const emit = defineEmits(['attack', 'run', 'learned-skill', 'endTurn', 'skill']);
 const props = defineProps({
   disabled: Boolean,
 })

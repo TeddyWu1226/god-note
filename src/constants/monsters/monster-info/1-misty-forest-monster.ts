@@ -33,17 +33,6 @@ export class Slime extends MonsterModel {
         playerStore.addStatus(UnitStatus.SlimeSlow);
         logStore.logger.add(`你沾滿了黏液。`);
     }
-
-    override onRoundBehaviorHook(battleRound: number, logStore: any) {
-        if (battleRound === 3) {
-            this.ad += 3;
-            this.hpLimit += 10;
-            this.hp += 10;
-            if (logStore) {
-                logStore.logger.add(`🟢 [獨特習性] ${this.name} 吸收了周圍的魔力，體型變大！攻擊力與生命上限提升！`);
-            }
-        }
-    }
 }
 
 export class ForestSprout extends MonsterModel {
