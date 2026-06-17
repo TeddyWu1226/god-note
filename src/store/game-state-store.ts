@@ -44,23 +44,23 @@ export const useGameStateStore = defineStore('game-state', () => {
 	const bottomPanelMode = ref<'backpack' | 'skills'>('skills'); // 下方區塊模式: backpack (背包) 或 skills (技能)
 
 	// 深度監聽敵怪數據，自動重構為 Class 實例
-	watch(currentEnemy, (newVal) => {
+	watch(() => currentEnemy.value, (newVal) => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
+					currentEnemy.value[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
 				}
 			}
 		}
 	}, { deep: true, immediate: true });
 
-	watch(switchEnemy, (newVal) => {
+	watch(() => switchEnemy.value, (newVal) => {
 		if (newVal) {
 			for (let i = 0; i < newVal.length; i++) {
 				if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
 					// @ts-ignore
-					newVal[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
+					switchEnemy.value[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
 				}
 			}
 		}

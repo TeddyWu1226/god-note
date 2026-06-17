@@ -21,7 +21,7 @@ export class MonsterModel implements MonsterType {
     runIncrease?: number;
     chaseIncrease?: number;
     lifeSteal?: number;
-    heal?: number;
+    hpRegen?: number;
     description?: string;
     class?: string;
     drop?: DropEntry[];
@@ -60,7 +60,7 @@ export class MonsterModel implements MonsterType {
         this.drop = data.drop;
         this.dropGold = data.dropGold;
         this.status = data.status || [];
-        this.heal = data.heal || 0;
+        this.hpRegen = data.hpRegen || 0;
         this.onStart = data.onStart;
         this.onAttack = data.onAttack;
         this.onAttacked = data.onAttacked;
@@ -85,7 +85,7 @@ export class MonsterModel implements MonsterType {
             level: this.level,
             hp: this.hp,
             ad: this.ad,
-            heal: this.heal,
+            hpRegen: this.hpRegen,
             adDefend: this.adDefend,
             apDefend: this.apDefend,
             hpLimit: this.hpLimit,
@@ -211,7 +211,7 @@ export class MonsterModel implements MonsterType {
     }
 
     /**
-     * 觸發攻擊前被動/效果
+     * 觸發攻擊前 被動/效果
      * 如果回傳 false 則不進行攻擊
      */
     triggerOnAttack(params: Omit<MonsterOnAttackParams, 'monster'>): boolean {
