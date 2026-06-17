@@ -4,10 +4,9 @@ import {usePlayerStore} from "@/store/player-store";
 import {RoomEnum} from "@/enums/room-enum";
 import {useTrackerStore} from "@/store/track-store";
 import {useAchievementStore} from "@/store/achievement-store";
-import {ref, computed} from "vue";
+import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
-import {CharEnum} from "@/enums/char-enum";
 import {Dagger} from "@/constants/items/equipment/weapon-info";
 
 const gameStateStore = useGameStateStore()
@@ -137,7 +136,7 @@ const continueGame = () => {
           </div>
         </div>
 
-        <div class="action-zone" style="margin-top: 3rem;">
+        <div class="action-zone class-select-zone">
           <el-button
               class="confirm-btn"
               :disabled="!selectedClass"
@@ -164,12 +163,25 @@ const continueGame = () => {
   height: 100%;
   box-sizing: border-box;
   background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 1px solid #444;
   position: relative;
   overflow: hidden;
+}
+
+:deep(.el-card__body) {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.class-select-zone {
+  margin-top: 3rem;
 }
 
 /* 裝飾性光暈 */
@@ -338,8 +350,11 @@ const continueGame = () => {
   color: #ccc;
 }
 
-/* On short or narrow screens, scale down card elements to avoid overflow */
-@media (max-height: 720px), (max-width: 767px) {
+/* 矮螢幕適應，避免 14 吋與小筆電高度出現滾動條 */
+@media (max-height: 800px), (max-width: 767px) {
+  :deep(.el-card__body) {
+    padding: 1.5rem;
+  }
   .class-cards {
     gap: 0.8rem;
     max-width: 420px;
@@ -366,25 +381,66 @@ const continueGame = () => {
     margin-bottom: 0.3rem;
   }
   .select-class-subtitle {
+    margin-bottom: 1.2rem;
+  }
+  .class-select-zone {
+    margin-top: 1.5rem;
+  }
+  .confirm-btn {
+    padding: 1.2rem 2.5rem !important;
+    font-size: 1.1rem !important;
+  }
+  .back-btn {
+    padding: 1rem 2rem !important;
+    font-size: 0.9rem !important;
+  }
+  .start-btn {
+    padding: 1.5rem 2.5rem !important;
+    font-size: 1.2rem !important;
+  }
+  .continue-btn {
+    padding: 1.5rem 2.5rem !important;
+    font-size: 1.2rem !important;
+  }
+  .action-zone {
+    gap: 0.8rem;
+  }
+  .game-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.3rem;
+  }
+  .game-subtitle {
+    font-size: 1rem;
     margin-bottom: 1.5rem;
+  }
+  .story-box {
+    margin-bottom: 2rem;
+    min-height: auto;
+  }
+  .typewriter {
+    font-size: 0.9rem;
+    margin: 0.4rem 0;
   }
 }
 
-@media (max-height: 580px) {
+@media (max-height: 680px) {
+  :deep(.el-card__body) {
+    padding: 1rem;
+  }
   .class-cards {
-    gap: 0.5rem;
-    max-width: 380px;
+    gap: 0.6rem;
+    max-width: 400px;
   }
   .class-card {
-    padding: 0.5rem 0.4rem;
+    padding: 0.6rem 0.5rem;
   }
   .class-icon {
-    font-size: 1.4rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
   }
   .class-label {
-    font-size: 0.85rem;
-    margin-bottom: 0.1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
   }
   .class-desc {
     font-size: 0.7rem;
@@ -392,9 +448,109 @@ const continueGame = () => {
   }
   .select-class-title {
     font-size: 1.5rem;
+    margin-bottom: 0.2rem;
   }
   .select-class-subtitle {
     margin-bottom: 0.8rem;
+  }
+  .class-select-zone {
+    margin-top: 1rem;
+  }
+  .confirm-btn {
+    padding: 0.8rem 1.8rem !important;
+    font-size: 1rem !important;
+  }
+  .back-btn {
+    padding: 0.7rem 1.5rem !important;
+    font-size: 0.85rem !important;
+  }
+  .start-btn {
+    padding: 1rem 1.8rem !important;
+    font-size: 1rem !important;
+  }
+  .continue-btn {
+    padding: 1rem 1.8rem !important;
+    font-size: 1rem !important;
+  }
+  .action-zone {
+    gap: 0.5rem;
+  }
+  .game-title {
+    font-size: 2rem;
+  }
+  .game-subtitle {
+    margin-bottom: 1rem;
+  }
+  .story-box {
+    margin-bottom: 1rem;
+  }
+  .typewriter {
+    font-size: 0.8rem;
+    margin: 0.3rem 0;
+  }
+}
+
+@media (max-height: 520px) {
+  :deep(.el-card__body) {
+    padding: 0.5rem;
+  }
+  .class-cards {
+    gap: 0.4rem;
+    max-width: 360px;
+  }
+  .class-card {
+    padding: 0.4rem 0.3rem;
+  }
+  .class-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0.1rem;
+  }
+  .class-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.1rem;
+  }
+  .class-desc {
+    display: none;
+  }
+  .select-class-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.1rem;
+  }
+  .select-class-subtitle {
+    margin-bottom: 0.4rem;
+  }
+  .class-select-zone {
+    margin-top: 0.5rem;
+  }
+  .confirm-btn {
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.85rem !important;
+  }
+  .back-btn {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.8rem !important;
+  }
+  .start-btn {
+    padding: 0.8rem 1.2rem !important;
+    font-size: 0.9rem !important;
+  }
+  .continue-btn {
+    padding: 0.8rem 1.2rem !important;
+    font-size: 0.9rem !important;
+  }
+  .game-title {
+    font-size: 1.5rem;
+  }
+  .game-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .story-box {
+    margin-bottom: 0.5rem;
+  }
+  .typewriter {
+    font-size: 0.75rem;
+    margin: 0.2rem 0;
   }
 }
 
