@@ -180,6 +180,7 @@ export interface MonsterType extends UnitType {
     status?: StatusEffect[]
     onStart?: string | ((params: MonsterActionParams) => void) // 回合開始時觸發
     onAttack?: string | ((params: MonsterOnAttackParams) => void), // 怪物攻擊前觸發
+    onAttackHit?: string | ((params: MonsterOnAttackParams) => void), // 怪物攻擊命中後觸發
     onAttacked?: string | ((params: MonsterActionParams) => void) // 怪物被攻擊後觸發
     onDead?: string | ((params: MonsterActionParams) => void)// 怪物死亡時觸發
     lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊

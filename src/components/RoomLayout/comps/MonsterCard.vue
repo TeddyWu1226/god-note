@@ -99,7 +99,17 @@ const monsterAttack = () => {
   }) ?? true;
   // 傷害計算
   if (!canAttack) return
-  applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
+  const damageResult = applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
+  if (damageResult.isHit) {
+    props.info.triggerOnAttackHit({
+      monsterIndex: props.index,
+      playerStore: playerStore,
+      gameStateStore: gameStateStore,
+      logStore: logStore,
+      damage: damageResult,
+      targetElement: CardRef.value?.$el
+    });
+  }
 }
 /**
  * 怪物被攻擊

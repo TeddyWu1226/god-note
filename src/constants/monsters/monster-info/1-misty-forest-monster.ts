@@ -29,7 +29,7 @@ export class Slime extends MonsterModel {
         });
     }
 
-    override onAttackHook({playerStore, logStore}) {
+    override onAttackHitHook({playerStore, logStore}: any) {
         playerStore.addStatus(UnitStatus.SlimeSlow);
         logStore.logger.add(`你沾滿了黏液。`);
     }
@@ -117,7 +117,7 @@ export class StingerBee extends MonsterModel {
         });
     }
 
-    override onAttackHook({playerStore, logStore}: any) {
+    override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.7)) {
             playerStore.addStatus(UnitStatus.BeePoison);
             logStore.logger.add(`你中毒了。`);

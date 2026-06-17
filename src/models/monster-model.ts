@@ -29,6 +29,7 @@ export class MonsterModel implements MonsterType {
     status: StatusEffect[];
     onStart?: MonsterType["onStart"];
     onAttack?: MonsterType["onAttack"];
+    onAttackHit?: MonsterType["onAttackHit"];
     onAttacked?: MonsterType["onAttacked"];
     onDead?: MonsterType["onDead"];
     lastDamageResult?: BattleOutcome;
@@ -63,6 +64,7 @@ export class MonsterModel implements MonsterType {
         this.hpRegen = data.hpRegen || 0;
         this.onStart = data.onStart;
         this.onAttack = data.onAttack;
+        this.onAttackHit = data.onAttackHit;
         this.onAttacked = data.onAttacked;
         this.onDead = data.onDead;
         this.lastDamageResult = data.lastDamageResult;
@@ -105,6 +107,7 @@ export class MonsterModel implements MonsterType {
             dropGold: this.dropGold,
             onStart: this.onStart,
             onAttack: this.onAttack,
+            onAttackHit: this.onAttackHit,
             onAttacked: this.onAttacked,
             onDead: this.onDead,
             lastDamageResult: this.lastDamageResult,
@@ -186,6 +189,15 @@ export class MonsterModel implements MonsterType {
         return true
     }
 
+    onAttackHitHook(params: Omit<MonsterOnAttackParams, 'monster'> & { damage: BattleOutcome }): void {
+        if (typeof this.onAttackHit === 'function') {
+            this.onAttackHit({
+                monster: this,
+                ...params
+            });
+        }
+    }
+
     onAttackedHook(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
     }
 
@@ -219,7 +231,14 @@ export class MonsterModel implements MonsterType {
     }
 
     /**
-     * 觸發被攻擊後被動/效果
+     * 觸發攻擊命中後 被動/效果
+     */
+    triggerOnAttackHit(params: Omit<MonsterOnAttackParams, 'monster'> & { damage: BattleOutcome }): void {
+        this.onAttackHitHook(params);
+    }
+
+    /**
+     * 觸發被攻擊命中後 被動/效果
      */
     triggerOnAttacked(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
         this.onAttackedHook(params);
