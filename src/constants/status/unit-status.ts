@@ -10,6 +10,13 @@ export const UnitStatus = {
             dodge: -30
         }
     } as StatusEffect,
+    WoodStuck: {
+        name: '老樹盤根',
+        icon: '🪵',
+        duration: 2,
+        description: '你被樹根睏綁住了,任何行動都會失效',
+        type: 'stuck',
+    } as StatusEffect,
     WolfRoarWarning: {
         name: '狼嚎警告',
         icon: '⚠️',

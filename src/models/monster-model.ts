@@ -1,7 +1,6 @@
 import {MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams} from "@/types";
 
 
-
 export class MonsterModel implements MonsterType {
     id: string;
     icon: string;
@@ -183,7 +182,8 @@ export class MonsterModel implements MonsterType {
     onStartHook(params: Omit<MonsterActionParams, 'monster'>): void {
     }
 
-    onAttackHook(params: Omit<MonsterOnAttackParams, 'monster'>): void {
+    onAttackHook(params: Omit<MonsterOnAttackParams, 'monster'>): boolean | void {
+        return true
     }
 
     onAttackedHook(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
@@ -212,9 +212,10 @@ export class MonsterModel implements MonsterType {
 
     /**
      * 觸發攻擊前被動/效果
+     * 如果回傳 false 則不進行攻擊
      */
-    triggerOnAttack(params: Omit<MonsterOnAttackParams, 'monster'>): void {
-        this.onAttackHook(params);
+    triggerOnAttack(params: Omit<MonsterOnAttackParams, 'monster'>): boolean {
+        return this.onAttackHook(params) || true;
     }
 
     /**

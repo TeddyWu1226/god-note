@@ -2,8 +2,9 @@ import {MonsterModel} from "@/models/monster-model";
 import {WorldDefault} from "@/assets/const";
 import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
-import {checkProbability} from "@/utils/math";
+import {checkProbability, isMultiple} from "@/utils/math";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {MonsterOnAttackParams} from "@/types";
 
 export class Slime extends MonsterModel {
     constructor() {
@@ -27,7 +28,7 @@ export class Slime extends MonsterModel {
         });
     }
 
-    override onAttackHook({playerStore, logStore}: any) {
+    override onAttackHook({playerStore, logStore}) {
         playerStore.addStatus(UnitStatus.SlimeSlow);
         logStore.logger.add(`你沾滿了黏液。`);
     }
@@ -49,7 +50,7 @@ export class ForestSprout extends MonsterModel {
         super({
             icon: '/monsters/sprout.png',
             name: '小樹人',
-            description: '被魔力扭曲的植物，雖然不會移動但生命力頑強',
+            description: '植物形態的魔物，擅長施展綑綁',
             ad: 3,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -64,6 +65,14 @@ export class ForestSprout extends MonsterModel {
                 {item: Material.ForestWood, chance: 0.5}
             ]
         });
+    }
+
+    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        if (isMultiple(gameStateStore.battleRound, 3)) {
+            playerStore.addStatus(UnitStatus.WoodStuck);
+            logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
+        }
+        return false
     }
 }
 

@@ -225,6 +225,7 @@ export const MagicStick = {
 		apIncrease: 50,
 	} as EquipmentType,
 };
+
 const SpecialWeapon = {
 	SpikeSpear: {
 		name: '尖刺木槍',

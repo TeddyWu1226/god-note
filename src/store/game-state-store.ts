@@ -241,7 +241,7 @@ export const useGameStateStore = defineStore('game-state', () => {
 	}
 
 	/**
-	 * 每回合觸發：更新所有怪物狀態
+	 * 每回合結束觸發：更新所有怪物狀態
 	 */
 	function tickAllMonsters() {
 		const logStore = useLogStore();

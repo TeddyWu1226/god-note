@@ -225,6 +225,8 @@ const isPlayerStuck = () => {
           color: 'red'
         }
     );
+    // 歸零行動點數
+    gameStateStore.playerActionPoints = 0
   }
   return isStuck
 }
@@ -302,6 +304,7 @@ const onItemSkill = ({skillKey, callback, el}) => {
 const isUsing = ref(false)
 // 技能使用
 const onSkill = async (skillKey: string) => {
+
   if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
   if (isUsing.value) return

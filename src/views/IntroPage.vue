@@ -8,6 +8,7 @@ import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
 import {Dagger} from "@/constants/items/equipment/weapon-info";
+import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -24,10 +25,10 @@ const hasSave = computed(() => {
 });
 
 const classOptions = [
-  {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '啥都沒有的普通人，完全依靠自身實力。'},
-  {value: 'Merchant', label: '商人', icon: '🪙', desc: '初始金額比較多，開局獲得 300 💰。'},
-  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '初始獲得「小刀」武器，且最大生命上限只有 50'},
-  {value: 'Cleric', label: '聖職者', icon: '🛐', desc: '擁有技能「治療」。'}
+  {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '農村的平民，擁有最基本素質以及帶著一些農產品。'},
+  {value: 'Merchant', label: '商人', icon: '🪙', desc: '商會的弟子，獲得 300 $，但戰鬥素質較差。'},
+  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '貧民窟的盜賊，初始裝備「生鏽匕首」，但最大生命上限只有 50'},
+  {value: 'Cleric', label: '牧師', icon: '🛐', desc: '信仰教會的牧師，在神的介入下獲得較高的法術適性，卻不擅長近戰。'}
 ]
 
 const confirmClassSelection = async () => {
@@ -41,14 +42,23 @@ const confirmClassSelection = async () => {
   playerStore.info.char = selectedClass.value;
 
   // 套用職業初始獎勵
-  if (selectedClass.value === 'Merchant') {
+  if (selectedClass.value === 'Villager') {
+    playerStore.gainItem(NormalFruits.RedApple, 3)
+  } else if (selectedClass.value === 'Merchant') {
     playerStore.info.gold = 300;
+    playerStore.info.ad = 8
+    playerStore.info.ap = 8
   } else if (selectedClass.value === 'Thief') {
-    playerStore.equipItem(Dagger.Dagger1);
+    playerStore.equipItem(Dagger.Dagger0);
     playerStore.info.hpLimit = 50;
     playerStore.info.hp = 50;
   } else if (selectedClass.value === 'Cleric') {
-    playerStore.addSkill('CommonHeal');
+    playerStore.info.ap = 13;
+    playerStore.info.ad = 7
+    playerStore.info.spLimit = 120;
+    playerStore.info.sp = 120;
+    playerStore.info.hpLimit = 80;
+    playerStore.info.hp = 80;
   }
 
   trackStore.init();
@@ -356,68 +366,85 @@ const continueGame = () => {
   :deep(.el-card__body) {
     padding: 1.5rem;
   }
+
   .class-cards {
     gap: 0.8rem;
     max-width: 420px;
   }
+
   .class-card {
     padding: 0.8rem 0.6rem;
   }
+
   .class-icon {
     font-size: 1.8rem;
     margin-bottom: 0.4rem;
   }
+
   .class-label {
     font-size: 0.95rem;
     margin-bottom: 0.3rem;
   }
+
   .class-desc {
     font-size: 0.75rem;
     height: auto;
     min-height: 48px;
     line-height: 1.3;
   }
+
   .select-class-title {
     font-size: 1.8rem;
     margin-bottom: 0.3rem;
   }
+
   .select-class-subtitle {
     margin-bottom: 1.2rem;
   }
+
   .class-select-zone {
     margin-top: 1.5rem;
   }
+
   .confirm-btn {
     padding: 1.2rem 2.5rem !important;
     font-size: 1.1rem !important;
   }
+
   .back-btn {
     padding: 1rem 2rem !important;
     font-size: 0.9rem !important;
   }
+
   .start-btn {
     padding: 1.5rem 2.5rem !important;
     font-size: 1.2rem !important;
   }
+
   .continue-btn {
     padding: 1.5rem 2.5rem !important;
     font-size: 1.2rem !important;
   }
+
   .action-zone {
     gap: 0.8rem;
   }
+
   .game-title {
     font-size: 2.5rem;
     margin-bottom: 0.3rem;
   }
+
   .game-subtitle {
     font-size: 1rem;
     margin-bottom: 1.5rem;
   }
+
   .story-box {
     margin-bottom: 2rem;
     min-height: auto;
   }
+
   .typewriter {
     font-size: 0.9rem;
     margin: 0.4rem 0;
@@ -428,63 +455,80 @@ const continueGame = () => {
   :deep(.el-card__body) {
     padding: 1rem;
   }
+
   .class-cards {
     gap: 0.6rem;
     max-width: 400px;
   }
+
   .class-card {
     padding: 0.6rem 0.5rem;
   }
+
   .class-icon {
     font-size: 1.5rem;
     margin-bottom: 0.3rem;
   }
+
   .class-label {
     font-size: 0.9rem;
     margin-bottom: 0.2rem;
   }
+
   .class-desc {
     font-size: 0.7rem;
     min-height: 36px;
   }
+
   .select-class-title {
     font-size: 1.5rem;
     margin-bottom: 0.2rem;
   }
+
   .select-class-subtitle {
     margin-bottom: 0.8rem;
   }
+
   .class-select-zone {
     margin-top: 1rem;
   }
+
   .confirm-btn {
     padding: 0.8rem 1.8rem !important;
     font-size: 1rem !important;
   }
+
   .back-btn {
     padding: 0.7rem 1.5rem !important;
     font-size: 0.85rem !important;
   }
+
   .start-btn {
     padding: 1rem 1.8rem !important;
     font-size: 1rem !important;
   }
+
   .continue-btn {
     padding: 1rem 1.8rem !important;
     font-size: 1rem !important;
   }
+
   .action-zone {
     gap: 0.5rem;
   }
+
   .game-title {
     font-size: 2rem;
   }
+
   .game-subtitle {
     margin-bottom: 1rem;
   }
+
   .story-box {
     margin-bottom: 1rem;
   }
+
   .typewriter {
     font-size: 0.8rem;
     margin: 0.3rem 0;
@@ -495,60 +539,76 @@ const continueGame = () => {
   :deep(.el-card__body) {
     padding: 0.5rem;
   }
+
   .class-cards {
     gap: 0.4rem;
     max-width: 360px;
   }
+
   .class-card {
     padding: 0.4rem 0.3rem;
   }
+
   .class-icon {
     font-size: 1.2rem;
     margin-bottom: 0.1rem;
   }
+
   .class-label {
     font-size: 0.8rem;
     margin-bottom: 0.1rem;
   }
+
   .class-desc {
     display: none;
   }
+
   .select-class-title {
     font-size: 1.2rem;
     margin-bottom: 0.1rem;
   }
+
   .select-class-subtitle {
     margin-bottom: 0.4rem;
   }
+
   .class-select-zone {
     margin-top: 0.5rem;
   }
+
   .confirm-btn {
     padding: 0.6rem 1.2rem !important;
     font-size: 0.85rem !important;
   }
+
   .back-btn {
     padding: 0.5rem 1rem !important;
     font-size: 0.8rem !important;
   }
+
   .start-btn {
     padding: 0.8rem 1.2rem !important;
     font-size: 0.9rem !important;
   }
+
   .continue-btn {
     padding: 0.8rem 1.2rem !important;
     font-size: 0.9rem !important;
   }
+
   .game-title {
     font-size: 1.5rem;
   }
+
   .game-subtitle {
     font-size: 0.8rem;
     margin-bottom: 0.5rem;
   }
+
   .story-box {
     margin-bottom: 0.5rem;
   }
+
   .typewriter {
     font-size: 0.75rem;
     margin: 0.2rem 0;

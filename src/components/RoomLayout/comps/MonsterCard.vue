@@ -90,14 +90,15 @@ const monsterMove = () => {
 // 怪物攻擊
 const monsterAttack = () => {
   // 特殊效果
-  props.info.triggerOnAttack({
+  const canAttack = props.info.triggerOnAttack({
     monsterIndex: props.index,
     playerStore: playerStore,
     gameStateStore: gameStateStore,
     logStore: logStore,
     targetElement: CardRef.value
-  });
+  }) ?? true;
   // 傷害計算
+  if (!canAttack) return
   applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
 }
 /**
