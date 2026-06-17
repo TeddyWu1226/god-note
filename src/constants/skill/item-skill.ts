@@ -8,6 +8,7 @@ import {Boss} from "../monsters/monster-info/99-boss-info";
 import {useSaveStore} from "@/store/save-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import EvnStatus from "@/constants/status/evn-status";
+import {useCardStatusEffect} from "@/components/RoomLayout/comps/useCardStatusEffect";
 
 export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | SpecifyMonsterItemSkillParams) => void> = {
 	// 選擇回合使用
@@ -67,7 +68,7 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 		callback(false);
 	},
 	useBurningPotion: (params: SpecifyMonsterItemSkillParams) => {
-		const {monster, monsterIndex, playerStore, gameStateStore, callback, targetElement} = params;
+		const {monster, monsterIndex, playerStore, gameStateStore, callback, targetElement, cardElement} = params;
 		if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
 			if (playerStore.hasStatus(UnitStatus.SpiderStuck.name)) {
 				playerStore.removeStatus(UnitStatus.SpiderStuck.name);
@@ -77,6 +78,15 @@ export const ItemSkill: Record<string, (params: NoneMonsterItemSkillParams | Spe
 			}
 			if (monster) {
 				gameStateStore.addEffectToMonster(monster, ItemStatus.OnBurn)
+				if (cardElement) {
+					useCardStatusEffect({
+						target: cardElement,
+						message: '燃燒',
+						color: '#e67e22',
+						icon: '🔥',
+						duration: 1500
+					});
+				}
 				callback(true)
 				return
 			}

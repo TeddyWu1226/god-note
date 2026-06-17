@@ -20,7 +20,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 import {useLogStore} from "@/store/log-store";
-import {MonsterModel as MonsterClass, GenericMonster} from "@/models/monster-model";
+import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
@@ -107,17 +107,10 @@ const genEliteMonster = () => {
  */
 
 const createBoss = () => {
-  let newMonsters: MonsterClass[]
+  let newMonsters: MonsterModel[]
 
   if (gameStateStore.currentStage === 6) {
     let boss: MonsterType
-    if (gameStateStore.stageDays === 5) {
-      boss = Boss.GodsRealm
-    } else if (gameStateStore.stageDays === 10) {
-      boss = Boss.TowerVoid
-    } else {
-      boss = Boss.TowerVoid
-    }
     newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
   } else {
     const stageBoss = StageBosses[gameStateStore.currentStage]
@@ -131,7 +124,7 @@ const createBoss = () => {
         boss = stageBoss.main
       }
     } else {
-      boss = Boss.Error
+      boss = Boss.Twilight
     }
     newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
   }
@@ -286,10 +279,11 @@ const onAttack = () => {
 // 物品使用
 const onItemSkill = ({skillKey, callback, el}) => {
   // 指定怪物
-  if (!selectedMonsterIndex.value) {
+  if (selectedMonsterIndex.value === null) {
     selectedMonsterIndex.value = 0
   }
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
+  const cardComponent = selectedMonster ? MonsterCardRefs.value[selectedMonster.id] : null;
   ItemSkill[skillKey](
       {
         monster: selectedMonster,
@@ -297,7 +291,8 @@ const onItemSkill = ({skillKey, callback, el}) => {
         playerStore: playerStore,
         gameStateStore: gameStateStore,
         callback: callback,
-        targetElement: el
+        targetElement: el,
+        cardElement: cardComponent?.$el as HTMLElement
       }
   )
 }

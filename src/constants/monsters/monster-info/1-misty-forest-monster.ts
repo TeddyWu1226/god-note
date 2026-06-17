@@ -5,6 +5,7 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability, isMultiple} from "@/utils/math";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {MonsterOnAttackParams} from "@/types";
+import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 
 export class Slime extends MonsterModel {
     constructor() {
@@ -70,6 +71,12 @@ export class ForestSprout extends MonsterModel {
     override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
         if (isMultiple(gameStateStore.battleRound, 3)) {
             playerStore.addStatus(UnitStatus.WoodStuck);
+            useHeroStatusEffect({
+                message: '老樹盤根',
+                color: '#632b2b',
+                icon: '🪵',
+                duration: 1000
+            })
             logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
         }
         return false

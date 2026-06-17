@@ -273,6 +273,7 @@ export interface SpecifyMonsterItemSkillParams {
     gameStateStore?: GameStateStoreType
     callback: (result: boolean) => void
     targetElement?: HTMLElement
+    cardElement?: HTMLElement
 }
 
 

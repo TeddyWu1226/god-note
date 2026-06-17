@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {ref, onMounted, computed} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const props = defineProps({
-  message: {type: String, default: ''},
-  duration: {type: Number, default: 3000},
-  color: {type: String, default: '#add8e6'}, // 漸層與文字的主色調
+  message: { type: String, default: '' },
+  icon: { type: String, default: '' },
+  color: { type: String, default: '#add8e6' }, // 漸層與文字的主色調
+  duration: { type: Number, default: 2000 },
 });
 
 const emit = defineEmits(['unmount']);
@@ -32,12 +33,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <transition name="full-screen-effect-fade">
-    <div v-if="isVisible" class="full-screen-overlay" :style="effectStyle">
-
+  <transition name="hero-effect-fade">
+    <div v-if="isVisible" class="hero-effect-overlay" :style="effectStyle">
+      <!-- 畫面四周漸層 -->
       <div class="vignette-layer"></div>
 
-      <div v-if="message" class="message-container">
+      <!-- 文字與圖示容器 -->
+      <div class="message-container">
+        <div v-if="icon" class="effect-icon">{{ icon }}</div>
         <h2 class="effect-message">{{ message }}</h2>
       </div>
     </div>
@@ -45,10 +48,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.full-screen-overlay {
-  /* 預設變數防止 IDE 報錯 */
+.hero-effect-overlay {
   --effect-color: #add8e6;
-  --effect-duration: 3000ms;
+  --effect-duration: 2000ms;
 
   position: absolute;
   inset: 0;
@@ -60,11 +62,10 @@ onMounted(() => {
   align-items: center;
 }
 
-/* 🎨 核心：畫面四周漸層 */
+/* 四周向內發光效果 */
 .vignette-layer {
   position: absolute;
   inset: 0;
-  /* 使用內陰影產生四周向內發光效果 */
   box-shadow: inset 0 0 100px 20px var(--effect-color);
   opacity: 0;
   animation: vignette-pulse var(--effect-duration) ease-in-out forwards;
@@ -76,7 +77,7 @@ onMounted(() => {
     box-shadow: inset 0 0 150px 50px var(--effect-color);
   }
   20% {
-    opacity: 0.6; /* 調整此值控制漸層透明度 */
+    opacity: 0.6;
     box-shadow: inset 0 0 80px 30px var(--effect-color);
   }
   80% {
@@ -94,17 +95,27 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.effect-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 8px var(--effect-color));
+  animation: message-pop var(--effect-duration) cubic-bezier(0.1, 0.7, 1.0, 0.1) forwards;
 }
 
 .effect-message {
   font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 3.5rem;
   font-weight: 900;
-  color: #ffffff; /* 文字維持白色，靠發光顏色辨識 */
-  /* 文字周圍的強光暈，顏色與漸層一致 */
+  color: #ffffff;
+  /* 文字發光顏色與設定顏色一致 */
   text-shadow: 0 0 10px var(--effect-color),
-  0 0 20px var(--effect-color),
-  0 0 40px var(--effect-color);
+               0 0 20px var(--effect-color),
+               0 0 40px var(--effect-color);
   margin: 0;
   letter-spacing: 0.2rem;
   animation: message-pop var(--effect-duration) cubic-bezier(0.1, 0.7, 1.0, 0.1) forwards;
@@ -133,12 +144,23 @@ onMounted(() => {
   }
 }
 
+.hero-effect-fade-enter-active,
+.hero-effect-fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.hero-effect-fade-enter-from,
+.hero-effect-fade-leave-to {
+  opacity: 0;
+}
 
 @media (max-width: 767px) {
   .effect-message {
     font-size: 2rem;
   }
-
+  .effect-icon {
+    font-size: 1.8rem;
+  }
   .vignette-layer {
     box-shadow: inset 0 0 60px 15px var(--effect-color);
   }
