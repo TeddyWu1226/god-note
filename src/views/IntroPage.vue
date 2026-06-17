@@ -273,15 +273,16 @@ const continueGame = () => {
 
 .class-cards {
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 240px));
+  grid-template-columns: repeat(2, minmax(140px, 240px));
   justify-content: center;
   gap: 1.2rem;
-  max-width: 520px;
+  width: 90vw;
+  max-width: 500px;
   margin: 0 auto;
 }
 
 .class-card {
-  padding: 1.5rem 1.2rem;
+  padding: 1.2rem 1rem;
   border: 1px solid #333;
   background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
@@ -291,6 +292,7 @@ const continueGame = () => {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .class-card:hover {
@@ -334,6 +336,66 @@ const continueGame = () => {
 
 .class-card.active .class-desc {
   color: #ccc;
+}
+
+/* On short or narrow screens, scale down card elements to avoid overflow */
+@media (max-height: 720px), (max-width: 767px) {
+  .class-cards {
+    gap: 0.8rem;
+    max-width: 420px;
+  }
+  .class-card {
+    padding: 0.8rem 0.6rem;
+  }
+  .class-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.4rem;
+  }
+  .class-label {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+  .class-desc {
+    font-size: 0.75rem;
+    height: auto;
+    min-height: 48px;
+    line-height: 1.3;
+  }
+  .select-class-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+  .select-class-subtitle {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-height: 580px) {
+  .class-cards {
+    gap: 0.5rem;
+    max-width: 380px;
+  }
+  .class-card {
+    padding: 0.5rem 0.4rem;
+  }
+  .class-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+  }
+  .class-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.1rem;
+  }
+  .class-desc {
+    font-size: 0.7rem;
+    min-height: 36px;
+  }
+  .select-class-title {
+    font-size: 1.5rem;
+  }
+  .select-class-subtitle {
+    margin-bottom: 0.8rem;
+  }
 }
 
 .confirm-btn {

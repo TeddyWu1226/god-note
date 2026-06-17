@@ -1,20 +1,18 @@
 import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {MonsterType, StatusEffect} from "@/types";
+import {StatusEffect} from "@/types";
 import {computed, ref, watch} from "vue";
 import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {MonsterModel} from "@/models/monster-model";
 import {usePlayerStore} from "@/store/player-store";
 
-export const getEffectiveStats = (monster: any): MonsterModel => {
-	if (!monster) return monster;
-	if (monster instanceof MonsterModel) {
+export const getEffectiveStats = (monster: any): any => {
+	if (monster && typeof monster.getEffectiveStats === 'function') {
 		return monster.getEffectiveStats();
 	}
-	const instance = new MonsterModel(monster);
-	return instance.getEffectiveStats();
+	return monster;
 };
 
 export const useGameStateStore = defineStore('game-state', () => {
@@ -236,24 +234,9 @@ export const useGameStateStore = defineStore('game-state', () => {
 	}
 
 	// 施加怪物狀態
-	function addEffectToMonster(monster: MonsterType, effect: StatusEffect) {
+	function addEffectToMonster(monster: MonsterModel, effect: StatusEffect) {
 		if (!monster) return;
-		if (monster instanceof MonsterModel) {
-			monster.addEffect(effect, useLogStore());
-		} else {
-			const logStore = useLogStore();
-			logStore.logger.add(`${monster.name} 受到 [${effect.name}] 效果。`);
-			// 邏輯：如果已有同名狀態，則更新持續時間，否則新增
-			if (!monster.status) {
-				monster.status = []
-			}
-			const existingIdx = monster.status.findIndex(e => e.name === effect.name);
-			if (existingIdx > -1) {
-				monster.status[existingIdx].duration = effect.duration;
-			} else {
-				monster.status.push({...effect});
-			}
-		}
+		monster.addEffect(effect, useLogStore());
 	}
 
 	/**
@@ -264,35 +247,10 @@ export const useGameStateStore = defineStore('game-state', () => {
 		currentEnemy.value.forEach(monster => {
 			if (monster.hp <= 0) return;
 
-			if (monster instanceof MonsterModel) {
-				// 處理 DoT/HoT 等狀態效果
-				monster.tickEffects(logStore);
-				// 處理回合習性行為
-				monster.executeRoundBehavior(battleRound.value, logStore);
-			} else {
-				// 1. 處理每回合跳血/回血 (DoT/HoT)
-				monster.status?.forEach(eff => {
-					let logMessage: string | undefined
-					if (eff.type === 'damage' && eff.value) {
-						logMessage = `${monster.name} 因[${eff.name}]受到了 ${eff.value} 點傷害。`;
-						monster.hp = Math.max(0, monster.hp - eff.value);
-					} else if (eff.type === 'heal' && eff.value) {
-						const finalStats = getEffectiveStats(monster); // 計算包含 buff 的上限
-						monster.hp = Math.min(finalStats.hpLimit, monster.hp + eff.value);
-						logMessage = `${monster.name} 因[${eff.name}]回復了 ${eff.value} 點生命。`;
-					}
-					if (logMessage) {
-						logStore.logger.add(logMessage);
-					}
-				});
-
-				// 2. 減少持續時間並過濾掉已結束的狀態
-				monster.status = monster.status?.map(eff => ({
-					...eff,
-					duration: eff.duration === -1 ? -1 : eff.duration - 1
-				}))
-					.filter(eff => eff.duration !== 0);
-			}
+			// 處理 DoT/HoT 等狀態效果
+			monster.tickEffects(logStore);
+			// 處理回合習性行為
+			monster.executeRoundBehavior(battleRound.value, logStore);
 		});
 
 		// 增加回合數

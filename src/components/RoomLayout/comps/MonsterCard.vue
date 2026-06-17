@@ -2,13 +2,10 @@
 import './boss-animation.css'
 import './god-animation.css'
 import {computed, PropType, ref, watch} from 'vue';
-import {BattleOutcome, MonsterType} from "@/types";
+import {BattleOutcome} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
-import {
-  applyAttackDamage,
-  triggerDamageEffect
-} from "@/constants/fight-func";
+import {applyAttackDamage, triggerDamageEffect} from "@/constants/fight-func";
 import {MonsterModel} from "@/models/monster-model";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
@@ -92,17 +89,14 @@ const monsterMove = () => {
 
 // 怪物攻擊
 const monsterAttack = () => {
-
   // 特殊效果
-  if (props.info instanceof MonsterModel) {
-    props.info.triggerOnAttack({
-      monsterIndex: props.index,
-      playerStore: playerStore,
-      gameStateStore: gameStateStore,
-      logStore: logStore,
-      targetElement: CardRef.value
-    });
-  }
+  props.info.triggerOnAttack({
+    monsterIndex: props.index,
+    playerStore: playerStore,
+    gameStateStore: gameStateStore,
+    logStore: logStore,
+    targetElement: CardRef.value
+  });
   // 傷害計算
   applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
 }
@@ -110,29 +104,25 @@ const monsterAttack = () => {
  * 怪物被攻擊
  */
 const onMonsterAttacked = (damageOutput: BattleOutcome) => {
-  if (props.info instanceof MonsterModel) {
-    props.info.triggerOnAttacked({
-      gameStateStore: gameStateStore,
-      playerStore: playerStore,
-      targetElement: CardRef.value?.$el,
-      logStore: logStore,
-      damage: damageOutput,
-    });
-  }
+  props.info.triggerOnAttacked({
+    gameStateStore: gameStateStore,
+    playerStore: playerStore,
+    targetElement: CardRef.value?.$el,
+    logStore: logStore,
+    damage: damageOutput,
+  });
 }
 /**
  * 怪物死亡
  */
 const onMonsterDie = () => {
   // 觸發死亡被動
-  if (props.info instanceof MonsterModel) {
-    props.info.triggerOnDead({
-      playerStore: playerStore,
-      gameStateStore: gameStateStore,
-      logStore: logStore,
-      targetElement: CardRef.value
-    });
-  }
+  props.info.triggerOnDead({
+    playerStore: playerStore,
+    gameStateStore: gameStateStore,
+    logStore: logStore,
+    targetElement: CardRef.value
+  });
   if (props.info.hp > 0) {
     return
   }
