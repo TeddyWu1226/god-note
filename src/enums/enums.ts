@@ -45,9 +45,6 @@ export enum SpecialEventEnum {
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘
     HuntDuneBeast = 'HuntDuneBeast', // 狩獵沙漠巨獸
-    // 轉職事件
-    JobWarrior = 'JobWarrior', 	// 轉職劍士
-    JobWizard = 'JobWizard', // 轉職法師
 
     // 額外功能事件
     Fusion = 'Fusion', // 合成功能
@@ -113,15 +110,15 @@ export const StatEnum = {
         icon: '✨',
         unit: ''
     },
-    heal: {
-        value: 'heal',
+    hpRegen: {
+        value: 'hpRegen',
         label: '生命回復',
         icon: '❤️‍🩹',
         unit: ''
     },
-    magic: {
-        value: 'magic',
-        label: '回復法力',
+    spRegen: {
+        value: 'spRegen',
+        label: '法力回復',
         icon: '💜',
         unit: ''
     },

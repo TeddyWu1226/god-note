@@ -13,8 +13,8 @@ import type {MonsterModel} from "@/models/monster-model";
 export interface qualityType {
     ad?: number // 物理攻擊力
     ap?: number // 魔法攻擊力/法傷
-    heal?: number // 回復生命
-    magic?: number // 回復法力
+    heal?: number // 回復生命(一次性)
+    magic?: number // 回復法力(一次性)
     critIncrease?: number // 爆擊增傷(200%)
     critRate?: number // 爆擊率(100%)
     // 有關防禦
@@ -25,7 +25,9 @@ export interface qualityType {
     hit?: number // 命中值
     // 有關身體素質
     hpLimit?: number; //生命上限
+    hpRegen?: number; // 生命回復
     spLimit?: number; // 法力上限
+    spRegen?: number; //法力回復
     // 特殊加成
     adIncrease?: number // 傷害增幅(%)
     apIncrease?: number // 法術增幅(%)
@@ -47,7 +49,9 @@ export const statLabels: Record<keyof qualityType, string> = {
     dodge: '閃避值',
     hit: '命中值',
     hpLimit: '生命上限',
+    hpRegen: '生命回復',
     spLimit: '法力上限',
+    spRegen: '法力回復',
     heal: '回復生命',
     magic: '回復法力',
     adIncrease: '物理增傷',
@@ -100,8 +104,8 @@ export interface UnitType {
     // 有關輸出
     ad: number // 物理攻擊力
     ap?: number // 魔法攻擊力/法傷
-    heal?: number // 回復生命
-    magic?: number // 回復法力
+    hpRegen?: number // 生命回復
+    spRegen?: number // 法力回復
     critIncrease: number // 爆擊增傷(200%)
     critRate: number // 爆擊率(%)
     // 有關防禦
@@ -295,9 +299,6 @@ export interface AchievementType {
 /**
  * 技能
  */
-export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
-export type SkillTypeCategory = 'active' | 'passive';
-
 export interface SkillParams {
     monster?: MonsterModel;
     monsterIndex?: number;

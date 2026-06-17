@@ -49,8 +49,6 @@ export const usePlayerStore = defineStore('player-info', () => {
         const bonus: Record<string, number> = {
             ad: 0,
             ap: 0,
-            heal: 0,
-            magic: 0,
             critIncrease: 0,
             critRate: 0,
             adDefend: 0,
@@ -64,6 +62,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             runIncrease: 0,
             lifeSteal: 0,
             actionValue: 0,
+            hpRegen: 0,
+            spRegen: 0,
         };
         // 計算裝備加成
         if (info.value.equips) {
@@ -109,8 +109,6 @@ export const usePlayerStore = defineStore('player-info', () => {
             ...info.value,
             ad: Math.max(0, info.value.ad + b.ad),
             ap: Math.max(0, (info.value.ap || 0) + b.ap),
-            heal: Math.max(0, (info.value.heal || 0) + b.heal),
-            magic: Math.max(0, (info.value.magic || 0) + b.magic),
             adDefend: Math.max(0, info.value.adDefend + b.adDefend),
             dodge: info.value.dodge + b.dodge,
             critRate: info.value.critRate + b.critRate,
@@ -124,6 +122,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             runIncrease: info.value.runIncrease + b.runIncrease,
             lifeSteal: info.value.lifeSteal + b.lifeSteal,
             actionValue: Math.max(0, (info.value.actionValue ?? 50) + b.actionValue),
+            hpRegen: info.value.hpRegen + b.hpRegen,
+            spRegen: info.value.spRegen + b.spRegen,
         };
     });
 
@@ -450,6 +450,18 @@ export const usePlayerStore = defineStore('player-info', () => {
         });
 
         statusEffects.value = remainingEffects;
+
+        // 處理自動回復 (被動技能或裝備帶來的生命與法力自動回復)
+        const hpRegenVal = finalStats.value.hpRegen || 0;
+        const spRegenVal = finalStats.value.spRegen || 0;
+
+        if (hpRegenVal > 0 && info.value.hp < finalStats.value.hpLimit) {
+            info.value.hp = Math.min(finalStats.value.hpLimit, info.value.hp + hpRegenVal);
+        }
+
+        if (spRegenVal > 0 && info.value.sp < finalStats.value.spLimit) {
+            info.value.sp = Math.min(finalStats.value.spLimit, info.value.sp + spRegenVal);
+        }
 
         // 💡 減少技能冷卻 CD
         if (info.value.skills) {

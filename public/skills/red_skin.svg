@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Borderless Background for Passive Skill -->
+  <rect width="16" height="16" fill="#1b1c20" rx="1" ry="1" />
+
+  <!-- Red Plate / Skin Texture (Shield shape in Red) -->
+  <rect x="5" y="3" width="6" height="1" fill="#c0392b" />
+  <rect x="4" y="4" width="8" height="1" fill="#e74c3c" />
+  <rect x="3" y="5" width="10" height="4" fill="#e74c3c" />
+  <rect x="4" y="9" width="8" height="2" fill="#c0392b" />
+  <rect x="5" y="11" width="6" height="1" fill="#c0392b" />
+  <rect x="6" y="12" width="4" height="1" fill="#962d22" />
+  <rect x="7" y="13" width="2" height="1" fill="#962d22" />
+
+  <!-- Skin Texture Highlights (Light Red) -->
+  <rect x="5" y="4" width="2" height="1" fill="#ff7675" />
+  <rect x="4" y="5" width="2" height="2" fill="#ff7675" />
+  <rect x="10" y="5" width="2" height="2" fill="#d63031" /> <!-- Shadow -->
+
+  <!-- Green Healing Cross (Auto-regen HP symbol) -->
+  <rect x="7" y="6" width="2" height="4" fill="#2ecc71" />
+  <rect x="6" y="7" width="4" height="2" fill="#2ecc71" />
+  <rect x="7" y="7" width="2" height="2" fill="#a3e4d7" /> <!-- cross highlight -->
+</svg>

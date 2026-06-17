@@ -11,6 +11,10 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     Thrust: SkillClasses.Thrust,
     SwordMastery: SkillClasses.SwordMastery,
     BladeMastery: SkillClasses.BladeMastery,
+    SpellMastery: SkillClasses.SpellMastery,
+    ReadingMastery: SkillClasses.ReadingMastery,
+    RedSkin: SkillClasses.RedSkin,
+    BlueSkin: SkillClasses.BlueSkin,
 };
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
@@ -23,6 +27,10 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     Thrust: new SkillClasses.Thrust(),
     SwordMastery: new SkillClasses.SwordMastery(),
     BladeMastery: new SkillClasses.BladeMastery(),
+    SpellMastery: new SkillClasses.SpellMastery(),
+    ReadingMastery: new SkillClasses.ReadingMastery(),
+    RedSkin: new SkillClasses.RedSkin(),
+    BlueSkin: new SkillClasses.BlueSkin(),
 };
 
 export class SkillFactory {
