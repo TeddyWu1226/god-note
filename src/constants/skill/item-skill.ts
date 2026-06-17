@@ -4,7 +4,7 @@ import {GameState} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UnitStatus} from "@/constants/status/unit-status";
-import {Boss} from "@/constants/monsters/boss-info";
+import {Boss} from "../monsters/monster-info/99-boss-info";
 import {useSaveStore} from "@/store/save-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import EvnStatus from "@/constants/status/evn-status";

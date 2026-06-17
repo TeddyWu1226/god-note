@@ -1,8 +1,6 @@
-import {MonsterType} from "@/types";
-import {WorldDefault} from "@/assets/const";
-import {Material} from "@/constants/items/material/material-info";
-import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
-
+import { WorldDefault } from "@/assets/const";
+import { Accessory1, Accessory2 } from "@/constants/items/equipment/accessories-info";
+import { MonsterType } from "@/types";
 
 export const SpecialBoss = {
     EvilWoodMan: {

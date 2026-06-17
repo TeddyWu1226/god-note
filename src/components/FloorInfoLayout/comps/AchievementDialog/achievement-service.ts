@@ -3,7 +3,7 @@ import {AchievementStoreType, AchievementType, GameStateStoreType, PlayerStoreTy
 import {CharEnum} from "@/enums/char-enum";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Accessory1, Accessory2} from "@/constants/items/equipment/accessories-info";
-import {Boss} from "@/constants/monsters/boss-info";
+import {Boss} from "../../../../constants/monsters/monster-info/99-boss-info";
 import {SpecialEventEnum} from "@/enums/enums";
 
 /**

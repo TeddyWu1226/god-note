@@ -6,7 +6,7 @@ import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {create} from "@/utils/create";
-import {SpecialBoss} from "@/constants/monsters/special-boss-info";
+import {SpecialBoss} from "@/constants/monsters/monster-info/98-special-boss-info";
 import {RoomEnum} from "@/enums/room-enum";
 import {Accessory2} from "@/constants/items/equipment/accessories-info";
 

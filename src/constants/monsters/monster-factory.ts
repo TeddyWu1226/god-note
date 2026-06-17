@@ -1,7 +1,7 @@
-import { MonsterModel } from "@/models/monster-model";
-import { Monster } from "@/constants/monsters/monster-info";
+import {MonsterModel} from "@/models/monster-model";
+import {Monster} from "@/constants/monsters/monster-info";
 import * as MistyForestClasses from "@/constants/monsters/monster-info/1-misty-forest-monster";
-import * as BossClasses from "@/constants/monsters/boss-info";
+import * as BossClasses from "./monster-info/99-boss-info";
 
 // 💡 怪物 ID 與 Subclass 類別對照表
 export const MONSTER_CLASS_MAP: Record<string, any> = {
@@ -18,10 +18,7 @@ export const MONSTER_CLASS_MAP: Record<string, any> = {
     SmallSpider: MistyForestClasses.SmallSpider,
 
     // Bosses
-    BeginForest: BossClasses.ForestGuardian,
-    SunkenGrove: BossClasses.PoisonSlimeBoss,
     AncientRoots: BossClasses.AncientSpider,
-    FairyBarrier: BossClasses.FairyElder,
     Twilight: BossClasses.Twilight,
 };
 
@@ -40,10 +37,10 @@ export class MonsterFactory {
      */
     static createMonster(id: string, savedData: Partial<any> = {}): MonsterModel {
         // 先使用 ID、中文名稱，或是 savedData 中的 name 與 id 查找對應的 Class
-        const MonsterClass = MONSTER_CLASS_MAP[id] || 
-                             MONSTER_NAME_MAP[id] || 
-                             (savedData.name ? MONSTER_NAME_MAP[savedData.name] : undefined) ||
-                             (savedData.id ? MONSTER_CLASS_MAP[savedData.id] : undefined);
+        const MonsterClass = MONSTER_CLASS_MAP[id] ||
+            MONSTER_NAME_MAP[id] ||
+            (savedData.name ? MONSTER_NAME_MAP[savedData.name] : undefined) ||
+            (savedData.id ? MONSTER_CLASS_MAP[savedData.id] : undefined);
 
         if (MonsterClass) {
             const instance = new MonsterClass();

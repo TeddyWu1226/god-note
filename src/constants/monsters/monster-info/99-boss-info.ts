@@ -1,13 +1,12 @@
-import {MonsterType} from "@/types";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {MonsterModel} from "@/models/monster-model";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
-import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {UnitStatus} from "@/constants/status/unit-status";
+import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {checkProbability} from "@/utils/math";
-
+import {MonsterType} from "@/types";
 
 export class AncientSpider extends MonsterModel {
     constructor() {

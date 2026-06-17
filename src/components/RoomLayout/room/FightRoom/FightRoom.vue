@@ -18,7 +18,7 @@ import {ElMessage} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
-import {Boss, StageBosses} from "@/constants/monsters/boss-info";
+import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 import {useLogStore} from "@/store/log-store";
 import {MonsterModel as MonsterClass, GenericMonster} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";

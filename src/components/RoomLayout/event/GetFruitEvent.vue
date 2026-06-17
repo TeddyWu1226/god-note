@@ -10,7 +10,7 @@ import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {getRandomElements} from "@/utils/math";
 import {RoomEnum} from "@/enums/room-enum";
-import {SpecialBoss} from "@/constants/monsters/special-boss-info";
+import {SpecialBoss} from "@/constants/monsters/monster-info/98-special-boss-info";
 import {create} from "@/utils/create";
 import {Accessory2} from "@/constants/items/equipment/accessories-info";
 
