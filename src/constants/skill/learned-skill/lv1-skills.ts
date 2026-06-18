@@ -93,17 +93,11 @@ export class PhysiqueBoost extends SkillModel {
             icon: "skills/physique_icon.svg",
             type: 'passive',
             rarity: 'common',
-            maxCd: 0,
-            costSp: 0,
-            costHp: 0,
-            costAction: 0,
-            maxProficiency: 50,
-            proficiencyGain: 2
         });
     }
 
     get hpBonus(): number {
-        return 20 * this.level;
+        return 20
     }
 
     description(playerStore: PlayerStoreType): string {

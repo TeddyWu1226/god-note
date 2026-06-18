@@ -18,6 +18,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     const stopValueChangeAnimation = ref<boolean>(false);
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
+    const isRestoring = ref(false);
 
     // 💡 監聽並自動將 plain object 技能或 string 技能還原成 SkillModel 類別實例
     watch(
@@ -126,6 +127,34 @@ export const usePlayerStore = defineStore('player-info', () => {
             spRegen: info.value.spRegen + b.spRegen,
         };
     });
+
+    let isHydrating = true;
+    nextTick(() => {
+        isHydrating = false;
+    });
+
+    // 💡 監看最大生命值與最大法力值的變化，並按比例調整當前生命值與法力值
+    watch(
+        () => finalStats.value.hpLimit,
+        (newMax, oldMax) => {
+            if (isHydrating || isRestoring.value) return;
+            if (oldMax && oldMax > 0 && newMax && newMax > 0) {
+                const ratio = info.value.hp / oldMax;
+                info.value.hp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
+            }
+        }
+    );
+
+    watch(
+        () => finalStats.value.spLimit,
+        (newMax, oldMax) => {
+            if (isHydrating || isRestoring.value) return;
+            if (oldMax && oldMax > 0 && newMax && newMax > 0) {
+                const ratio = info.value.sp / oldMax;
+                info.value.sp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
+            }
+        }
+    );
 
     const currentExpPercentage = computed(() => {
         const nextExp = getNextLevelExp(info.value.level)
@@ -615,10 +644,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             info.value.ap = (info.value.ap || 0) + 1;
         } else if (statKey === 'hpLimit') {
             info.value.hpLimit += 10;
-            info.value.hp += 10;
         } else if (statKey === 'spLimit') {
             info.value.spLimit += 5;
-            info.value.sp += 5;
         }
 
         return true;
@@ -626,6 +653,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     return {
         info, skillProficiency,
         stopValueChangeAnimation,
+        isRestoring,
         totalBonus,
         finalStats,
         currentExpPercentage,

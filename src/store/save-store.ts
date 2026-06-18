@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {ref} from 'vue';
+import {ref, nextTick} from 'vue';
 import {usePlayerStore} from './player-store';
 import {useGameStateStore} from './game-state-store';
 import CryptoJS from 'crypto-js';
@@ -68,6 +68,9 @@ export const useSaveStore = defineStore('save-management', () => {
         const rawData = decrypt(encryptedData);
         if (!rawData) return false;
 
+        // 💡 標記正在進行回檔，防止最大生命/法力變更的 watcher 被觸發
+        playerStore.isRestoring = true;
+
         // --- 還原 Player Store ---
         // 使用 $patch 可以一次更新多個屬性，且性能較好
         playerStore.$patch((state) => {
@@ -82,6 +85,10 @@ export const useSaveStore = defineStore('save-management', () => {
         // --- 還原 Tracker Store ---
         trackerStore.$patch((state) => {
             Object.assign(state, rawData.tracker);
+        });
+
+        nextTick(() => {
+            playerStore.isRestoring = false;
         });
 
         console.log('數據回檔完成');

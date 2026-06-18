@@ -51,14 +51,11 @@ const confirmClassSelection = async () => {
   } else if (selectedClass.value === 'Thief') {
     playerStore.equipItem(Dagger.Dagger0);
     playerStore.info.hpLimit = 50;
-    playerStore.info.hp = 50;
   } else if (selectedClass.value === 'Cleric') {
     playerStore.info.ap = 13;
     playerStore.info.ad = 7
     playerStore.info.spLimit = 120;
-    playerStore.info.sp = 120;
     playerStore.info.hpLimit = 80;
-    playerStore.info.hp = 80;
   }
 
   trackStore.init();
