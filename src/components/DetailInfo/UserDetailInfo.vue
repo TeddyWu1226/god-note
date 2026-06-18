@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, watch, nextTick} from "vue";
+import {nextTick, ref, watch} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {EquipmentEnum, StatEnum} from "@/enums/enums";
@@ -50,8 +50,8 @@ const handleUnequip = (slotKey: keyof Equipment) => {
   // 如果在戰鬥中，自動關閉狀態彈窗以顯示受傷
   const gameStateStore = useGameStateStore();
   const inBattle = gameStateStore.currentEnemy.length > 0 &&
-                   !gameStateStore.isBattleWon &&
-                   !gameStateStore.isDead;
+      !gameStateStore.isBattleWon &&
+      !gameStateStore.isDead;
   if (inBattle) {
     isShowStats.value = false;
   }
@@ -142,7 +142,7 @@ const skipLearn = () => {
   ElMessage.info('您放棄了本次學習新技能的機會。');
 };
 
-const selectSkill = (skill: SkillModel) => {
+const selectSkill = (skill: any) => {
   if (!playerStore.info.skills) {
     playerStore.info.skills = [];
   }
@@ -455,6 +455,10 @@ const cancelReplaceMode = () => {
 </template>
 
 <style scoped>
+:root {
+  --rarity-color: ''
+}
+
 .floating-bag {
   position: absolute;
   width: 54px;

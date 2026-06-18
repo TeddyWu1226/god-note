@@ -7,6 +7,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
+import {Offhand} from "@/constants/items/equipment/offhand-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -23,10 +24,10 @@ const onTest = () => {
 const give = () => {
   playerStore.addGold(10000)
   // playerStore.gainItem(Potions.Heal1, 10)
-  playerStore.gainItem(Accessory2.SoulAnchor)
+  // playerStore.gainItem(Accessory2.SoulAnchor)
   // playerStore.gainItem(Head.HpHead2)
   // playerStore.gainItem(Armor.Armor2)
-  // playerStore.gainItem(Offhand.Book0)
+  playerStore.gainItem(Offhand.Shield0)
   playerStore.gainItem(Weapon.Axe0)
   // playerStore.gainItem(Weapon.MagicStick1)
   // playerStore.gainItem(Offhand.Book1)

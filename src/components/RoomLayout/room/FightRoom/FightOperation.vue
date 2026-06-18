@@ -63,9 +63,20 @@ watch(
   <el-button type="danger" :disabled="props.disabled" @click="emit('run',true)">
     逃跑({{ escapeRate }}%)
   </el-button>
-  <el-button type="warning" :disabled="props.disabled" @click="emit('endTurn')">
-    跳過({{gameStateStore.playerActionPoints}}/{{maxActionPoints}})
-  </el-button>
+  <el-tooltip
+      effect="dark"
+      content="點擊就跳過此回合"
+      placement="top"
+  >
+    <el-button type="warning" :disabled="props.disabled" @click="emit('endTurn')">
+      <template v-if="maxActionPoints >1">
+        行動次數 ({{ gameStateStore.playerActionPoints }}/{{ maxActionPoints }})
+      </template>
+      <template v-else>
+        跳過
+      </template>
+    </el-button>
+  </el-tooltip>
 </template>
 
 <style scoped>
