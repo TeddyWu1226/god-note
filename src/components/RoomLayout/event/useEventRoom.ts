@@ -7,7 +7,6 @@ import PotionEvent from "@/components/RoomLayout/event/PotionEvent.vue";
 import StorytellerEvent from "@/components/RoomLayout/event/StorytellerEvent.vue";
 import FusionEvent from "@/components/RoomLayout/event/FusionEvent.vue";
 import NeedWaterEvent from "@/components/RoomLayout/event/NeedWaterEvent.vue";
-import HuntDuneBeastEvent from "@/components/RoomLayout/event/HuntDuneBeastEvent.vue";
 import BushSearchEvent from "@/components/RoomLayout/event/BushSearchEvent.vue";
 
 export const eventComponentMap = {
@@ -19,6 +18,5 @@ export const eventComponentMap = {
 	[SpecialEventEnum.Storyteller]: StorytellerEvent,
 	[SpecialEventEnum.Fusion]: FusionEvent,
 	[SpecialEventEnum.NeedWater]: NeedWaterEvent,
-	[SpecialEventEnum.HuntDuneBeast]: HuntDuneBeastEvent,
 	[SpecialEventEnum.BushSearch]: BushSearchEvent,
 };

@@ -1,5 +1,6 @@
 import { SkillModel, GenericSkill } from "@/models/skill-model";
 import * as SkillClasses from "@/constants/skill/learned-skill/lv1-skills";
+import { ShieldBlock } from "@/constants/skill/offhand-skill/offhand-skill";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -15,10 +16,12 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     ReadingMastery: SkillClasses.ReadingMastery,
     RedSkin: SkillClasses.RedSkin,
     BlueSkin: SkillClasses.BlueSkin,
+    ShieldBlock: ShieldBlock,
 };
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
 export const SKILL_TEMPLATES: Record<string, SkillModel> = {
+    // 等級1
     CommonHeal: new SkillClasses.CommonHeal(),
     MagicBall: new SkillClasses.MagicBall(),
     PhysiqueBoost: new SkillClasses.PhysiqueBoost(),
@@ -31,6 +34,8 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     ReadingMastery: new SkillClasses.ReadingMastery(),
     RedSkin: new SkillClasses.RedSkin(),
     BlueSkin: new SkillClasses.BlueSkin(),
+    // 副手技能
+    ShieldBlock: new ShieldBlock(),
 };
 
 export class SkillFactory {

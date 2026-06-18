@@ -44,7 +44,6 @@ export enum SpecialEventEnum {
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘
-    HuntDuneBeast = 'HuntDuneBeast', // 狩獵沙漠巨獸
 
     // 額外功能事件
     Fusion = 'Fusion', // 合成功能

@@ -2,20 +2,27 @@
 
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
-import {EquipmentType, ItemType, UsableType, statLabels} from "@/types";
-import {PropType, ref} from "vue";
+import {EquipmentType, ItemType, statLabels, UsableType} from "@/types";
+import {computed, PropType} from "vue";
 import {StatEnum} from "@/enums/enums";
-import {OffhandSkill} from "../../../constants/skill/offhand-skill/offhand-skill";
-import {usePlayerStore} from "@/store/player-store";
+import {SkillFactory} from "@/constants/skill/learned-skill";
 
-const playerStore = usePlayerStore()
+
 const props = defineProps({
   item: {
     type: Object as PropType<ItemType | EquipmentType | UsableType>,
   }
 })
 
-const skill = ref(props.item['learned-skill'])
+const skill = computed(() => {
+  if (!props.item) return undefined;
+  return (props.item as any)['learned-skill'] || (props.item as any).skill;
+})
+
+const skillInstance = computed(() => {
+  if (!skill.value) return undefined;
+  return SkillFactory.createSkill(skill.value);
+})
 </script>
 
 <template>
@@ -26,12 +33,12 @@ const skill = ref(props.item['learned-skill'])
     </h3>
 
     <p class="detail-desc">{{ props.item.description }}</p>
-    <template v-if="skill && OffhandSkill[skill]">
+    <template v-if="skillInstance && skillInstance.itemDescription">
       <el-divider content-position="left">
         副手能力
       </el-divider>
       <div style="display:flex;flex-wrap: wrap">
-        {{ OffhandSkill[skill]?.itemDescription }}
+        {{ skillInstance.itemDescription }}
       </div>
     </template>
     <el-divider v-if="props.item.usable || props.item['position']" content-position="left">

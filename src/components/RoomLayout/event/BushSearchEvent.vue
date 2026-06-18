@@ -38,7 +38,7 @@ const startSearch = () => {
   setTimeout(() => {
     const rand = Math.random();
     let type: 'item' | 'empty' | 'hurt';
-    let msg = "";
+    let msg: string;
 
     if (rand < 0.25) {
       type = 'empty';
@@ -69,7 +69,7 @@ const onLeave = () => {
 </script>
 
 <template>
-  <RoomTemplate title="🌿神秘的草叢🌿">
+  <RoomTemplate title="神秘的草叢">
     <template #default>
       <div class="general-event">
         <div v-if="isRolling" class="dice-container">

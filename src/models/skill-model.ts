@@ -18,6 +18,7 @@ export abstract class SkillModel {
     costSp: number;          // 施放技能所消耗的魔法值 (SP)
     costHp: number;          // 施放技能所消耗的生命值 (HP)
     costAction: number;      // 施放技能所消耗的行動點數 (AP)
+    itemDescription?: string;// 技能的靜態說明描述 (用於背包/商店 Tooltips)
 
     constructor(data: {
         id: string;              // 技能唯一的識別碼 (ID)
@@ -34,6 +35,7 @@ export abstract class SkillModel {
         costSp?: number;         // 施放技能所消耗的魔法值 (選填，預設為 0)
         costHp?: number;         // 施放技能所消耗的生命值 (選填，預設為 0)
         costAction?: number;     // 施放技能所消耗的行動點數 (選填，預設為 1)
+        itemDescription?: string;// 技能的靜態說明描述 (選填)
     }) {
         this.id = data.id;
         this.name = data.name;
@@ -49,6 +51,7 @@ export abstract class SkillModel {
         this.costSp = data.costSp ?? 0;
         this.costHp = data.costHp ?? 0;
         this.costAction = data.costAction ?? 1;
+        this.itemDescription = data.itemDescription;
     }
 
     // 💡 獲取描述 (由子類別實作)
