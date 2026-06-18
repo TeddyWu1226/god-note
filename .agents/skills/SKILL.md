@@ -103,3 +103,8 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
 2.  **Vue Key 碰撞問題**：怪物類別的 `constructor` 中**嚴禁**使用固定的靜態 `id` 欄位。所有的 `id` 必須交由 `MonsterModel` 基類建構子動態分配（例如隨機 hash），以防 Vue 虛擬 DOM 渲染 `v-for` 時發生 Key 碰撞崩潰。
 3.  **成就系統禁止重裝**：本專案已完全將成就系統（`achievement-store`、`AchievementDialog` 等）移除。如有數值累計需求，請直接記錄在 `trackerStore` 內作為純數據指標即可。
 4.  **編譯驗證**：每次變更模型或資料結構後，由開發者自行測試，確保 Pinia 持久化快取在頁面重新整理（F5）時能毫無障礙地恢復類別狀態。
+5.  **技能 SVG 圖示樣式規範**：
+    *   **主動技能**（`type: 'active'`）：必須包含一個 1px 的外框，使用顏色為 `#3d3d4e`，定義為 `<rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />`。
+    *   **被動技能**（`type: 'passive'`）：不包含任何外框，直接繪製技能圖案本身。
+    *   **底色樣式**：不論主動還是被動技能，底色一律為**透明（Transparent）**，不能有任何滿版的背景填充矩形（例如刪除原本的 `fill="#1b1c20"` 或 `fill="#121216"` 等背景 `rect`）。
+

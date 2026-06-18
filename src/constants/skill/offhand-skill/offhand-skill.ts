@@ -54,7 +54,7 @@ export class PowerCharge extends SkillModel {
         super({
             id: 'PowerCharge',
             name: "蓄力",
-            icon: "💪",
+            icon: "skills/power_charge.svg",
             type: 'active',
             rarity: 'common',
             costSp: 5,
