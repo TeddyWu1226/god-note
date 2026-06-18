@@ -75,6 +75,7 @@ export interface ItemType {
 export interface EquipmentType extends ItemType, qualityType {
     position: EquipmentPosition
     skill?: string
+    isTwoHanded?: boolean
 }
 
 export interface UsableType extends ItemType, qualityType {

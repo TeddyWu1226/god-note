@@ -300,6 +300,17 @@ export const usePlayerStore = defineStore('player-info', () => {
             }
         } else {
             // 情況 B：穿上裝備
+            // 雙手武器與副手互斥邏輯
+            if (slot === 'weapon' && item.isTwoHanded) {
+                if (info.value.equips.offhand) {
+                    _unequipItem('offhand');
+                }
+            } else if (slot === 'offhand') {
+                if (info.value.equips.weapon?.isTwoHanded) {
+                    _unequipItem('weapon');
+                }
+            }
+
             // 如果該位置已有裝備，先卸下
             if (info.value.equips[slot]) {
                 _unequipItem(slot);

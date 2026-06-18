@@ -43,3 +43,47 @@ export class ShieldBlock extends SkillModel {
 		return true;
 	}
 }
+
+export class PowerCharge extends SkillModel {
+	constructor() {
+		super({
+			id: 'PowerCharge',
+			name: "蓄力",
+			icon: "💪",
+			type: 'active',
+			rarity: 'common',
+			costSp: 0,
+			costAction: 1,
+			itemDescription: '下一回合提升 50% 物理傷害。'
+		});
+	}
+
+	description(playerStore: PlayerStoreType): string {
+		return `蓄力以準備致命一擊。下一回合提升 50% 物理傷害。`;
+	}
+
+	protected execute(params: SkillParams): boolean {
+		const playerStore = params.playerStore;
+		if (!playerStore) return false;
+
+		playerStore.addStatus(genCustomStatus({
+			base: {
+				name: '蓄力',
+				icon: '💪',
+				duration: 2,
+				isBuff: true,
+				description: '提升 50% 物理傷害',
+				bonus: {
+					adIncrease: 50
+				}
+			},
+			duration: 2
+		}));
+
+		useFullScreenEffect({
+			message: '蓄力',
+			color: 'orange'
+		});
+		return true;
+	}
+}

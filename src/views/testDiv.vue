@@ -6,6 +6,7 @@ import {Accessory2} from "@/constants/items/equipment/accessories-info";
 import {RoomEnum} from "@/enums/room-enum";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
+import {Weapon} from "@/constants/items/equipment/weapon-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -26,7 +27,7 @@ const give = () => {
   // playerStore.gainItem(Head.HpHead2)
   // playerStore.gainItem(Armor.Armor2)
   // playerStore.gainItem(Offhand.Book0)
-  // playerStore.gainItem(Weapon.Sword2)
+  playerStore.gainItem(Weapon.Axe0)
   // playerStore.gainItem(Weapon.MagicStick1)
   // playerStore.gainItem(Offhand.Book1)
   // playerStore.info.hpLimit = 130

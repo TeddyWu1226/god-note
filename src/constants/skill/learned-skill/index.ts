@@ -1,6 +1,6 @@
 import { SkillModel, GenericSkill } from "@/models/skill-model";
 import * as SkillClasses from "@/constants/skill/learned-skill/lv1-skills";
-import { ShieldBlock } from "@/constants/skill/offhand-skill/offhand-skill";
+import { ShieldBlock, PowerCharge } from "@/constants/skill/offhand-skill/offhand-skill";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -17,6 +17,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     RedSkin: SkillClasses.RedSkin,
     BlueSkin: SkillClasses.BlueSkin,
     ShieldBlock: ShieldBlock,
+    PowerCharge: PowerCharge,
 };
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
@@ -36,6 +37,7 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     BlueSkin: new SkillClasses.BlueSkin(),
     // 副手技能
     ShieldBlock: new ShieldBlock(),
+    PowerCharge: new PowerCharge(),
 };
 
 export class SkillFactory {

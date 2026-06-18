@@ -93,7 +93,7 @@ const openLearnSkill = () => {
   // 過濾出玩家目前沒有的技能，且排除副手技能
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
-    return !currentSkillIds.includes(id) && id !== 'ShieldBlock' && id !== 'MagicRegain';
+    return !currentSkillIds.includes(id) && id !== 'ShieldBlock' && id !== 'PowerCharge' && id !== 'MagicRegain';
   });
 
   if (candidates.length === 0) {

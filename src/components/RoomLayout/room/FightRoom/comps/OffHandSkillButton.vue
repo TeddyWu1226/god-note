@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
-import {EquipmentType} from "@/types";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
-import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
+import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 const emit = defineEmits(['click'])
 
 const playerStore = usePlayerStore();
-const offhand = computed<EquipmentType | undefined>(() => {
-  return playerStore.info.equips?.offhand
-})
-const skill = computed<SkillModel | undefined>(() => offhand.value?.skill ? SkillFactory.createSkill(offhand.value.skill) : undefined);
+
+const offhandSkillKey = computed<string | undefined>(() => {
+  if (playerStore.info.equips?.offhand?.skill) {
+    return playerStore.info.equips.offhand.skill;
+  }
+  if (playerStore.info.equips?.weapon?.isTwoHanded && playerStore.info.equips.weapon.skill) {
+    return playerStore.info.equips.weapon.skill;
+  }
+  return undefined;
+});
+
+const skill = computed<SkillModel | undefined>(() => offhandSkillKey.value ? SkillFactory.createSkill(offhandSkillKey.value) : undefined);
 
 // 判斷是否可用
 const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0));
@@ -20,7 +27,7 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
 </script>
 
 <template>
-  <div v-if="skill" class="skill-container">
+  <template v-if="skill">
     <el-button
         class="skill-btn"
         :type="!canAfford ? 'info' : 'warning'"
@@ -28,7 +35,8 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         @click="emit('click',skill?.id)"
     >
       <span class="skill-icon">
-        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon" alt="skill icon" />
+        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon"
+             alt="skill icon"/>
         <template v-else>{{ skill?.icon }}</template>
       </span>
       <div class="skill-info">
@@ -51,12 +59,11 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         <div v-html="skill.description(playerStore)"/>
       </div>
     </el-popover>
-  </div>
+  </template>
 </template>
 
 <style scoped>
 .skill-container {
-  position: relative;
   width: 100%;
 }
 

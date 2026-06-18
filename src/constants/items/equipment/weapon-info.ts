@@ -123,6 +123,8 @@ export const Axe = {
 		quality: 0,
 		hit: -15,
 		ad: 7,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 	Axe1: {
 		name: '銅斧',
@@ -132,6 +134,8 @@ export const Axe = {
 		quality: 1,
 		hit: -15,
 		ad: 14,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 	Axe2: {
 		name: '鐵斧',
@@ -141,7 +145,9 @@ export const Axe = {
 		quality: 2,
 		hit: -15,
 		ad: 21,
-		critIncrease: 10
+		critIncrease: 10,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 	Axe3: {
 		name: '鋼鐵斧',
@@ -151,7 +157,9 @@ export const Axe = {
 		quality: 3,
 		hit: -15,
 		ad: 28,
-		critIncrease: 15
+		critIncrease: 15,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 	Axe4: {
 		name: '合金斧',
@@ -161,7 +169,9 @@ export const Axe = {
 		quality: 4,
 		hit: -15,
 		ad: 35,
-		critIncrease: 20
+		critIncrease: 20,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 	Axe5: {
 		name: '強化巨斧',
@@ -171,7 +181,9 @@ export const Axe = {
 		quality: 5,
 		hit: -10,
 		ad: 45,
-		critIncrease: 25
+		critIncrease: 25,
+		isTwoHanded: true,
+		skill: 'PowerCharge',
 	} as EquipmentType,
 };
 
