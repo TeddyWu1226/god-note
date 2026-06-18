@@ -32,7 +32,6 @@ import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
 import {Sleep} from "@/utils/create";
 
-const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const logStore = useLogStore()
@@ -369,13 +368,14 @@ const onSkill = async (skillKey: string) => {
 const isEscape = ref(false)
 const onRun = () => {
   if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy)) {
-    emit('runFailed', true)
+    logStore.logger.add('逃跑失敗....')
     monsterMove()
     gameStateStore.tickAllMonsters()
     // 記錄後續回合日誌
     logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   } else {
     isEscape.value = true
+    logStore.logger.add('逃跑成功....')
     gameStateStore.setBattleWon(true)
   }
   // 回合結束判定

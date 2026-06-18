@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {computed, ref, watch} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -24,9 +23,6 @@ const currentRoomValue = computed(() => {
       return gameStateStore.currentRoomValue
     }
 )
-const onRunFailed = () => {
-  emit('runFailed', true)
-}
 /** 戰鬥房間 **/
 const FightRoomRef = ref()
 // 攻擊
@@ -125,7 +121,6 @@ const gainFirstPower = () => {
         currentRoomValue === RoomEnum.Boss.value||
         currentRoomValue === RoomEnum.SpecialBoss.value
 "
-      @run-failed="onRunFailed"
       :key="roomKeyCounter"
   />
   <RestRoom
@@ -149,10 +144,6 @@ const gainFirstPower = () => {
 </template>
 
 <style scoped>
-.title {
-  font-size: 1.2rem;
-}
-
 .room-layout :deep(.el-card__body) {
   height: 100%;
   box-sizing: border-box;

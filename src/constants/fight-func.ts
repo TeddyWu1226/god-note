@@ -23,10 +23,7 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
     };
 
     // --- 1. 命中判斷 ---
-    const BASE_HIT_RATE = 100;
-    let hitRate = Math.max(0, BASE_HIT_RATE + attacker.hit - defender.dodge);
-    if (Math.random() * MAX_RATE >= hitRate) return result;
-    result.isHit = true;
+    result.isHit = calculateIsHit(attacker, defender)
     if (!result.isHit) {
         return result;
     }
@@ -515,3 +512,15 @@ export const checkHpThresholds = (entity: Entity, thresholds = [75, 50, 25]): bo
 
     return isTrigger;
 };
+
+/**
+ * 計算是否命中
+ * @param attacker 施放者
+ * @param defender 承受者
+ * @returns boolean 是否命中
+ */
+export function calculateIsHit(attacker: UnitType, defender: UnitType): boolean {
+    const BASE_HIT_RATE = 100;
+    let hitRate = Math.max(0, BASE_HIT_RATE + attacker.hit - defender.dodge);
+    return Math.random() * MAX_RATE < hitRate
+}
