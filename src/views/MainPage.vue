@@ -2,7 +2,6 @@
 import {computed, onMounted, ref, watch} from 'vue';
 import {RoomLayout} from "@/components/RoomLayout";
 import {UserLayout} from "@/components/UserLayout";
-import {OperationLayout} from "@/components/OperationLayout";
 import {FloorInfoLayout} from "@/components/FloorInfoLayout";
 import {useGameStateStore} from "@/store/game-state-store";
 import CombatSkillsLayout from "@/components/UserLayout/comps/CombatSkillsLayout.vue";
