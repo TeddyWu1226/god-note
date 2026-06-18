@@ -7,6 +7,7 @@ import {SpecialItem} from "@/constants/items/special-item-info";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {checkProbability} from "@/utils/math";
 import {MonsterType} from "@/types";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 export class AncientSpider extends MonsterModel {
     constructor() {
@@ -15,7 +16,7 @@ export class AncientSpider extends MonsterModel {
             name: '古蜘蛛',
             description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物,且對於被網住的生物必定爆擊',
             class: 'boss big',
-            ad: 22,
+            ad: 20,
             critIncrease: 200,
             critRate: 0,
             adDefend: 10,
@@ -38,6 +39,11 @@ export class AncientSpider extends MonsterModel {
                 color: 'red'
             }
         );
+        useFullScreenEffect({
+            message: '蛛絲纏繞',
+            color: 'white',
+            duration: 1500
+        });
         playerStore.addStatus(UnitStatus.SpiderStuck);
     }
 

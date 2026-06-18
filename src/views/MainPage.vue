@@ -44,6 +44,12 @@ const isShowIllustration = ref(false)
 const showIllustrate = () => {
   isShowIllustration.value = true
 }
+// 新增圖鑑相關狀態與方法
+const isShowEncyclopedia = ref(false)
+const activeEncyclopediaTab = ref('monster')
+const showEncyclopedia = () => {
+  isShowEncyclopedia.value = true
+}
 
 /** 重新開始 **/
 const resetGame = async () => {
@@ -114,6 +120,9 @@ watch(
 
             <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>
               📖 說明
+            </el-button>
+            <el-button type="info" style="height: 2rem" size="small" @click="showEncyclopedia" plain>
+              📚 圖鑑
             </el-button>
             <el-button type="danger" style="height: 2rem" size="small" @click="resetGame" plain>
               🪦 放棄
@@ -196,7 +205,27 @@ watch(
         </div>
       </div>
     </el-dialog>
-
+    <!-- 圖鑑對話框 -->
+    <el-dialog
+        v-model="isShowEncyclopedia"
+        title="📚 圖鑑"
+        width="600px"
+        custom-class="encyclopedia-dialog"
+        :append-to-body="true"
+        @close="isShowEncyclopedia = false"
+    >
+      <el-tabs v-model="activeEncyclopediaTab" type="border-card">
+        <el-tab-pane label="怪物" name="monster">
+          <div class="encyclopedia-content">怪物圖鑑內容（待填充）</div>
+        </el-tab-pane>
+        <el-tab-pane label="武器" name="weapon">
+          <div class="encyclopedia-content">武器圖鑑內容（待填充）</div>
+        </el-tab-pane>
+        <el-tab-pane label="技能" name="skill">
+          <div class="encyclopedia-content">技能圖鑑內容（待填充）</div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </el-config-provider>
 </template>
 

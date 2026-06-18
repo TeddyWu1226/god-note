@@ -67,7 +67,7 @@ export const UnitStatus = {
         type: 'stuck',
     } as StatusEffect,
     SpiderHunter: {
-        name: '獵殺者',
+        name: '攻擊獵物',
         icon: '⚠️',
         duration: 1,
         isBuff: true,

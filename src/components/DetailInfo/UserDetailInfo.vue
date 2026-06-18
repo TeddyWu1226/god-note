@@ -346,7 +346,7 @@ const cancelReplaceMode = () => {
               </span>
           </el-tooltip>
           <span v-else class="equip-placeholder-icon">
-            <template v-if="pos.value ==='offhand' && playerStore.info.equips.weapon.isTwoHanded">
+            <template v-if="pos.value ==='offhand' && playerStore.info.equips?.weapon?.isTwoHanded">
               🚫
             </template>
             <template v-else>

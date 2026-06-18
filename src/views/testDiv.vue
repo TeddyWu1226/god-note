@@ -27,8 +27,8 @@ const give = () => {
   // playerStore.gainItem(Accessory2.SoulAnchor)
   // playerStore.gainItem(Head.HpHead2)
   // playerStore.gainItem(Armor.Armor2)
-  playerStore.gainItem(Offhand.Shield0)
-  playerStore.gainItem(Weapon.Axe0)
+  // playerStore.gainItem(Offhand.Shield0)
+  playerStore.gainItem(Weapon.Sword0)
   // playerStore.gainItem(Weapon.MagicStick1)
   // playerStore.gainItem(Offhand.Book1)
   // playerStore.info.hpLimit = 130
