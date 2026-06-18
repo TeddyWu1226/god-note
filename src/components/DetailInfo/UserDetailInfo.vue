@@ -12,7 +12,8 @@ import type {Equipment} from "@/types";
 import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {SkillModel} from "@/models/skill-model";
-import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
+import {SKILL_TEMPLATES, SkillFactory, EVOLUTION_RULES} from "@/constants/skill/learned-skill";
+import {useTrackerStore} from "@/store/track-store";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 
@@ -100,10 +101,32 @@ const getRarityName = (rarity: string) => {
 };
 
 const openLearnSkill = () => {
-  // 過濾出玩家目前沒有的技能，且排除副手技能
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
+  const trackerStore = useTrackerStore();
+
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
-    return !currentSkillIds.includes(id) && id !== 'ShieldBlock' && id !== 'PowerCharge' && id !== 'MagicRegain';
+    // 排除特定副手與系統技能
+    if (id === 'ShieldBlock' || id === 'PowerCharge' || id === 'MagicRegain') return false;
+
+    // 檢查是否為進化/融合技能
+    const evoRule = EVOLUTION_RULES[id];
+    if (evoRule) {
+      // 進化技能：必須滿足解鎖條件，且玩家目前有基礎技能，且目前沒有該進化技能
+      const hasEvolved = currentSkillIds.includes(id);
+      return !hasEvolved && evoRule.checkEligible(playerStore, trackerStore);
+    }
+
+    // 常規技能：
+    // 1. 玩家不能已經擁有此技能
+    if (currentSkillIds.includes(id)) return false;
+    
+    // 2. 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordMaster 就不能再抽 SwordMastery)
+    const hasEvolvedVersion = Object.values(EVOLUTION_RULES).some(rule => 
+      rule.baseSkillId === id && currentSkillIds.includes(rule.evolvedSkillId)
+    );
+    if (hasEvolvedVersion) return false;
+
+    return true;
   });
 
   if (candidates.length === 0) {
@@ -146,6 +169,34 @@ const selectSkill = (skill: any) => {
   if (!playerStore.info.skills) {
     playerStore.info.skills = [];
   }
+
+  // 檢查是否為進化/融合技能
+  const evoRule = EVOLUTION_RULES[skill.id];
+  if (evoRule) {
+    // 進化/融合邏輯
+    const index = playerStore.info.skills.findIndex((s: any) => s.id === evoRule.baseSkillId);
+    if (index > -1) {
+      // 1. 替換基礎技能
+      playerStore.info.skills[index] = skill;
+
+      // 2. 如果是融合（有額外需要移除的技能，如橫擊與刺擊），一併從技能欄中清除
+      if (evoRule.fuseSkillIds) {
+        playerStore.info.skills = playerStore.info.skills.filter((s: any) => 
+          !evoRule.fuseSkillIds!.includes(s.id)
+        );
+      }
+
+      // 3. 扣減點數與提示
+      playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
+      ElMessage.success(`技能進化！成功獲得：${skill.name}！`);
+      isShowLearnSkill.value = false;
+    } else {
+      ElMessage.error('找不到進化所需的基礎技能，無法學習！');
+    }
+    return;
+  }
+
+  // 常規學習邏輯
   if (playerStore.info.skills.length < 6) {
     // 還有空位，直接學習
     playerStore.info.skills.push(skill);
