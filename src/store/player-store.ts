@@ -651,10 +651,10 @@ export const usePlayerStore = defineStore('player-info', () => {
             info.value.hp = finalStats.value.hpLimit;
             info.value.sp = finalStats.value.spLimit;
 
-            // 💡 核心新增：每 5 等可獲得技能點數
+            // 💡 核心新增：每 3 等可獲得技能點數
             let skillPointsGained = 0;
             for (let lvl = startLevel + 1; lvl <= info.value.level; lvl++) {
-                if (lvl % 5 === 0) {
+                if (lvl % 3 === 0) {
                     skillPointsGained++;
                 }
             }

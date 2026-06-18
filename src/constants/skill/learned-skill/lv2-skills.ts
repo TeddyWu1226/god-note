@@ -3,7 +3,7 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus} from "@/utils/create";
+import {genCustomStatus, Sleep} from "@/utils/create";
 
 /**
  * 1. 劍術大師 (SwordMaster) - 進化自 劍術精通
@@ -76,7 +76,7 @@ export class Cleave extends SkillModel {
         if (!playerStore || !monster) return false;
 
         const dmg = this.getDamage(playerStore);
-        applySkillDamage(playerStore.finalStats, monster, dmg, 'ad', this.name);
+        monster.lastDamageResult = applySkillDamage(playerStore.finalStats, monster, dmg, 'ad', this.name);
 
         // 提升下一回合 5% 物理傷害 (加持續時間為 2 的 Buff，當前/下回合結束時分別減1，下回合行動時剩下 1 回合且依然生效)
         playerStore.addStatus(genCustomStatus({
@@ -117,22 +117,26 @@ export class Flurry extends SkillModel {
             maxCd: 0,
             costSp: 15,
             costAction: 1,
-            maxProficiency: 100,
-            proficiencyGain: 1
+            maxProficiency: 50,
+            proficiencyGain: 2
         });
     }
 
     getSingleDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.4 + this.proficiency * 0.1);
+        return Math.round(ad * 0.4);
+    }
+
+    getMaxHitNum() {
+        return 1 + (Math.ceil(this.proficiency * 0.1))
     }
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getSingleDamage(playerStore);
-        return `狂亂地連續揮打，對隨機敵方目標發起 3~4 次攻擊，每次造成 ${ColorText.ad(dmg)} 物理傷害。`;
+        return `狂亂地連續揮打，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(dmg)} 物理傷害。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected async execute(params: SkillParams): Promise<boolean> {
         const playerStore = params.playerStore;
         const gameStateStore = params.gameStateStore;
         if (!playerStore || !gameStateStore) return false;
@@ -141,8 +145,12 @@ export class Flurry extends SkillModel {
         if (enemies.length === 0) return false;
 
         // 隨機決定 3 或 4 次連擊
-        const hits = Math.floor(Math.random() * 2) + 3;
+        const hits = this.getMaxHitNum();
         const dmg = this.getSingleDamage(playerStore);
+
+        useFullScreenEffect({
+            message: '亂擊'
+        });
 
         // 執行多段隨機打擊
         for (let i = 0; i < hits; i++) {
@@ -151,13 +159,13 @@ export class Flurry extends SkillModel {
             if (livingEnemies.length === 0) break;
 
             const target = livingEnemies[Math.floor(Math.random() * livingEnemies.length)];
-            applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
-        }
+            target.lastDamageResult = applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
 
-        useFullScreenEffect({
-            message: '亂擊！',
-            color: 'cyan'
-        });
+            // 每次打擊之間延遲 250 毫秒
+            if (i < hits - 1) {
+                await Sleep(250);
+            }
+        }
 
         return true;
     }

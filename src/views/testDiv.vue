@@ -16,7 +16,7 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  playerStore.gainExp({amount: 1300})
+  playerStore.gainExp({amount: 100})
   // playerStore.addSkill(Skills.FireBall.id)
   // playerStore.addSkill(Skills.MagicDefend.id)
   // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
@@ -54,7 +54,7 @@ const onSave = () => {
       <el-button @click="give">給道具</el-button>
       <el-button @click="heal">回血</el-button>
       <el-button @click="setRoom">房間</el-button>
-      <el-button @click="onTest">測試</el-button>
+      <el-button @click="onTest">作弊</el-button>
       <el-button @click="onSave">存檔</el-button>
       <el-collapse>
         <el-collapse-item title="回合環境參數">

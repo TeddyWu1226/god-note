@@ -14,7 +14,7 @@ export function useFullScreenEffect(options: FullScreenEffectOptions) {
 	const {
 		message = '',
 		duration = 1000,   // 漸層效果建議至少 2 秒比較有感
-		color = '#0f670d'  // 預設森林綠
+		color = ''  // 預設森林綠
 	} = options;
 
 	// 1. 尋找遊戲容器

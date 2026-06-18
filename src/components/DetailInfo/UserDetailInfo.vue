@@ -105,9 +105,6 @@ const openLearnSkill = () => {
   const trackerStore = useTrackerStore();
 
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
-    // 排除特定副手與系統技能
-    if (id === 'ShieldBlock' || id === 'PowerCharge' || id === 'MagicRegain') return false;
-
     // 檢查是否為進化/融合技能
     const evoRule = EVOLUTION_RULES[id];
     if (evoRule) {
