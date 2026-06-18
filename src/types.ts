@@ -336,3 +336,10 @@ export interface FusionListType {
     }[]
 }
 
+// 💡 進化與融合規則定義
+export interface EvolutionRule {
+    evolvedSkillId: string;
+    baseSkillId?: string; // 進化時替換的基礎技能 ID
+    fuseSkillIds?: string[]; // 融合時需要額外移除的其他技能 ID
+    checkEligible: (playerStore: PlayerStoreType, trackerStore: TrackerStoreType) => boolean;
+}

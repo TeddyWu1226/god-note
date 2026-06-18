@@ -1,28 +1,35 @@
 import {SkillModel, GenericSkill} from "@/models/skill-model";
-import * as SkillClasses from "@/constants/skill/learned-skill/lv1-skills";
-import * as SkillClassesLv2 from "@/constants/skill/learned-skill/lv2-skills";
+import * as Lv1SkillActive from "./lv1/active";
+import * as Lv1SkillPassive from "./lv1/passive";
+import * as Lv2SkillActive from "./lv2/active";
+import * as Lv2SkillPassive from "./lv2/passive";
 import {ShieldBlock, PowerCharge} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
+import {EvolutionRule} from "@/types";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
-    CommonHeal: SkillClasses.CommonHeal,
-    MagicBall: SkillClasses.MagicBall,
-    PhysiqueBoost: SkillClasses.PhysiqueBoost,
-    VerticalSlash: SkillClasses.VerticalSlash,
-    HorizontalSlash: SkillClasses.HorizontalSlash,
-    Thrust: SkillClasses.Thrust,
-    SwordMastery: SkillClasses.SwordMastery,
-    BladeMastery: SkillClasses.BladeMastery,
-    SpellMastery: SkillClasses.SpellMastery,
-    ReadingMastery: SkillClasses.ReadingMastery,
-    RedSkin: SkillClasses.RedSkin,
-    BlueSkin: SkillClasses.BlueSkin,
+    // Level 2
+    CommonHeal: Lv1SkillActive.CommonHeal,
+    MagicBall: Lv1SkillActive.MagicBall,
+    VerticalSlash: Lv1SkillActive.VerticalSlash,
+    HorizontalSlash: Lv1SkillActive.HorizontalSlash,
+    Thrust: Lv1SkillActive.Thrust,
+    SwordMastery: Lv1SkillActive.SwordMastery,
 
-    // Level 2 進化與融合技能
-    SwordMaster: SkillClassesLv2.SwordMaster,
-    Cleave: SkillClassesLv2.Cleave,
-    Flurry: SkillClassesLv2.Flurry,
+    PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
+    BladeMastery: Lv1SkillPassive.BladeMastery,
+    SpellMastery: Lv1SkillPassive.SpellMastery,
+    ReadingMastery: Lv1SkillPassive.ReadingMastery,
+    RedSkin: Lv1SkillPassive.RedSkin,
+    BlueSkin: Lv1SkillPassive.BlueSkin,
+
+    // Level 2
+    Cleave: Lv2SkillActive.Cleave,
+    Flurry: Lv2SkillActive.Flurry,
+
+    SwordMaster: Lv2SkillPassive.SwordMaster,
+
     // 副手技能
     ShieldBlock: ShieldBlock,
     PowerCharge: PowerCharge,
@@ -31,23 +38,25 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
 export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     // Level 1
-    CommonHeal: new SkillClasses.CommonHeal(),
-    MagicBall: new SkillClasses.MagicBall(),
-    PhysiqueBoost: new SkillClasses.PhysiqueBoost(),
-    VerticalSlash: new SkillClasses.VerticalSlash(),
-    HorizontalSlash: new SkillClasses.HorizontalSlash(),
-    Thrust: new SkillClasses.Thrust(),
-    SwordMastery: new SkillClasses.SwordMastery(),
-    BladeMastery: new SkillClasses.BladeMastery(),
-    SpellMastery: new SkillClasses.SpellMastery(),
-    ReadingMastery: new SkillClasses.ReadingMastery(),
-    RedSkin: new SkillClasses.RedSkin(),
-    BlueSkin: new SkillClasses.BlueSkin(),
+    CommonHeal: new Lv1SkillActive.CommonHeal(),
+    MagicBall: new Lv1SkillActive.MagicBall(),
+    VerticalSlash: new Lv1SkillActive.VerticalSlash(),
+    HorizontalSlash: new Lv1SkillActive.HorizontalSlash(),
+    Thrust: new Lv1SkillActive.Thrust(),
+    SwordMastery: new Lv1SkillActive.SwordMastery(),
+
+    PhysiqueBoost: new Lv1SkillPassive.PhysiqueBoost(),
+    BladeMastery: new Lv1SkillPassive.BladeMastery(),
+    SpellMastery: new Lv1SkillPassive.SpellMastery(),
+    ReadingMastery: new Lv1SkillPassive.ReadingMastery(),
+    RedSkin: new Lv1SkillPassive.RedSkin(),
+    BlueSkin: new Lv1SkillPassive.BlueSkin(),
 
     // Level 2
-    SwordMaster: new SkillClassesLv2.SwordMaster(),
-    Cleave: new SkillClassesLv2.Cleave(),
-    Flurry: new SkillClassesLv2.Flurry(),
+    Cleave: new Lv2SkillActive.Cleave(),
+    Flurry: new Lv2SkillActive.Flurry(),
+
+    SwordMaster: new Lv2SkillPassive.SwordMaster(),
 };
 
 export class SkillFactory {
@@ -90,13 +99,6 @@ export class SkillFactory {
     }
 }
 
-// 💡 進化與融合規則定義
-export interface EvolutionRule {
-    evolvedSkillId: string;
-    baseSkillId?: string; // 進化時替換的基礎技能 ID
-    fuseSkillIds?: string[]; // 融合時需要額外移除的其他技能 ID
-    checkEligible: (playerStore: any, trackerStore: any) => boolean;
-}
 
 export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     SwordMaster: {
@@ -111,7 +113,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     Cleave: {
         evolvedSkillId: 'Cleave',
         baseSkillId: 'VerticalSlash',
-        checkEligible: (playerStore, trackerStore) => {
+        checkEligible: (playerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
             const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordMastery' || s.id === 'SwordMaster');
             const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'VerticalSlash');
@@ -122,7 +124,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     Flurry: {
         evolvedSkillId: 'Flurry',
         fuseSkillIds: ['HorizontalSlash', 'Thrust'],
-        checkEligible: (playerStore, trackerStore) => {
+        checkEligible: (playerStore) => {
             const hasVertical = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
             const hasHorizontal = playerStore.info.skills?.some((s: any) => s.id === 'HorizontalSlash');
             const hasThrust = playerStore.info.skills?.some((s: any) => s.id === 'Thrust');

@@ -6,42 +6,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {genCustomStatus, Sleep} from "@/utils/create";
 
 /**
- * 1. 劍術大師 (SwordMaster) - 進化自 劍術精通
- * 被動技能，裝備劍時提升 15% 物理傷害，以及 20 點命中值。
- */
-export class SwordMaster extends SkillModel {
-    constructor() {
-        super({
-            id: 'SwordMaster',
-            name: "劍術大師",
-            icon: "skills/sword_master.svg",
-            type: 'passive',
-            rarity: 'rare',
-        });
-    }
-
-    description(playerStore: PlayerStoreType): string {
-        return `裝備劍（名稱含有「劍」的武器）時，提升 15% 物理傷害，並增加 20 點命中。`;
-    }
-
-    protected execute(params: SkillParams): boolean {
-        return true;
-    }
-
-    override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('劍')) {
-            return {
-                adIncrease: 15,
-                hit: 20
-            };
-        }
-        return {};
-    }
-}
-
-/**
- * 2. 劈斬 (Cleave) - 進化自 豎擊
+ * 劈斬 (Cleave) - 進化自 豎擊
  * 主動技能，造成高額單體傷害，並在下一回合提升 5% 物理傷害。
  */
 export class Cleave extends SkillModel {
@@ -103,7 +68,7 @@ export class Cleave extends SkillModel {
 }
 
 /**
- * 3. 亂擊 (Flurry) - 融合自 豎擊 + 橫擊 + 刺擊
+ * 亂擊 (Flurry) - 融合自 豎擊 + 橫擊 + 刺擊
  * 主動技能，對隨機敵方目標發起 3~4 次攻擊，每次造成小幅傷害。
  */
 export class Flurry extends SkillModel {
