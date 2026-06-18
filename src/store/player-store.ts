@@ -9,6 +9,7 @@ import {checkProbability} from "@/utils/math";
 import {ItemStatus} from "@/constants/status/item-status";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
+import {useGameStateStore} from "@/store/game-state-store";
 
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
@@ -19,6 +20,10 @@ export const usePlayerStore = defineStore('player-info', () => {
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
     const isRestoring = ref(false);
+    let _onEquipActionCallback: (() => void) | null = null;
+    const setEquipActionCallback = (cb: (() => void) | null) => {
+        _onEquipActionCallback = cb;
+    };
 
     // 💡 監聽並自動將 plain object 技能或 string 技能還原成 SkillModel 類別實例
     watch(
@@ -344,6 +349,19 @@ export const usePlayerStore = defineStore('player-info', () => {
         nextTick().then(() => {
             stopValueChangeAnimation.value = false;
         });
+
+        // 4. 戰鬥中穿脫裝備跳過回合
+        try {
+            const gameStateStore = useGameStateStore();
+            const inBattle = gameStateStore.currentEnemy.length > 0 &&
+                             !gameStateStore.isBattleWon &&
+                             !gameStateStore.isDead;
+            if (inBattle && _onEquipActionCallback) {
+                _onEquipActionCallback();
+            }
+        } catch (e) {
+            console.error("Failed to trigger combat turn end on equip change", e);
+        }
     };
 
     /**
@@ -677,6 +695,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         info, skillProficiency,
         stopValueChangeAnimation,
         isRestoring,
+        setEquipActionCallback,
         totalBonus,
         finalStats,
         currentExpPercentage,

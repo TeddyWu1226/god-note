@@ -4,6 +4,7 @@ import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {EquipmentEnum, StatEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
+import {useGameStateStore} from "@/store/game-state-store";
 import {ItemInfo} from "@/components/Shared/itemInfo";
 import {ElMessage} from "element-plus";
 import {useDraggable} from "@/components/DetailInfo/useDraggble";
@@ -45,6 +46,15 @@ const getBackgroundColor = (slotKey: string) => {
 const handleUnequip = (slotKey: keyof Equipment) => {
   playerStore.equipItem(null, null, slotKey)
   ElMessage.success('脫下裝備')
+
+  // 如果在戰鬥中，自動關閉狀態彈窗以顯示受傷
+  const gameStateStore = useGameStateStore();
+  const inBattle = gameStateStore.currentEnemy.length > 0 &&
+                   !gameStateStore.isBattleWon &&
+                   !gameStateStore.isDead;
+  if (inBattle) {
+    isShowStats.value = false;
+  }
 };
 const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
   handleUnequip(slotKey);

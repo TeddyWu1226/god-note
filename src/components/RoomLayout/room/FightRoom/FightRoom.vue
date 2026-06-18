@@ -5,7 +5,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
 import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
-import {computed, nextTick, ref, watch} from "vue";
+import {computed, nextTick, ref, watch, onMounted, onUnmounted} from "vue";
 import {ItemType, MonsterType} from "@/types";
 import {
   applyAttackDamage,
@@ -453,6 +453,16 @@ const init = () => {
 if (!gameStateStore.isBattleWon) {
   init()
 }
+
+onMounted(() => {
+  playerStore.setEquipActionCallback(() => {
+    resolveRoundEnd();
+  });
+});
+
+onUnmounted(() => {
+  playerStore.setEquipActionCallback(null);
+});
 
 </script>
 
