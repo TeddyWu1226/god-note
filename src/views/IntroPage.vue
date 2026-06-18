@@ -3,7 +3,7 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {RoomEnum} from "@/enums/room-enum";
 import {useTrackerStore} from "@/store/track-store";
-import {useAchievementStore} from "@/store/achievement-store";
+
 import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
@@ -13,7 +13,7 @@ import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackStore = useTrackerStore()
-const achievementStore = useAchievementStore()
+
 const saveStore = useSaveStore();
 
 const showClassSelect = ref(false)
@@ -62,7 +62,7 @@ const confirmClassSelection = async () => {
   }
 
   trackStore.init();
-  achievementStore.tryTime += 1;
+
   gameStateStore.setRoom(RoomEnum.Bless.value);
 }
 

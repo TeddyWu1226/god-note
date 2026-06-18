@@ -107,7 +107,7 @@ export class PhysiqueBoost extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】最大生命值增加 ${this.hpBonus} 點。`;
+        return `最大生命值增加 ${this.hpBonus} 點。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -273,7 +273,7 @@ export class SwordMastery extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】裝備劍（名稱含有「劍」的武器）時，提升 10% 物理傷害。`;
+        return `裝備劍（名稱含有「劍」的武器）時，提升 10% 物理傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -303,7 +303,7 @@ export class BladeMastery extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】裝備刀（名稱含有「刀」的武器）時，提升 10% 物理傷害。`;
+        return `裝備刀（名稱含有「刀」的武器）時，提升 10% 物理傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -339,7 +339,7 @@ export class SpellMastery extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】裝備杖（名稱含有「杖」的武器）時，提升 10% 法術傷害。`;
+        return `裝備名稱含有「杖」的武器時，提升 10% 法術傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -375,7 +375,7 @@ export class ReadingMastery extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】裝備名稱含有「書」或「捲」的副手武器時，提升自動回魔 1 點。`;
+        return `裝備名稱含有「書」或「捲」的副手武器時，提升自動回魔 1 點。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -411,7 +411,7 @@ export class RedSkin extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】當無身體防具時，提升生命回復 2 點。`;
+        return `當無身體防具時，提升生命回復 2 點。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -446,7 +446,7 @@ export class BlueSkin extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `【被動】當無身體防具時，提升法力回復 2 點。`;
+        return `當無身體防具時，提升法力回復 2 點。`;
     }
 
     protected execute(params: SkillParams): boolean {

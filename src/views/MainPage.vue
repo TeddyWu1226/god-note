@@ -17,7 +17,7 @@ import {StageTransition} from "@/components/StageTransition";
 import DeadPage from "@/views/DeadPage.vue";
 import IntroPage from "@/views/IntroPage.vue";
 import VictoryPage from "@/views/VictoryPage.vue";
-import AchievementDialog from "@/components/FloorInfoLayout/comps/AchievementDialog/AchievementDialog.vue";
+
 
 const gameStateStore = useGameStateStore()
 const isDead = computed(() => gameStateStore.isDead);
@@ -39,11 +39,7 @@ const buttonConfig = ref({
   autoInsertSpace: true,
 })
 
-/** 成就 **/
-const isShowAchievementDialog = ref(false)
-const showAchievement = () => {
-  isShowAchievementDialog.value = true
-}
+
 
 /** 說明 **/
 const isShowIllustration = ref(false)
@@ -130,9 +126,7 @@ watch(
         <el-header class="header">
           <span>𝄞締造𝄞</span>
           <div>
-            <el-button type="warning" style="height: 2rem" size="small" @click="showAchievement" plain>
-              🏆 成就
-            </el-button>
+
             <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>
               📖 說明
             </el-button>
@@ -217,7 +211,7 @@ watch(
         </div>
       </div>
     </el-dialog>
-    <AchievementDialog v-model="isShowAchievementDialog"/>
+
   </el-config-provider>
 </template>
 

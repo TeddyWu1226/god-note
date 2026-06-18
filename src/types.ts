@@ -3,7 +3,7 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {useLogStore} from "@/store/log-store";
 import {useTrackerStore} from "@/store/track-store";
-import {useAchievementStore} from "@/store/achievement-store";
+
 import {SkillModel} from "@/models/skill-model";
 import type {MonsterModel} from "@/models/monster-model";
 
@@ -240,7 +240,7 @@ export type GameStateStoreType = ReturnType<typeof useGameStateStore>;
 export type PlayerStoreType = ReturnType<typeof usePlayerStore>;
 export type logStoreType = ReturnType<typeof useLogStore>;
 export type TrackerStoreType = ReturnType<typeof useTrackerStore>;
-export type AchievementStoreType = ReturnType<typeof useAchievementStore>;
+
 
 //
 export interface MonsterActionParams {
