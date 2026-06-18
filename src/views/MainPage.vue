@@ -39,7 +39,6 @@ const buttonConfig = ref({
 })
 
 
-
 /** 說明 **/
 const isShowIllustration = ref(false)
 const showIllustrate = () => {
@@ -69,27 +68,14 @@ const resetGame = async () => {
 const RoomLayoutRef = ref()
 const OperationLayoutRef = ref()
 
-const onAttack = () => {
-  RoomLayoutRef.value?.onAttack()
-}
 const onSkill = (skillKey: string) => {
   RoomLayoutRef.value?.onSkill(skillKey)
 }
 const onItemSkill = (prop) => {
   RoomLayoutRef.value?.onItemSkill(prop)
 }
-const onRun = () => {
-  RoomLayoutRef.value?.onRun()
-}
-const onRest = () => {
-  RoomLayoutRef.value?.onRest()
-}
-const onEndTurn = () => {
-  RoomLayoutRef.value?.onEndTurn()
-}
-const onCancel = () => {
-  RoomLayoutRef.value?.onCancel()
-}
+
+
 const onRunFailed = () => {
   OperationLayoutRef.value?.showEscapeFailedMessage()
 }
