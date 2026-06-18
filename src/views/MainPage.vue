@@ -176,7 +176,7 @@ watch(
           </div>
           <div class="rule-item">
             <span class="rule-icon">🗺️</span>
-            <p><strong>路線規劃：</strong> 你可以自由選擇路線，但請在挑戰 BOSS 前做好萬全準備。</p>
+            <p><strong>路線規劃：</strong> 可以自由選擇路線，但請在挑戰 BOSS 前做好萬全準備。</p>
           </div>
         </section>
 

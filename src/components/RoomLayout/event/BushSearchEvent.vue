@@ -45,13 +45,13 @@ const startSearch = () => {
       msg = "草叢裡只有幾隻驚慌的昆蟲飛出，什麼都沒有。";
     } else if (rand < 0.85) {
       type = 'item';
-      msg = "你在草叢中發現了果實！";
+      msg = "在草叢中發現了果實！";
       playerStore.gainItem(getRandomFromArray(Object.values(allowFruits.value)));
     } else {
       type = 'hurt';
       const damage = 15;
       playerStore.info.hp -= damage;
-      msg = `哎呀！草叢裡躲著蛇！你被咬傷了（-${damage}HP）。`;
+      msg = `哎呀！草叢裡躲著蛇！被咬傷了（-${damage}HP）。`;
     }
 
     // 儲存該次 Action 的結果內容
@@ -82,7 +82,7 @@ const onLeave = () => {
             <div class="event-icon">🌿🌿🌿</div>
             <div class="dialog-box">
               這片草叢看起來非常深，感覺裡面藏著東西。<br/>
-              你要試著翻找看看嗎？（最多可翻找 3 次）
+              要試著翻找看看嗎？（最多可翻找 3 次）
             </div>
           </div>
 

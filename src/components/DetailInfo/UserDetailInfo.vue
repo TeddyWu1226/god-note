@@ -273,7 +273,7 @@ const cancelReplaceMode = () => {
         角色狀態 ({{ getEnumColumn(CharEnum, playerStore.info.char) }})
       </span>
         <div v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0" class="stat-points-banner">
-          <span>你有 <strong>{{ playerStore.info.statPoints }}</strong> 點未分配的屬性點</span>
+          <span>有 <strong>{{ playerStore.info.statPoints }}</strong> 點未分配的屬性點</span>
         </div>
       </div>
 

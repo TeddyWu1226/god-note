@@ -56,13 +56,13 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         const picked = getRandomElements(['ad', 'apIncrease', 'hit'])[0]
         if (picked === 'ad') {
           playerStore.info.ad += 3;
-          finalText.value += "生長出一個咖啡色的果實，你吃下後攻擊力永久提升了！";
+          finalText.value += "生長出一個咖啡色的果實，吃下後攻擊力永久提升了！";
         } else if (picked === 'apIncrease') {
           playerStore.info.apIncrease += 3;
-          finalText.value += "生長出一個藍色的果實，你吃下後法術傷害永久提升了！";
+          finalText.value += "生長出一個藍色的果實，吃下後法術傷害永久提升了！";
         } else {
           playerStore.info.hit += 3;
-          finalText.value += "生長出一個綠色的果實，你吃下後命中值永久提升了！";
+          finalText.value += "生長出一個綠色的果實，吃下後命中值永久提升了！";
         }
         break;
       case 'juice':
@@ -70,28 +70,28 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         const picked2 = getRandomElements(['critRate', 'adDefend', 'dodge'])[0]
         if (picked2 === 'critRate') {
           playerStore.info.critRate += 3;
-          finalText.value += "生長出一個鮮紅色的嫩葉，你吃下後爆擊率永久提升了！";
+          finalText.value += "生長出一個鮮紅色的嫩葉，吃下後爆擊率永久提升了！";
         } else if (picked2 === 'adDefend') {
           playerStore.info.adDefend += 1;
-          finalText.value += "生長出一個鐵灰色的嫩葉，你吃下後物理防禦永久提升了！";
+          finalText.value += "生長出一個鐵灰色的嫩葉，吃下後物理防禦永久提升了！";
         } else {
           playerStore.info.dodge += 3;
-          finalText.value += "生長出一個青綠色的嫩葉，你吃下後閃避值永久提升了！";
+          finalText.value += "生長出一個青綠色的嫩葉，吃下後閃避值永久提升了！";
         }
         break;
       case 'destroy':
         playerStore.gainItem(Weapon.SpikeSpear);
-        finalText.value = "你粗暴地拆下了最堅硬樹枝，削成了一把尖刺木槍。枯樹發出了最後的哀鳴後彻底枯萎了。";
+        finalText.value = "粗暴地拆下了最堅硬樹枝，削成了一把尖刺木槍。枯樹發出了最後的哀鳴後彻底枯萎了。";
         break;
       case 'sacrifice_hp':
         if (playerStore.info.hp <= 50) {
-          ElMessage.error("你的血量不足以獻祭...");
+          ElMessage.error("血量不足以獻祭...");
           gameStateStore.eventAction = 0;
           return;
         }
         playerStore.info.hp -= 50;
         playerStore.info.hpLimit += 25;
-        finalText.value = "古樹貪婪地吸食了你的鮮血，作為回報，你的生命上限增加了。";
+        finalText.value = "古樹貪婪地吸食了鮮血，作為回報，生命上限增加了。";
         break;
       case 'sacrifice_sp':
         if (playerStore.info.sp < 50) {

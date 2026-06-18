@@ -11,8 +11,8 @@ gameStateStore.currentState = GameState.SELECTION_PHASE;
 <template>
   <RoomTemplate class="weird" title="一個空空如也的地方...">
     <div class="ghost-room">
-      你來到一個空無一物的地方<br/>
-      但這裡不詳的氣息讓你不想在這多留...
+      來到一個空無一物的地方<br/>
+      但這裡不詳的氣息彷彿生人勿近...
     </div>
   </RoomTemplate>
 </template>

@@ -495,7 +495,7 @@ onUnmounted(() => {
             @monster-die="whenMonsterDead(index)"
         />
         <div class="victory-container" v-if="gameStateStore.isBattleWon">
-          <span v-if="isEscape" class="run-message">你成功逃跑了!</span>
+          <span v-if="isEscape" class="run-message">成功逃跑了!</span>
           <span
               v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
               class="victory-message">

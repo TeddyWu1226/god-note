@@ -41,14 +41,14 @@ defineExpose({
           <div class="event-icon">💤</div>
           <div class="dialog-box">
             <p>這邊好像很適合休息...</p>
-            <p>你選擇...?</p>
+            <p>選擇...?</p>
           </div>
         </template>
         <template v-else>
           <template v-if="isRested">
             <div class="event-icon">💤</div>
             <div style="color: var(--el-color-success);text-align: center" class="dialog-box">
-              你休息了一會,<br/>你的HP跟SP完全恢復外,身上暫時的負面效果也消除了!
+              休息了一會,<br/>你的HP跟SP完全恢復外,身上暫時的負面效果也消除了!
             </div>
           </template>
           <div v-else class="dialog-box">

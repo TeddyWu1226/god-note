@@ -29,8 +29,8 @@ const eventConfig = computed(() => {
     return {
       title: "奇怪的藥劑櫃",
       icon: "🧪",
-      defaultMsg: "你發現了一個佈滿五顏六色瓶子的藥劑櫃。標籤已經脫落...",
-      leaveMsg: "你決定不拿自己的腸胃開玩笑，轉身離開了。",
+      defaultMsg: "發現了一個佈滿五顏六色瓶子的藥劑櫃。標籤已經脫落...",
+      leaveMsg: "決定不拿自己的腸胃開玩笑，轉身離開了。",
       actionText: "隨便喝一瓶",
       drinkingMsg: "咕嚕咕嚕... 呸！",
       animClass: "animate-cabinet"
@@ -40,7 +40,7 @@ const eventConfig = computed(() => {
       title: "神秘的水井",
       icon: "🕳️",
       defaultMsg: "一口隱約散發著清涼氣息的古井，井口溢出一些不明的神祕液體。",
-      leaveMsg: "看著混濁的水面，你決定還是忍耐口渴。",
+      leaveMsg: "看著混濁的水面，決定還是忍耐口渴。",
       actionText: "喝一口井水",
       drinkingMsg: "大口大口地飲用井水...",
       animClass: "animate-well"
@@ -69,7 +69,7 @@ const drinkPotion = () => {
       resultMsg.value = `味道意外地清甜！恢復了 <span style="color: #4caf50; font-weight: bold;">${healAmount} HP</span>。`;
 
       if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
-        resultMsg.value += `<br/>你想起手上的空瓶,順手用這乾淨的液體裝了滿了它。`
+        resultMsg.value += `<br/>想起手上的空瓶,順手用這乾淨的液體裝了滿了它。`
         gameStateStore.otherRecord['WATER'] = 2
       }
     } else if (rnd < 55) {

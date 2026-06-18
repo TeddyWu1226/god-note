@@ -127,9 +127,7 @@ const continueGame = () => {
       </template>
 
       <template v-else>
-        <h1 class="select-class-title">選擇你的初始職業</h1>
-        <p class="select-class-subtitle">這將決定你踏入高塔時的起點與能力</p>
-
+        <h1 class="select-class-title">選擇你的欽定之人</h1>
         <div class="class-cards">
           <div
               v-for="cls in classOptions"

@@ -22,7 +22,7 @@ const restartGame = async () => {
     <h1 style="color:var(--el-color-danger);text-align: center">
       經歷了 {{ gameStateStore.days }} 天
       <br/>
-      你最終倒在了 {{
+      你欽定的勇者最終倒在了 {{
         getEnumColumn(StageEnum, gameStateStore.currentStage)
       }}
     </h1>

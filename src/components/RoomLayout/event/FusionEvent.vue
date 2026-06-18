@@ -31,7 +31,7 @@ const readNote = () => {
         <template v-if="gameStateStore.eventAction === 0">
           <div class="event-icon">📜</div>
           <div class="dialog-box">
-            <p>你來到一個神祕的房間,桌上發現了一本散發著微光的殘破筆記。</p>
+            <p>眼前佇立著一個單柱石桌,桌上發現了一本散發著微光的殘破筆記。</p>
             <p>封面上繪製著複雜的圓陣，記載著關於物質重組的奧秘...</p>
           </div>
         </template>
@@ -40,8 +40,8 @@ const readNote = () => {
           <div class="result-display">
             <div class="event-icon">⚗️</div>
             <div class="dialog-box">
-              <p>萬物的本質在你眼中變得清晰，你讀懂了筆記中的知識！<br/>
-                你現在可以在「休息」回合中,選擇「合成」!
+              <p>萬物的本質在眼中變得清晰，筆記中的知識湧入腦海！<br/>
+                現在可以在「休息」回合中,選擇「合成」!
               </p>
               <div class="unlock-banner">
                 <span class="unlock-label">系統解鎖</span>

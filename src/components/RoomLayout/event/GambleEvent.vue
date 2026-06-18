@@ -85,7 +85,7 @@ const startGamble = (amount: number) => {
         <template v-if="gameStateStore.eventAction === 0">
           <div class="event-icon">👨‍💼</div>
           <div class="dialog-box">
-            <p>有一個穿著正裝的人類向你招手:</p>
+            <p>有一個穿著正裝的人類正在招手:</p>
             <p>「那位小伙, 要不要用你的金幣跟我賭一把? 」</p>
             <p>(4點以上你就贏)</p>
           </div>

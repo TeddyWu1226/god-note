@@ -57,18 +57,18 @@ const openChest = () => {
 
       playerStore.gainItem(equip);
       const color = getEnumColumn(QualityEnum, equip.quality, 'color');
-      resultMsg.value = `你在裡頭找到了 <span style="color: ${color}; font-weight: bold;">[${equip.name}]</span>!`;
+      resultMsg.value = `在裡頭找到了 <span style="color: ${color}; font-weight: bold;">[${equip.name}]</span>!`;
 
     } else if (rnd < 60) {
       // 20% 機率：陷阱 (Trap)
       resultType.value = 'trap';
       const dmg = 10 + (stage * 5);
-      resultMsg.value = `咔噠！你觸發了箭矢陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
+      resultMsg.value = `咔噠！觸發了箭矢陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
       playerStore.info.hp -= dmg;
     } else {
       resultType.value = 'treasure';
       playerStore.addGold(goldFound);
-      resultMsg.value = `你發現了金幣！獲得了 <span style="color: #ffca28; font-weight: bold;">${goldFound} G</span>`;
+      resultMsg.value = `發現了金幣！獲得了 <span style="color: #ffca28; font-weight: bold;">${goldFound} G</span>`;
     }
 
     // 動畫結束，切換到結果狀態
@@ -86,7 +86,7 @@ const openChest = () => {
         <template v-if="gameStateStore.eventAction === 0">
           <div :class="['event-icon', { 'opening-animation': isOpening }]">📦</div>
           <div class="dialog-box">
-            <p v-if="!isOpening">在房間的角落，你發現了一個佈滿灰塵的寶箱...</p>
+            <p v-if="!isOpening">有一個佈滿灰塵的寶箱...</p>
             <p v-else class="shaking-text">正在小心翼翼地開啟...</p>
           </div>
         </template>
@@ -94,7 +94,7 @@ const openChest = () => {
         <template v-else-if="gameStateStore.eventAction === 2">
           <div class="event-icon" style="opacity: 0.5">📦</div>
           <div class="dialog-box">
-            <p>謹慎為上。你選擇繞過這個寶箱，繼續前進。</p>
+            <p>謹慎為上。不打開這個寶箱，繼續前進。</p>
           </div>
         </template>
 
