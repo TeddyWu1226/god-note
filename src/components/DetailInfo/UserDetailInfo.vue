@@ -46,8 +46,6 @@ const getBackgroundColor = (slotKey: string) => {
  */
 const handleUnequip = (slotKey: keyof Equipment) => {
   playerStore.equipItem(null, null, slotKey)
-  ElMessage.success('脫下裝備')
-
   // 如果在戰鬥中，自動關閉狀態彈窗以顯示受傷
   const gameStateStore = useGameStateStore();
   const inBattle = gameStateStore.currentEnemy.length > 0 &&
@@ -116,10 +114,10 @@ const openLearnSkill = () => {
     // 常規技能：
     // 1. 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
-    
+
     // 2. 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordMaster 就不能再抽 SwordMastery)
-    const hasEvolvedVersion = Object.values(EVOLUTION_RULES).some(rule => 
-      rule.baseSkillId === id && currentSkillIds.includes(rule.evolvedSkillId)
+    const hasEvolvedVersion = Object.values(EVOLUTION_RULES).some(rule =>
+        rule.baseSkillId === id && currentSkillIds.includes(rule.evolvedSkillId)
     );
     if (hasEvolvedVersion) return false;
 
@@ -178,8 +176,8 @@ const selectSkill = (skill: any) => {
 
       // 2. 如果是融合（有額外需要移除的技能，如橫擊與刺擊），一併從技能欄中清除
       if (evoRule.fuseSkillIds) {
-        playerStore.info.skills = playerStore.info.skills.filter((s: any) => 
-          !evoRule.fuseSkillIds!.includes(s.id)
+        playerStore.info.skills = playerStore.info.skills.filter((s: any) =>
+            !evoRule.fuseSkillIds!.includes(s.id)
         );
       }
 
@@ -347,7 +345,14 @@ const cancelReplaceMode = () => {
                 {{ playerStore.info.equips[pos.value as keyof typeof playerStore.info.equips]?.icon }}
               </span>
           </el-tooltip>
-          <span v-else class="equip-placeholder-icon">{{ pos.icon }}</span>
+          <span v-else class="equip-placeholder-icon">
+            <template v-if="pos.value ==='offhand' && playerStore.info.equips.weapon.isTwoHanded">
+              🚫
+            </template>
+            <template v-else>
+               {{ pos.icon }}
+            </template>
+          </span>
         </div>
       </div>
 

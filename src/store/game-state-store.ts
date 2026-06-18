@@ -17,31 +17,73 @@ export const getEffectiveStats = (monster: any): any => {
 };
 
 export const useGameStateStore = defineStore('game-state', () => {
+	/** 當前所處的房間類型數值 (例如：戰鬥房、休息房、商店房、祝福房等) */
 	const currentRoomValue = ref<number>(RoomEnum.Rest.value);
+
+	/** 當前遊戲關卡/層數 (第幾大關) */
 	const currentStage = ref(1);
-	const isDead = ref(false)
-	// 無限挑戰制所需參數
+
+	/** 玩家是否已死亡 */
+	const isDead = ref(false);
+
+	/** 累計生存或挑戰天數 (無限挑戰制參數) */
 	const days = ref(0);
+
+	/** 當前關卡已度過的天數/前進步數 */
 	const stageDays = ref(0);
+
+	/** 歷史最高通關關卡數 */
 	const maxClearedStage = ref(0);
+
+	/** 遊戲是否已獲得最終勝利 */
 	const isVictory = ref(false);
-	const nextRooms = ref<number[]>([])
-	// 回合/戰鬥用數據
+
+	/** 隨機產生的後續可選房間類型列表 */
+	const nextRooms = ref<number[]>([]);
+
+	// --- 回合/戰鬥用數據 ---
+	/** 當前遊戲狀態階段 (例如：初始化、探索中、事件處理中、戰鬥中、結算等) */
 	const currentState = ref<GameState>(GameState.INITIAL);
+
+	/** 當前戰鬥是否已獲勝 */
 	const isBattleWon = ref(false);
+
+	/** 當前房間中的敵方怪物列表 (MonsterModel 實例陣列) */
 	const currentEnemy = ref<MonsterModel[]>([]);
-	// 事件相關紀錄
+
+	// --- 事件相關紀錄 ---
+	/** 當前觸發的特殊事件類型 */
 	const currentEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
+
+	/** 上一次觸發的特殊事件類型 */
 	const lastEventType = ref<SpecialEventEnum>(SpecialEventEnum.None);
+
+	/** 特殊事件的進度紀錄表，對應各個 SpecialEventEnum 的數值進度 */
 	const eventProcess = ref<Record<SpecialEventEnum, number>>({} as Record<SpecialEventEnum, number>);
-	const eventAction = ref(0)
-	const thisStageAppear = ref<string[]>([])
+
+	/** 當前事件中所執行的行動次數或進階狀態指標 */
+	const eventAction = ref(0);
+
+	/** 本大關已出現過的怪物名稱或 ID 列表 (避免重複或用於紀錄) */
+	const thisStageAppear = ref<string[]>([]);
+
+	/** 戰鬥中後備或準備切換登場的敵方怪物列表 */
 	const switchEnemy = ref<MonsterModel[]>([]);
+
+	/** 當前遊戲難度數值 (簡單、普通、困難等) */
 	const difficulty = ref(DifficultyEnum.Normal.value);
-	const otherRecord = ref<Record<string, any>>({}); // 額外記錄表
-	const battleRound = ref(1); // 戰鬥回合數
-	const playerActionPoints = ref(0); // 玩家當前行動點數
-	const bottomPanelMode = ref<'backpack' | 'skills'>('skills'); // 下方區塊模式: backpack (背包) 或 skills (技能)
+
+	/** 額外記錄表，用於存放暫存的特殊機制、任務或小遊戲變數 */
+	const otherRecord = ref<Record<string, any>>({});
+
+	/** 當前戰鬥的累計回合數 */
+	const battleRound = ref(1);
+
+	/** 玩家在當前戰鬥回合剩餘的可用行動點數 (AP) */
+	const playerActionPoints = ref(0);
+
+	/** 下方面板的顯示模式：'backpack' (顯示背包) 或 'skills' (顯示技能) */
+	const bottomPanelMode = ref<'backpack' | 'skills'>('skills');
 
 	// 深度監聽敵怪數據，自動重構為 Class 實例
 	watch(() => currentEnemy.value, (newVal) => {

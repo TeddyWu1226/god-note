@@ -225,33 +225,4 @@ export class MagicBall extends SkillModel {
     }
 }
 
-export class SwordMastery extends SkillModel {
-    constructor() {
-        super({
-            id: 'SwordMastery',
-            name: "劍術精通",
-            icon: "skills/sword_mastery.svg",
-            type: 'passive',
-            rarity: 'common',
-        });
-    }
-
-    description(playerStore: PlayerStoreType): string {
-        return `裝備劍（名稱含有「劍」的武器）時，提升 10% 物理傷害。`;
-    }
-
-    protected execute(params: SkillParams): boolean {
-        return true;
-    }
-
-    override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('劍')) {
-            return {
-                adIncrease: 10
-            };
-        }
-        return {};
-    }
-}
 

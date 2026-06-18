@@ -15,9 +15,9 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     VerticalSlash: Lv1SkillActive.VerticalSlash,
     HorizontalSlash: Lv1SkillActive.HorizontalSlash,
     Thrust: Lv1SkillActive.Thrust,
-    SwordMastery: Lv1SkillActive.SwordMastery,
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
+    SwordMastery: Lv1SkillPassive.SwordMastery,
     BladeMastery: Lv1SkillPassive.BladeMastery,
     SpellMastery: Lv1SkillPassive.SpellMastery,
     ReadingMastery: Lv1SkillPassive.ReadingMastery,
@@ -43,9 +43,10 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
     VerticalSlash: new Lv1SkillActive.VerticalSlash(),
     HorizontalSlash: new Lv1SkillActive.HorizontalSlash(),
     Thrust: new Lv1SkillActive.Thrust(),
-    SwordMastery: new Lv1SkillActive.SwordMastery(),
+
 
     PhysiqueBoost: new Lv1SkillPassive.PhysiqueBoost(),
+    SwordMastery: new Lv1SkillPassive.SwordMastery(),
     BladeMastery: new Lv1SkillPassive.BladeMastery(),
     SpellMastery: new Lv1SkillPassive.SpellMastery(),
     ReadingMastery: new Lv1SkillPassive.ReadingMastery(),

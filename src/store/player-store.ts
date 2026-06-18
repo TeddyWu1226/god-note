@@ -354,8 +354,8 @@ export const usePlayerStore = defineStore('player-info', () => {
         try {
             const gameStateStore = useGameStateStore();
             const inBattle = gameStateStore.currentEnemy.length > 0 &&
-                             !gameStateStore.isBattleWon &&
-                             !gameStateStore.isDead;
+                !gameStateStore.isBattleWon &&
+                !gameStateStore.isDead;
             if (inBattle && _onEquipActionCallback) {
                 _onEquipActionCallback();
             }

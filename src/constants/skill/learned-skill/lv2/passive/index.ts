@@ -1,9 +1,5 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
-import {ColorText} from "@/utils/color";
-import {applySkillDamage} from "@/constants/fight-func";
-import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, Sleep} from "@/utils/create";
 
 /**
  * 劍術大師 (SwordMaster) - 進化自 劍術精通

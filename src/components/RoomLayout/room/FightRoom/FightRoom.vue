@@ -78,9 +78,9 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 const getWeightByStage = () => {
   const day = Math.max(1, gameStateStore.stageDays)
-  const subZoneIdx = Math.min(4, Math.floor((day - 1) / 20))
-  const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
-  const originalMap = stageMonsterWeightsMap[oldStageIndex] || EndlessWeights
+  const subZoneIdx = Math.min(3, Math.ceil((day / 33)))
+  console.log('subZoneIdx', subZoneIdx)
+  const originalMap = stageMonsterWeightsMap[subZoneIdx ?? 1] || EndlessWeights
   const monsterMap = {...originalMap}
   return monsterMap || EndlessWeights;
 }
@@ -455,6 +455,7 @@ if (!gameStateStore.isBattleWon) {
 
 onMounted(() => {
   playerStore.setEquipActionCallback(() => {
+    logStore.logger.add('換了身上的裝備')
     resolveRoundEnd();
   });
 });

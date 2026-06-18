@@ -25,7 +25,7 @@ export class Slime extends MonsterModel {
             level: 1,
             dropGold: 3,
             drop: [
-                {item: Material.SlimeGoo, chance: 0.5}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }
@@ -53,7 +53,7 @@ export class ForestSprout extends MonsterModel {
             level: 1,
             dropGold: 5,
             drop: [
-                {item: Material.ForestWood, chance: 0.5}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }
@@ -95,7 +95,7 @@ export class WoodTick extends MonsterModel {
             level: 2,
             dropGold: 5,
             drop: [
-                {item: Material.AntShell, chance: 0.5}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }
@@ -118,7 +118,7 @@ export class StingerBee extends MonsterModel {
             level: 3,
             dropGold: 12,
             drop: [
-                {item: Material.BeeStinger, chance: 0.1}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }
@@ -148,7 +148,7 @@ export class GreenRabbit extends MonsterModel {
             level: 3,
             dropGold: 12,
             drop: [
-                {item: Material.RabbitHorn, chance: 0.3}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }
@@ -171,7 +171,7 @@ export class ForestOwl extends MonsterModel {
             level: 3,
             dropGold: 12,
             drop: [
-                {item: Material.OwlFeather, chance: 0.5}
+                {item: Material.LowerNormal, chance: 0.5}
             ]
         });
     }

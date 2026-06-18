@@ -14,7 +14,7 @@ export class PhysiqueBoost extends SkillModel {
     }
 
     get hpBonus(): number {
-        return 20
+        return 50
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -29,6 +29,36 @@ export class PhysiqueBoost extends SkillModel {
         return {
             hpLimit: this.hpBonus
         };
+    }
+}
+
+export class SwordMastery extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordMastery',
+            name: "劍術精通",
+            icon: "skills/sword_mastery.svg",
+            type: 'passive',
+            rarity: 'common',
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `裝備劍（名稱含有「劍」的武器）時，提升 3 點物理攻擊。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (weaponName.includes('劍')) {
+            return {
+                ad: 3
+            };
+        }
+        return {};
     }
 }
 
@@ -79,8 +109,12 @@ export class SpellMastery extends SkillModel {
         });
     }
 
+    get apBonus(): number {
+        return 5
+    }
+
     description(playerStore: PlayerStoreType): string {
-        return `裝備名稱含有「杖」的武器時，提升 10% 法術傷害。`;
+        return `裝備名稱含有「杖」的武器時，提升 ${this.apBonus} 點法術攻擊。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -91,7 +125,7 @@ export class SpellMastery extends SkillModel {
         const weaponName = player?.equips?.weapon?.name || '';
         if (weaponName.includes('杖')) {
             return {
-                apIncrease: 10
+                ap: this.apBonus
             };
         }
         return {};
@@ -115,8 +149,12 @@ export class ReadingMastery extends SkillModel {
         });
     }
 
+    get apBonus(): number {
+        return 10
+    }
+
     description(playerStore: PlayerStoreType): string {
-        return `裝備名稱含有「書」或「捲」的副手武器時，提升自動回魔 1 點。`;
+        return `裝備名稱含有「書」或「捲」的副手武器時，提升 ${this.apBonus}% 法術增傷。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -127,7 +165,7 @@ export class ReadingMastery extends SkillModel {
         const offhandName = player?.equips?.offhand?.name || '';
         if (offhandName.includes('書') || offhandName.includes('捲')) {
             return {
-                spRegen: 1
+                apIncrease: this.apBonus
             };
         }
         return {};

@@ -58,6 +58,7 @@ const confirmClassSelection = async () => {
     playerStore.info.hpLimit = 80;
   }
 
+  playerStore.healFull()
   trackStore.init();
 
   gameStateStore.setRoom(RoomEnum.Bless.value);

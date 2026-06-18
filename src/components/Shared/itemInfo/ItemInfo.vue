@@ -44,6 +44,9 @@ const skillInstance = computed(() => {
     <el-divider v-if="props.item.usable || props.item['position']" content-position="left">
       {{ props.item.usable ? '可使用' : '裝備屬性' }}
     </el-divider>
+    <p class="detail-desc" v-if="(props.item as EquipmentType)?.isTwoHanded">
+      此為雙手武器, 無法裝備副手
+    </p>
 
     <div class="detail-stats">
       <template v-for="(val, key) in props.item" :key="key">
