@@ -35,7 +35,7 @@ const skillInstance = computed(() => {
     <p class="detail-desc">{{ props.item.description }}</p>
     <template v-if="skillInstance && skillInstance.itemDescription">
       <el-divider content-position="left">
-        {{ (props.item as EquipmentType)?.position === 'weapon' ? '武器技能' : '副手能力' }}
+        武技
       </el-divider>
       <div style="display:flex;flex-wrap: wrap">
         {{ skillInstance.itemDescription }}

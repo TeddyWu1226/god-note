@@ -14,13 +14,14 @@ export class ShieldBlock extends SkillModel {
 			rarity: 'common',
 			costSp: 20,
 			costAction: 1,
-			itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則額外造成對方暫時暈眩。'
+			maxCd: 2,
+			itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則額外造成對方暫時暈眩。[冷卻: 2 回合]'
 		});
 	}
 
 	description(playerStore: PlayerStoreType): string {
 		const shield = playerStore?.info?.equips?.offhand?.adDefend ?? 0;
-		return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。如果敵方爆擊，則額外造成對方暫時暈眩。`;
+		return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。如果敵方爆擊，則額外造成對方暫時暈眩。[冷卻: ${this.maxCd} 回合]`;
 	}
 
 	protected execute(params: SkillParams): boolean {
@@ -54,12 +55,13 @@ export class PowerCharge extends SkillModel {
 			rarity: 'common',
 			costSp: 0,
 			costAction: 1,
-			itemDescription: '下一回合提升 50% 物理傷害。'
+			maxCd: 2,
+			itemDescription: '下一回合提升 50% 物理傷害。[冷卻: 2 回合]'
 		});
 	}
 
 	description(playerStore: PlayerStoreType): string {
-		return `蓄力以準備致命一擊。下一回合提升 50% 物理傷害。`;
+		return `蓄力以準備致命一擊。下一回合提升 50% 物理傷害。[冷卻: ${this.maxCd} 回合]`;
 	}
 
 	protected execute(params: SkillParams): boolean {

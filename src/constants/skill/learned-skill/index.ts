@@ -1,6 +1,7 @@
 import { SkillModel, GenericSkill } from "@/models/skill-model";
 import * as SkillClasses from "@/constants/skill/learned-skill/lv1-skills";
 import { ShieldBlock, PowerCharge } from "@/constants/skill/offhand-skill/offhand-skill";
+import { usePlayerStore } from "@/store/player-store";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -50,8 +51,18 @@ export class SkillFactory {
         const SkillClass = SKILL_CLASS_MAP[id];
         if (SkillClass) {
             const instance = new SkillClass();
+
+            // 讀取當前暫時性/副手技能的冷卻 CD
+            let cd = savedData.currentCd;
+            if (cd === undefined) {
+                try {
+                    const playerStore = usePlayerStore();
+                    cd = (playerStore.info?.offhandSkillCds as any)?.[id] ?? 0;
+                } catch (e) {}
+            }
+
             // 還原等級、熟練度、CD 等動態數據到 Class 實例中
-            Object.assign(instance, savedData);
+            Object.assign(instance, { currentCd: cd, ...savedData });
             return instance;
         }
 

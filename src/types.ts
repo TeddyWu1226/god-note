@@ -157,6 +157,7 @@ export interface UserType extends UnitType {
     statPoints?: number // 升級點數
     pendingSkillPoints?: number // 待分配的技能點數
     actionValue?: number
+    offhandSkillCds?: Record<string, number> // 臨時/副手技能冷卻狀態
 }
 
 

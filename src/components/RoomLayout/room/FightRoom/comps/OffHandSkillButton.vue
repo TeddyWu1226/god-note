@@ -21,86 +21,48 @@ const offhandSkillKey = computed<string | undefined>(() => {
 
 const skill = computed<SkillModel | undefined>(() => offhandSkillKey.value ? SkillFactory.createSkill(offhandSkillKey.value) : undefined);
 
-// 判斷是否可用
-const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0));
+// 判斷是否可用以及冷卻狀態
+const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0) && (skill.value?.currentCd ?? 0) === 0);
 
 </script>
 
 <template>
-  <template v-if="skill">
-    <el-button
-        class="skill-btn"
-        :type="!canAfford ? 'info' : 'warning'"
-        :disabled="!canAfford"
-        @click="emit('click',skill?.id)"
-    >
-      <span class="skill-icon">
-        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon"
-             alt="skill icon"/>
-        <template v-else>{{ skill?.icon }}</template>
-      </span>
-      <div class="skill-info">
-        <span class="skill-name">{{ skill?.name }}</span>
-        <span v-if="skill?.costSp" class="skill-cost">SP: {{ skill.costSp }}</span>
-        <span v-if="skill?.costHp" class="skill-cost">HP: {{ skill.costHp }}</span>
-      </div>
-    </el-button>
-
-    <el-popover
-        placement="top"
-        :title="skill.name"
-        :width="200"
-        trigger="hover"
-    >
-      <template #reference>
-        <div class="info-trigger">i</div>
-      </template>
-      <div class="skill-desc">
-        <div v-html="skill.description(playerStore)"/>
-      </div>
-    </el-popover>
-  </template>
+  <el-popover
+      v-if="skill"
+      placement="top"
+      :title="skill.name"
+      :width="200"
+      trigger="hover"
+  >
+    <template #reference>
+      <el-button
+          class="skill-btn"
+          :type="(skill?.currentCd ?? 0) > 0 ? 'info' : !canAfford ? 'info' : 'warning'"
+          :disabled="!canAfford || (skill?.currentCd ?? 0) > 0"
+          @click="emit('click',skill?.id)"
+      >
+        <span class="skill-icon">
+          <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon"
+               alt="skill icon"/>
+          <template v-else>{{ skill?.icon }}</template>
+        </span>
+        <div class="skill-info">
+          <span class="skill-name">{{ skill?.name }}</span>
+          <span v-if="skill.currentCd > 0" class="skill-cd-status">冷卻: {{ skill.currentCd }} 回合</span>
+          <template v-else>
+            <span v-if="skill?.costSp" class="skill-cost">SP: {{ skill.costSp }}</span>
+            <span v-if="skill?.costHp" class="skill-cost">HP: {{ skill.costHp }}</span>
+          </template>
+        </div>
+      </el-button>
+    </template>
+    <div class="skill-desc">
+      <div v-html="skill.description(playerStore)"/>
+    </div>
+  </el-popover>
 </template>
 
 <style scoped>
-.skill-container {
-  width: 100%;
-}
-
-.skill-container .el-button {
-  width: 100%;
-}
-
-.info-trigger {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 1.5rem;
-  height: 1.5rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #fff;
-  z-index: 10;
-  cursor: help;
-}
-
-.skill-desc {
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.skill-icon {
-  font-size: 1.5rem;
-  margin-right: 10px;
-  /* 讓圖示看起來更有立體感 */
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
-}
-
 .skill-image-icon {
   width: 1.5rem;
   height: 1.5rem;
@@ -108,6 +70,12 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
   image-rendering: pixelated;
   display: inline-block;
   vertical-align: middle;
+}
+
+.skill-icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
 }
 
 .skill-info {
@@ -126,5 +94,11 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
 .skill-cost {
   font-size: 0.7rem;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.skill-cd-status {
+  font-size: 0.7rem;
+  color: #ff9f43;
+  font-weight: bold;
 }
 </style>

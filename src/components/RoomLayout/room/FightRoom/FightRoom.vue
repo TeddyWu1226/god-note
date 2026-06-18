@@ -338,6 +338,14 @@ const onSkill = async (skillKey: string) => {
     // 扣除行動點數
     gameStateStore.playerActionPoints -= costAction
 
+    // 儲存副手/武技技能的 CD 到 playerStore
+    if (!playerStore.info.skills.some((s: any) => s.id === skillKey)) {
+      if (!playerStore.info.offhandSkillCds) {
+        playerStore.info.offhandSkillCds = {};
+      }
+      playerStore.info.offhandSkillCds[skillKey] = useSkill.currentCd;
+    }
+
     // 熟練度增加
     playerStore.addSkillProficiency(useSkill.id)
     if (useSkill?.costSp) {

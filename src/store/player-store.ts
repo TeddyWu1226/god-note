@@ -511,6 +511,13 @@ export const usePlayerStore = defineStore('player-info', () => {
                 }
             });
         }
+        if (info.value.offhandSkillCds) {
+            Object.keys(info.value.offhandSkillCds).forEach(key => {
+                if ((info.value.offhandSkillCds as any)[key] > 0) {
+                    (info.value.offhandSkillCds as any)[key]--;
+                }
+            });
+        }
     };
 
     const healFull = () => {
@@ -528,6 +535,11 @@ export const usePlayerStore = defineStore('player-info', () => {
                 if (skill instanceof SkillModel) {
                     skill.currentCd = 0;
                 }
+            });
+        }
+        if (info.value.offhandSkillCds) {
+            Object.keys(info.value.offhandSkillCds).forEach(key => {
+                (info.value.offhandSkillCds as any)[key] = 0;
             });
         }
     }

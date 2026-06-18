@@ -8,8 +8,6 @@ export const DEFAULT_USER_INFO: UserType = {
     icon: '🌟',
     ad: 10,
     ap: 10,
-    heal: 0,
-    magic: 0,
     adDefend: 0,
     apDefend: 0,
     critIncrease: WorldDefault.critIncrease,
@@ -32,7 +30,8 @@ export const DEFAULT_USER_INFO: UserType = {
     skills: [],
     currentExp: 0,
     actionValue: 50,
-    statPoints: 0
+    statPoints: 0,
+    offhandSkillCds: {}
 }
 
 // 房間類型權重
