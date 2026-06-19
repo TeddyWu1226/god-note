@@ -91,7 +91,6 @@ const monsterMove = () => {
 const monsterAttack = () => {
   // 特殊效果
   const canAttack = props.info.triggerOnAttack({
-    monsterIndex: props.index,
     playerStore: playerStore,
     gameStateStore: gameStateStore,
     logStore: logStore,
@@ -102,7 +101,6 @@ const monsterAttack = () => {
   const damageResult = applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
   if (damageResult.isHit) {
     props.info.triggerOnAttackHit({
-      monsterIndex: props.index,
       playerStore: playerStore,
       gameStateStore: gameStateStore,
       logStore: logStore,
@@ -142,7 +140,7 @@ const onMonsterDie = () => {
 }
 
 // 監控是否死亡
-watch(() => props.info?.hp, (newResult) => {
+watch(() => props.info?.hp, () => {
   if (props.info?.hp <= 0) {
     onMonsterDie()
   }
@@ -337,9 +335,9 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  min-height: 0;
+  height: 3.5rem;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .monster-icon {
@@ -350,13 +348,12 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 }
 
 .monster-image-icon {
-  max-width: 100%;
-  max-height: 3.5rem;
-  height: auto;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
   display: inline-block;
-  transition: max-height 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .death-emoji {
@@ -462,8 +459,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     font-size: 1.6rem;
   }
 
-  .monster-image-icon {
-    max-height: 2.5rem;
+  .monster-avatar-container {
+    height: 2.5rem;
   }
 
   .death-emoji {
@@ -524,8 +521,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     font-size: 1.25rem;
   }
 
-  .monster-image-icon {
-    max-height: 1.8rem;
+  .monster-avatar-container {
+    height: 1.8rem;
   }
 
   .death-emoji {
@@ -567,8 +564,8 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     font-size: 0.95rem;
   }
 
-  .monster-image-icon {
-    max-height: 1.2rem;
+  .monster-avatar-container {
+    height: 1.2rem;
   }
 
   .death-emoji {
