@@ -6,6 +6,7 @@ import * as Lv2SkillPassive from "./lv2/passive";
 import {ShieldBlock, PowerCharge} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {EvolutionRule} from "@/types";
+import {KnifeMastery} from "./lv1/passive";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -18,7 +19,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
     SwordMastery: Lv1SkillPassive.SwordMastery,
-    BladeMastery: Lv1SkillPassive.BladeMastery,
+    KnifeMastery: Lv1SkillPassive.KnifeMastery,
     SpellMastery: Lv1SkillPassive.SpellMastery,
     ReadingMastery: Lv1SkillPassive.ReadingMastery,
     RedSkin: Lv1SkillPassive.RedSkin,
@@ -47,7 +48,7 @@ export const SKILL_TEMPLATES: Record<string, SkillModel> = {
 
     PhysiqueBoost: new Lv1SkillPassive.PhysiqueBoost(),
     SwordMastery: new Lv1SkillPassive.SwordMastery(),
-    BladeMastery: new Lv1SkillPassive.BladeMastery(),
+    KnifeMastery: new Lv1SkillPassive.KnifeMastery(),
     SpellMastery: new Lv1SkillPassive.SpellMastery(),
     ReadingMastery: new Lv1SkillPassive.ReadingMastery(),
     RedSkin: new Lv1SkillPassive.RedSkin(),

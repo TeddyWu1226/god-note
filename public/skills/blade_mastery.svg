@@ -1,35 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Pommel & Handle -->
+  <rect x="2" y="13" width="1" height="1" fill="#5d4037" />
+  <rect x="3" y="12" width="1" height="1" fill="#795548" />
+  <rect x="4" y="11" width="1" height="1" fill="#5d4037" />
   
+  <!-- Hand Guard (Gold) -->
+  <rect x="3" y="10" width="1" height="1" fill="#f1c40f" />
+  <rect x="4" y="10" width="1" height="1" fill="#f1c40f" />
+  <rect x="5" y="10" width="1" height="1" fill="#f1c40f" />
+  <rect x="5" y="11" width="1" height="1" fill="#f1c40f" />
 
-  <!-- Hilt & Handle (Crimson wrapping) -->
-  <rect x="3" y="12" width="1" height="1" fill="#c0392b" />
-  <rect x="4" y="11" width="1" height="1" fill="#e74c3c" />
-  
-  <!-- Tsuba / Hand Guard (Dark Metal) -->
-  <rect x="3" y="10" width="1" height="1" fill="#2c3e50" />
-  <rect x="4" y="10" width="1" height="1" fill="#34495e" />
-  <rect x="5" y="10" width="1" height="1" fill="#2c3e50" />
-
-  <!-- Curved Blade (Steel & Highlights) -->
+  <!-- Dagger Blade (Silver & Highlights - Shorter than sword) -->
   <rect x="5" y="9" width="1" height="1" fill="#7f8c8d" />
-  <rect x="6" y="9" width="1" height="1" fill="#bdc3c7" />
+  <rect x="6" y="9" width="1" height="1" fill="#ecf0f1" />
   
   <rect x="6" y="8" width="1" height="1" fill="#7f8c8d" />
-  <rect x="7" y="8" width="1" height="1" fill="#bdc3c7" />
+  <rect x="7" y="8" width="1" height="1" fill="#ecf0f1" />
   
-  <rect x="7" y="7" width="1" height="1" fill="#7f8c8d" />
-  <rect x="8" y="7" width="1" height="1" fill="#ecf0f1" />
+  <rect x="7" y="7" width="1" height="1" fill="#bdc3c7" />
+  <rect x="8" y="7" width="1" height="1" fill="#ffffff" />
   
-  <rect x="8" y="6" width="1" height="1" fill="#bdc3c7" />
-  <rect x="9" y="5" width="1" height="1" fill="#ffffff" />
-  
-  <rect x="10" y="4" width="1" height="1" fill="#ffffff" />
-  <rect x="11" y="3" width="1" height="1" fill="#ffffff" />
+  <!-- Blade Tip -->
+  <rect x="8" y="6" width="1" height="1" fill="#ffffff" />
 
-  <!-- Mastery Sparks (Crimson Energy) -->
-  <rect x="13" y="5" width="1" height="1" fill="#e74c3c" />
-  <rect x="9" y="2" width="1" height="1" fill="#e74c3c" />
-  <rect x="4" y="8" width="1" height="1" fill="#e74c3c" />
-  <rect x="7" y="12" width="1" height="1" fill="#e74c3c" />
-  <rect x="2" y="6" width="1" height="1" fill="#e74c3c" />
+  <!-- Mastery Sparks (Golden - Scattered around the short blade) -->
+  <rect x="10" y="6" width="1" height="1" fill="#f1c40f" />
+  <rect x="8" y="4" width="1" height="1" fill="#f1c40f" />
+  <rect x="4" y="7" width="1" height="1" fill="#f1c40f" />
+  <rect x="8" y="11" width="1" height="1" fill="#f1c40f" />
+  <rect x="2" y="8" width="1" height="1" fill="#f1c40f" />
 </svg>

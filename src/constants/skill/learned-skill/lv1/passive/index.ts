@@ -62,11 +62,11 @@ export class SwordMastery extends SkillModel {
     }
 }
 
-export class BladeMastery extends SkillModel {
+export class KnifeMastery extends SkillModel {
     constructor() {
         super({
-            id: 'BladeMastery',
-            name: "刀術精通",
+            id: 'KnifeMastery',
+            name: "短刀精通",
             icon: "skills/blade_mastery.svg",
             type: 'passive',
             rarity: 'common',
@@ -74,7 +74,7 @@ export class BladeMastery extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `裝備刀（名稱含有「刀」的武器）時，提升 10% 物理傷害。`;
+        return `裝備名稱含有「小刀」或「匕首」的武器時，提升 3 點物理攻擊。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -83,9 +83,9 @@ export class BladeMastery extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('刀')) {
+        if (weaponName.includes('小刀') || weaponName.includes('匕首')) {
             return {
-                adIncrease: 10
+                ad: 3
             };
         }
         return {};
