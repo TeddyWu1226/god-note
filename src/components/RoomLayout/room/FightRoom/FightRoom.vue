@@ -30,6 +30,7 @@ import {SkillFactory} from "@/constants/skill/learned-skill";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
+import {Sleep} from "@/utils/create";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -227,28 +228,52 @@ const onPlayerTurnEnd = () => {
   playerStore.nextTurnStatus()
 }
 
-const resolveRoundEnd = () => {
+const resolveRoundEnd = async () => {
+  // 關閉玩家操作
+  gameStateStore.isPlayerTurn = false
+
+  // 等待 (怪物行動與玩家回合開始之間的延遲)
+  await Sleep(200)
+
   // 怪物行動
   monsterMove()
   // 回合結束判定
-  gameStateStore.tickAllMonsters()
+  gameStateStore.tickEndAllMonsters()
   // 玩家狀態結算
   onPlayerTurnEnd()
-  if (gameStateStore.isBattleWon) {
+
+  if (gameStateStore.isBattleWon || playerStore.info.hp <= 0) {
+    gameStateStore.isPlayerTurn = true
     return
   }
+
+  if (gameStateStore.isBattleWon || playerStore.info.hp <= 0) {
+    gameStateStore.isPlayerTurn = true
+    return
+  }
+
+  // 等待 (怪物行動與玩家回合開始之間的延遲)
+  await Sleep(200)
+  
   // 記錄後續回合日誌
   logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
+  // 觸發怪物每回合特定行為
+  gameStateStore.tickStartAllMonsters()
   // 補滿行動點數
   gameStateStore.refillActionPoints()
+
+  // 開啟玩家操作
+  gameStateStore.isPlayerTurn = true
 }
 
 const onEndTurn = () => {
+  if (!gameStateStore.isPlayerTurn) return
   resolveRoundEnd()
 }
 
 // 攻擊
 const onAttack = () => {
+  if (!gameStateStore.isPlayerTurn) return
   if (gameStateStore.playerActionPoints < 1) {
     ElMessage.warning('行動點數不足！')
     return
@@ -280,6 +305,7 @@ const onAttack = () => {
 }
 // 物品使用
 const onItemSkill = ({skillKey, callback, el}) => {
+  if (!gameStateStore.isPlayerTurn) return
   // 指定怪物
   if (selectedMonsterIndex.value === null) {
     selectedMonsterIndex.value = 0
@@ -301,7 +327,7 @@ const onItemSkill = ({skillKey, callback, el}) => {
 const isUsing = ref(false)
 // 技能使用
 const onSkill = async (skillKey: string) => {
-
+  if (!gameStateStore.isPlayerTurn) return;
   if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
   if (isUsing.value) return
@@ -364,20 +390,17 @@ const onSkill = async (skillKey: string) => {
 };
 // 逃跑
 const isEscape = ref(false)
-const onRun = () => {
+const onRun = async () => {
+  if (!gameStateStore.isPlayerTurn) return
   if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy)) {
     logStore.logger.add('逃跑失敗....')
-    monsterMove()
-    gameStateStore.tickAllMonsters()
-    // 記錄後續回合日誌
-    logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
+    await resolveRoundEnd()
   } else {
     isEscape.value = true
     logStore.logger.add('逃跑成功....')
     gameStateStore.setBattleWon(true)
+    onPlayerTurnEnd()
   }
-  // 回合結束判定
-  onPlayerTurnEnd()
 }
 
 
@@ -392,6 +415,7 @@ defineExpose({
 // --- 初始化邏輯 (讀檔機制) ---
 
 const init = () => {
+  gameStateStore.isPlayerTurn = true;
   isEscape.value = false;
   selectedMonsterIndex.value = null;
 
@@ -540,6 +564,7 @@ onUnmounted(() => {
     <template #button>
       <FightOperation
           ref="FightOperationRef"
+          :disabled="!gameStateStore.isPlayerTurn"
           @skill="onSkill"
           @attack="onAttack"
           @run="onRun"

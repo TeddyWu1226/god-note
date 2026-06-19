@@ -151,16 +151,16 @@ export const StatEnum = {
         icon: '🛡️',
         unit: ''
     },
-    lifeSteal: {
-        value: 'lifeSteal',
-        label: '吸血',
-        icon: '🩸',
-        unit: '%'
-    },
     defendIncrease: {
         value: 'defendIncrease',
         label: '抗性',
         icon: '🔰',
+        unit: '%'
+    },
+    lifeSteal: {
+        value: 'lifeSteal',
+        label: '吸血',
+        icon: '🩸',
         unit: '%'
     },
     actionValue: {

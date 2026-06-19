@@ -38,6 +38,7 @@ const getRarityName = (rarity: string) => {
 };
 
 const canAfford = (skill: SkillModel) => {
+  if (!gameStateStore.isPlayerTurn) return false;
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
   const actionCost = skill.costAction || 1;
@@ -48,6 +49,7 @@ const canAfford = (skill: SkillModel) => {
 };
 
 const clickSkill = (skill: SkillModel) => {
+  if (!gameStateStore.isPlayerTurn) return;
   if (skill.type === 'passive') return;
   // 檢查是否足夠點數和冷卻
   if (!canAfford(skill)) {

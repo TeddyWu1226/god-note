@@ -38,10 +38,10 @@ watch(
 </script>
 
 <template>
-  <el-button type="primary" @click="emit('attack',true)">
+  <el-button type="primary" :disabled="props.disabled" @click="emit('attack',true)">
     攻擊
   </el-button>
-  <OffHandSkillButton @click="(skillKey)=>{emit('skill',skillKey)}"/>
+  <OffHandSkillButton :disabled="props.disabled" @click="(skillKey)=>{emit('skill',skillKey)}"/>
 
   <!-- 補給與技能按鈕共用位置，按下方版面狀態進行切換 -->
   <el-button

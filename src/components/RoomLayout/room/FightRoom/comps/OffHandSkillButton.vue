@@ -6,6 +6,9 @@ import {SkillFactory} from "@/constants/skill/learned-skill";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 const emit = defineEmits(['click'])
+const props = defineProps({
+  disabled: Boolean
+})
 
 const playerStore = usePlayerStore();
 
@@ -38,7 +41,7 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
       <el-button
           class="skill-btn"
           :type="(skill?.currentCd ?? 0) > 0 ? 'info' : !canAfford ? 'info' : 'warning'"
-          :disabled="!canAfford || (skill?.currentCd ?? 0) > 0"
+          :disabled="props.disabled || !canAfford || (skill?.currentCd ?? 0) > 0"
           @click="emit('click',skill?.id)"
       >
         <span class="skill-icon">

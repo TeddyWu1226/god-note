@@ -6,8 +6,10 @@ import {UsableType} from "@/types"
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
+import {useGameStateStore} from '@/store/game-state-store';
 
 const playerStore = usePlayerStore()
+const gameStateStore = useGameStateStore()
 const emit = defineEmits(['onItemSkill'])
 
 // 🌟 修正 1：現在不需要手動計算聚合，直接從 store 取出排序即可
@@ -24,6 +26,7 @@ const sortedConsumables = computed(() => {
 });
 
 const handleUse = async (item: UsableType, event?: MouseEvent) => {
+  if (!gameStateStore.isPlayerTurn) return;
   if (!item.usable) return;
   const targetEl = event?.currentTarget as HTMLElement;
 
@@ -62,6 +65,7 @@ const onTouchHandleUse = createDoubleTapHandler((potion: UsableType, event?: any
           v-for="entry in sortedConsumables"
           :key="entry.item.name"
           class="item-slot"
+          :class="{ 'disabled-item': !gameStateStore.isPlayerTurn }"
           @dblclick="handleUse(entry.item, $event)"
           @touchend="onTouchHandleUse(entry.item, $event)"
       >

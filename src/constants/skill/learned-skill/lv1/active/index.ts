@@ -2,6 +2,7 @@ import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 export class CommonHeal extends SkillModel {
     constructor() {
@@ -35,6 +36,10 @@ export class CommonHeal extends SkillModel {
             playerStore.finalStats.hpLimit,
             playerStore.info.hp + this.healVal
         );
+        useFullScreenEffect({
+            message: this.name,
+            color: 'green',
+        });
         return true;
     }
 }
@@ -78,6 +83,10 @@ export class VerticalSlash extends SkillModel {
             'ad',
             '豎擊'
         );
+        useFullScreenEffect({
+            message: this.name,
+            color: '#806000',
+        });
         return true;
     }
 }

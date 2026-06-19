@@ -598,7 +598,7 @@ const cancelReplaceMode = () => {
 /* 彈窗樣式 */
 .stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 12px;
 }
 
