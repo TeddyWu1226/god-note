@@ -3,7 +3,7 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, Sleep} from "@/utils/create";
+import {genCustomStatus, getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 /**
@@ -127,7 +127,7 @@ export class Flurry extends SkillModel {
 
             const target = livingEnemies[Math.floor(Math.random() * livingEnemies.length)];
             target.lastDamageResult = applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
-            const el = document.querySelector(`[data-monster-id="${target.id}"]`) as HTMLElement;
+            const el = getMonsterElement(target.id)
             if (el) {
                 useCardImpactEffect(el, 'physical');
             }

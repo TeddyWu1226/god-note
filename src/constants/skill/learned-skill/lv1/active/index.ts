@@ -4,6 +4,7 @@ import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {getMonsterElement} from "@/utils/create";
 
 export class CommonHeal extends SkillModel {
     constructor() {
@@ -132,7 +133,7 @@ export class HorizontalSlash extends SkillModel {
                 'ad',
                 '橫擊'
             );
-            const el = document.querySelector(`[data-monster-id="${enemy.id}"]`) as HTMLElement;
+            const el = getMonsterElement(enemy.id)
             if (el) {
                 useCardImpactEffect(el, 'horizontal-slash');
             }

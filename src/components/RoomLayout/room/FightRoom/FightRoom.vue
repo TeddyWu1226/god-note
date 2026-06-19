@@ -331,23 +331,19 @@ const onAttack = () => {
   }
 }
 // 物品使用
-const onItemSkill = ({skillKey, callback, el}) => {
+const onItemSkill = ({skillKey, callback}) => {
   if (!gameStateStore.isPlayerTurn) return
   // 指定怪物
   if (selectedMonsterIndex.value === null) {
     selectedMonsterIndex.value = 0
   }
   const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
-  const cardComponent = selectedMonster ? MonsterCardRefs.value[selectedMonster.id] : null;
   ItemSkill[skillKey](
       {
         monster: selectedMonster,
-        monsterIndex: selectedMonsterIndex.value,
         playerStore: playerStore,
         gameStateStore: gameStateStore,
-        callback: callback,
-        targetElement: el,
-        cardElement: cardComponent?.$el as HTMLElement
+        callback: callback
       }
   )
 }
@@ -412,7 +408,7 @@ const onSkill = async (skillKey: string) => {
 
   // 檢查是否回合結束
   if (gameStateStore.playerActionPoints <= 0) {
-    resolveRoundEnd()
+    await resolveRoundEnd()
   }
 };
 // 逃跑

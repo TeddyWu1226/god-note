@@ -44,7 +44,9 @@ const onEndTurn = () => {
 
 const onItemSkill = ({skillKey, callback, el}) => {
   const specifySkill = [
-    Usable.Campfire.skill, Usable.GodNotePage.skill, Usable.ShabbyTent.skill,
+    Usable.Campfire.skill,
+    Usable.GodNotePage.skill,
+    Usable.ShabbyTent.skill,
     Potions.UnPoisonPotion.skill
   ]
   if (specifySkill.includes(skillKey)) {
@@ -52,8 +54,7 @@ const onItemSkill = ({skillKey, callback, el}) => {
         {
           playerStore: playerStore,
           gameStateStore: gameStateStore,
-          callback: callback,
-          targetElement: el
+          callback: callback
         }
     )
   } else {

@@ -274,13 +274,10 @@ export interface NoneMonsterItemSkillParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType;
     callback: (result: boolean) => void;
-    targetElement?: HTMLElement;
 }
 
 export interface SpecifyMonsterItemSkillParams extends NoneMonsterItemSkillParams {
-    monster?: MonsterModel;
-    monsterIndex?: number;
-    cardElement?: HTMLElement;
+    monster?: MonsterModel
 }
 
 
