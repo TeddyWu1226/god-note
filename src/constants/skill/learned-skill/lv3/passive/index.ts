@@ -7,7 +7,7 @@ export class SwordMaster extends SkillModel {
         super({
             id: 'SwordMaster',
             name: "劍術大師",
-            icon: "skills/sword_master.svg",
+            icon: "skills/sword_expert.svg",
             type: 'passive',
             rarity: 'rare',
         });

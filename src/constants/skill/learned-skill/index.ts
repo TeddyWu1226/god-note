@@ -6,7 +6,6 @@ import * as Lv2SkillPassive from "./lv2/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {EvolutionRule} from "@/types";
-import {KnifeProficiency} from "./lv1/passive";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -32,7 +31,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     Cleave: Lv2SkillActive.Cleave,
     Flurry: Lv2SkillActive.Flurry,
 
-    SwordMaster: Lv2SkillPassive.SwordMaster,
+    SwordExpert: Lv2SkillPassive.SwordExpert,
 
     // 副手技能
     ShieldBlock: ShieldBlock,
@@ -91,9 +90,12 @@ export class SkillFactory {
 }
 
 
+/**
+ * 技能進化規則
+ */
 export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
-    SwordMaster: {
-        evolvedSkillId: 'SwordMaster',
+    SwordExpert: {
+        evolvedSkillId: 'SwordExpert',
         baseSkillId: 'SwordProficiency',
         checkEligible: (playerStore, trackerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency');
@@ -106,7 +108,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         baseSkillId: 'VerticalSlash',
         checkEligible: (playerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
-            const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency' || s.id === 'SwordMaster');
+            const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency' || s.id === 'SwordExpert');
             const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'VerticalSlash');
             const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
             return hasBase && hasMastery && isMaxProf;

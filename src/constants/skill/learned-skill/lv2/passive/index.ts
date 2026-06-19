@@ -1,16 +1,12 @@
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillParams} from "@/types";
+import {SkillParams} from "@/types";
 
-/**
- * 劍術大師 (SwordMaster) - 進化自 劍術精通
- * 被動技能，裝備劍時提升 15% 物理傷害，以及 20 點命中值。
- */
-export class SwordMaster extends SkillModel {
+export class SwordExpert extends SkillModel {
     constructor() {
         super({
-            id: 'SwordMaster',
-            name: "劍術大師",
-            icon: "skills/sword_master.svg",
+            id: 'SwordExpert',
+            name: "劍術專家",
+            icon: "skills/passive/sword_expert.svg",
             type: 'passive',
             rarity: 'rare',
         });
