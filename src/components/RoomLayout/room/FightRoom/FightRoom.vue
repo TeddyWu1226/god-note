@@ -71,7 +71,6 @@ const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
   const strengthening = Math.ceil(Math.max(0, gameStateStore.stageDays - 50) / 25)
-  console.log('strengthening', strengthening)
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -91,14 +90,12 @@ const genEliteMonster = () => {
   const useWeight = getWeightByStage();
   if (!useWeight) return;
 
-  // 50% 機率生成 1 隻強化版菁英怪,其餘生成 2 隻普通怪，
-  const isDouble = Math.random() > 0.5;
-
-  if (isDouble) {
-    genMonsters(2, useWeight, false);
-  } else {
-    genMonsters(1, useWeight, true);
-  }
+  const monsterCount = Math.floor(Math.random() * 3) + 1;
+  genMonsters(
+      monsterCount,
+      useWeight,
+      monsterCount === 1
+  );
 }
 
 
@@ -111,7 +108,7 @@ const createBoss = () => {
 
   if (gameStateStore.currentStage === 6) {
     let boss: MonsterType
-    newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
+    newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
   } else {
     const stageBoss = StageBosses[gameStateStore.currentStage]
     let boss: MonsterType
@@ -126,7 +123,7 @@ const createBoss = () => {
     } else {
       boss = Boss.Twilight
     }
-    newMonsters = [MonsterFactory.createMonster(boss.class || boss.name, boss)]
+    newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
   }
 
   // 同步到 Store 做持久化緩存

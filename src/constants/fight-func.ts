@@ -420,11 +420,14 @@ export const spawnMonsters = (
     strengthening: number = 0,
     eliteBoost = false
 ): MonsterClass[] => {
+    //test
+    count = 3
     const newMonsters: MonsterClass[] = [];
     let strengtheningLevel = strengthening
     for (let i = 0; i < count; i++) {
-        let m = getRandomItemByWeight(weight, Monster);
-        let monsterInstance = MonsterFactory.createMonster(m.id || m.name, m);
+        // let m = getRandomItemByWeight(weight, Monster);
+        let m = Monster.Slime
+        let monsterInstance = MonsterFactory.createMonster(m.code, m);
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
@@ -442,11 +445,6 @@ export const spawnMonsters = (
             monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengthening));
             monsterInstance.adDefend += strengtheningLevel
         }
-        // monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * strengthening);
-        // monsterInstance.hp = monsterInstance.hpLimit;
-        // monsterInstance.ad = Math.round(monsterInstance.ad * strengthening);
-        // monsterInstance.level += (Math.round(strengthening - 1))
-
         newMonsters.push(monsterInstance);
     }
     return newMonsters;

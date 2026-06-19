@@ -12,6 +12,7 @@ import {UsualStatus} from "@/constants/status/usual-status";
 export class AncientSpider extends MonsterModel {
     constructor() {
         super({
+            code: 'AncientRoots',
             icon: '🕷️',
             name: '古蜘蛛',
             description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物',
@@ -57,6 +58,7 @@ export class AncientSpider extends MonsterModel {
 export class Twilight extends MonsterModel {
     constructor() {
         super({
+            code: "Twilight",
             icon: '🕺🏼',
             name: '墮落的半神',
             class: 'mystery',

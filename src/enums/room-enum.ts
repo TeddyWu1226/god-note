@@ -41,12 +41,6 @@ export const RoomEnum = {
 		icon: '⛲',
 		color: '#dda900',
 	},
-	SpecialBoss: {
-		value: 7,
-		label: '隱藏BOSS',
-		icon: '☠️',
-		color: '#D32F2F',
-	},
 	Fusion: {
 		value: 8,
 		label: '合成',

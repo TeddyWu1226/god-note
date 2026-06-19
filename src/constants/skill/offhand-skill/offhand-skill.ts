@@ -4,6 +4,7 @@ import {genCustomStatus} from "@/utils/create";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {ItemStatus} from "@/constants/status/item-status";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 export class ShieldBlock extends SkillModel {
     constructor() {
@@ -66,27 +67,17 @@ export class PowerCharge extends SkillModel {
         });
     }
 
+    adIncrease = 100
+
     description(playerStore: PlayerStoreType): string {
-        return `蓄力以準備致命一擊。下一回合提升 50% 物理傷害。[冷卻: ${this.maxCd} 回合]`;
+        return `蓄力以準備致命一擊。下一回合提升 ${this.adIncrease}% 物理傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
         const playerStore = params.playerStore;
         if (!playerStore) return false;
 
-        playerStore.addStatus(genCustomStatus({
-            base: {
-                name: '蓄力',
-                icon: '💪',
-                duration: 2,
-                isBuff: true,
-                description: '提升 50% 物理傷害',
-                bonus: {
-                    adIncrease: 50
-                }
-            },
-            duration: 2
-        }));
+        playerStore.addStatus(genCustomStatus({base: SkillStatus.SavePower, bonus: {adIncrease: this.adIncrease}}));
 
         useFullScreenEffect({
             message: '蓄力',

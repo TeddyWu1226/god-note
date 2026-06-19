@@ -6,6 +6,7 @@ import {
 
 export class MonsterModel implements MonsterType {
     id: string;
+    code: string;
     icon: string;
     name: string;
     ad: number;
@@ -41,6 +42,7 @@ export class MonsterModel implements MonsterType {
 
     constructor(data: MonsterType) {
         this.id = data.id || crypto.randomUUID();
+        this.code = data.code;
         this.icon = data.icon;
         this.name = data.name;
         this.ad = data.ad;
@@ -84,6 +86,7 @@ export class MonsterModel implements MonsterType {
     getEffectiveStats(): MonsterModel {
         const finalStats: MonsterType = {
             id: this.id,
+            code: this.code,
             icon: this.icon,
             name: this.name,
             description: this.description,

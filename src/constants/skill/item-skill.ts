@@ -33,7 +33,7 @@ const onCanUseInFight = (
     useFn: () => void
 ) => {
     const isFightRoom = params.gameStateStore?.roomIs(
-        [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value, RoomEnum.SpecialBoss.value]
+        [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value]
     )
     if (!isFightRoom || !params.gameStateStore?.stateIs(GameState.EVENT_PHASE)) {
         cantUse()

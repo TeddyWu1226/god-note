@@ -119,9 +119,7 @@ const gainFirstPower = () => {
       ref="FightRoomRef"
       v-else-if="currentRoomValue === RoomEnum.Fight.value ||
         currentRoomValue === RoomEnum.EliteFight.value ||
-        currentRoomValue === RoomEnum.Boss.value||
-        currentRoomValue === RoomEnum.SpecialBoss.value
-"
+        currentRoomValue === RoomEnum.Boss.value"
       :key="roomKeyCounter"
   />
   <RestRoom

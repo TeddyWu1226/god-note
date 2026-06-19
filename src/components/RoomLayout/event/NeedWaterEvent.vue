@@ -5,9 +5,6 @@ import {usePlayerStore} from "@/store/player-store";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
-import {create} from "@/utils/create";
-import {SpecialBoss} from "@/constants/monsters/monster-info/98-special-boss-info";
-import {RoomEnum} from "@/enums/room-enum";
 import {Accessory2} from "@/constants/items/equipment/accessories-info";
 
 const gameStateStore = useGameStateStore();
@@ -47,7 +44,8 @@ const handleChoice = (type: 'get_bottle' | 'give_water' | 'rob') => {
       gameStateStore.transitionToNextState()
       gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true)
     } else {
-      gameStateStore.switchToFightRoom(RoomEnum.SpecialBoss.value, [create(SpecialBoss.AtreidesMan)])
+      // SpecialBoss 待重新設計，暫不觸發戰鬥
+      gameStateStore.transitionToNextState()
       gameStateStore.addEventProcess(SpecialEventEnum.NeedWater, true)
     }
   }

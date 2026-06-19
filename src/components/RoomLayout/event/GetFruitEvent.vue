@@ -9,9 +9,6 @@ import {ElMessage} from "element-plus";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {getRandomElements} from "@/utils/math";
-import {RoomEnum} from "@/enums/room-enum";
-import {SpecialBoss} from "@/constants/monsters/monster-info/98-special-boss-info";
-import {create} from "@/utils/create";
 import {Accessory2} from "@/constants/items/equipment/accessories-info";
 
 const gameStateStore = useGameStateStore();
@@ -122,14 +119,9 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
 
 const onLeave = () => {
   if (gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5) {
-    const boss = create(SpecialBoss.EvilWoodMan)
-    // 怪物強化
-    boss.hpLimit += playerStore.finalStats.hpLimit
-    boss.hp += playerStore.finalStats.hpLimit
-    boss.ad += playerStore.finalStats.ad
-    boss.adDefend += playerStore.finalStats.adDefend
-    gameStateStore.switchToFightRoom(RoomEnum.SpecialBoss.value, [boss])
-    gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true)
+    // SpecialBoss 待重新設計，暫不觸發戰鬥，直接離開並結束事件
+    gameStateStore.transitionToNextState();
+    gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true);
   } else {
     gameStateStore.transitionToNextState();
   }

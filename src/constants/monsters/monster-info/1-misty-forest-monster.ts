@@ -14,6 +14,7 @@ export class Slime extends MonsterModel {
     constructor() {
         super({
             icon: '/monsters/slime.png',
+            code: 'Slime',
             name: '史萊姆',
             description: '森林中最常見的粘稠生物，帶有淡淡的草本氣味',
             ad: 5,
@@ -42,6 +43,7 @@ export class ForestSprout extends MonsterModel {
     constructor() {
         super({
             icon: '/monsters/sprout.png',
+            code: 'ForestSprout',
             name: '小樹人',
             description: '植物形態的魔物，擅長施展綑綁',
             ad: 3,
@@ -85,6 +87,7 @@ export class WoodTick extends MonsterModel {
         super({
             icon: '🐜',
             name: '木兵蟻',
+            code: 'WoodTick',
             description: '體型細小但甲殼堅硬，容易躲開笨重的攻擊',
             ad: 4,
             critIncrease: WorldDefault.critIncrease,
@@ -108,6 +111,7 @@ export class StingerBee extends MonsterModel {
         super({
             icon: '🐝',
             name: '森林虎頭蜂',
+            code: 'StingerBee',
             description: '擁有致命的毒刺，一旦被刺中傷口劇痛不已',
             ad: 2,
             critIncrease: 100,
@@ -136,6 +140,7 @@ export class StingerBee extends MonsterModel {
 export class GreenRabbit extends MonsterModel {
     constructor() {
         super({
+            code: 'GreenRabbit',
             icon: '🐇',
             name: '綠兔',
             description: '額頭長有小角的兔子，衝撞力驚人',
@@ -159,6 +164,7 @@ export class GreenRabbit extends MonsterModel {
 export class ForestOwl extends MonsterModel {
     constructor() {
         super({
+            code: 'ForestOwl',
             icon: '🦉',
             name: '夜行梟',
             description: '在樹蔭間穿梭的獵食者，眼神銳利',
@@ -179,80 +185,11 @@ export class ForestOwl extends MonsterModel {
     }
 }
 
-export class FairyGuard extends MonsterModel {
-    constructor() {
-        super({
-            icon: '🧚',
-            name: '妖精守衛',
-            description: '守衛著迷霧森林核心區域的靈體，動作輕盈且攻擊精準，手中的靈光長矛不容小覷',
-            ad: 12,
-            critIncrease: 150,
-            critRate: 10,
-            adDefend: 4,
-            dodge: 15,
-            hit: 15,
-            hp: 50,
-            hpLimit: 50,
-            level: 4,
-            dropGold: 30
-        });
-    }
-}
-
-export class MushroomMan extends MonsterModel {
-    constructor() {
-        super({
-            icon: '🍄',
-            name: '毒粉蕈人',
-            description: '行走緩慢的蕈類，厚實的菌蓋提供了極佳防護,而且攻擊他都會飄逸神秘粉末',
-            ad: 10,
-            critIncrease: 0,
-            critRate: 0,
-            adDefend: 20,
-            dodge: -10,
-            hit: 5,
-            hp: 10,
-            hpLimit: 10,
-            level: 5,
-            dropGold: 25
-        });
-    }
-
-    override onAttackedHook({playerStore, logStore}: any) {
-        if (checkProbability(0.5)) {
-            playerStore.addStatus(UnitStatus.MushroomManPoison);
-            logStore.logger.add(`你中毒了。`);
-        }
-    }
-}
-
-export class Mandragora extends MonsterModel {
-    constructor() {
-        super({
-            icon: '🌺',
-            name: '尖叫蔓陀羅',
-            class: 'elite',
-            description: '森林的恐怖傳聞，其尖叫聲能震懾所有入侵者',
-            ad: 15,
-            critIncrease: 200,
-            critRate: 25,
-            adDefend: 5,
-            dodge: 0,
-            hit: 20,
-            hp: 65,
-            hpLimit: 65,
-            level: 6,
-            dropGold: 40,
-            drop: [
-                {item: Material.MandrakeRoot, chance: 0.1}
-            ]
-        });
-    }
-}
 
 export class FierceWolf extends MonsterModel {
     constructor() {
         super({
+            code: 'FierceWolf',
             icon: '🐺',
             name: '森林之狼',
             class: 'elite',
@@ -295,6 +232,7 @@ export class FierceWolf extends MonsterModel {
 export class SmallSpider extends MonsterModel {
     constructor() {
         super({
+            code: 'SmallSpider',
             icon: '🕷️',
             name: '古蜘蛛的眷屬',
             description: '古蜘蛛的眷屬,強大的狩獵能力,攻擊時有機率綑綁敵人',
@@ -324,14 +262,13 @@ export class SmallSpider extends MonsterModel {
 
 export const MistyForestMonster = {
     Slime: new Slime(),
-    ForestSprout: new ForestSprout(),
+    ForestSprout: new Slime(),
     WoodTick: new WoodTick(),
     StingerBee: new StingerBee(),
     GreenRabbit: new GreenRabbit(),
     ForestOwl: new ForestOwl(),
-    FairyGuard: new FairyGuard(),
-    MushroomMan: new MushroomMan(),
-    Mandragora: new Mandragora(),
     FierceWolf: new FierceWolf(),
     SmallSpider: new SmallSpider(),
 };
+
+

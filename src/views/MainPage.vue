@@ -27,8 +27,7 @@ const isCombatRoom = computed(() => {
   const battleRooms = [
     RoomEnum.Fight.value,
     RoomEnum.EliteFight.value,
-    RoomEnum.Boss.value,
-    RoomEnum.SpecialBoss.value
+    RoomEnum.Boss.value
   ];
   return battleRooms.includes(gameStateStore.currentRoomValue);
 });

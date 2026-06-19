@@ -92,7 +92,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             for (let i = 0; i < newVal.length; i++) {
                 if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
                     // @ts-ignore
-                    currentEnemy.value[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
+                    currentEnemy.value[i] = MonsterFactory.createMonster(newVal[i].code, newVal[i]);
                 }
             }
         }
@@ -103,7 +103,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             for (let i = 0; i < newVal.length; i++) {
                 if (newVal[i] && !(newVal[i] instanceof MonsterModel)) {
                     // @ts-ignore
-                    switchEnemy.value[i] = MonsterFactory.createMonster(newVal[i].id || newVal[i].name, newVal[i]);
+                    switchEnemy.value[i] = MonsterFactory.createMonster(newVal[i].code, newVal[i]);
                 }
             }
         }
@@ -186,7 +186,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         playerActionPoints.value = 0;
         // 進入房間時判定：如果是戰鬥房間且玩家擁有主動技能，預設開啟技能面板，否則開啟背包面板
         const playerStore = usePlayerStore();
-        const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value, RoomEnum.SpecialBoss.value];
+        const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];
         const hasActiveSkills = playerStore.info.skills?.some((s: any) => s.type === 'active');
         if (battleRooms.includes(roomValue) && hasActiveSkills) {
             bottomPanelMode.value = 'skills';
@@ -234,7 +234,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     }
 
     function setBattleWon(won: boolean): void {
-        const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value, RoomEnum.SpecialBoss.value];
+        const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];
         if (battleRooms.includes(currentRoomValue.value)) {
             isBattleWon.value = won;
             if (won) {

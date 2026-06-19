@@ -175,6 +175,7 @@ export interface DropEntry<T extends ItemType = ItemType> {
  */
 export interface MonsterType extends UnitType {
     id?: string // 唯一識別碼
+    code: string // 代號
     description?: string //介紹
     class?: string // 卡片的特殊特效
     drop?: DropEntry[]
