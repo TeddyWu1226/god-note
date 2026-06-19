@@ -13,7 +13,7 @@ export class AncientSpider extends MonsterModel {
     constructor() {
         super({
             code: 'AncientRoots',
-            icon: '🕷️',
+            icon: '/monsters/spider.png',
             name: '古蜘蛛',
             description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物',
             class: 'boss big',

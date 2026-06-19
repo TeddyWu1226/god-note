@@ -32,6 +32,7 @@ import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
 import {Sleep} from "@/utils/create";
 import {useDebounceFn} from "@vueuse/core";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -406,6 +407,12 @@ const onRun = async () => {
   if (!gameStateStore.isPlayerTurn) return
   if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy)) {
     logStore.logger.add('逃跑失敗....')
+    showEffect(
+        {
+          text: "逃跑失敗...",
+          type: "debuff"
+        }
+    )
     await resolveRoundEnd()
   } else {
     isEscape.value = true

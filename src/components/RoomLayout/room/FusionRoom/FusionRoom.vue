@@ -29,11 +29,6 @@ const currentRawList = computed(() => {
   switch (activeCategory.value) {
     case 0: // 消耗品
       list = [...FusionUsableList];
-
-      // 條件：狩獵沙漠巨獸進度 >= 1
-      if (gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) >= 1) {
-        list.push(ExtraFusionUsableItem.DuneBeastBomb);
-      }
       break;
 
     case 1: // 裝備

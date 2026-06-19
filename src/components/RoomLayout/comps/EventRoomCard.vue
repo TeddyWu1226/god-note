@@ -43,22 +43,6 @@ const ScorchedSandsEvent = [
     canAppear: () => {
       return !(gameStateStore.otherRecord['WATER'] === 1)
     }
-  },
-  {
-    type: SpecialEventEnum.HuntDuneBeast, // 狩獵巨獸事件
-    canAppear: () => {
-      return (
-          (!gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.HuntDuneBeast) &&
-              gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) === 0 &&
-              playerStore.hasItem(Material.BehemothScales.name)[0]
-          ) ||
-          (gameStateStore.getEventProcess(SpecialEventEnum.HuntDuneBeast) === 1 &&
-              playerStore.hasItem(Usable.DuneBeastBomb.name)[0]
-          ) ||
-          (trackerStore.getKillCount(Monster.DuneBeast.name, 'current') >= 1
-          )
-      )
-    }
   }
 ]
 // 第三區才有
@@ -67,7 +51,7 @@ const IcyPlateauEvent = []
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
   let allowEvent = [...GeneralEvent]
-  
+
   // 計算區域索引 (1-25)
   const subZoneIdx = Math.min(4, Math.floor((Math.max(1, gameStateStore.stageDays) - 1) / 20))
   const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
@@ -108,12 +92,14 @@ const pickRandomEvent = () => {
     pool = [SpecialEventEnum.Fusion]
   }
   const randomIndex = Math.floor(Math.random() * pool.length);
-  return pool[randomIndex];
+  console.log('pool[randomIndex]', pool[randomIndex])
+  return pool[randomIndex] ?? SpecialEventEnum.Gamble;
 };
 
 // 初始化邏輯
 const initializeEventRoom = () => {
   // 只有當前還沒有事件時才初始化，避免在某些情況下組件重新渲染導致事件變更
+  console.log('觸發了', gameStateStore.currentEventType)
   if (!gameStateStore.currentEventType) {
     const selectedEvent = pickRandomEvent();
     gameStateStore.setEvent(selectedEvent);
@@ -124,9 +110,8 @@ const initializeEventRoom = () => {
 const currentEventComponent = computed(() => {
   return eventComponentMap[gameStateStore.currentEventType as SpecialEventEnum] || null;
 });
-onMounted(() => {
-  initializeEventRoom();
-});
+
+initializeEventRoom();
 </script>
 
 <template>

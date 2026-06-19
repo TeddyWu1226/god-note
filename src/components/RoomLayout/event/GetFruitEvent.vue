@@ -145,8 +145,6 @@ init()
             你快步遠離了這個邪惡氣息的東西...
           </div>
         </template>
-
-
         <template v-else-if="gameStateStore.eventAction === 0">
           <div class="event-icon">🪾</div>
           <div class="dialog-box">

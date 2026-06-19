@@ -83,6 +83,9 @@ export const useGameStateStore = defineStore('game-state', () => {
     /** 是否為玩家的行動回合 */
     const isPlayerTurn = ref(true);
 
+    /** 用於刷新房間的ID */
+    const roomId = ref(0);
+
     /** 下方面板的顯示模式：'backpack' (顯示背包) 或 'skills' (顯示技能) */
     const bottomPanelMode = ref<'backpack' | 'skills'>('skills');
 
@@ -140,6 +143,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             currentRoomValue.value = RoomEnum.Rest.value;
         }
         stageDays.value = 0;
+        roomId.value = 0;
         thisStageAppear.value = []
         currentStage.value = stageNum;
         isBattleWon.value = false;
@@ -175,6 +179,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     }
 
     function setRoom(roomValue: number): void {
+        roomId.value += 1
         currentRoomValue.value = roomValue ?? RoomEnum.Fight.value;
         isBattleWon.value = false;
         currentEnemy.value = [];
@@ -303,6 +308,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         getEventProcess,
         stateIs,
         roomIs,
+        roomId,
         eventAction,
         battleRound,
         playerActionPoints,

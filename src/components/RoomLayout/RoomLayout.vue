@@ -25,21 +25,9 @@ const currentRoomValue = computed(() => {
 )
 /** 戰鬥房間 **/
 const FightRoomRef = ref()
-// 攻擊
-const onAttack = () => {
-  FightRoomRef.value.onAttack()
-}
 
 const onSkill = (skillKey: string) => {
   FightRoomRef.value.onSkill(skillKey)
-}
-
-const onRun = () => {
-  FightRoomRef.value?.onRun()
-}
-
-const onEndTurn = () => {
-  FightRoomRef.value?.onEndTurn()
 }
 
 const onItemSkill = ({skillKey, callback, el}) => {
@@ -62,17 +50,6 @@ const onItemSkill = ({skillKey, callback, el}) => {
   }
 }
 
-/** 合成房間 **/
-const FusionRoomRef = ref()
-
-/** 休息房間 **/
-const RestRoomRef = ref()
-const onRest = () => {
-  RestRoomRef.value?.onRest()
-}
-
-/** 購物房間 **/
-const ShopRoomRef = ref()
 
 
 /** 綜合取消 **/
@@ -84,21 +61,14 @@ const onCancel = () => {
 }
 
 defineExpose({
-  onAttack,
   onSkill,
-  onRun,
-  onRest,
-  onCancel,
-  onItemSkill,
-  onEndTurn
+  onItemSkill
 })
 
 /** 初始化刷新 **/
-const roomKeyCounter = ref(0)
 const logStore = useLogStore();
-watch(() => gameStateStore.days,
+watch(() => gameStateStore.roomId,
     () => {
-      roomKeyCounter.value++
       logStore.logger.clear()
     },
     {
@@ -106,38 +76,31 @@ watch(() => gameStateStore.days,
       deep: true
     }) // 確保在組件第一次加載時也能觸發計數
 
-const gainFirstPower = () => {
-  playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 0) + 1;
-  gameStateStore.transitionToNextState();
-};
 </script>
 
 <template>
-  <EventRoomCard v-if="currentRoomValue === RoomEnum.Event.value" :key="roomKeyCounter"/>
-  <BlessRoom v-else-if="currentRoomValue === RoomEnum.Bless.value" :key="roomKeyCounter"/>
+  <EventRoomCard v-if="currentRoomValue === RoomEnum.Event.value" :key="gameStateStore.roomId"/>
+  <BlessRoom v-else-if="currentRoomValue === RoomEnum.Bless.value" :key="gameStateStore.roomId"/>
   <FightRoom
       ref="FightRoomRef"
       v-else-if="currentRoomValue === RoomEnum.Fight.value ||
         currentRoomValue === RoomEnum.EliteFight.value ||
         currentRoomValue === RoomEnum.Boss.value"
-      :key="roomKeyCounter"
+      :key="gameStateStore.roomId"
   />
   <RestRoom
-      ref="RestRoomRef"
       v-else-if="currentRoomValue === RoomEnum.Rest.value"
-      :key="roomKeyCounter"
+      :key="gameStateStore.roomId"
       @cancel="onCancel"
   />
   <ShopRoom
-      ref="ShopRoomRef"
       v-else-if="currentRoomValue === RoomEnum.Shop.value"
-      :key="roomKeyCounter"
+      :key="gameStateStore.roomId"
       @cancel="onCancel"
   />
   <FusionRoom
-      ref="FusionRoomRef"
       v-else-if="currentRoomValue === RoomEnum.Fusion.value"
-      :key="roomKeyCounter"
+      :key="gameStateStore.roomId"
       @cancel="onCancel"
   />
 </template>

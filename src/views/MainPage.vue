@@ -71,7 +71,6 @@ const resetGame = async () => {
 
 /** 觸發 **/
 const RoomLayoutRef = ref()
-const OperationLayoutRef = ref()
 
 const onSkill = (skillKey: string) => {
   RoomLayoutRef.value?.onSkill(skillKey)
@@ -80,10 +79,6 @@ const onItemSkill = (prop) => {
   RoomLayoutRef.value?.onItemSkill(prop)
 }
 
-
-const onRunFailed = () => {
-  OperationLayoutRef.value?.showEscapeFailedMessage()
-}
 
 const showLoadingSuccess = () => {
   if (!gameStateStore.stateIs(GameState.INITIAL)) {
@@ -130,10 +125,7 @@ watch(
         </el-header>
         <el-main>
           <FloorInfoLayout/>
-          <RoomLayout
-              ref="RoomLayoutRef"
-              @run-failed="onRunFailed"
-          />
+          <RoomLayout ref="RoomLayoutRef"/>
           <UserValueLayout/>
           <UserLayout
               v-if="gameStateStore.bottomPanelMode === 'backpack' || !isCombatRoom"

@@ -50,16 +50,16 @@
 }
 
 .boss::after {
-    content: "BOSS";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 0.6rem;
-    background: #ff4d4d;
-    color: black;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-weight: bold;
+    /*content: "BOSS";*/
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*right: 5px;*/
+    /*font-size: 0.6rem;*/
+    /*background: #ff4d4d;*/
+    /*color: black;*/
+    /*padding: 2px 5px;*/
+    /*border-radius: 3px;*/
+    /*font-weight: bold;*/
 }
 
 /* BOSS 呼吸燈特效 */
