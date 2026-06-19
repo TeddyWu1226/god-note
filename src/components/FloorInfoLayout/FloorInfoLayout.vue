@@ -18,7 +18,7 @@ const isShowBackpack = ref(false);
         命運之始
       </template>
       <template v-else>
-        第 {{ gameStateStore.days }} 天 -
+        第 {{ gameStateStore.stageDays }} 天 -
         {{ getEnumColumn(StageEnum, gameStateStore.currentStage, 'label', '塔之後⏳') }}
       </template>
     </span>

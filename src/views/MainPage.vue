@@ -115,7 +115,7 @@ watch(
       <IntroPage v-else-if="gameStateStore.stateIs(GameState.INITIAL)"/>
       <el-container v-else>
         <el-header class="header">
-          <span>𝄞締造𝄞</span>
+          <span>締造開始 -經過了 {{ gameStateStore.days }} 天 -</span>
           <div>
 
             <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>
