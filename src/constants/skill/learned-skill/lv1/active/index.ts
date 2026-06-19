@@ -7,45 +7,6 @@ import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardI
 import {genCustomStatus, getMonsterElement} from "@/utils/create";
 import {SkillStatus} from "@/constants/status/skill-status";
 
-export class CommonHeal extends SkillModel {
-    constructor() {
-        super({
-            id: 'CommonHeal',
-            name: "初級治療",
-            icon: "skills/heal_icon.svg",
-            type: 'active',
-            rarity: 'common',
-            maxCd: 2,
-            costSp: 25,
-            costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2
-        });
-    }
-
-    get healVal(): number {
-        return Math.round(30 + this.level * 15 + this.proficiency * 0.7);
-    }
-
-    description(playerStore: PlayerStoreType): string {
-        return `自身 ${ColorText.heal(this.healVal)}。 [冷卻: ${this.maxCd} 回合]`;
-    }
-
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        if (!playerStore) return false;
-
-        playerStore.info.hp = Math.min(
-            playerStore.finalStats.hpLimit,
-            playerStore.info.hp + this.healVal
-        );
-        useFullScreenEffect({
-            message: this.name,
-            color: 'green',
-        });
-        return true;
-    }
-}
 
 /**
  * 物理輸出相關
@@ -56,7 +17,7 @@ export class VerticalSlash extends SkillModel {
         super({
             id: 'VerticalSlash',
             name: "豎擊",
-            icon: "skills/vertical_slash_icon.svg",
+            icon: "skills/active/vertical_slash_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
@@ -100,7 +61,7 @@ export class HorizontalSlash extends SkillModel {
         super({
             id: 'HorizontalSlash',
             name: "橫擊",
-            icon: "skills/horizontal_slash_icon.svg",
+            icon: "skills/active/horizontal_slash_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
@@ -152,7 +113,7 @@ export class Thrust extends SkillModel {
         super({
             id: 'Thrust',
             name: "刺擊",
-            icon: "skills/thrust_icon.svg",
+            icon: "skills/active/thrust_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
@@ -205,7 +166,7 @@ export class MagicBall extends SkillModel {
         super({
             id: 'MagicBall',
             name: "法力彈",
-            icon: "skills/magic_ball_icon.svg",
+            icon: "skills/active/magic_ball_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
@@ -250,25 +211,28 @@ export class MagicBall extends SkillModel {
 
 /**
  * 純BUFF相關
+ * Buff類 統一不看熟練度
+ * maxProficiency: 0, proficiencyGain: 0
+ *
  */
 export class FocusBuff extends SkillModel {
     constructor() {
         super({
             id: 'FocusBuff',
             name: "專注提升",
-            icon: "skills/focus_buff.svg",
+            icon: "skills/active/focus_buff.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 5,
             costSp: 10,
             costAction: 1,
-            maxProficiency: 10,
-            proficiencyGain: 1
+            maxProficiency: 0,
+            proficiencyGain: 0
         });
     }
 
     description(): string {
-        return `提升自身 5 點命中，持續 4 回合。[冷卻: ${this.maxCd} 回合]`;
+        return `提升自身 5 點命中，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -287,4 +251,80 @@ export class FocusBuff extends SkillModel {
     }
 }
 
+export class WillBuff extends SkillModel {
+    constructor() {
+        super({
+            id: 'WillBuff',
+            name: "堅定意志",
+            icon: "skills/active/will_buff.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 5,
+            costSp: 10,
+            costAction: 1,
+            maxProficiency: 0,
+            proficiencyGain: 0
+        });
+    }
 
+    description(): string {
+        return `提升自身 10% 抗性，持續 5 回合。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+
+        const buff = genCustomStatus({
+            base: SkillStatus.Will,
+        });
+        playerStore.addStatus(buff);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
+        return true;
+    }
+}
+
+/**
+ * 其他相關
+ */
+export class CommonHeal extends SkillModel {
+    constructor() {
+        super({
+            id: 'CommonHeal',
+            name: "初級治療",
+            icon: "skills/active/heal_icon.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 2,
+            costSp: 25,
+            costAction: 1,
+            maxProficiency: 50,
+            proficiencyGain: 2
+        });
+    }
+
+    get healVal(): number {
+        return Math.round(30 + this.level * 15 + this.proficiency * 0.7);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `自身 ${ColorText.heal(this.healVal)}。 [冷卻: ${this.maxCd} 回合]`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        if (!playerStore) return false;
+
+        playerStore.info.hp = Math.min(
+            playerStore.finalStats.hpLimit,
+            playerStore.info.hp + this.healVal
+        );
+        useFullScreenEffect({
+            message: this.name,
+            color: 'green',
+        });
+        return true;
+    }
+}

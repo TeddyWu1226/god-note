@@ -6,6 +6,7 @@ import * as Lv2SkillPassive from "./lv2/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {EvolutionRule} from "@/types";
+import {KnifeProficiency} from "./lv1/passive";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -15,13 +16,15 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     VerticalSlash: Lv1SkillActive.VerticalSlash,
     HorizontalSlash: Lv1SkillActive.HorizontalSlash,
     Thrust: Lv1SkillActive.Thrust,
+
+    WillBuff: Lv1SkillActive.WillBuff,
     FocusBuff: Lv1SkillActive.FocusBuff,
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
-    SwordMastery: Lv1SkillPassive.SwordMastery,
-    KnifeMastery: Lv1SkillPassive.KnifeMastery,
-    SpellMastery: Lv1SkillPassive.SpellMastery,
-    ReadingMastery: Lv1SkillPassive.ReadingMastery,
+    SwordProficiency: Lv1SkillPassive.SwordProficiency,
+    KnifeProficiency: Lv1SkillPassive.KnifeProficiency,
+    SpellProficiency: Lv1SkillPassive.SpellProficiency,
+    ReadingProficiency: Lv1SkillPassive.ReadingProficiency,
     RedSkin: Lv1SkillPassive.RedSkin,
     BlueSkin: Lv1SkillPassive.BlueSkin,
 
@@ -91,9 +94,9 @@ export class SkillFactory {
 export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     SwordMaster: {
         evolvedSkillId: 'SwordMaster',
-        baseSkillId: 'SwordMastery',
+        baseSkillId: 'SwordProficiency',
         checkEligible: (playerStore, trackerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordMastery');
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency');
             const kills = trackerStore.getKillCount('USE_SWORD', 'total') || 0;
             return hasBase && kills >= 1;
         }
@@ -103,7 +106,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         baseSkillId: 'VerticalSlash',
         checkEligible: (playerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
-            const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordMastery' || s.id === 'SwordMaster');
+            const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency' || s.id === 'SwordMaster');
             const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'VerticalSlash');
             const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
             return hasBase && hasMastery && isMaxProf;

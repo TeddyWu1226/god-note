@@ -118,7 +118,7 @@ const openLearnSkill = () => {
     // 1. 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
 
-    // 2. 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordMaster 就不能再抽 SwordMastery)
+    // 2. 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordMaster 就不能再抽 SwordProficiency)
     const hasEvolvedVersion = Object.values(EVOLUTION_RULES).some(rule =>
         rule.baseSkillId === id && currentSkillIds.includes(rule.evolvedSkillId)
     );

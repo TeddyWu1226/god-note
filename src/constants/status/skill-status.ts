@@ -21,6 +21,16 @@ export const SkillStatus = {
             hit: 5
         }
     } as StatusEffect,
+    Will: {
+        name: '堅定意志',
+        icon: '✊',
+        duration: 5,
+        isBuff: true,
+        description: `提升自身 %defendIncrease% 點抗性，持續 %duration% 回合`,
+        bonus: {
+            defendIncrease: 10
+        }
+    } as StatusEffect,
     MagicDefend: {
         name: '法術裝甲',
         icon: '🌐',

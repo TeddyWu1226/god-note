@@ -7,7 +7,7 @@ export class PhysiqueBoost extends SkillModel {
         super({
             id: 'PhysiqueBoost',
             name: "強健體魄",
-            icon: "skills/physique_icon.svg",
+            icon: "skills/passive/physique_icon.svg",
             type: 'passive',
             rarity: 'common',
         });
@@ -32,12 +32,12 @@ export class PhysiqueBoost extends SkillModel {
     }
 }
 
-export class SwordMastery extends SkillModel {
+export class SwordProficiency extends SkillModel {
     constructor() {
         super({
-            id: 'SwordMastery',
+            id: 'Proficiency',
             name: "劍術精通",
-            icon: "skills/sword_mastery.svg",
+            icon: "skills/passive/sword_proficiency.svg",
             type: 'passive',
             rarity: 'common',
         });
@@ -62,12 +62,12 @@ export class SwordMastery extends SkillModel {
     }
 }
 
-export class KnifeMastery extends SkillModel {
+export class KnifeProficiency extends SkillModel {
     constructor() {
         super({
-            id: 'KnifeMastery',
+            id: 'KnifeProficiency',
             name: "短刀精通",
-            icon: "skills/blade_mastery.svg",
+            icon: "skills/passive/knife_proficiency.svg",
             type: 'passive',
             rarity: 'common',
         });
@@ -92,12 +92,12 @@ export class KnifeMastery extends SkillModel {
     }
 }
 
-export class SpellMastery extends SkillModel {
+export class SpellProficiency extends SkillModel {
     constructor() {
         super({
-            id: 'SpellMastery',
-            name: "法術精通",
-            icon: "skills/spell_mastery.svg",
+            id: 'SpellProficiency',
+            name: "法杖精通",
+            icon: "skills/passive/spell_proficiency.svg",
             type: 'passive',
             rarity: 'common',
             maxCd: 0,
@@ -132,12 +132,12 @@ export class SpellMastery extends SkillModel {
     }
 }
 
-export class ReadingMastery extends SkillModel {
+export class ReadingProficiency extends SkillModel {
     constructor() {
         super({
-            id: 'ReadingMastery',
+            id: 'ReadingProficiency',
             name: "閱讀精通",
-            icon: "skills/reading_mastery.svg",
+            icon: "skills/passive/reading_proficiency.svg",
             type: 'passive',
             rarity: 'common',
             maxCd: 0,
@@ -177,7 +177,7 @@ export class RedSkin extends SkillModel {
         super({
             id: 'RedSkin',
             name: "紅皮膚",
-            icon: "skills/red_skin.svg",
+            icon: "skills/passive/red_skin.svg",
             type: 'passive',
             rarity: 'common',
             maxCd: 0,
@@ -212,7 +212,7 @@ export class BlueSkin extends SkillModel {
         super({
             id: 'BlueSkin',
             name: "藍皮膚",
-            icon: "skills/blue_skin.svg",
+            icon: "skills/passive/blue_skin.svg",
             type: 'passive',
             rarity: 'common',
             maxCd: 0,

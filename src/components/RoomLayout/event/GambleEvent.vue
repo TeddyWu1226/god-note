@@ -43,6 +43,10 @@ const onCancel = () => {
 };
 
 const finalText = ref<string | undefined>(undefined);
+// 解決重載頁面時 eventAction 為 3 但本地 finalText 丟失導致空白的 Bug
+if (gameStateStore.eventAction === 3) {
+  finalText.value = "骰子已投擲完成。";
+}
 // 執行賭博
 const startGamble = (amount: number) => {
   if (playerStore.info.gold < amount) {

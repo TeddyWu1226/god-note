@@ -130,6 +130,20 @@ const onLeave = () => {
 /**初始化**/
 const init = () => {
   gameStateStore.recordThisStageAppear(SpecialEventEnum.GetFruit)
+  
+  // 解決重載頁面時 eventAction 為 2 但本地 finalText 丟失導致空白的 Bug
+  if (gameStateStore.eventAction === 2 && !finalText.value) {
+    const process = gameStateStore.getEventProcess(SpecialEventEnum.GetFruit);
+    if (process === 1 || process === 3 || process === 5) {
+      finalText.value = "魔樹吸收了供奉，發生了奇妙的變化。";
+    } else if (process === 2 || process === 4) {
+      finalText.value = "魔樹吸食了你的力量，作為回報，上限獲得了提升。";
+    } else if (process === -1) {
+      finalText.value = "魔樹事件已結束。";
+    } else {
+      finalText.value = "魔樹發生了神祕的變化。";
+    }
+  }
 }
 init()
 
