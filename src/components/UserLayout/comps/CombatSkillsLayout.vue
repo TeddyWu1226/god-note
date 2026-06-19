@@ -134,9 +134,6 @@ const clickSkill = (skill: SkillModel) => {
 
 <style scoped>
 .skills-card {
-  height: 20vh;
-  min-height: 140px;
-  box-sizing: border-box;
 }
 
 .skills-card :deep(.el-card__body) {
