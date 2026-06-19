@@ -1,6 +1,18 @@
 import {MonsterModel} from "@/models/monster-model";
 import {Monster} from "@/constants/monsters/monster-info";
 
+const generateUUID = (): string => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    // 安全備用隨機產生器 (以防在非 HTTPS/localhost 或老舊瀏覽器環境下 crypto.randomUUID 未定義)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+};
+
 // 💡 怪物 ID 與 Subclass 類別對照表 (從 Monster 模板中動態過濾並提取自訂 Subclass 類別)
 export const MONSTER_CLASS_MAP: Record<string, any> = {};
 
@@ -26,9 +38,12 @@ export class MonsterFactory {
         if (MonsterClass) {
             console.log('真的有人走到這了', MonsterClass)
             const instance = new MonsterClass();
-            instance.id = crypto.randomUUID()
-            // 還原動態數據到 Class 實例中
+            // 先還原動態數據到 Class 實例中
             Object.assign(instance, savedData);
+            // 若當前實例沒有 ID，才重新生成 (防止 Object.assign 覆蓋為 undefined 或是重複生成新的 ID)
+            if (!instance.id) {
+                instance.id = generateUUID();
+            }
             return instance;
         }
 
@@ -36,13 +51,20 @@ export class MonsterFactory {
         const template = (Monster as Record<string, any>)[code];
         if (template) {
             const baseData = JSON.parse(JSON.stringify(template));
-            return new MonsterModel({
+            const merged = {
                 ...baseData,
-                ...savedData,
-                id: crypto.randomUUID()
-            });
+                ...savedData
+            };
+            if (!merged.id) {
+                merged.id = generateUUID();
+            }
+            return new MonsterModel(merged);
         }
 
-        return new MonsterModel(savedData as any);
+        const finalData = { ...savedData };
+        if (!finalData.id) {
+            finalData.id = generateUUID();
+        }
+        return new MonsterModel(finalData as any);
     }
 }

@@ -41,7 +41,7 @@ export class MonsterModel implements MonsterType {
     roundBehavior?: string;
 
     constructor(data: MonsterType) {
-        this.id = data.id || crypto.randomUUID();
+        this.id = data.id;
         this.code = data.code;
         this.icon = data.icon;
         this.name = data.name;
