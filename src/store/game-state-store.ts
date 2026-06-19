@@ -286,33 +286,6 @@ export const useGameStateStore = defineStore('game-state', () => {
         monster.addEffect(effect, useLogStore());
     }
 
-    /**
-     * 每回合開始觸發：觸發怪物指定回合特性
-     */
-    function tickStartAllMonsters() {
-        const logStore = useLogStore();
-        currentEnemy.value.forEach(monster => {
-            if (monster.hp <= 0) return;
-            // 處理回合習性行為
-            monster.executeRoundBehavior(battleRound.value, logStore);
-        });
-    }
-
-    /**
-     * 每回合結束觸發：更新所有怪物狀態
-     */
-    function tickEndAllMonsters() {
-        const logStore = useLogStore();
-        currentEnemy.value.forEach(monster => {
-            if (monster.hp <= 0) return;
-
-            // 處理 DoT/HoT 等狀態效果
-            monster.tickEffects(logStore);
-        });
-
-        // 增加回合數
-        battleRound.value += 1;
-    }
 
     function recordThisStageAppear(key: string) {
         thisStageAppear.value = Array.from(new Set([...thisStageAppear.value, key]));
@@ -350,7 +323,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         setCurrentEnemy, setBattleWon,
         setEvent, isEventClose,
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
-        addEffectToMonster, tickEndAllMonsters, tickStartAllMonsters,
+        addEffectToMonster,
         enterJudgmentStage
     };
 }, {

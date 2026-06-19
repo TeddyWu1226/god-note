@@ -9,6 +9,7 @@ import {useTrackerStore} from "@/store/track-store";
 import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -23,17 +24,17 @@ const onTest = () => {
   // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
 }
 const give = () => {
-  // playerStore.addGold(10000)
-  playerStore.gainItem(Potions.BurningPotion, 10)
-  // playerStore.gainItem(Accessory2.SoulAnchor)
+  // playerStore.addGold(1000)
+
   // playerStore.gainItem(Head.HpHead2)
   // playerStore.gainItem(Armor.Armor2)
   // playerStore.gainItem(Offhand.Shield0)
   // playerStore.gainItem(Weapon.Sword0)
-  // playerStore.gainItem(Weapon.MagicStick1)
-  // playerStore.gainItem(Offhand.Book1)
-  // playerStore.info.hpLimit = 130
+  // playerStore.gainItem(Accessory2.SoulAnchor)
+  // playerStore.gainItem(Accessory1.SoulAnchor)
 
+  // playerStore.gainItem(Potions.BurningPotion, 10)
+  playerStore.gainItem(Usable.Campfire)
 }
 const heal = () => {
   playerStore.healFull()

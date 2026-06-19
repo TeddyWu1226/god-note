@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import {ref, watch, computed, nextTick} from 'vue';
+import {computed, nextTick, ref, watch} from 'vue';
 import {HpProgress, ValueProgress} from "@/components/Shared/Progress";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {ElCard} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
-import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {useGameStateStore} from "@/store/game-state-store";
 
 const playerStore = usePlayerStore();
@@ -37,7 +36,6 @@ watch(
         if (playerStore.hasItem(Usable.GodStar.name)[0]) {
           playerStore.healFull()
           playerStore.removeItem(Usable.GodStar.name)
-          showEffect(cardRef.value.$el, "🪽神聖光芒的庇護🪽", "fullscreen")
           return;
         }
         gameStore.isDead = true

@@ -204,6 +204,36 @@ const checkAllMonsterDead = () => {
   }
 }
 
+/**
+ * 每回合開始觸發：觸發怪物指定回合特性(除了第一回合)
+ */
+const tickStartAllMonsters = () => {
+  gameStateStore.currentEnemy.forEach(monster => {
+    if (monster.hp <= 0) return;
+    // 處理回合習性行為
+    monster.executeRoundBehavior(
+        {
+          playerStore: playerStore,
+          gameStateStore: gameStateStore,
+          logStore: logStore,
+          targetElement: MonsterCardRefs.value[monster.id]?.$el,
+          battleRound: gameStateStore.battleRound,
+        }
+    );
+  });
+}
+
+/**
+ * 每回合結束觸發：更新所有怪物狀態
+ */
+function tickEndAllMonsters() {
+  gameStateStore.currentEnemy.forEach(monster => {
+    if (monster.hp <= 0) return;
+    // 處理 DoT/HoT 等狀態效果
+    monster.tickEffects(logStore);
+  });
+}
+
 
 /**
  * 玩家行動
@@ -238,8 +268,8 @@ const resolveRoundEnd = async () => {
 
   // 怪物行動
   monsterMove()
-  // 回合結束判定
-  gameStateStore.tickEndAllMonsters()
+  // 怪物狀態結束檢查
+  tickEndAllMonsters()
   // 玩家狀態結算
   onPlayerTurnEnd()
 
@@ -247,19 +277,15 @@ const resolveRoundEnd = async () => {
     gameStateStore.isPlayerTurn = true
     return
   }
-
-  if (gameStateStore.isBattleWon || playerStore.info.hp <= 0) {
-    gameStateStore.isPlayerTurn = true
-    return
-  }
-
   // 等待 (怪物行動與玩家回合開始之間的延遲)
   await Sleep(200)
-
+  /** 新的回合 **/
+  gameStateStore.battleRound += 1
   // 記錄後續回合日誌
   logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
-  // 觸發怪物每回合特定行為
-  gameStateStore.tickStartAllMonsters()
+  // 觸發怪物每回合開始的特定行為
+  tickStartAllMonsters()
+
   // 補滿行動點數
   gameStateStore.refillActionPoints()
 
@@ -458,7 +484,7 @@ const init = () => {
   }
   // 回合開始的觸發
   nextTick().then(() => {
-    gameStateStore.currentEnemy.forEach((monster, index) => {
+    gameStateStore.currentEnemy.forEach((monster) => {
       monster.triggerOnStart({
         playerStore: playerStore,
         gameStateStore: gameStateStore,

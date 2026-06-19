@@ -254,7 +254,7 @@ export class FierceWolf extends MonsterModel {
             icon: '🐺',
             name: '森林之狼',
             class: 'elite',
-            description: '森林的巡邏者,極具威脅,遇到了建議跑',
+            description: '森林中的巡邏者',
             ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: 10,
@@ -266,13 +266,12 @@ export class FierceWolf extends MonsterModel {
             level: 5,
             dropGold: 50,
             drop: [
-                {item: Material.WolfSkin, chance: 1}
+                {item: Material.WolfSkin, chance: 0.3}
             ]
         });
     }
 
-    override onStartHook({playerStore, targetElement, gameStateStore}: any) {
-        if (gameStateStore.currentStage >= 5) return;
+    override onStartHook({playerStore, targetElement}) {
         playerStore.addStatus(UnitStatus.WolfRoarWarning);
         useFloatingMessage(
             '啊嗚~',

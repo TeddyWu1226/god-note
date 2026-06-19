@@ -1,4 +1,7 @@
-import {MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams} from "@/types";
+import {
+    MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams,
+    MonsterOnAttackedParams
+} from "@/types";
 
 
 export class MonsterModel implements MonsterType {
@@ -182,43 +185,42 @@ export class MonsterModel implements MonsterType {
     }
 
     // 子類別可覆寫的生命週期鉤子方法
-    onStartHook(params: Omit<MonsterActionParams, 'monster'>): void {
+    onStartHook(params: MonsterActionParams): void {
     }
 
-    onAttackHook(params: Omit<MonsterOnAttackParams, 'monster'>): boolean | void {
+    onAttackHook(params: MonsterOnAttackParams): boolean | void {
         return true
     }
 
-    onAttackHitHook(params: Omit<MonsterOnAttackParams, 'monster'> & { damage: BattleOutcome }): void {
+    onAttackHitHook(params: MonsterOnAttackParams & { damage: BattleOutcome }): void {
         if (typeof this.onAttackHit === 'function') {
             this.onAttackHit({
-                monster: this,
                 ...params
             });
         }
     }
 
-    onAttackedHook(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
+    onAttackedHook(params: MonsterOnAttackedParams): void {
     }
 
-    onDeadHook(params: Omit<MonsterActionParams, 'monster'>): void {
+    onDeadHook(params: MonsterActionParams): void {
     }
 
-    onRoundBehaviorHook(battleRound: number, logStore: any): void {
+    onRoundBehaviorHook(params: MonsterActionParams & { battleRound: number }): void {
     }
 
     /**
      * 執行怪物在特定回合的獨特習性行為
      */
-    executeRoundBehavior(battleRound: number, logStore: any) {
+    executeRoundBehavior(params: MonsterActionParams & { battleRound: number }) {
         if (this.hp <= 0) return;
-        this.onRoundBehaviorHook(battleRound, logStore);
+        this.onRoundBehaviorHook(params);
     }
 
     /**
      * 觸發回合開始被動/效果
      */
-    triggerOnStart(params: Omit<MonsterActionParams, 'monster'>): void {
+    triggerOnStart(params: MonsterActionParams): void {
         this.onStartHook(params);
     }
 
@@ -226,21 +228,21 @@ export class MonsterModel implements MonsterType {
      * 觸發攻擊前 被動/效果
      * 如果回傳 false 則不進行攻擊
      */
-    triggerOnAttack(params: Omit<MonsterOnAttackParams, 'monster'>): boolean {
+    triggerOnAttack(params: MonsterOnAttackParams): boolean {
         return this.onAttackHook(params) || true;
     }
 
     /**
      * 觸發攻擊命中後 被動/效果
      */
-    triggerOnAttackHit(params: Omit<MonsterOnAttackParams, 'monster'> & { damage: BattleOutcome }): void {
+    triggerOnAttackHit(params: MonsterOnAttackParams & { damage: BattleOutcome }): void {
         this.onAttackHitHook(params);
     }
 
     /**
      * 觸發被攻擊命中後 被動/效果
      */
-    triggerOnAttacked(params: Omit<MonsterActionParams, 'monster'> & { damage: BattleOutcome }): void {
+    triggerOnAttacked(params: MonsterOnAttackedParams): void {
         this.onAttackedHook(params);
     }
 

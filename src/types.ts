@@ -244,19 +244,21 @@ export type logStoreType = ReturnType<typeof useLogStore>;
 export type TrackerStoreType = ReturnType<typeof useTrackerStore>;
 
 
-//
 export interface MonsterActionParams {
-    monster?: MonsterModel;
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
     logStore?: logStoreType;
-    damage?: BattleOutcome; // onAttack 沒有傳這值
     targetElement?: HTMLElement
 }
 
 export interface MonsterOnAttackParams {
-    monster?: MonsterModel;
-    monsterIndex?: number;
+    playerStore?: PlayerStoreType;
+    gameStateStore?: GameStateStoreType
+    logStore?: logStoreType;
+    targetElement?: HTMLElement
+}
+
+export interface MonsterOnAttackedParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
     logStore?: logStoreType;
@@ -264,38 +266,21 @@ export interface MonsterOnAttackParams {
     targetElement?: HTMLElement
 }
 
+/**
+ * 使用物品相關
+ */
 
-// 物品使用觸發
 export interface NoneMonsterItemSkillParams {
     playerStore?: PlayerStoreType;
-    gameStateStore?: GameStateStoreType
-    callback: (result: boolean) => void
-    targetElement?: HTMLElement
+    gameStateStore?: GameStateStoreType;
+    callback: (result: boolean) => void;
+    targetElement?: HTMLElement;
 }
 
-export interface SpecifyMonsterItemSkillParams {
+export interface SpecifyMonsterItemSkillParams extends NoneMonsterItemSkillParams {
     monster?: MonsterModel;
     monsterIndex?: number;
-    playerStore?: PlayerStoreType;
-    gameStateStore?: GameStateStoreType
-    callback: (result: boolean) => void
-    targetElement?: HTMLElement
-    cardElement?: HTMLElement
-}
-
-
-/**
- * 成就
- */
-export interface AchievementType {
-    name: string;
-    icon: string;
-    quality: number; // 顏色用
-    description: string;
-    reward?: { item: string; amount: number; exp?: number };
-    isUnlocked?: boolean; // 是否達成
-    isHide: boolean; // 是否為隱藏成就
-    hindHint?: string // 隱藏成就提示
+    cardElement?: HTMLElement;
 }
 
 

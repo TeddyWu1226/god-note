@@ -4,7 +4,6 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
-import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {checkProbability} from "@/utils/math";
 import {MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
