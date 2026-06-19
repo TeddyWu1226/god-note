@@ -3,6 +3,7 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 export class CommonHeal extends SkillModel {
     constructor() {
@@ -83,10 +84,7 @@ export class VerticalSlash extends SkillModel {
             'ad',
             '豎擊'
         );
-        useFullScreenEffect({
-            message: this.name,
-            color: '#806000',
-        });
+        useCardImpactEffect(params.targetElement || null, 'vertical-slash');
         return true;
     }
 }
@@ -134,6 +132,10 @@ export class HorizontalSlash extends SkillModel {
                 'ad',
                 '橫擊'
             );
+            const el = document.querySelector(`[data-monster-id="${enemy.id}"]`) as HTMLElement;
+            if (el) {
+                useCardImpactEffect(el, 'horizontal-slash');
+            }
         });
         return true;
     }
@@ -184,6 +186,7 @@ export class Thrust extends SkillModel {
             'ad',
             '刺擊'
         );
+        useCardImpactEffect(params.targetElement || null, 'thrust');
         return true;
     }
 }
@@ -230,6 +233,7 @@ export class MagicBall extends SkillModel {
             'ap',
             '法力彈'
         );
+        useCardImpactEffect(params.targetElement || null, 'magic');
         return true;
     }
 }

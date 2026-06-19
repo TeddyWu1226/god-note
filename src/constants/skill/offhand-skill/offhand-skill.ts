@@ -3,6 +3,7 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {genCustomStatus} from "@/utils/create";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {ItemStatus} from "@/constants/status/item-status";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 export class ShieldBlock extends SkillModel {
     constructor() {
@@ -45,6 +46,7 @@ export class ShieldBlock extends SkillModel {
             message: '格擋',
             color: 'gray'
         });
+        useCardImpactEffect(null, 'buff');
         return true;
     }
 }
@@ -90,6 +92,7 @@ export class PowerCharge extends SkillModel {
             message: '蓄力',
             color: 'orange'
         });
+        useCardImpactEffect(null, 'buff');
         return true;
     }
 }

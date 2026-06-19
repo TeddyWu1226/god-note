@@ -174,6 +174,7 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   <el-card
       ref="CardRef"
       class="monster-card"
+      :data-monster-id="props.info.id"
       :class="[
           props.info.class,
           {

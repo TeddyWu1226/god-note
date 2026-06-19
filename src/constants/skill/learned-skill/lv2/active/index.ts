@@ -4,6 +4,7 @@ import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {genCustomStatus, Sleep} from "@/utils/create";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 /**
  * 劈斬 (Cleave) - 進化自 豎擊
@@ -42,6 +43,7 @@ export class Cleave extends SkillModel {
 
         const dmg = this.getDamage(playerStore);
         monster.lastDamageResult = applySkillDamage(playerStore.finalStats, monster, dmg, 'ad', this.name);
+        useCardImpactEffect(params.targetElement || null, 'vertical-slash');
 
         // 提升下一回合 5% 物理傷害 (加持續時間為 2 的 Buff，當前/下回合結束時分別減1，下回合行動時剩下 1 回合且依然生效)
         playerStore.addStatus(genCustomStatus({
@@ -125,6 +127,10 @@ export class Flurry extends SkillModel {
 
             const target = livingEnemies[Math.floor(Math.random() * livingEnemies.length)];
             target.lastDamageResult = applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
+            const el = document.querySelector(`[data-monster-id="${target.id}"]`) as HTMLElement;
+            if (el) {
+                useCardImpactEffect(el, 'physical');
+            }
 
             // 每次打擊之間延遲 250 毫秒
             if (i < hits - 1) {
