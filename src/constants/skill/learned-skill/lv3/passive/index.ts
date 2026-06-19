@@ -1,10 +1,7 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
 
-/**
- * 劍術大師 (SwordMaster) - 進化自 劍術精通
- * 被動技能，裝備劍時提升 15% 物理傷害，以及 20 點命中值。
- */
+
 export class SwordMaster extends SkillModel {
     constructor() {
         super({
@@ -16,11 +13,8 @@ export class SwordMaster extends SkillModel {
         });
     }
 
-    addAd = 10
-    addHit = 30
-
-    description(): string {
-        return `增加 ${this.addHit} 點命中。裝備名稱含有「劍」的武器時，提升 ${this.addAd} 物理攻擊。`;
+    description(playerStore: PlayerStoreType): string {
+        return `裝備劍（名稱含有「劍」的武器）時，提升 15% 物理傷害，並增加 20 點命中。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -29,13 +23,13 @@ export class SwordMaster extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        const bonus = {
-            hit: this.addAd
-        };
         if (weaponName.includes('劍')) {
-            bonus['ad'] = this.addHit
+            return {
+                adIncrease: 15,
+                hit: 20
+            };
         }
-        return bonus;
+        return {};
     }
 }
 

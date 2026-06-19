@@ -1,9 +1,7 @@
 import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {StatusEffect} from "@/types";
 import {computed, ref, watch} from "vue";
-import {useLogStore} from "@/store/log-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -280,13 +278,6 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
     }
 
-    // 施加怪物狀態
-    function addEffectToMonster(monster: MonsterModel, effect: StatusEffect) {
-        if (!monster) return;
-        monster.addEffect(effect, useLogStore());
-    }
-
-
     function recordThisStageAppear(key: string) {
         thisStageAppear.value = Array.from(new Set([...thisStageAppear.value, key]));
     }
@@ -323,7 +314,6 @@ export const useGameStateStore = defineStore('game-state', () => {
         setCurrentEnemy, setBattleWon,
         setEvent, isEventClose,
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
-        addEffectToMonster,
         enterJudgmentStage
     };
 }, {

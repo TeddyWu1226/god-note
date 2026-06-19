@@ -206,11 +206,12 @@ export class MonsterModel implements MonsterType {
     onDeadHook(params: MonsterActionParams): void {
     }
 
+    //怪物在特定回合開始的獨特習性行為
     onRoundBehaviorHook(params: MonsterActionParams & { battleRound: number }): void {
     }
 
     /**
-     * 執行怪物在特定回合的獨特習性行為
+     * 執行怪物在特定回合開始的獨特習性行為
      */
     executeRoundBehavior(params: MonsterActionParams & { battleRound: number }) {
         if (this.hp <= 0) return;

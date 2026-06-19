@@ -4,9 +4,11 @@ import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability, isMultiple} from "@/utils/math";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {MonsterOnAttackParams} from "@/types";
+import {MonsterActionParams, MonsterOnAttackParams} from "@/types";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 import {calculateIsHit} from "@/constants/fight-func";
+import {UsualStatus} from "@/constants/status/usual-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 export class Slime extends MonsterModel {
     constructor() {
@@ -282,6 +284,12 @@ export class FierceWolf extends MonsterModel {
             }
         );
     }
+
+    override onRoundBehaviorHook({battleRound}) {
+        if (isMultiple(battleRound, 3)) {
+            this.addEffect(UsualStatus.Angry)
+        }
+    }
 }
 
 export class SmallSpider extends MonsterModel {
@@ -304,11 +312,13 @@ export class SmallSpider extends MonsterModel {
         });
     }
 
-    override onAttackHook({playerStore, logStore}: any) {
-        if (checkProbability(0.25)) {
-            playerStore.addStatus(UnitStatus.SmallSpiderStuck);
-            logStore.logger.add(`你被綑綁了。`);
-        }
+    override onStartHook({playerStore, targetElement}: any) {
+        useFullScreenEffect({
+            message: '蛛絲纏繞',
+            color: 'white',
+            duration: 1500
+        });
+        playerStore.addStatus(UnitStatus.SmallSpiderStuck);
     }
 }
 

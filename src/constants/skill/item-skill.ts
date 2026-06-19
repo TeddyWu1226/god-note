@@ -11,6 +11,7 @@ import EvnStatus from "@/constants/status/evn-status";
 import {useCardStatusEffect} from "@/components/RoomLayout/comps/useCardStatusEffect";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {getMonsterElement} from "@/utils/create";
+import {useLogStore} from "@/store/log-store";
 
 const cantUse = () => {
     showEffect(
@@ -31,7 +32,9 @@ const onCanUseInFight = (
     params: SpecifyMonsterItemSkillParams | NoneMonsterItemSkillParams,
     useFn: () => void
 ) => {
-    const isFightRoom = params.gameStateStore?.roomIs([RoomEnum.Fight.value, RoomEnum.EliteFight.value])
+    const isFightRoom = params.gameStateStore?.roomIs(
+        [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value, RoomEnum.SpecialBoss.value]
+    )
     if (!isFightRoom || !params.gameStateStore?.stateIs(GameState.EVENT_PHASE)) {
         cantUse()
         params.callback(false);
@@ -117,7 +120,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
                 return
             }
             if (monster) {
-                gameStateStore.addEffectToMonster(monster, ItemStatus.OnBurn)
+                monster.addEffect(ItemStatus.OnBurn, useLogStore())
                 const monsterElement = getMonsterElement(monster.id)
                 if (monsterElement) {
                     useCardStatusEffect({

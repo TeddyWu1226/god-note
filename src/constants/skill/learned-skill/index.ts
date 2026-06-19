@@ -95,7 +95,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         checkEligible: (playerStore, trackerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordMastery');
             const kills = trackerStore.getKillCount('USE_SWORD', 'total') || 0;
-            return hasBase && kills >= 10;
+            return hasBase && kills >= 1;
         }
     },
     Cleave: {

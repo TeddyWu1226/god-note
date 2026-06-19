@@ -4,16 +4,17 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
-import {checkProbability} from "@/utils/math";
+import {checkProbability, isMultiple} from "@/utils/math";
 import {MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {UsualStatus} from "@/constants/status/usual-status";
 
 export class AncientSpider extends MonsterModel {
     constructor() {
         super({
             icon: '🕷️',
             name: '古蜘蛛',
-            description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物,且對於被網住的生物必定爆擊',
+            description: '巨大古老的蜘蛛,擅長蜘蛛網網住獵物',
             class: 'boss big',
             ad: 20,
             critIncrease: 200,
@@ -46,9 +47,9 @@ export class AncientSpider extends MonsterModel {
         playerStore.addStatus(UnitStatus.SpiderStuck);
     }
 
-    override onAttackHook({gameStateStore, playerStore}: any) {
-        if (playerStore.statusEffects?.find((e: any) => e.name === '蜘蛛綑綁')) {
-            gameStateStore.addEffectToMonster(this, UnitStatus.SpiderHunter);
+    override onRoundBehaviorHook({battleRound}) {
+        if (isMultiple(battleRound, 5)) {
+            this.addEffect(UsualStatus.Angry)
         }
     }
 }
