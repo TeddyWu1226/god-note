@@ -31,6 +31,7 @@ import {ItemSkill} from "@/constants/skill/item-skill";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperation.vue";
 import {Sleep} from "@/utils/create";
+import {useDebounceFn} from "@vueuse/core";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -156,50 +157,37 @@ const monsterMove = () => {
   })
 }
 
-const whenMonsterDead = (monsterIndex: number) => {
-  const selectedMonster = gameStateStore.currentEnemy[monsterIndex]
-  if (!selectedMonster) {
-    console.error('找不到對應的怪物資訊', monsterIndex)
-    return
-  }
-  // 紀錄擊殺
-  trackStore.recordKill(selectedMonster.name)
-  // 經驗取得
-  playerStore.gainExp({monsterLevel: selectedMonster.level})
-  // 掉落金幣
-  const dropMoney = applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
-  playerStore.addGold(dropMoney)
-  monsterDropGold.value += dropMoney
-
-  // 掉落物品
-  const earnedItems = getLootFromTable(selectedMonster.drop);
-  earnedItems.forEach((item) => {
-    playerStore.gainItem(item);
-    monsterDropItems.value.push(item)
-  });
+const whenMonsterDead = () => {
+  gameStateStore.currentEnemy.filter((m) => m.hp <= 0).forEach((selectedMonster) => {
+    // 紀錄死亡
+    logStore.logger.add(`${selectedMonster.name} 死亡`)
+    // 紀錄擊殺
+    trackStore.recordKill(selectedMonster.name)
+    // 經驗取得
+    playerStore.gainExp({monsterLevel: selectedMonster.level})
+    // 掉落金幣
+    const dropMoney = applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
+    playerStore.addGold(dropMoney)
+    monsterDropGold.value += dropMoney
+    // 掉落物品
+    const earnedItems = getLootFromTable(selectedMonster.drop);
+    earnedItems.forEach((item) => {
+      playerStore.gainItem(item);
+      monsterDropItems.value.push(item)
+    });
+  })
   // 移除死亡怪
-  gameStateStore.currentEnemy.splice(monsterIndex, 1);
-  logStore.logger.add(`${selectedMonster.name} 死亡`)
-  // 確保選中狀態同步
-  if (selectedMonsterIndex.value === monsterIndex) {
-    selectedMonsterIndex.value = null;
-  } else if (selectedMonsterIndex.value !== null && selectedMonsterIndex.value > monsterIndex) {
-    selectedMonsterIndex.value--;
+  gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m) => m.hp > 0)
+  // 檢查是否還有活著的
+  if (!gameStateStore.currentEnemy || gameStateStore.currentEnemy.length === 0) {
+    gameStateStore.setBattleWon(true)
   }
-  // 檢查怪物是否都死亡
-  checkAllMonsterDead()
 }
+const debounceWhenMonsterDead = useDebounceFn(
+    whenMonsterDead,
+    200
+)
 
-const checkAllMonsterDead = () => {
-  // 怪物全部死亡
-  if (gameStateStore.currentEnemy.length === 0) {
-    if (gameStateStore.currentStage === 6 && gameStateStore.stageDays === 10) {
-      gameStateStore.isVictory = true
-    } else {
-      gameStateStore.setBattleWon(true)
-    }
-  }
-}
 
 /**
  * 每回合開始觸發：觸發怪物指定回合特性(除了第一回合)
@@ -257,6 +245,7 @@ const onPlayerTurnEnd = () => {
 }
 
 const resolveRoundEnd = async () => {
+
   // 關閉玩家操作
   gameStateStore.isPlayerTurn = false
 
@@ -265,8 +254,10 @@ const resolveRoundEnd = async () => {
 
   // 怪物行動
   monsterMove()
+
   // 怪物狀態結束檢查
   tickEndAllMonsters()
+
   // 玩家狀態結算
   onPlayerTurnEnd()
 
@@ -282,6 +273,7 @@ const resolveRoundEnd = async () => {
   logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   // 觸發怪物每回合開始的特定行為
   tickStartAllMonsters()
+
 
   // 補滿行動點數
   gameStateStore.refillActionPoints()
@@ -452,6 +444,7 @@ const init = () => {
   if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {
     if (gameStateStore.playerActionPoints <= 0) {
       gameStateStore.refillActionPoints();
+      whenMonsterDead()
     }
     return;
   }
@@ -535,7 +528,7 @@ onUnmounted(() => {
             :index="index"
             :is-selected="selectedMonsterIndex === index"
             @select="handleMonsterSelect(index)"
-            @monster-die="whenMonsterDead(index)"
+            @monster-die="debounceWhenMonsterDead"
         />
         <div class="victory-container" v-if="gameStateStore.isBattleWon">
           <span v-if="isEscape" class="run-message">成功逃跑了!</span>

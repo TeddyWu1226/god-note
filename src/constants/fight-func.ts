@@ -255,7 +255,7 @@ export function applySkillDamage(
     const logMessage = [
         `${attacker.name} 施放 【${skillName}】，`,
         outcome.isCrit ? `💥 暴擊` : `命中`,
-        `造成 ${outcome.totalDamage} 點${typeNames[type]}傷害。`,
+        `造成${defender.name} ${outcome.totalDamage} 點${typeNames[type]}傷害。`,
         outcome.healAmount > 0 ? `(恢復 ${outcome.healAmount} 點生命)` : ''
     ].join('');
     logStore.logger.add(logMessage);
@@ -420,14 +420,13 @@ export const spawnMonsters = (
     strengthening: number = 0,
     eliteBoost = false
 ): MonsterClass[] => {
-    //test
-    count = 3
     const newMonsters: MonsterClass[] = [];
     let strengtheningLevel = strengthening
     for (let i = 0; i < count; i++) {
-        // let m = getRandomItemByWeight(weight, Monster);
-        let m = Monster.Slime
+        let m = getRandomItemByWeight(weight, Monster);
         let monsterInstance = MonsterFactory.createMonster(m.code, m);
+
+        // monsterInstance.name += `${i}`
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;

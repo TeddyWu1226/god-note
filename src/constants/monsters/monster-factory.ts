@@ -31,12 +31,10 @@ export class MonsterFactory {
      * @param savedData 緩存中已有的狀態（如 hp, ad, status 等）
      */
     static createMonster(code: string, savedData: Partial<any> = {}): MonsterModel {
-        console.log('產生怪物code', code)
         const MonsterClass = MONSTER_CLASS_MAP[code] ||
             (savedData.code ? MONSTER_CLASS_MAP[savedData.code] : undefined);
 
         if (MonsterClass) {
-            console.log('真的有人走到這了', MonsterClass)
             const instance = new MonsterClass();
             // 先還原動態數據到 Class 實例中
             Object.assign(instance, savedData);

@@ -136,7 +136,7 @@ const onMonsterDie = () => {
     return
   }
   // 確實死亡後觸發
-  emit('monsterDie', props.index)
+  emit('monsterDie', props.info?.id)
 }
 
 // 監控是否死亡
