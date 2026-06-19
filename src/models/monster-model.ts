@@ -37,7 +37,7 @@ export class MonsterModel implements MonsterType {
     roundBehavior?: string;
 
     constructor(data: MonsterType) {
-        this.id = data.id || Math.random().toString(36).substring(2, 9);
+        this.id = data.id || crypto.randomUUID();
         this.icon = data.icon;
         this.name = data.name;
         this.ad = data.ad;

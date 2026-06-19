@@ -91,7 +91,6 @@ export class Twilight extends MonsterModel {
     override onAttackHook({targetElement, logStore}: any) {
         this.adDefend += 2;
         this.ad += 2;
-        showEffect(targetElement, "節奏加速了 ⚔️⬆️ 🛡️⬆️", "buff");
         logStore.logger.add('半神的攻擊更凌厲了,防禦也更加堅固!');
     }
 

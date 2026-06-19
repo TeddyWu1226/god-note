@@ -70,7 +70,8 @@ const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
-  const strengthening = 1 + gameStateStore.days * 0.005
+  const strengthening = Math.ceil(Math.max(0, gameStateStore.stageDays - 50) / 25)
+  console.log('strengthening', strengthening)
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -254,7 +255,7 @@ const resolveRoundEnd = async () => {
 
   // 等待 (怪物行動與玩家回合開始之間的延遲)
   await Sleep(200)
-  
+
   // 記錄後續回合日誌
   logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
   // 觸發怪物每回合特定行為
@@ -520,7 +521,7 @@ onUnmounted(() => {
         <div class="victory-container" v-if="gameStateStore.isBattleWon">
           <span v-if="isEscape" class="run-message">成功逃跑了!</span>
           <span
-              v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value)"
+              v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value) && gameStateStore.stageDays === 100"
               class="victory-message">
         通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}!
       </span>

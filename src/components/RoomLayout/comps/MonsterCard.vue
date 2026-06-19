@@ -185,6 +185,11 @@ watch(() => props.info.lastDamageResult, (newResult) => {
       shadow="hover"
       @click="handleClick"
   >
+    <!-- 等級標籤 -->
+    <div class="monster-level-badge">
+      Lv.{{ props.info.level }}
+    </div>
+
     <!-- 狀態欄 -->
     <div class="status-bar">
       <el-tooltip
@@ -279,11 +284,29 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   box-sizing: border-box;
 }
 
+/* 等級標籤 */
+.monster-level-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffb86c; /* 橙金色 */
+  border: 1.5px solid #ff5555; /* 精緻紅邊 */
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 1.2;
+  font-family: monospace;
+  pointer-events: none;
+}
+
 /* 狀態欄不佔空間地定選在卡片上方 */
 .status-bar {
   position: absolute;
   top: 4px;
-  left: 4px;
+  right: 4px; /* 移到右上角，防止與等級重疊 */
   z-index: 10;
   display: flex;
   gap: 2px;
@@ -459,6 +482,13 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   .monster-hp-container {
     margin-top: 0.05rem;
   }
+
+  .monster-level-badge {
+    top: 3px;
+    left: 3px;
+    font-size: 0.62rem;
+    padding: 0 3px;
+  }
 }
 
 /* 2. 當房間主體高度極矮時 (例如 <= 165px) */
@@ -474,8 +504,16 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 
   .status-bar {
     top: 2px;
-    left: 2px;
+    right: 2px;
+    left: auto;
     gap: 1px;
+  }
+
+  .monster-level-badge {
+    top: 2px;
+    left: 2px;
+    font-size: 0.58rem;
+    padding: 0 2px;
   }
 
   .status-icon {
@@ -548,6 +586,13 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 
   .stat-col {
     gap: 0px;
+  }
+
+  .monster-level-badge {
+    top: 1px;
+    left: 1px;
+    font-size: 0.52rem;
+    padding: 0 1px;
   }
 }
 

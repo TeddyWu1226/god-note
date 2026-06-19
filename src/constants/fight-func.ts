@@ -408,39 +408,43 @@ export function canEscape(runner: UnitType, chasers: MonsterClass[]): boolean {
  * 核心生成怪物函數
  * @param count 生成數量
  * @param weight 權重表
- * @param strengthening 強化倍率(1.0為基準)
+ * @param strengthening 強化等級
  * @param eliteBoost 是否進行菁英強化
  *
  */
 export const spawnMonsters = (
     count: number,
     weight: Record<string, number>,
-    strengthening: number = 1,
+    strengthening: number = 0,
     eliteBoost = false
 ): MonsterClass[] => {
     const newMonsters: MonsterClass[] = [];
-
+    let strengtheningLevel = strengthening
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
-        // Create the correct subclass instance using MonsterFactory
         let monsterInstance = MonsterFactory.createMonster(m.id || m.name, m);
-        // 基本階段強化
-        monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * strengthening);
-        monsterInstance.hp = monsterInstance.hpLimit;
-        monsterInstance.ad = Math.round(monsterInstance.ad * strengthening);
-        // monsterInstance.adDefend = Math.round(monsterInstance.adDefend * strengthening);
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
             monsterInstance.class = 'elite';
-            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * 2);
-            monsterInstance.hp = monsterInstance.hpLimit;
-            monsterInstance.ad = Math.round(monsterInstance.ad * 1.5);
-            monsterInstance.adDefend = Math.round((monsterInstance.adDefend + 2) * 1.3);
-            monsterInstance.apDefend = Math.round((monsterInstance.apDefend + 2) * 1.3);
-            monsterInstance.dropGold = Math.round((monsterInstance.dropGold || 10) * 3);
-            monsterInstance.level += 2;
+            strengtheningLevel += 2
         }
+        // 基本階段強化
+        if (strengtheningLevel) {
+            monsterInstance.level += strengtheningLevel
+            // 每多一等
+            // 多 15% 血量
+            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * (1 + 0.15 * strengthening));
+            monsterInstance.hp = monsterInstance.hpLimit;
+            // 多 20% 輸出
+            monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengthening));
+            monsterInstance.adDefend += strengtheningLevel
+        }
+        // monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * strengthening);
+        // monsterInstance.hp = monsterInstance.hpLimit;
+        // monsterInstance.ad = Math.round(monsterInstance.ad * strengthening);
+        // monsterInstance.level += (Math.round(strengthening - 1))
+
         newMonsters.push(monsterInstance);
     }
     return newMonsters;
