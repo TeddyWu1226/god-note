@@ -4,7 +4,8 @@ import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {getMonsterElement} from "@/utils/create";
+import {genCustomStatus, getMonsterElement} from "@/utils/create";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 export class CommonHeal extends SkillModel {
     constructor() {
@@ -45,6 +46,10 @@ export class CommonHeal extends SkillModel {
         return true;
     }
 }
+
+/**
+ * 物理輸出相關
+ */
 
 export class VerticalSlash extends SkillModel {
     constructor() {
@@ -192,6 +197,9 @@ export class Thrust extends SkillModel {
     }
 }
 
+/**
+ * 法術輸出相關
+ */
 export class MagicBall extends SkillModel {
     constructor() {
         super({
@@ -235,6 +243,46 @@ export class MagicBall extends SkillModel {
             '法力彈'
         );
         useCardImpactEffect(params.targetElement || null, 'magic');
+        return true;
+    }
+}
+
+
+/**
+ * 純BUFF相關
+ */
+export class FocusBuff extends SkillModel {
+    constructor() {
+        super({
+            id: 'FocusBuff',
+            name: "專注提升",
+            icon: "skills/focus_buff.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 5,
+            costSp: 10,
+            costAction: 1,
+            maxProficiency: 10,
+            proficiencyGain: 1
+        });
+    }
+
+    description(): string {
+        return `提升自身 5 點命中，持續 4 回合。[冷卻: ${this.maxCd} 回合]`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        if (!playerStore) return false;
+
+        const buff = genCustomStatus({
+            base: SkillStatus.Focus,
+        });
+        playerStore.addStatus(buff);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
         return true;
     }
 }

@@ -1,6 +1,16 @@
 import {StatusEffect} from "@/types";
 
 export const SkillStatus = {
+	Focus: {
+		name: '專注提升',
+		icon: '🎯',
+		duration: 5,
+		isBuff: true,
+		description: `提升自身 %hit% 點命中，持續 %duration% 回合`,
+		bonus: {
+			hit: 5
+		}
+	} as StatusEffect,
 	MagicDefend: {
 		name: '法術裝甲',
 		icon: '🌐',

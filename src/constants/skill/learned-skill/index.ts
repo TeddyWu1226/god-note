@@ -1,21 +1,21 @@
-import {SkillModel, GenericSkill} from "@/models/skill-model";
+import {GenericSkill, SkillModel} from "@/models/skill-model";
 import * as Lv1SkillActive from "./lv1/active";
 import * as Lv1SkillPassive from "./lv1/passive";
 import * as Lv2SkillActive from "./lv2/active";
 import * as Lv2SkillPassive from "./lv2/passive";
-import {ShieldBlock, PowerCharge} from "@/constants/skill/offhand-skill/offhand-skill";
+import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {EvolutionRule} from "@/types";
-import {KnifeMastery} from "./lv1/passive";
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
-    // Level 2
+    // Level 1
     CommonHeal: Lv1SkillActive.CommonHeal,
     MagicBall: Lv1SkillActive.MagicBall,
     VerticalSlash: Lv1SkillActive.VerticalSlash,
     HorizontalSlash: Lv1SkillActive.HorizontalSlash,
     Thrust: Lv1SkillActive.Thrust,
+    FocusBuff: Lv1SkillActive.FocusBuff,
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
     SwordMastery: Lv1SkillPassive.SwordMastery,
@@ -37,29 +37,15 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 };
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
-export const SKILL_TEMPLATES: Record<string, SkillModel> = {
-    // Level 1
-    CommonHeal: new Lv1SkillActive.CommonHeal(),
-    MagicBall: new Lv1SkillActive.MagicBall(),
-    VerticalSlash: new Lv1SkillActive.VerticalSlash(),
-    HorizontalSlash: new Lv1SkillActive.HorizontalSlash(),
-    Thrust: new Lv1SkillActive.Thrust(),
+export const SKILL_TEMPLATES: Record<string, SkillModel> = {};
 
-
-    PhysiqueBoost: new Lv1SkillPassive.PhysiqueBoost(),
-    SwordMastery: new Lv1SkillPassive.SwordMastery(),
-    KnifeMastery: new Lv1SkillPassive.KnifeMastery(),
-    SpellMastery: new Lv1SkillPassive.SpellMastery(),
-    ReadingMastery: new Lv1SkillPassive.ReadingMastery(),
-    RedSkin: new Lv1SkillPassive.RedSkin(),
-    BlueSkin: new Lv1SkillPassive.BlueSkin(),
-
-    // Level 2
-    Cleave: new Lv2SkillActive.Cleave(),
-    Flurry: new Lv2SkillActive.Flurry(),
-
-    SwordMaster: new Lv2SkillPassive.SwordMaster(),
-};
+// 動態從 SKILL_CLASS_MAP 生成實例，避免重複設定與遺漏（排除非直接學習的副手技能）
+const EXCLUDE_TEMPLATES = ['ShieldBlock', 'PowerCharge'];
+Object.entries(SKILL_CLASS_MAP).forEach(([key, ClassConstructor]) => {
+    if (!EXCLUDE_TEMPLATES.includes(key)) {
+        SKILL_TEMPLATES[key] = new ClassConstructor();
+    }
+});
 
 export class SkillFactory {
     /**
