@@ -109,18 +109,6 @@ export const StatEnum = {
         icon: '✨',
         unit: ''
     },
-    hpRegen: {
-        value: 'hpRegen',
-        label: '生命回復',
-        icon: '❤️‍🩹',
-        unit: ''
-    },
-    spRegen: {
-        value: 'spRegen',
-        label: '法力回復',
-        icon: '💜',
-        unit: ''
-    },
     ad: {
         value: 'ad',
         label: '物傷',
@@ -131,6 +119,18 @@ export const StatEnum = {
         value: 'ap',
         label: '法傷',
         icon: '🔮',
+        unit: ''
+    },
+    hit: {
+        value: 'hit',
+        label: '命中',
+        icon: '🎯',
+        unit: ''
+    },
+    dodge: {
+        value: 'dodge',
+        label: '閃避',
+        icon: '💨',
         unit: ''
     },
     adIncrease: {
@@ -145,30 +145,6 @@ export const StatEnum = {
         icon: '💫',
         unit: '%'
     },
-    adDefend: {
-        value: 'adDefend',
-        label: '防禦',
-        icon: '🛡️',
-        unit: ''
-    },
-    defendIncrease: {
-        value: 'defendIncrease',
-        label: '抗性',
-        icon: '🔰',
-        unit: '%'
-    },
-    lifeSteal: {
-        value: 'lifeSteal',
-        label: '吸血',
-        icon: '🩸',
-        unit: '%'
-    },
-    actionValue: {
-        value: 'actionValue',
-        label: '行動值',
-        icon: '⚡',
-        unit: ''
-    },
     critRate: {
         value: 'critRate',
         label: '爆擊',
@@ -181,16 +157,41 @@ export const StatEnum = {
         icon: '💢',
         unit: '%'
     },
-    hit: {
-        value: 'hit',
-        label: '命中',
-        icon: '🎯',
+    hpRegen: {
+        value: 'hpRegen',
+        label: '生命回復',
+        icon: '❤️‍🩹',
         unit: ''
     },
-    dodge: {
-        value: 'dodge',
-        label: '閃避',
-        icon: '💨',
+    spRegen: {
+        value: 'spRegen',
+        label: '法力回復',
+        icon: '💜',
+        unit: ''
+    },
+    adDefend: {
+        value: 'adDefend',
+        label: '防禦',
+        icon: '🛡️',
+        unit: ''
+    },
+    defendIncrease: {
+        value: 'defendIncrease',
+        label: '抗性',
+        icon: '🔰',
+        unit: '%'
+    },
+
+    lifeSteal: {
+        value: 'lifeSteal',
+        label: '吸血',
+        icon: '🩸',
+        unit: '%'
+    },
+    actionValue: {
+        value: 'actionValue',
+        label: '行動值',
+        icon: '⚡',
         unit: ''
     },
 };

@@ -27,7 +27,7 @@ const hasSave = computed(() => {
 const classOptions = [
   {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '農村的平民，擁有最基本素質以及帶著一些農產品。'},
   {value: 'Merchant', label: '商人', icon: '🪙', desc: '商會的弟子，獲得 300 $，但戰鬥素質較差。'},
-  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '貧民窟的盜賊，初始裝備「生鏽匕首」，但最大生命上限只有 50'},
+  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '貧民窟的盜賊，擁有武器「生鏽匕首」，但最大生命上限較低'},
   {value: 'Cleric', label: '牧師', icon: '🛐', desc: '信仰教會的牧師，在神的介入下獲得較高的法術適性，卻不擅長近戰。'}
 ]
 

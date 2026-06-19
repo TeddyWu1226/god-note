@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {nextTick, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {QualityEnum} from "@/enums/quality-enum";
 import {EquipmentEnum, StatEnum} from "@/enums/enums";
@@ -60,9 +60,12 @@ const onTouchUnequip = createDoubleTapHandler((slotKey: keyof Equipment) => {
 }, 350)
 
 const isUpgradeable = (statValue: string) => {
-  return ['hp', 'sp', 'ad', 'ap'].includes(statValue);
+  return ['hp', 'sp', 'ad', 'ap', 'hit', 'dodge'].includes(statValue);
 };
 
+const availableUpgradeStat = computed(() => Object.values(StatEnum).filter((stat) => isUpgradeable(stat.value)))
+const otherUpgradeStat = computed(() => Object.values(StatEnum).filter((stat) => !isUpgradeable(stat.value)))
+const showOther = ref(false);
 const allocatePoint = (statValue: string) => {
   let targetKey = statValue;
   if (statValue === 'hp') targetKey = 'hpLimit';
@@ -227,7 +230,6 @@ const cancelReplaceMode = () => {
   replaceMode.value = false;
   selectedNewSkill.value = null;
 };
-
 </script>
 
 <template>
@@ -278,8 +280,8 @@ const cancelReplaceMode = () => {
     </template>
     <div class="stats-container">
 
-      <div class="stats-grid">
-        <div v-for="stat in StatEnum" :key="stat.value" class="stat-item">
+      <div class="main-stats-grid">
+        <div v-for="stat in availableUpgradeStat" :key="stat.value" class="stat-item">
           <div class="stat-info">
             {{ stat.icon }} {{ stat.label }}:
             <template v-if="(stat as any)?.maxKey">
@@ -308,7 +310,7 @@ const cancelReplaceMode = () => {
             </template>
           </div>
           <el-button
-              v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0 && isUpgradeable(stat.value)"
+              v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0"
               size="small"
               type="warning"
               circle
@@ -319,7 +321,47 @@ const cancelReplaceMode = () => {
           </el-button>
         </div>
       </div>
-
+      <div v-if="showOther" class="other-stats-grid">
+        <div v-for="stat in otherUpgradeStat" :key="stat.value" class="stat-item">
+          <div class="stat-info">
+            {{ stat.icon }} {{ stat.label }}:
+            <template v-if="(stat as any)?.maxKey">
+              {{ playerStore.finalStats[stat.value] }} / {{ playerStore.info[(stat as any).maxKey] }}
+              <span
+                  v-if="playerStore.totalBonus[(stat as any).maxKey]"
+                  class="stat-bonus"
+                  :class="{ 'is-positive': playerStore.totalBonus[(stat as any).maxKey] > 0, 'is-negative': playerStore.totalBonus[(stat as any).maxKey] < 0 }"
+              >
+                ({{
+                  playerStore.totalBonus[(stat as any).maxKey] > 0 ? '+' : ''
+                }}{{ playerStore.totalBonus[(stat as any).maxKey] }})
+              </span>
+            </template>
+            <template v-else>
+              {{ playerStore.info[stat.value] || 0 }}{{ stat.unit }}
+              <span
+                  v-if="playerStore.totalBonus[stat.value]"
+                  class="stat-bonus"
+                  :class="{ 'is-positive': playerStore.totalBonus[stat.value] > 0, 'is-negative': playerStore.totalBonus[stat.value] < 0 }"
+              >
+                ({{ playerStore.totalBonus[stat.value] > 0 ? '+' : '' }}{{
+                  playerStore.totalBonus[stat.value]
+                }}{{ stat.unit }})
+              </span>
+            </template>
+          </div>
+        </div>
+      </div>
+      <el-button
+          type="primary"
+          plain
+          style="width: 100%;height: 1.5rem"
+          @click="()=>{
+        showOther = !showOther
+      }
+">
+        其他數據
+      </el-button>
       <el-divider>當前裝備</el-divider>
 
       <div class="equipment-slots">
@@ -596,10 +638,18 @@ const cancelReplaceMode = () => {
 }
 
 /* 彈窗樣式 */
-.stats-grid {
+.main-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+
+.other-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 12px;
+  padding-bottom: 12px;
 }
 
 .stat-item {

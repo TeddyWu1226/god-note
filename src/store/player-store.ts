@@ -132,6 +132,10 @@ export const usePlayerStore = defineStore('player-info', () => {
             spRegen: info.value.spRegen + b.spRegen,
         };
     });
+    const setDead = () => {
+        const gameStateStore = useGameStateStore();
+        gameStateStore.isDead = true
+    }
 
     let isHydrating = true;
     nextTick(() => {
@@ -143,12 +147,16 @@ export const usePlayerStore = defineStore('player-info', () => {
         () => finalStats.value.hpLimit,
         (newMax, oldMax) => {
             if (isHydrating || isRestoring.value) return;
+            if (newMax === 0) {
+                setDead()
+                return;
+            }
             if (oldMax && oldMax > 0 && newMax && newMax > 0) {
                 const ratio = info.value.hp / oldMax;
                 info.value.hp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
             }
         },
-        { flush: 'sync' }
+        {flush: 'sync'}
     );
 
     watch(
@@ -160,7 +168,7 @@ export const usePlayerStore = defineStore('player-info', () => {
                 info.value.sp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
             }
         },
-        { flush: 'sync' }
+        {flush: 'sync'}
     );
 
     const currentExpPercentage = computed(() => {
@@ -672,21 +680,15 @@ export const usePlayerStore = defineStore('player-info', () => {
     /**
      * 分配屬性點數
      */
-    const allocateStatPoint = (statKey: 'ad' | 'ap' | 'hpLimit' | 'spLimit') => {
+    const allocateStatPoint = (statKey: 'ad' | 'ap' | 'hpLimit' | 'spLimit' | 'hit' | 'dodge') => {
         if (!info.value.statPoints || info.value.statPoints <= 0) return false;
 
         info.value.statPoints -= 1;
-
-        if (statKey === 'ad') {
-            info.value.ad += 1;
-        } else if (statKey === 'ap') {
-            info.value.ap = (info.value.ap || 0) + 1;
-        } else if (statKey === 'hpLimit') {
-            info.value.hpLimit += 10;
-        } else if (statKey === 'spLimit') {
-            info.value.spLimit += 5;
+        if (statKey === 'hpLimit' || statKey === 'spLimit') {
+            info.value[statKey] = (info.value[statKey] || 0) + 10;
+        } else {
+            info.value[statKey] = (info.value[statKey] || 0) + 1;
         }
-
         return true;
     };
     return {
