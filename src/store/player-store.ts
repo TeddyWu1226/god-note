@@ -147,7 +147,8 @@ export const usePlayerStore = defineStore('player-info', () => {
                 const ratio = info.value.hp / oldMax;
                 info.value.hp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
             }
-        }
+        },
+        { flush: 'sync' }
     );
 
     watch(
@@ -158,7 +159,8 @@ export const usePlayerStore = defineStore('player-info', () => {
                 const ratio = info.value.sp / oldMax;
                 info.value.sp = Math.min(newMax, Math.max(0, Math.round(newMax * ratio)));
             }
-        }
+        },
+        { flush: 'sync' }
     );
 
     const currentExpPercentage = computed(() => {
@@ -539,12 +541,8 @@ export const usePlayerStore = defineStore('player-info', () => {
     };
 
     const healFull = () => {
-        if (info.value.hp < finalStats.value.hpLimit) {
-            info.value.hp = finalStats.value.hpLimit
-        }
-        if (info.value.sp < finalStats.value.spLimit) {
-            info.value.sp = finalStats.value.spLimit
-        }
+        info.value.hp = finalStats.value.hpLimit
+        info.value.sp = finalStats.value.spLimit
         statusEffects.value = statusEffects.value.filter(effect => effect.isBuff || effect.duration === -1)
 
         // 💡 重置技能冷卻 CD
