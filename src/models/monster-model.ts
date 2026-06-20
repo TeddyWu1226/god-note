@@ -233,7 +233,8 @@ export class MonsterModel implements MonsterType {
      * 如果回傳 false 則不進行攻擊
      */
     triggerOnAttack(params: MonsterOnAttackParams): boolean {
-        return this.onAttackHook(params) || true;
+        const trigger = this.onAttackHook(params)
+        return trigger !== false;
     }
 
     /**

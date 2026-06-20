@@ -11,7 +11,7 @@ export class ShieldBlock extends SkillModel {
         super({
             id: 'ShieldBlock',
             name: "格擋",
-            icon: "skills/shield_block.svg",
+            icon: "skills/active/shield_block.svg",
             type: 'active',
             rarity: 'common',
             costSp: 10,
