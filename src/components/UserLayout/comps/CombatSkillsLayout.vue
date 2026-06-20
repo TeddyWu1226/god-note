@@ -92,11 +92,11 @@ const clickSkill = (skill: SkillModel) => {
                   <span v-if="skill.costSp">SP 消耗: {{ skill.costSp }}</span>
                   <span v-if="skill.costHp && skill.costSp" style="margin: 0 4px">|</span>
                   <span v-if="skill.costHp">HP 消耗: {{ skill.costHp }}</span>
-                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp)" style="margin: 0 4px">|</span>
+                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp) && skill.cd" style="margin: 0 4px">|</span>
                   <template v-if="skill.type === 'active'">
-                    <span>冷卻: {{ skill.cd }} 回合</span>
-                    <span style="margin: 0 4px">|</span>
-                    <span>{{ skill.proficiencyText }}</span>
+                    <span v-if="skill.cd">冷卻: {{ skill.cd }} 回合</span>
+                    <span v-if="skill.proficiencyGain" style="margin: 0 4px">|</span>
+                    <span v-if="skill.proficiencyGain">{{ skill.proficiencyText }}</span>
                   </template>
                 </div>
                 <div class="desc" v-html="skill.description(playerStore)"/>
@@ -117,7 +117,7 @@ const clickSkill = (skill: SkillModel) => {
                   </span>
                 </div>
                 <div class="sub-row">
-                  <span class="lv">{{ skill.proficiencyText }}</span>
+                  <span class="lv" v-if="skill.proficiencyGain">{{ skill.proficiencyText }}</span>
                   <span v-if="skill.type === 'passive'" class="passive-tag">被動</span>
                   <span v-else-if="skill.costSp" class="cost-tag">SP:{{ skill.costSp }}</span>
                   <span v-else-if="skill.costHp" class="cost-tag hp">HP:{{ skill.costHp }}</span>

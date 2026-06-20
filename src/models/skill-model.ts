@@ -12,7 +12,7 @@ export abstract class SkillModel {
     level: number;           // 技能的當前等級
     proficiency: number;     // 技能的當前熟練度 (通常為 0 ~ maxProficiency)
     maxProficiency: number;  // 技能的熟練度上限 (預設為 100)
-    proficiencyGain: number; // 每次使用技能時提升的熟練度 (預設為 1)
+    proficiencyGain: number; // 每次使用技能時提升的熟練度 (預設為 0,如果有才會顯示)
     currentCd: number;       // 當前剩餘的冷卻回合數 (0 代表可立即施展)
     maxCd: number;           // 技能的最大冷卻回合數 (0 代表無 CD)
     costSp: number;          // 施放技能所消耗的魔法值 (SP)

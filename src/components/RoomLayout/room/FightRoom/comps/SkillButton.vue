@@ -2,7 +2,7 @@
 import {computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {SkillModel} from "@/models/skill-model";
-import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
+import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 const emit = defineEmits(['click'])
 const props = defineProps({
@@ -12,7 +12,6 @@ const props = defineProps({
 const playerStore = usePlayerStore();
 const skill = computed<SkillModel>(() => props.skill as SkillModel);
 
-const proficiency = computed(() => skill.value.proficiency);
 // 判斷是否可用與冷卻狀態
 const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 0) && skill.value.currentCd === 0);
 
@@ -28,7 +27,8 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         @click="emit('click')"
     >
       <span class="skill-icon">
-        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon" alt="skill icon" />
+        <img v-if="isImageIcon(skill?.icon)" :src="resolveIconPath(skill?.icon)" class="skill-image-icon"
+             alt="skill icon"/>
         <template v-else>{{ skill?.icon }}</template>
       </span>
       <div class="skill-info">
@@ -51,7 +51,7 @@ const canAfford = computed(() => playerStore.info.sp >= (skill.value?.costSp || 
         <div class="info-trigger">i</div>
       </template>
       <div class="skill-desc">
-        <div>{{ skill.proficiencyText }}</div>
+        <div v-if="skill.proficiencyGain">{{ skill.proficiencyText }}</div>
         <div v-html="skill.description(playerStore)"/>
       </div>
     </el-popover>

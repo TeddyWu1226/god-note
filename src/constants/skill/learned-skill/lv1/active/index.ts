@@ -23,19 +23,17 @@ export class VerticalSlash extends SkillModel {
             maxCd: 0,
             costSp: 5,
             costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2,
             uniqueFields: ['豎擊'],
         });
     }
 
-    get extraDamage(): number {
-        return Math.round(this.proficiency / 5);
+    extraDamage(playerStore): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.max(ad * 0.5 + 5, ad * 0.8 + 1)
     }
 
     description(playerStore: PlayerStoreType): string {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        const total = ad + this.extraDamage;
+        const total = this.extraDamage(playerStore);
         return `由上往下攻擊，總計造成 ${ColorText.ad(total)} 。`;
     }
 
@@ -44,7 +42,7 @@ export class VerticalSlash extends SkillModel {
         const monster = params.monster;
         if (!playerStore || !monster) return false;
 
-        const totalDmg = playerStore.finalStats.ad + this.extraDamage;
+        const totalDmg = this.extraDamage(playerStore);
         monster.lastDamageResult = applySkillDamage(
             playerStore.finalStats,
             monster,
@@ -68,15 +66,13 @@ export class HorizontalSlash extends SkillModel {
             maxCd: 0,
             costSp: 15,
             costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2,
             uniqueFields: ['橫擊'],
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(((50 + this.proficiency) / 100) * ad);
+        return Math.round(0.8 * ad)
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -120,15 +116,13 @@ export class Thrust extends SkillModel {
             rarity: 'common',
             maxCd: 0,
             costSp: 10,
-            costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            costAction: 1
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad + 5 + this.proficiency * 0.6);
+        return ad + 5
     }
 
     description(playerStore: PlayerStoreType): string {
