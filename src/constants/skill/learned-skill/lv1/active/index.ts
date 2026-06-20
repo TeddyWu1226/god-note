@@ -20,7 +20,7 @@ export class VerticalSlash extends SkillModel {
             icon: "skills/active/vertical_slash_icon.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 0,
+            maxCd: 2,
             costSp: 5,
             costAction: 1,
             uniqueFields: ['豎擊'],
@@ -63,7 +63,7 @@ export class HorizontalSlash extends SkillModel {
             icon: "skills/active/horizontal_slash_icon.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 0,
+            maxCd: 2,
             costSp: 15,
             costAction: 1,
             uniqueFields: ['橫擊'],
@@ -114,7 +114,7 @@ export class Thrust extends SkillModel {
             icon: "skills/active/thrust_icon.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 0,
+            maxCd: 2,
             costSp: 10,
             costAction: 1
         });

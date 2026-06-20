@@ -623,8 +623,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
     }
     /**
-     * 等級提升(每階100點)
-     * 等差>=1 : 10, >=2 以上 每等額外+10
+     * 等級提升
      */
     const getNextLevelExp = (level: number) => {
         return 10 + 10 * level;
@@ -685,7 +684,7 @@ export const usePlayerStore = defineStore('player-info', () => {
 
         info.value.statPoints -= 1;
         if (statKey === 'hpLimit' || statKey === 'spLimit') {
-            info.value[statKey] = (info.value[statKey] || 0) + 10;
+            info.value[statKey] = (info.value[statKey] || 0) + 20;
         } else if (statKey === 'hit' || statKey === 'dodge') {
             info.value[statKey] = (info.value[statKey] || 0) + 2;
         } else {

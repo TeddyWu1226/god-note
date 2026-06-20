@@ -14,7 +14,6 @@ import {EvolutionRule} from "@/types";
 export const SKILL_CLASS_MAP: Record<string, any> = {
     // Level 1
     CommonHeal: Lv1SkillActive.CommonHeal,
-    MagicBall: Lv1SkillActive.MagicBall,
     VerticalSlash: Lv1SkillActive.VerticalSlash,
     HorizontalSlash: Lv1SkillActive.HorizontalSlash,
     Thrust: Lv1SkillActive.Thrust,
