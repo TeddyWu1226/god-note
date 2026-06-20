@@ -4,16 +4,17 @@ import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability, isMultiple} from "@/utils/math";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {MonsterActionParams, MonsterOnAttackParams} from "@/types";
+import {MonsterOnAttackParams} from "@/types";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 import {calculateIsHit} from "@/constants/fight-func";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {genCustomStatus} from "@/utils/create";
 
 export class Slime extends MonsterModel {
     constructor() {
         super({
-            icon: '/monsters/slime.png',
+            icon: '🟢',
             code: 'Slime',
             name: '史萊姆',
             description: '森林中最常見的粘稠生物，帶有淡淡的草本氣味',
@@ -89,15 +90,15 @@ export class WoodTick extends MonsterModel {
             name: '木兵蟻',
             code: 'WoodTick',
             description: '體型細小但甲殼堅硬，容易躲開笨重的攻擊',
-            ad: 4,
+            ad: 6,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 3,
             dodge: 12,
             hit: 5,
-            hp: 20,
-            hpLimit: 20,
-            level: 2,
+            hp: 30,
+            hpLimit: 30,
+            level: 3,
             dropGold: 5,
             drop: [
                 {item: Material.LowerNormal, chance: 0.5}
@@ -110,7 +111,7 @@ export class StingerBee extends MonsterModel {
     constructor() {
         super({
             icon: '🐝',
-            name: '森林虎頭蜂',
+            name: '森林毒蜂',
             code: 'StingerBee',
             description: '擁有致命的毒刺，一旦被刺中傷口劇痛不已',
             ad: 2,
@@ -129,6 +130,7 @@ export class StingerBee extends MonsterModel {
         });
     }
 
+
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.7)) {
             playerStore.addStatus(UnitStatus.BeePoison);
@@ -136,55 +138,6 @@ export class StingerBee extends MonsterModel {
         }
     }
 }
-
-export class GreenRabbit extends MonsterModel {
-    constructor() {
-        super({
-            code: 'GreenRabbit',
-            icon: '🐇',
-            name: '綠兔',
-            description: '額頭長有小角的兔子，衝撞力驚人',
-            ad: 7,
-            critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
-            adDefend: 5,
-            dodge: 10,
-            hit: 4,
-            hp: 30,
-            hpLimit: 30,
-            level: 3,
-            dropGold: 12,
-            drop: [
-                {item: Material.LowerNormal, chance: 0.5}
-            ]
-        });
-    }
-}
-
-export class ForestOwl extends MonsterModel {
-    constructor() {
-        super({
-            code: 'ForestOwl',
-            icon: '🦉',
-            name: '夜行梟',
-            description: '在樹蔭間穿梭的獵食者，眼神銳利',
-            ad: 10,
-            critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
-            adDefend: 0,
-            dodge: 30,
-            hit: 10,
-            hp: 25,
-            hpLimit: 25,
-            level: 3,
-            dropGold: 12,
-            drop: [
-                {item: Material.LowerNormal, chance: 0.5}
-            ]
-        });
-    }
-}
-
 
 export class FierceWolf extends MonsterModel {
     constructor() {
@@ -198,8 +151,8 @@ export class FierceWolf extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: 10,
             adDefend: 6,
-            dodge: 12,
-            hit: 10,
+            dodge: 25,
+            hit: 15,
             hp: 85,
             hpLimit: 85,
             level: 5,
@@ -260,15 +213,49 @@ export class SmallSpider extends MonsterModel {
     }
 }
 
+export class PoisonSlime extends MonsterModel {
+    constructor() {
+        super({
+            icon: '🟣',
+            code: 'PoisonSlime',
+            name: '毒史萊姆',
+            description: '受到毒區影響變異的史萊姆,有強烈毒性',
+            ad: 6,
+            critIncrease: WorldDefault.critIncrease,
+            critRate: WorldDefault.critRate,
+            adDefend: 0,
+            dodge: 10,
+            hit: 10,
+            hp: 45,
+            hpLimit: 45,
+            level: 5,
+            dropGold: 15,
+            drop: [
+                {item: Material.LowerNormal, chance: 0.5}
+            ]
+        });
+    }
+
+    override onAttackedHook({playerStore, logStore}: any) {
+        if (checkProbability(0.7)) {
+            playerStore.addStatus(UnitStatus.ScorpionPoison);
+            logStore.logger.add(`你中毒了。`);
+        }
+    }
+
+    override onStartHook({playerStore, targetElement}) {
+        this.addEffect(genCustomStatus({base: UsualStatus.AdDefendInCrease, bonus: {adDefend: 10}}))
+    }
+}
+
 export const MistyForestMonster = {
     Slime: new Slime(),
-    ForestSprout: new Slime(),
+    ForestSprout: new ForestSprout(),
     WoodTick: new WoodTick(),
     StingerBee: new StingerBee(),
-    GreenRabbit: new GreenRabbit(),
-    ForestOwl: new ForestOwl(),
     FierceWolf: new FierceWolf(),
     SmallSpider: new SmallSpider(),
+    PoisonSlime: new PoisonSlime()
 };
 
 

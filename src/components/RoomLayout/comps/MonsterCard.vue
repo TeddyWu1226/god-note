@@ -206,14 +206,9 @@ watch(() => props.info.lastDamageResult, (newResult) => {
     <div class="monster-card-body" :class="{ 'is-dead': isDead }">
       <!-- 頭像與圖示區 -->
       <div class="monster-avatar-container">
-        <template v-if="isDead">
-          <span class="death-emoji">🪦</span>
-        </template>
-        <template v-else>
-          <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon"
-               alt="monster icon"/>
-          <span v-else class="monster-icon">{{ props.info.icon }}</span>
-        </template>
+        <img v-if="isImageIcon" :src="resolveIconPath(props.info.icon)" class="monster-image-icon"
+             alt="monster icon"/>
+        <span v-else class="monster-icon">{{ props.info.icon }}</span>
       </div>
 
       <!-- 名字與狀態文字區 -->

@@ -81,7 +81,7 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 const getWeightByStage = () => {
   const day = Math.max(1, gameStateStore.stageDays)
-  const subZoneIdx = Math.min(3, Math.ceil((day / 33)))
+  const subZoneIdx = Math.min(3, Math.ceil((day / 25)))
   const originalMap = stageMonsterWeightsMap[subZoneIdx ?? 1] || EndlessWeights
   const monsterMap = {...originalMap}
   return monsterMap || EndlessWeights;
