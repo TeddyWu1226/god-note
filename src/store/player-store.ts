@@ -96,7 +96,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 💡 計算被動技能加成
         if (info.value.skills) {
             info.value.skills.forEach(s => {
-                if (s && s instanceof SkillModel && s.type === 'passive') {
+                if (s && s instanceof SkillModel) {
                     const skillBonus = s.getPassiveBonus(info.value);
                     Object.keys(skillBonus).forEach(key => {
                         if (typeof bonus[key] === 'number') {

@@ -40,6 +40,7 @@ export class SwordProficiency extends SkillModel {
             icon: "skills/passive/sword_proficiency.svg",
             type: 'passive',
             rarity: 'common',
+            uniqueFields: ['劍之道'],
         });
     }
 
@@ -167,7 +168,8 @@ export class RedSkin extends SkillModel {
             name: "紅皮膚",
             icon: "skills/passive/red_skin.svg",
             type: 'passive',
-            rarity: 'common'
+            rarity: 'common',
+            uniqueFields: ['紅皮膚'],
         });
     }
 
@@ -196,7 +198,8 @@ export class BlueSkin extends SkillModel {
             name: "藍皮膚",
             icon: "skills/passive/blue_skin.svg",
             type: 'passive',
-            rarity: 'common'
+            rarity: 'common',
+            uniqueFields: ['藍皮膚'],
         });
     }
 
@@ -225,7 +228,8 @@ export class BlockBoost extends SkillModel {
             name: "格擋強化",
             icon: "skills/passive/block_boost.svg",
             type: 'passive',
-            rarity: 'common'
+            rarity: 'common',
+            uniqueFields: ['格檔強化'],
         });
     }
 

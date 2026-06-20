@@ -24,7 +24,8 @@ export class VerticalSlash extends SkillModel {
             costSp: 5,
             costAction: 1,
             maxProficiency: 50,
-            proficiencyGain: 2
+            proficiencyGain: 2,
+            uniqueFields: ['豎擊'],
         });
     }
 
@@ -68,7 +69,8 @@ export class HorizontalSlash extends SkillModel {
             costSp: 15,
             costAction: 1,
             maxProficiency: 50,
-            proficiencyGain: 2
+            proficiencyGain: 2,
+            uniqueFields: ['橫擊'],
         });
     }
 

@@ -3,6 +3,7 @@ import * as Lv1SkillActive from "./lv1/active";
 import * as Lv1SkillPassive from "./lv1/passive";
 import * as Lv2SkillActive from "./lv2/active";
 import * as Lv2SkillPassive from "./lv2/passive";
+import * as Lv3SkillActive from "./lv3/active";
 import * as Lv3SkillPassive from "./lv3/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
@@ -34,17 +35,24 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     // Level 2
     Cleave: Lv2SkillActive.Cleave,
     Flurry: Lv2SkillActive.Flurry,
+    KnightWay: Lv2SkillActive.KnightWay,
+    SwordQi: Lv2SkillActive.SwordQi,
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
+    HeartOfRebellion: Lv2SkillPassive.HeartOfRebellion,
 
     // Level 3
-
-
+    VerticalSlashMaster: Lv3SkillActive.VerticalSlashMaster,
+    HorizontalSlashMaster: Lv3SkillActive.HorizontalSlashMaster,
     SwordMaster: Lv3SkillPassive.SwordMaster,
+    PurpleSkin: Lv3SkillPassive.PurpleSkin,
+
     // 副手技能
     ShieldBlock: ShieldBlock,
     PowerCharge: PowerCharge,
 };
+
+
 
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
 export const SKILL_TEMPLATES: Record<string, SkillModel> = {};
@@ -108,7 +116,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         checkEligible: (playerStore, trackerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency');
             const kills = trackerStore.getKillCount('USE_SWORD', 'total') || 0;
-            return hasBase && kills >= 1;
+            return hasBase && kills >= 100;
         }
     },
     SwordMaster: {
@@ -120,15 +128,78 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
             return hasBase && kills >= 200;
         }
     },
+    KnightWay: {
+        evolvedSkillId: 'KnightWay',
+        baseSkillId: 'SwordProficiency',
+        checkEligible: (playerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency');
+            const hasWill = playerStore.info.skills?.some((s: any) => s.id === 'WillBuff');
+            return hasBase && hasWill;
+        }
+    },
     Cleave: {
         evolvedSkillId: 'Cleave',
         baseSkillId: 'VerticalSlash',
         checkEligible: (playerStore) => {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
-            const hasMastery = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency' || s.id === 'SwordExpert');
+            const hasMastery = playerStore.info.skills?.some((s: any) =>
+                s.id === 'SwordProficiency' || s.id === 'SwordExpert' || s.id === 'SwordMaster' || s.id === 'KnightWay'
+            );
             const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'VerticalSlash');
             const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
             return hasBase && hasMastery && isMaxProf;
+        }
+    },
+    VerticalSlashMaster: {
+        evolvedSkillId: 'VerticalSlashMaster',
+        baseSkillId: 'Cleave',
+        checkEligible: (playerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'Cleave');
+            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'Cleave');
+            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
+            return hasBase && isMaxProf;
+        }
+    },
+    SwordQi: {
+        evolvedSkillId: 'SwordQi',
+        baseSkillId: 'HorizontalSlash',
+        checkEligible: (playerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'HorizontalSlash');
+            const hasMastery = playerStore.info.skills?.some((s: any) =>
+                s.id === 'SwordProficiency' || s.id === 'SwordExpert' || s.id === 'SwordMaster' || s.id === 'KnightWay'
+            );
+            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'HorizontalSlash');
+            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
+            return hasBase && hasMastery && isMaxProf;
+        }
+    },
+    HorizontalSlashMaster: {
+        evolvedSkillId: 'HorizontalSlashMaster',
+        baseSkillId: 'SwordQi',
+        checkEligible: (playerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordQi');
+            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'SwordQi');
+            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
+            return hasBase && isMaxProf;
+        }
+    },
+    HeartOfRebellion: {
+        evolvedSkillId: 'HeartOfRebellion',
+        baseSkillId: 'BlockBoost',
+        checkEligible: (playerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'BlockBoost');
+            const hasKnightWay = playerStore.info.skills?.some((s: any) => s.id === 'KnightWay');
+            return hasBase && hasKnightWay;
+        }
+    },
+    PurpleSkin: {
+        evolvedSkillId: 'PurpleSkin',
+        baseSkillId: 'BlueSkin',
+        fuseSkillIds: ['RedSkin'],
+        checkEligible: (playerStore) => {
+            const hasBlue = playerStore.info.skills?.some((s: any) => s.id === 'BlueSkin');
+            const hasRed = playerStore.info.skills?.some((s: any) => s.id === 'RedSkin');
+            return hasBlue && hasRed;
         }
     },
     Flurry: {
@@ -142,3 +213,4 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         }
     }
 };
+

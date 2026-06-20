@@ -3,37 +3,38 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, getMonsterElement, Sleep} from "@/utils/create";
+import {genCustomStatus, getMonsterElement} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 /**
- * 劈斬 (Cleave) - 進化自 豎擊
- * 主動技能，造成高額單體傷害，並在下一回合提升 5% 物理傷害。
+ * 垂直斬 (VerticalSlashMaster) - 進化自 劈砍
+ * 主動技能，造成高額單體傷害，並在下一回合提升 10% 物理傷害。
  */
-export class Cleave extends SkillModel {
+export class VerticalSlashMaster extends SkillModel {
     constructor() {
         super({
-            id: 'Cleave',
-            name: "劈斬",
-            icon: "skills/cleave.svg",
+            id: 'VerticalSlashMaster',
+            name: "垂直斬",
+            icon: "skills/active/vertical_slash_master.svg",
             type: 'active',
-            rarity: 'rare',
+            rarity: 'legendary',
             maxCd: 0,
-            costSp: 12,
+            costSp: 20,
             costAction: 1,
             maxProficiency: 100,
-            proficiencyGain: 1
+            proficiencyGain: 1,
+            uniqueFields: ['豎擊'],
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 1.5 + this.proficiency * 0.5);
+        return Math.round(ad * 2.2 + this.proficiency * 0.8);
     }
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `重重劈斬單體敵人，造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 5% 物理傷害。`;
+        return `對單體敵人發動致命的垂直斬擊，造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 10% 物理傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -45,23 +46,23 @@ export class Cleave extends SkillModel {
         monster.lastDamageResult = applySkillDamage(playerStore.finalStats, monster, dmg, 'ad', this.name);
         useCardImpactEffect(params.targetElement || null, 'vertical-slash');
 
-        // 提升下一回合 5% 物理傷害 (加持續時間為 2 的 Buff，當前/下回合結束時分別減1，下回合行動時剩下 1 回合且依然生效)
+        // 提升下一回合 10% 物理傷害
         playerStore.addStatus(genCustomStatus({
             base: {
-                name: '攻擊強化',
+                name: '攻擊強化+',
                 icon: '🗡️',
                 duration: 2,
                 isBuff: true,
-                description: '提升 5% 物理傷害',
+                description: '提升 10% 物理傷害',
                 bonus: {
-                    adIncrease: 5
+                    adIncrease: 10
                 }
             },
             duration: 2
         }));
 
         useFullScreenEffect({
-            message: '劈斬',
+            message: '垂直斬',
             color: 'red'
         });
 
@@ -70,40 +71,37 @@ export class Cleave extends SkillModel {
 }
 
 /**
- * 亂擊 (Flurry) - 融合自 豎擊 + 橫擊 + 刺擊
- * 主動技能，對隨機敵方目標發起 3~4 次攻擊，每次造成小幅傷害。
+ * 水平斬 (HorizontalSlashMaster) - 進化自 劍氣
+ * 主動技能，對全體敵人造成高額物理傷害，並在下一回合提升 10% 物理傷害。
  */
-export class Flurry extends SkillModel {
+export class HorizontalSlashMaster extends SkillModel {
     constructor() {
         super({
-            id: 'Flurry',
-            name: "亂擊",
-            icon: "skills/flurry.svg",
+            id: 'HorizontalSlashMaster',
+            name: "水平斬",
+            icon: "skills/active/horizontal_slash_master.svg",
             type: 'active',
-            rarity: 'rare',
+            rarity: 'legendary',
             maxCd: 0,
-            costSp: 15,
+            costSp: 30,
             costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            maxProficiency: 100,
+            proficiencyGain: 1,
+            uniqueFields: ['橫擊'],
         });
     }
 
-    getSingleDamage(playerStore: PlayerStoreType): number {
+    getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.4);
-    }
-
-    getMaxHitNum() {
-        return 1 + (Math.ceil(this.proficiency * 0.1))
+        return Math.round(((140 + this.proficiency) / 100) * ad);
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getSingleDamage(playerStore);
-        return `狂亂地連續揮打，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(dmg)} 物理傷害。`;
+        const dmg = this.getDamage(playerStore);
+        return `發動毀滅性的水平斬擊，對全體敵人造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 10% 物理傷害。`;
     }
 
-    protected async execute(params: SkillParams): Promise<boolean> {
+    protected execute(params: SkillParams): boolean {
         const playerStore = params.playerStore;
         const gameStateStore = params.gameStateStore;
         if (!playerStore || !gameStateStore) return false;
@@ -111,33 +109,42 @@ export class Flurry extends SkillModel {
         const enemies = gameStateStore.currentEnemy || [];
         if (enemies.length === 0) return false;
 
-        // 隨機決定 3 或 4 次連擊
-        const hits = this.getMaxHitNum();
-        const dmg = this.getSingleDamage(playerStore);
-
-        useFullScreenEffect({
-            message: '亂擊'
+        const dmg = this.getDamage(playerStore);
+        enemies.forEach((enemy) => {
+            enemy.lastDamageResult = applySkillDamage(
+                playerStore.finalStats,
+                enemy,
+                dmg,
+                'ad',
+                this.name
+            );
+            const el = getMonsterElement(enemy.id);
+            if (el) {
+                useCardImpactEffect(el, 'horizontal-slash');
+            }
         });
 
-        // 執行多段隨機打擊
-        for (let i = 0; i < hits; i++) {
-            // 每次打擊前過濾出尚存活的目標
-            const livingEnemies = enemies.filter(m => m.hp > 0);
-            if (livingEnemies.length === 0) break;
+        // 提升下一回合 10% 物理傷害
+        playerStore.addStatus(genCustomStatus({
+            base: {
+                name: '攻擊強化+',
+                icon: '🗡️',
+                duration: 2,
+                isBuff: true,
+                description: '提升 10% 物理傷害',
+                bonus: {
+                    adIncrease: 10
+                }
+            },
+            duration: 2
+        }));
 
-            const target = livingEnemies[Math.floor(Math.random() * livingEnemies.length)];
-            target.lastDamageResult = applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
-            const el = getMonsterElement(target.id)
-            if (el) {
-                useCardImpactEffect(el, 'physical');
-            }
-
-            // 每次打擊之間延遲 250 毫秒
-            if (i < hits - 1) {
-                await Sleep(250);
-            }
-        }
+        useFullScreenEffect({
+            message: '水平斬',
+            color: 'orange'
+        });
 
         return true;
     }
 }
+

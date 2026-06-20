@@ -7,22 +7,23 @@ import {genCustomStatus, getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 /**
- * 劈斬 (Cleave) - 進化自 豎擊
+ * 劈砍 (Cleave) - 進化自 豎擊
  * 主動技能，造成高額單體傷害，並在下一回合提升 5% 物理傷害。
  */
 export class Cleave extends SkillModel {
     constructor() {
         super({
             id: 'Cleave',
-            name: "劈斬",
-            icon: "skills/cleave.svg",
+            name: "劈砍",
+            icon: "skills/active/cleave.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 0,
             costSp: 12,
             costAction: 1,
             maxProficiency: 100,
-            proficiencyGain: 1
+            proficiencyGain: 1,
+            uniqueFields: ['豎擊'],
         });
     }
 
@@ -33,7 +34,7 @@ export class Cleave extends SkillModel {
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `重重劈斬單體敵人，造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 5% 物理傷害。`;
+        return `重重劈砍單體敵人，造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 5% 物理傷害。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -61,7 +62,7 @@ export class Cleave extends SkillModel {
         }));
 
         useFullScreenEffect({
-            message: '劈斬',
+            message: '劈砍',
             color: 'red'
         });
 
@@ -78,7 +79,7 @@ export class Flurry extends SkillModel {
         super({
             id: 'Flurry',
             name: "亂擊",
-            icon: "skills/flurry.svg",
+            icon: "skills/active/flurry.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 0,
@@ -137,6 +138,140 @@ export class Flurry extends SkillModel {
                 await Sleep(250);
             }
         }
+
+        return true;
+    }
+}
+
+/**
+ * 騎士道 (KnightWay) - 進化自 劍術精通
+ * 主動技能，獲得抗性加成，且永久獲得 5% 減傷。
+ */
+export class KnightWay extends SkillModel {
+    constructor() {
+        super({
+            id: 'KnightWay',
+            name: "騎士道",
+            icon: "skills/active/knight_way.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 5,
+            costSp: 10,
+            costAction: 1,
+            maxProficiency: 0,
+            proficiencyGain: 0,
+            uniqueFields: ['劍之道'],
+        });
+    }
+
+    description(): string {
+        return `永久獲得 5% 減傷。主動使用：提升自身 15% 抗性，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        if (!playerStore) return false;
+
+        const buff = genCustomStatus({
+            base: {
+                name: '騎士道',
+                icon: '🛡️',
+                duration: 5,
+                isBuff: true,
+                description: '提升 15% 抗性',
+                bonus: {
+                    defendIncrease: 15
+                }
+            },
+            duration: 5
+        });
+        playerStore.addStatus(buff);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        return {
+            defendIncrease: 5
+        };
+    }
+}
+
+/**
+ * 劍氣 (SwordQi) - 進化自 橫擊
+ * 主動技能，對全體敵人造成物理傷害，並使下一回合提升 5% 物理傷害。
+ */
+export class SwordQi extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordQi',
+            name: "劍氣",
+            icon: "skills/active/sword_qi.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 0,
+            costSp: 20,
+            costAction: 1,
+            maxProficiency: 100,
+            proficiencyGain: 1,
+            uniqueFields: ['橫擊'],
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.round(((90 + this.proficiency * 0.6) / 100) * ad);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const dmg = this.getDamage(playerStore);
+        return `揮舞武器釋放劍氣，對全體敵人造成 ${ColorText.ad(dmg)} 物理傷害，並使下一回合提升 5% 物理傷害。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        const playerStore = params.playerStore;
+        const gameStateStore = params.gameStateStore;
+        if (!playerStore || !gameStateStore) return false;
+
+        const enemies = gameStateStore.currentEnemy || [];
+        if (enemies.length === 0) return false;
+
+        const dmg = this.getDamage(playerStore);
+        enemies.forEach((enemy) => {
+            enemy.lastDamageResult = applySkillDamage(
+                playerStore.finalStats,
+                enemy,
+                dmg,
+                'ad',
+                this.name
+            );
+            const el = getMonsterElement(enemy.id);
+            if (el) {
+                useCardImpactEffect(el, 'horizontal-slash');
+            }
+        });
+
+        playerStore.addStatus(genCustomStatus({
+            base: {
+                name: '攻擊強化',
+                icon: '🗡️',
+                duration: 2,
+                isBuff: true,
+                description: '提升 5% 物理傷害',
+                bonus: {
+                    adIncrease: 5
+                }
+            },
+            duration: 2
+        }));
+
+        useFullScreenEffect({
+            message: '劍氣',
+            color: 'blue'
+        });
 
         return true;
     }

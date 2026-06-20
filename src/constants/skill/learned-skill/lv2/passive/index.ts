@@ -1,5 +1,5 @@
 import {SkillModel} from "@/models/skill-model";
-import {SkillParams} from "@/types";
+import {PlayerStoreType, SkillParams} from "@/types";
 
 export class SwordExpert extends SkillModel {
     constructor() {
@@ -9,6 +9,7 @@ export class SwordExpert extends SkillModel {
             icon: "skills/passive/sword_expert.svg",
             type: 'passive',
             rarity: 'rare',
+            uniqueFields: ['劍之道'],
         });
     }
 
@@ -34,4 +35,34 @@ export class SwordExpert extends SkillModel {
         return bonus;
     }
 }
+
+/**
+ * 反抗之心 (HeartOfRebellion) - 進化自 格擋強化
+ * 被動技能，完美格擋成功除了減傷強化外, 還可以獲得一回合增傷。
+ */
+export class HeartOfRebellion extends SkillModel {
+    constructor() {
+        super({
+            id: 'HeartOfRebellion',
+            name: "反抗之心",
+            icon: "skills/passive/heart_of_rebellion.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['格檔強化'],
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `完美格擋（格擋敵方暴擊）的受傷比例減少至 25%。且完美格擋成功時，獲得下一回合 20% 物理與法術增傷。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        return {};
+    }
+}
+
 

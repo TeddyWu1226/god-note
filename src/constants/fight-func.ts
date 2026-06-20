@@ -3,7 +3,7 @@ import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
-import {getRandomItemByWeight} from "@/utils/create";
+import {getRandomItemByWeight, genCustomStatus} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -103,11 +103,30 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     // 額外效果
     if (outcome.isCrit && playerStore.hasStatus(ItemStatus.Block.name)) {
         let blockMultiplier = 0.50;
-        if (playerStore.hasSkill('BlockBoost')) {
+        if (playerStore.hasSkill('BlockBoost') || playerStore.hasSkill('HeartOfRebellion')) {
             blockMultiplier = 0.25;
         }
         damageTaken = Math.round(damageTaken * blockMultiplier);
         monster.status.push(UsualStatus.Stuck);
+
+        // 反抗之心效果：完美格擋成功時，獲得下一回合 20% 增傷
+        if (playerStore.hasSkill('HeartOfRebellion')) {
+            playerStore.addStatus(genCustomStatus({
+                base: {
+                    name: '反抗之心',
+                    icon: '⚔️',
+                    duration: 2,
+                    isBuff: true,
+                    description: '下一回合提升 20% 物理與法術傷害',
+                    bonus: {
+                        adIncrease: 20,
+                        apIncrease: 20
+                    }
+                },
+                duration: 2
+            }));
+            logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
+        }
     }
     if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
         // 直接修改 Store 裡的原始數據 info.hp

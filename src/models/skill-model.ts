@@ -19,6 +19,7 @@ export abstract class SkillModel {
     costHp: number;          // 施放技能所消耗的生命值 (HP)
     costAction: number;      // 施放技能所消耗的行動點數 (AP)
     itemDescription?: string;// 技能的靜態說明描述 (用於背包/商店 Tooltips)
+    uniqueFields: string[];  // 唯一字段列表 (用於學習衝突檢查)
 
     constructor(data: {
         id: string;              // 技能唯一的識別碼 (ID)
@@ -30,12 +31,13 @@ export abstract class SkillModel {
         proficiency?: number;    // 技能的當前熟練度 (選填，預設為 0)
         maxProficiency?: number; // 技能的熟練度上限 (選填，預設為 100)
         proficiencyGain?: number;// 每次使用技能時提升的熟練度 (選填，預設為 1)
-        currentCd?: number;      // 當前剩餘的冷卻回合數 (選填，預設為 0)
+        currentCd?: number;      // 當前剩餘 of 冷卻回合數 (選填，預設為 0)
         maxCd?: number;          // 技能的最大冷卻回合數 (選填，預設為 0)
         costSp?: number;         // 施放技能所消耗的魔法值 (選填，預設為 0)
         costHp?: number;         // 施放技能所消耗的生命值 (選填，預設為 0)
         costAction?: number;     // 施放技能所消耗的行動點數 (選填，預設為 1)
         itemDescription?: string;// 技能的靜態說明描述 (選填)
+        uniqueFields?: string[]; // 唯一字段 (選填)
     }) {
         this.id = data.id;
         this.name = data.name;
@@ -52,6 +54,7 @@ export abstract class SkillModel {
         this.costHp = data.costHp ?? 0;
         this.costAction = data.costAction ?? 1;
         this.itemDescription = data.itemDescription;
+        this.uniqueFields = data.uniqueFields ?? [];
     }
 
     // 💡 獲取描述 (由子類別實作)
@@ -125,6 +128,7 @@ export class GenericSkill extends SkillModel {
         description: (playerStore: any, self: SkillModel) => string;                        // 描述函數
         use: (params: SkillParams, self: SkillModel) => Promise<boolean> | boolean;         // 使用函數
         passiveBonus?: (self: SkillModel) => Record<string, number>;                        // 被動加成函數
+        uniqueFields?: string[]; // 唯一字段
     }) {
         super(data);
         this._descFn = data.description;
