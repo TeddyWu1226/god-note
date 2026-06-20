@@ -12,7 +12,7 @@ export class SwordExpert extends SkillModel {
         });
     }
 
-    addAd = 10
+    addAd = 6
     addHit = 30
 
     description(): string {

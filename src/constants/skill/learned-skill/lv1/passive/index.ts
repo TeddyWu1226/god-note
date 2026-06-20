@@ -35,7 +35,7 @@ export class PhysiqueBoost extends SkillModel {
 export class SwordProficiency extends SkillModel {
     constructor() {
         super({
-            id: 'Proficiency',
+            id: 'SwordProficiency',
             name: "劍術精通",
             icon: "skills/passive/sword_proficiency.svg",
             type: 'passive',

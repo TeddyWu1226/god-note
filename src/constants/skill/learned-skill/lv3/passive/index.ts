@@ -7,14 +7,17 @@ export class SwordMaster extends SkillModel {
         super({
             id: 'SwordMaster',
             name: "劍術大師",
-            icon: "skills/sword_expert.svg",
+            icon: "skills/passive/sword_master.svg",
             type: 'passive',
-            rarity: 'rare',
+            rarity: 'legendary',
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return `裝備劍（名稱含有「劍」的武器）時，提升 15% 物理傷害，並增加 20 點命中。`;
+    addAd = 30
+    addHit = 60
+
+    description(): string {
+        return `增加 ${this.addHit} 點命中。裝備名稱含有「劍」的武器時，提升 ${this.addAd} 物理攻擊。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -23,13 +26,13 @@ export class SwordMaster extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
+        const bonus = {
+            hit: this.addAd
+        };
         if (weaponName.includes('劍')) {
-            return {
-                adIncrease: 15,
-                hit: 20
-            };
+            bonus['ad'] = this.addHit
         }
-        return {};
+        return bonus;
     }
 }
 

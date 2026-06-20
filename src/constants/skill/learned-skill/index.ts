@@ -3,9 +3,11 @@ import * as Lv1SkillActive from "./lv1/active";
 import * as Lv1SkillPassive from "./lv1/passive";
 import * as Lv2SkillActive from "./lv2/active";
 import * as Lv2SkillPassive from "./lv2/passive";
+import * as Lv3SkillPassive from "./lv3/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {EvolutionRule} from "@/types";
+
 
 // 💡 技能 ID 與 Subclass 類別對照表
 export const SKILL_CLASS_MAP: Record<string, any> = {
@@ -33,6 +35,10 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
 
+    // Level 3
+
+
+    SwordMaster: Lv3SkillPassive.SwordMaster,
     // 副手技能
     ShieldBlock: ShieldBlock,
     PowerCharge: PowerCharge,
@@ -101,6 +107,15 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
             const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordProficiency');
             const kills = trackerStore.getKillCount('USE_SWORD', 'total') || 0;
             return hasBase && kills >= 1;
+        }
+    },
+    SwordMaster: {
+        evolvedSkillId: 'SwordMaster',
+        baseSkillId: 'SwordExpert',
+        checkEligible: (playerStore, trackerStore) => {
+            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordExpert');
+            const kills = trackerStore.getKillCount('USE_SWORD', 'total') || 0;
+            return hasBase && kills >= 200;
         }
     },
     Cleave: {
