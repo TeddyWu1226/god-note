@@ -12,7 +12,7 @@ export const SkillStatus = {
         }
     },
     Focus: {
-        name: '專注提升',
+        name: '專注意志',
         icon: '🎯',
         duration: 5,
         isBuff: true,
@@ -29,6 +29,16 @@ export const SkillStatus = {
         description: `提升自身 %defendIncrease% 點抗性，持續 %duration% 回合`,
         bonus: {
             defendIncrease: 10
+        }
+    } as StatusEffect,
+    Fight: {
+        name: '戰鬥意志',
+        icon: '✊',
+        duration: 5,
+        isBuff: true,
+        description: `提升自身 %adIncrease%% 物理輸出，持續 %duration% 回合`,
+        bonus: {
+            adIncrease: 10
         }
     } as StatusEffect,
     MagicDefend: {

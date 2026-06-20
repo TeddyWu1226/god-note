@@ -2,40 +2,48 @@
   <!-- Retro Item Frame (Border Only, Transparent Background) -->
   <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
 
-  <!-- Shield Outline (Dark Golden Bronze) -->
-  <rect x="4" y="2" width="8" height="1" fill="#b78408" />
-  <rect x="3" y="3" width="10" height="9" fill="#b78408" />
-  <rect x="4" y="12" width="8" height="1" fill="#b78408" />
-  <rect x="5" y="13" width="6" height="1" fill="#b78408" />
-  <rect x="7" y="14" width="2" height="1" fill="#b78408" />
+  <!-- Shield Outline (Dark Slate Iron) -->
+  <rect x="4" y="2" width="8" height="1" fill="#2c3e50" />
+  <rect x="3" y="3" width="10" height="9" fill="#2c3e50" />
+  <rect x="4" y="12" width="8" height="1" fill="#2c3e50" />
+  <rect x="5" y="13" width="6" height="1" fill="#2c3e50" />
+  <rect x="7" y="14" width="2" height="1" fill="#2c3e50" />
 
-  <!-- Shield Inner Gold Fill -->
-  <rect x="4" y="4" width="8" height="8" fill="#f1c40f" />
-  <rect x="5" y="3" width="6" height="1" fill="#f1c40f" />
-  <rect x="5" y="12" width="6" height="1" fill="#f1c40f" />
-  <rect x="6" y="13" width="4" height="1" fill="#f1c40f" />
+  <!-- Shield Inner Steel Fill -->
+  <rect x="4" y="4" width="8" height="8" fill="#7f8c8d" />
+  <rect x="5" y="3" width="6" height="1" fill="#7f8c8d" />
+  <rect x="5" y="12" width="6" height="1" fill="#7f8c8d" />
+  <rect x="6" y="13" width="4" height="1" fill="#7f8c8d" />
 
-  <!-- Left Side Highlights (Pale Gold) -->
-  <rect x="4" y="3" width="1" height="9" fill="#f9e79f" />
-  <rect x="5" y="3" width="1" height="10" fill="#f9e79f" />
-  <rect x="6" y="4" width="1" height="9" fill="#f9e79f" />
+  <!-- Left Side Highlights (Light Silver) -->
+  <rect x="4" y="3" width="1" height="9" fill="#bdc3c7" />
+  <rect x="5" y="3" width="1" height="10" fill="#bdc3c7" />
+  <rect x="6" y="4" width="1" height="9" fill="#bdc3c7" />
 
-  <!-- Right Side Shadows (Dark Orange Bronze) -->
-  <rect x="10" y="3" width="1" height="10" fill="#d35400" />
-  <rect x="11" y="3" width="1" height="9" fill="#d35400" />
-  
-  <!-- Glowing Center Diamond (Willpower Light) -->
+  <!-- Right Side Shadows (Deep Slate Grey) -->
+  <rect x="10" y="3" width="1" height="10" fill="#34495e" />
+  <rect x="11" y="3" width="1" height="9" fill="#34495e" />
+
+  <!-- Glowing Center Diamond (Willpower Light Core) -->
   <rect x="7" y="5" width="2" height="6" fill="#ffffff" />
   <rect x="5" y="7" width="6" height="2" fill="#ffffff" />
-  
-  <!-- Glowing Diamond Cyan Outline/Aura -->
-  <rect x="7" y="4" width="2" height="1" fill="#00ffff" />
-  <rect x="7" y="11" width="2" height="1" fill="#00ffff" />
-  <rect x="4" y="7" width="1" height="2" fill="#00ffff" />
-  <rect x="11" y="7" width="1" height="2" fill="#00ffff" />
-  
-  <rect x="6" y="5" width="1" height="1" fill="#00ffff" />
-  <rect x="9" y="5" width="1" height="1" fill="#00ffff" />
-  <rect x="6" y="10" width="1" height="1" fill="#00ffff" />
-  <rect x="9" y="10" width="1" height="1" fill="#00ffff" />
+
+  <!-- Glowing Diamond Red Battle Aura -->
+  <rect x="7" y="4" width="2" height="1" fill="#e74c3c" />
+  <rect x="7" y="11" width="2" height="1" fill="#e74c3c" />
+  <rect x="4" y="7" width="1" height="2" fill="#e74c3c" />
+  <rect x="11" y="7" width="1" height="2" fill="#e74c3c" />
+
+  <!-- Orange Sparks -->
+  <rect x="6" y="5" width="1" height="1" fill="#e67e22" />
+  <rect x="9" y="5" width="1" height="1" fill="#e67e22" />
+  <rect x="6" y="10" width="1" height="1" fill="#e67e22" />
+  <rect x="9" y="10" width="1" height="1" fill="#e67e22" />
+
+  <!-- External Sparks -->
+  <rect x="7" y="1" width="2" height="1" fill="#f1c40f" />
+  <rect x="2" y="3" width="1" height="1" fill="#e74c3c" />
+  <rect x="13" y="3" width="1" height="1" fill="#e74c3c" />
+  <rect x="13" y="12" width="1" height="1" fill="#e67e22" />
+  <rect x="2" y="12" width="1" height="1" fill="#e67e22" />
 </svg>

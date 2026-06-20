@@ -219,7 +219,7 @@ export class FocusBuff extends SkillModel {
     constructor() {
         super({
             id: 'FocusBuff',
-            name: "專注提升",
+            name: "專注意志",
             icon: "skills/active/focus_buff.svg",
             type: 'active',
             rarity: 'common',
@@ -276,6 +276,41 @@ export class WillBuff extends SkillModel {
 
         const buff = genCustomStatus({
             base: SkillStatus.Will,
+        });
+        playerStore.addStatus(buff);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
+        return true;
+    }
+}
+
+export class FightBuff extends SkillModel {
+    constructor() {
+        super({
+            id: 'FightBuff',
+            name: "戰鬥意志",
+            icon: "skills/active/fight_buff.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 5,
+            costSp: 10,
+            costAction: 1,
+            maxProficiency: 0,
+            proficiencyGain: 0
+        });
+    }
+
+    description(): string {
+        return `提升自身 10% 抗性，持續 5 回合。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+
+        const buff = genCustomStatus({
+            base: SkillStatus.Fight,
         });
         playerStore.addStatus(buff);
         useFullScreenEffect({

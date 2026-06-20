@@ -20,6 +20,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 
     WillBuff: Lv1SkillActive.WillBuff,
     FocusBuff: Lv1SkillActive.FocusBuff,
+    FightBuff: Lv1SkillActive.FightBuff,
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
     SwordProficiency: Lv1SkillPassive.SwordProficiency,
