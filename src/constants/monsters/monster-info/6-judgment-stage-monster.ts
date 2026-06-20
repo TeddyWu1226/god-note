@@ -123,8 +123,7 @@ export class SeraphimGuard extends MonsterModel {
             hp: 1200,
             hpLimit: 1200,
             level: 29,
-            dropGold: 300,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 300
         });
     }
 
@@ -154,8 +153,7 @@ export class DivineExecutioner extends MonsterModel {
             hp: 1400,
             hpLimit: 1400,
             level: 29,
-            dropGold: 350,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 350
         });
     }
 

@@ -97,13 +97,6 @@ const selectStage = (stageVal: number) => {
   gameStateStore.setRoom(RoomEnum.Rest.value)
   gameStateStore.nextRooms = []
 
-  if (stageVal === 2) {
-    playerStore.addStatus(EvnStatus.Sandstorm)
-    useEpicSubtitle("沙塵暴席捲整個地區...", 2000);
-  } else {
-    playerStore.removeStatus(EvnStatus.Sandstorm.name)
-  }
-
   showStageSelectDialog.value = false
 }
 
@@ -113,7 +106,6 @@ const triggerJudgmentStage = () => {
 
   gameStateStore.enterJudgmentStage()
 
-  playerStore.removeStatus(EvnStatus.Sandstorm.name)
   useEpicSubtitle("⚖️ 審判時刻已到，終焉的考驗降臨...", 4000);
 }
 

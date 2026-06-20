@@ -1,4 +1,3 @@
-import {MistyForestMaterial} from "@/constants/items/material/1-misty-forest";
 import {ItemType} from "@/types";
 
 export const MonsterCrystals = {
@@ -95,6 +94,5 @@ export const MonsterCrystals = {
     } as ItemType,
 };
 export const Material = {
-    ...MistyForestMaterial,
     ...MonsterCrystals
 }

@@ -154,10 +154,7 @@ export class FierceWolf extends MonsterModel {
             hp: 85,
             hpLimit: 85,
             level: 5,
-            dropGold: 50,
-            drop: [
-                {item: Material.WolfSkin, chance: 0.3}
-            ]
+            dropGold: 50
         });
     }
 

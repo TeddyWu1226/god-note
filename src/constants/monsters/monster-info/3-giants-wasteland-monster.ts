@@ -120,8 +120,7 @@ export class DuneCrawler extends MonsterModel {
             hp: 280,
             hpLimit: 280,
             level: 14,
-            dropGold: 90,
-            drop: [{item: Material.WolfSkin, chance: 0.4}]
+            dropGold: 90
         });
     }
 
@@ -156,7 +155,6 @@ export class StoneGiant extends MonsterModel {
             hpLimit: 350,
             level: 14,
             dropGold: 100,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
         });
     }
 }

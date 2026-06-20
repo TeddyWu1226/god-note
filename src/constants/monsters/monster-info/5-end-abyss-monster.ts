@@ -124,8 +124,7 @@ export class AbyssReaper extends MonsterModel {
             hp: 750,
             hpLimit: 750,
             level: 24,
-            dropGold: 220,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 220
         });
     }
 
@@ -154,8 +153,7 @@ export class VoidBeast extends MonsterModel {
             hp: 900,
             hpLimit: 900,
             level: 24,
-            dropGold: 250,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 250
         });
     }
 

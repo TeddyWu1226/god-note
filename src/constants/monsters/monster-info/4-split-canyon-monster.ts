@@ -123,8 +123,7 @@ export class SkySlasher extends MonsterModel {
             hp: 420,
             hpLimit: 420,
             level: 19,
-            dropGold: 120,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 120
         });
     }
 
@@ -150,8 +149,7 @@ export class EchoStone extends MonsterModel {
             hp: 500,
             hpLimit: 500,
             level: 19,
-            dropGold: 130,
-            drop: [{item: Material.WolfSkin, chance: 0.5}]
+            dropGold: 130
         });
     }
 

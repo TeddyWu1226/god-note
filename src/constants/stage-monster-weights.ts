@@ -36,36 +36,35 @@ export const MistyForestWeights4: Record<string, number> = {
 
 /**
  * 第二階段：赤之山脈 (Red Mountain)
+ * 先冰再火
  */
 export const RedMountainWeights1: Record<string, number> = {
-    LavaSlime: 40,
     FrostSlime: 40,
-    FireBat: 20,
-    IceBat: 20
+    IceBat: 20,
+    FrostGolem: 5
 };
 
 export const RedMountainWeights2: Record<string, number> = {
-    LavaSlime: 20,
-    FrostSlime: 20,
-    FireBat: 30,
-    IceBat: 30,
-    CrimsonSalamander: 10
+    FrostSlime: 33,
+    IceBat: 33,
+    FireBat: 10,
+    LavaSlime: 5,
+    FrostGolem: 5
 };
 
 export const RedMountainWeights3: Record<string, number> = {
-    FireBat: 20,
-    IceBat: 20,
-    CrimsonSalamander: 20,
-    GlacierLizard: 20,
-    ObsidianGolem: 10,
-    FrostGolem: 10
+    FrostSlime: 10,
+    IceBat: 10,
+    FireBat: 33,
+    LavaSlime: 33,
+    FrostGolem: 5,
+    ObsidianGolem: 5
 };
 
 export const RedMountainWeights4: Record<string, number> = {
-    CrimsonSalamander: 25,
-    GlacierLizard: 25,
-    ObsidianGolem: 25,
-    FrostGolem: 25
+    FireBat: 50,
+    LavaSlime: 50,
+    ObsidianGolem: 10
 };
 
 /**

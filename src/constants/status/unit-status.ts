@@ -153,7 +153,7 @@ export const UnitStatus = {
     Frozen: {
         name: '冰凍',
         icon: '🥶',
-        duration: 1,
+        duration: 2,
         description: '被凍住了,無法行動外還會扣除 10 點防禦',
         type: 'stuck',
         bonus: {
