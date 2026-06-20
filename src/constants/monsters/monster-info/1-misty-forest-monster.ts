@@ -42,7 +42,7 @@ export class Slime extends MonsterModel {
 export class ForestSprout extends MonsterModel {
     constructor() {
         super({
-            icon: '/monsters/sprout.png',
+            icon: '🌱',
             code: 'ForestSprout',
             name: '小樹人',
             description: '植物形態的魔物，擅長施展綑綁',
@@ -246,6 +246,30 @@ export class PoisonSlime extends MonsterModel {
     }
 }
 
+export class WoodGuardian extends MonsterModel {
+    constructor() {
+        super({
+            icon: '🌳',
+            code: 'WoodGuardian',
+            name: '樹人衛士',
+            description: '守護森林的古老樹衛，外皮如鋼鐵般堅硬。',
+            ad: 8,
+            critIncrease: WorldDefault.critIncrease,
+            critRate: WorldDefault.critRate,
+            adDefend: 10,
+            dodge: -10,
+            hit: 10,
+            hp: 60,
+            hpLimit: 60,
+            level: 3,
+            dropGold: 8,
+            drop: [
+                {item: Material.LowerNormal, chance: 0.5}
+            ]
+        });
+    }
+}
+
 export const MistyForestMonster = {
     Slime: new Slime(),
     ForestSprout: new ForestSprout(),
@@ -253,7 +277,8 @@ export const MistyForestMonster = {
     StingerBee: new StingerBee(),
     FierceWolf: new FierceWolf(),
     SmallSpider: new SmallSpider(),
-    PoisonSlime: new PoisonSlime()
+    PoisonSlime: new PoisonSlime(),
+    WoodGuardian: new WoodGuardian()
 };
 
 

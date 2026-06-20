@@ -183,4 +183,59 @@ export const UnitStatus = {
             dodge: 80
         }
     } as StatusEffect,
+    Burn: {
+        name: '燒傷',
+        icon: '🔥',
+        duration: 4,
+        description: '每回合失去 10 點生命值',
+        type: 'damage',
+        value: 10
+    } as StatusEffect,
+    Bleed: {
+        name: '流血',
+        icon: '🩸',
+        duration: 3,
+        description: '每回合失去 15 點生命值',
+        type: 'damage',
+        value: 15
+    } as StatusEffect,
+    Shock: {
+        name: '感電',
+        icon: '⚡',
+        duration: 3,
+        description: '受到感電影響，降低 20 點閃避與 10 點防禦',
+        bonus: {
+            dodge: -20,
+            adDefend: -10
+        }
+    } as StatusEffect,
+    Blind: {
+        name: '失明',
+        icon: '🕶️',
+        duration: 3,
+        description: '眼前一片漆黑，降低 30 點命中值',
+        bonus: {
+            hit: -30
+        }
+    } as StatusEffect,
+    AbyssCurse: {
+        name: '深淵詛咒',
+        icon: '☠️',
+        duration: 5,
+        description: '每回合失去 25 點生命值，抗性降低 20%',
+        type: 'damage',
+        value: 25,
+        bonus: {
+            defendIncrease: -20
+        }
+    } as StatusEffect,
+    JudgmentSilence: {
+        name: '神聖沉默',
+        icon: '🤫',
+        duration: 2,
+        description: '受到神聖光芒干涉，法術傷害降低 50%',
+        bonus: {
+            apIncrease: -50
+        }
+    } as StatusEffect,
 }

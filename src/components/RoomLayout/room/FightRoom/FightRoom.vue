@@ -18,7 +18,7 @@ import {ElMessage} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
-import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
+import {StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 import {useLogStore} from "@/store/log-store";
 import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -42,6 +42,13 @@ const trackStore = useTrackerStore()
 
 const showLogDialog = ref(false)
 const logScrollRef = ref<HTMLElement | null>(null)
+
+const isFinalBossOfStage = computed(() => {
+  if (gameStateStore.currentStage === 6) {
+    return gameStateStore.stageDays === 10
+  }
+  return gameStateStore.stageDays === 100
+})
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -82,8 +89,10 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
 
 const getWeightByStage = () => {
   const day = Math.max(1, gameStateStore.stageDays)
-  const subZoneIdx = Math.min(3, Math.ceil((day / 25)))
-  const originalMap = stageMonsterWeightsMap[subZoneIdx ?? 1] || EndlessWeights
+  const subZoneIdx = Math.min(4, Math.ceil((day / 25)))
+  const stageNum = gameStateStore.currentStage
+  const stageWeights = stageMonsterWeightsMap[stageNum] || {}
+  const originalMap = stageWeights[subZoneIdx ?? 1] || EndlessWeights
   const monsterMap = {...originalMap}
   return monsterMap || EndlessWeights;
 }
@@ -109,25 +118,14 @@ const genEliteMonster = () => {
 const createBoss = () => {
   let newMonsters: MonsterModel[]
 
-  if (gameStateStore.currentStage === 6) {
-    let boss: MonsterType
-    newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
+  const stageBoss = StageBosses[gameStateStore.currentStage]
+  let boss: MonsterType
+  if (gameStateStore.stageDays === 50) {
+    boss = stageBoss.mini
   } else {
-    const stageBoss = StageBosses[gameStateStore.currentStage]
-    let boss: MonsterType
-    if (stageBoss) {
-      if (gameStateStore.stageDays === 50) {
-        boss = stageBoss.mini
-      } else if (gameStateStore.stageDays === 100) {
-        boss = stageBoss.main
-      } else {
-        boss = stageBoss.main
-      }
-    } else {
-      boss = Boss.Twilight
-    }
-    newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
+    boss = stageBoss.main
   }
+  newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
 
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
@@ -556,7 +554,7 @@ onUnmounted(() => {
         <div class="victory-container" v-if="gameStateStore.isBattleWon">
           <span v-if="isEscape" class="run-message">成功逃跑了!</span>
           <span
-              v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value) && gameStateStore.stageDays === 100"
+              v-else-if="gameStateStore.roomIs(RoomEnum.Boss.value) && isFinalBossOfStage"
               class="victory-message">
         通關 {{ getEnumColumn(StageEnum, gameStateStore.currentStage) }}!
       </span>
