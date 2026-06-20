@@ -27,10 +27,10 @@ export class SwordExpert extends SkillModel {
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
         const bonus = {
-            hit: this.addAd
+            hit: this.addHit
         };
         if (weaponName.includes('劍')) {
-            bonus['ad'] = this.addHit
+            bonus['ad'] = this.addAd
         }
         return bonus;
     }
