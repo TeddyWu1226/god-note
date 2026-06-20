@@ -1,5 +1,6 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 
 export class SwordMaster extends SkillModel {
@@ -14,26 +15,31 @@ export class SwordMaster extends SkillModel {
         });
     }
 
-    addAd = 30
-    addHit = 60
 
-    description(): string {
-        return `增加 ${this.addHit} 點命中。裝備名稱含有「劍」的武器時，提升 ${this.addAd} 物理攻擊。`;
+    addBonus() {
+        return {
+            hit: 50,
+            ad: 20,
+            adDefend: 10,
+        }
     }
 
-    protected execute(params: SkillParams): boolean {
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+            ;
+    }
+
+    protected execute(): boolean {
         return true;
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        const bonus = {
-            hit: this.addAd
-        };
-        if (weaponName.includes('劍')) {
-            bonus['ad'] = this.addHit
+        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+            return this.addBonus();
         }
-        return bonus;
+        return {};
     }
 }
 
@@ -52,8 +58,10 @@ export class PurpleSkin extends SkillModel {
             uniqueFields: ['藍皮膚', '紅皮膚'],
         });
     }
+
     regen = 2
     increase = 10
+
     description(playerStore: PlayerStoreType): string {
         return `當無身體防具時，提升生命與法力回復各 ${this.regen} 點且總輸出提升 ${this.increase}%。`;
     }

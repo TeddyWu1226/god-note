@@ -143,62 +143,6 @@ export class Flurry extends SkillModel {
     }
 }
 
-/**
- * 騎士道 (KnightWay) - 進化自 劍術精通
- * 主動技能，獲得抗性加成，且永久獲得 5% 減傷。
- */
-export class KnightWay extends SkillModel {
-    constructor() {
-        super({
-            id: 'KnightWay',
-            name: "騎士道",
-            icon: "skills/active/knight_way.svg",
-            type: 'active',
-            rarity: 'rare',
-            maxCd: 5,
-            costSp: 10,
-            costAction: 1,
-            maxProficiency: 0,
-            proficiencyGain: 0,
-            uniqueFields: ['SwordProficiency'],
-        });
-    }
-
-    description(): string {
-        return `永久獲得 5% 減傷。主動使用：提升自身 15% 抗性，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
-    }
-
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        if (!playerStore) return false;
-
-        const buff = genCustomStatus({
-            base: {
-                name: '騎士道',
-                icon: '🛡️',
-                duration: 5,
-                isBuff: true,
-                description: '提升 15% 抗性',
-                bonus: {
-                    defendIncrease: 15
-                }
-            },
-            duration: 5
-        });
-        playerStore.addStatus(buff);
-        useFullScreenEffect({
-            message: this.name,
-            color: '#f1c40f',
-        });
-        return true;
-    }
-
-    override getPassiveBonus(player?: any): Record<string, number> {
-        return {
-            defendIncrease: 5
-        };
-    }
-}
 
 /**
  * 劍氣 (SwordQi) - 進化自 橫擊

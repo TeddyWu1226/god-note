@@ -36,9 +36,10 @@ export const SkillStatus = {
         icon: '✊',
         duration: 5,
         isBuff: true,
-        description: `提升自身 %adIncrease%% 物理輸出，持續 %duration% 回合`,
+        description: `提升自身 %adIncrease%% 總輸出，持續 %duration% 回合`,
         bonus: {
-            adIncrease: 10
+            adIncrease: 10,
+            apIncrease: 10
         }
     } as StatusEffect,
     MagicDefend: {

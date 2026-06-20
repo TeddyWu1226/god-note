@@ -12,9 +12,10 @@ import type {Equipment} from "@/types";
 import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
 import {SkillModel} from "@/models/skill-model";
-import {SKILL_TEMPLATES, SkillFactory, EVOLUTION_RULES} from "@/constants/skill/learned-skill";
+import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
 import {useTrackerStore} from "@/store/track-store";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
+import {EVOLUTION_RULES} from "@/constants/skill/learned-skill/evolution-rule";
 
 
 const playerStore = usePlayerStore();
@@ -151,7 +152,7 @@ const openLearnSkill = () => {
       return true;
     }
   });
-
+  console.log('可學技能列', candidates)
   if (candidates.length === 0) {
     ElMessage.warning('您已經學會了所有可用的技能！');
     return;

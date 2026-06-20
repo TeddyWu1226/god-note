@@ -591,8 +591,9 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
     }
 
-    const hasSkill = (skillKey: string): boolean => {
-        return info.value.skills.some(s => s.id === skillKey);
+    const hasSkill = (skillKey: string): SkillModel | undefined => {
+        // @ts-ignore
+        return info.value.skills.find(s => s.id === skillKey);
     }
 
     /**

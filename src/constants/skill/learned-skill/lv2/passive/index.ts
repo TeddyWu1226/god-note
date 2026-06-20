@@ -1,36 +1,98 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 export class SwordExpert extends SkillModel {
     constructor() {
         super({
             id: 'SwordExpert',
-            name: "劍術專家",
+            name: "進階劍術",
             icon: "skills/passive/sword_expert.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['SwordProficiency'],
+            maxProficiency: 100,
+            proficiencyGain: 1
         });
     }
 
-    addAd = 6
-    addHit = 30
-
-    description(): string {
-        return `增加 ${this.addHit} 點命中。裝備名稱含有「劍」的武器時，提升 ${this.addAd} 物理攻擊。`;
+    addBonus() {
+        return {
+            hit: 25,
+            ad: 1 + (Math.ceil(this.proficiency * 0.04)),
+            adDefend: 5,
+        }
     }
 
-    protected execute(params: SkillParams): boolean {
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`
+            ;
+    }
+
+    protected execute(): boolean {
         return true;
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        const bonus = {
-            hit: this.addHit
-        };
-        if (weaponName.includes('劍')) {
-            bonus['ad'] = this.addAd
+        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+            return this.addBonus();
+        }
+        return {};
+    }
+}
+
+export class KnightWay extends SkillModel {
+    constructor() {
+        super({
+            id: 'KnightWay',
+            name: "騎士劍術",
+            icon: "skills/active/knight_way.svg",
+            type: 'passive',
+            rarity: 'rare',
+            maxProficiency: 0,
+            proficiencyGain: 0,
+            uniqueFields: ['SwordProficiency'],
+        });
+    }
+
+    addSwordBonus() {
+        return {
+            hit: 25,
+            ad: 5,
+        }
+    }
+
+    addShieldBonus() {
+        return {
+            defendIncrease: 5,
+            adDefend: 5,
+        }
+    }
+
+    description(): string {
+        const swordBonus = this.addSwordBonus()
+        const shieldBonus = this.addShieldBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時, 提升 ${swordBonus.ad} 點物理攻擊力, ${swordBonus.hit} 點命中。`
+            + `<br/>裝備名稱含有「盾」的副手時, 提升 ${shieldBonus.defendIncrease}% 抗性 以及 ${shieldBonus.adDefend} 點防禦`
+            ;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        const offhandName = player?.equips?.offhand?.name || '';
+        let bonus = {}
+        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+            bonus = {...bonus, ...this.addSwordBonus()}
+        }
+        if (offhandName.includes('盾')) {
+            bonus = {...bonus, ...this.addShieldBonus()}
         }
         return bonus;
     }

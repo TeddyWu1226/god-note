@@ -29,7 +29,7 @@ export class VerticalSlash extends SkillModel {
 
     extraDamage(playerStore): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.max(ad * 0.5 + 5, ad * 0.8 + 1)
+        return Math.max(ad * 0.5 + 8, ad + 3)
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -299,7 +299,7 @@ export class FightBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10% 抗性，持續 5 回合。`;
+        return `提升自身 10% 增傷，持續 5 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {

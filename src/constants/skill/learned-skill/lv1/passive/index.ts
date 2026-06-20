@@ -36,7 +36,7 @@ export class SwordProficiency extends SkillModel {
     constructor() {
         super({
             id: 'SwordProficiency',
-            name: "劍術精通",
+            name: "基礎劍術",
             icon: "skills/passive/sword_proficiency.svg",
             type: 'passive',
             rarity: 'common',
@@ -47,16 +47,17 @@ export class SwordProficiency extends SkillModel {
     }
 
     addBonus() {
+        // 提升 5
         return {
             hit: 5 + (Math.ceil(this.proficiency * 0.05)),
-            adDefend: 1 + (Math.ceil(this.proficiency * 0.05)),
+            adDefend: 1 + (Math.ceil(this.proficiency * 0.04)),
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
         return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
-            + `(裝備對應武器進行攻擊可以提升熟練度)`;
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
     protected execute(): boolean {
