@@ -101,6 +101,23 @@ const getRarityName = (rarity: string) => {
   return names[rarity] || '普通';
 };
 
+const getEvolutionText = (skillId: string) => {
+  const rule = EVOLUTION_RULES[skillId];
+  if (!rule) return '';
+  const getSkillName = (id: string) => SKILL_TEMPLATES[id]?.name || id;
+
+  if (rule.baseSkillId && rule.fuseSkillIds && rule.fuseSkillIds.length > 0) {
+    const ingredients = [rule.baseSkillId, ...rule.fuseSkillIds].map(getSkillName).join(' + ');
+    return `${ingredients}`;
+  } else if (rule.fuseSkillIds && rule.fuseSkillIds.length > 0) {
+    const ingredients = rule.fuseSkillIds.map(getSkillName).join(' + ');
+    return `${ingredients}`;
+  } else if (rule.baseSkillId) {
+    return `${getSkillName(rule.baseSkillId)}`;
+  }
+  return '';
+};
+
 const openLearnSkill = () => {
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
   const trackerStore = useTrackerStore();
@@ -499,6 +516,9 @@ const cancelReplaceMode = () => {
           </div>
           <div class="card-name">{{ skill.name }}</div>
           <div class="card-type">{{ skill.type === 'active' ? '主動' : '被動' }}</div>
+          <div v-if="getEvolutionText(skill.id)" class="card-evo-info">
+            {{ getEvolutionText(skill.id) }}
+          </div>
           <div class="card-desc" v-html="skill.description(playerStore)"/>
         </div>
       </div>
@@ -1019,7 +1039,19 @@ const cancelReplaceMode = () => {
 .card-type {
   font-size: 0.75rem;
   color: #888;
+  margin-bottom: 8px;
+}
+
+.card-evo-info {
+  font-size: 0.7rem;
+  color: #f1c40f;
+  background: rgba(241, 196, 15, 0.1);
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
   margin-bottom: 12px;
+  font-weight: 500;
+  display: inline-block;
 }
 
 .card-desc {
