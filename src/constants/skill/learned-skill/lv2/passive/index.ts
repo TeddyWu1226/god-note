@@ -98,10 +98,6 @@ export class KnightWay extends SkillModel {
     }
 }
 
-/**
- * 反抗之心 (HeartOfRebellion) - 進化自 格擋強化
- * 被動技能，完美格擋成功除了減傷強化外, 還可以獲得一回合增傷。
- */
 export class HeartOfRebellion extends SkillModel {
     constructor() {
         super({
@@ -126,5 +122,31 @@ export class HeartOfRebellion extends SkillModel {
         return {};
     }
 }
+
+// export class CleaveFencing extends SkillModel {
+//     constructor() {
+//         super({
+//             id: 'CleaveFencing',
+//             name: "劍技-正擊",
+//             icon: "skills/passive/cleave_fencing.svg",
+//             type: 'passive',
+//             rarity: 'rare',
+//             uniqueFields: ['豎擊'],
+//         });
+//     }
+//
+//     description(playerStore: PlayerStoreType): string {
+//         return ``;
+//     }
+//
+//     protected execute(params: SkillParams): boolean {
+//         return true;
+//     }
+//
+//     override getPassiveBonus(player?: any): Record<string, number> {
+//         return {};
+//     }
+// }
+
 
 

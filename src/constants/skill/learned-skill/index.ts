@@ -1,4 +1,4 @@
-import {GenericSkill, SkillModel} from "@/models/skill-model";
+import {SkillModel} from "@/models/skill-model";
 import * as Lv1SkillActive from "./lv1/active";
 import * as Lv1SkillPassive from "./lv1/passive";
 import * as Lv2SkillActive from "./lv2/active";
@@ -51,7 +51,6 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 };
 
 
-
 // 💡 預設實例化地圖，提供給 UI 或是其他模組查詢可學習候選清單或基本屬性
 export const SKILL_TEMPLATES: Record<string, SkillModel> = {};
 
@@ -88,18 +87,6 @@ export class SkillFactory {
             Object.assign(instance, {currentCd: cd, ...savedData});
             return instance;
         }
-
-        // 💡 找不到對照 Class 時的相容回溯處理 (GenericSkill)
-        return new GenericSkill({
-            id,
-            name: id,
-            icon: "❔",
-            type: 'active',
-            rarity: 'common',
-            description: () => "未知技能",
-            use: () => true,
-            ...savedData
-        });
     }
 }
 
