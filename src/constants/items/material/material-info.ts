@@ -1,7 +1,5 @@
 import {MistyForestMaterial} from "@/constants/items/material/1-misty-forest";
 import {ItemType} from "@/types";
-import {ScorchedSandsMaterial} from "@/constants/items/material/2-scorched-sands";
-import {IcyPlateauMaterial} from "@/constants/items/material/3-icy-plateau";
 
 export const MonsterCrystals = {
     // 下級魔物晶石
@@ -98,7 +96,5 @@ export const MonsterCrystals = {
 };
 export const Material = {
     ...MistyForestMaterial,
-    ...ScorchedSandsMaterial,
-    ...IcyPlateauMaterial,
     ...MonsterCrystals
 }

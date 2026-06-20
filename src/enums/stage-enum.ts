@@ -1,8 +1,8 @@
 export const StageEnum = {
-	MistyForest: {value: 1, label: '迷霧森林🌳'},
-	ScorchedSands: {value: 2, label: '灼熱沙漠🏜️'},
-	IcyPlateau: {value: 3, label: '冰雪高地❄️'},
-	RottenSwamp: {value: 4, label: '腐爛沼澤☣️'},
-	ActiveVolcano: {value: 5, label: '活火山脈🌋'},
-	JudgmentStage: {value: 6, label: '審判之關卡⚖️'}
+    MistyForest: {value: 1, label: '迷霧森林🌳'},
+    RedMountain: {value: 2, label: '赤之山脈⛰️'},
+    GiantsWasteland: {value: 3, label: '大荒地🗿'},
+    SplitCanyon: {value: 4, label: '分裂之谷🌓'},
+    EndAbyss: {value: 5, label: '終焉深淵🌌'},
+    JudgmentStage: {value: 6, label: '審判之日⚖️'}
 };

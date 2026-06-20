@@ -15,7 +15,9 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
 *   `src/store/`：Pinia 狀態管理庫，管理存檔、玩家屬性、遊戲進度、戰鬥日誌及統計數據。
 *   `src/constants/`：靜態數據配置與核心函數：
     *   `monsters/`：怪物、Boss 範本與實例化 `MonsterFactory`。
-    *   `skill/`：職業技能與裝備技能。
+    *   `skill/`：技能系統相關：
+        *   `learned-skill/`：主動與被動技能（按等級劃分 `lv1` ~ `lv3`）、技能工廠 `SkillFactory`、進化/融合規則 `EVOLUTION_RULES`。
+        *   `offhand-skill/`：副手專屬技能（例如 `ShieldBlock` 格擋、`PowerCharge` 蓄力）。
     *   `items/`：武器、防具、飾品、消耗品、材料。
     *   `status/`：狀態效果（Buff / Debuff）。
     *   `fight-func.ts`：戰鬥引擎的核心邏輯（傷害計算、怪物生成、掉落判斷）。
@@ -31,6 +33,7 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
 1.  **`usePlayerStore`** (`src/store/player-store.ts`)
     *   管理玩家屬性（HP, AD, AP, SP, Gold, Level, Exp）及背包、裝備、已學技能。
     *   提供玩家相關動作：`addStatus`、`gainItem`、`useItem`、`addExp`、`levelUp` 等。
+    *   **⚠️ 重要監聽器**：深度監聽 `info.value.skills`。如果發現陣列中含有非 `SkillModel` 實例（例如從存檔加載的純 JS 物件或字串），會自動調用 `SkillFactory.createSkill` 還原為對應的子類別 Class 實例。
 2.  **`useGameStateStore`** (`src/store/game-state-store.ts`)
     *   管理遊戲天數（`days`、`stageDays`）、當前層數（`currentStage`）、當前房間類型（`currentRoomValue`）。
     *   管理當前敵人陣列（`currentEnemy`）。
@@ -64,13 +67,39 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
 
 ---
 
+## ⚔️ 技能系統 (OOP Skill System & Evolution)
+
+專案採用物件導向（OOP）架構來定義主動與被動技能，並支援技能進化與融合。
+
+### 1. 技能基類：`SkillModel` (`src/models/skill-model.ts`)
+定義了所有技能的基本屬性與核心行為，子類別必須覆寫以下內容：
+*   `description(playerStore)`：返回技能的動態描述字串，可調用 `ColorText` 方法輸出有顏色的富文本。
+*   `execute(params)`：執行技能的具體效果邏輯（如造成傷害、套用 Buff、回復生命等）。
+*   `getPassiveBonus(player)`：被動技能覆寫此方法，回傳屬性加成物件（如 `{ ad: 5, hit: 10 }`）。這會在 `playerStore.totalBonus` 中被自動累加。
+*   **序列化**：透過 `toJSON()` 限制僅保存必要的動態欄位（`id`、`level`、`proficiency`、`currentCd`），以節省存檔體積。
+
+### 2. 技能工廠：`SkillFactory` (`src/constants/skill/learned-skill/index.ts`)
+*   **`SKILL_CLASS_MAP`**：所有已實現的技能 Class 必須在此 Map 中註冊，以便透過技能 ID 還原或創建實例。
+*   **`SKILL_TEMPLATES`**：根據 `SKILL_CLASS_MAP` 自動生成的所有技能實例模板，用於提供可學習技能候選清單。
+*   **`createSkill(id, savedData)`**：工廠靜態方法，根據 ID 還原技能，並自動載入已儲存的熟練度、等級、CD 等動態數據。
+
+### 3. 技能進化與融合 (`src/constants/skill/learned-skill/evolution-rule.ts`)
+*   **`EVOLUTION_RULES`**：技能進化與融合的靜態配置表。
+    *   `evolvedSkillId`：進化/融合後獲得的新技能 ID。
+    *   `baseSkillId`：進化時將被替換的基礎技能 ID（非必填，僅用於進化覆蓋）。
+    *   `fuseSkillIds`：融合時需要額外移除的其他技能 ID 陣列。
+    *   `checkEligible(playerStore, trackerStore)`：判斷玩家是否滿足進化/融合條件（例如基礎技能熟練度達 Max，或同時擁有特定技能）。
+*   在 `playerStore` 內部提供了 `checkAndTriggerEvolutions()` 動作，在滿足條件時會自動將舊技能替換為新進化技能，並移除融合素材技能。
+
+---
+
 ## ⚔️ 戰鬥引擎與計算 (`src/constants/fight-func.ts`)
 
 *   **傷害計算 (`calculateDamage`)**：
     *   命中判斷：`BASE_HIT_RATE (100) + hit - dodge`。
     *   暴擊判斷：基於 `critRate`，暴擊時傷害乘以 `critIncrease / 100`。
     *   防禦力減免：物理傷害扣除防禦 `adDefend`，並依據 `defendIncrease` 套用比例減傷（最大 95%）。
-*   **戰鬥執行 (`applyAttackDamage`)**：
+*   **戰鬥執行 (`applyAttackDamage` & `applySkillDamage`)**：
     *   計算傷害並扣減 HP，記錄日誌至 `logStore`，並利用 `useFloatingMessage` 產生受擊數字的浮動特效。
 *   **怪物生成 (`spawnMonsters`)**：
     *   自權重表中隨機挑選怪物，若為菁英戰鬥（`eliteBoost = true`），則依據特定公式加倍屬性，最終透過 `MonsterFactory.createMonster` 實例化。
@@ -86,14 +115,25 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
 4.  將類別註冊進 `MistyForestMonster` 物件（檔案底部），並匯入至 `src/constants/monsters/monster-factory.ts` 的 `MONSTER_CLASS_MAP`。
 
 ### 2. 新增 Boss
-1.  in `src/constants/monsters/monster-info/99-boss-info.ts` 中宣告 Boss 類別。
+1.  在 `src/constants/monsters/monster-info/99-boss-info.ts` 中宣告 Boss 類別。
 2.  在 `Boss` 常數中以 `new YourBossClass()` 進行暫存。
 3.  在 `StageBosses` 中將其配置到相應的 Stage（Day 50 為 mini，Day 100 為 main）。
 4.  註冊至 `MONSTER_CLASS_MAP`。
 
-### 3. 新增狀態效果 (Status Effect)
-1.  在 `src/constants/status/unit-status.ts` (針對怪物或玩家) 或 `usual-status.ts` 中定義狀態模板。
-2.  設定對應屬性的 `bonus` 值（如 `{ ad: 5 }`），系統在 `getEffectiveStats()` 中會自動進行數值疊加。
+### 3. 新增技能 (Active / Passive)
+1.  **建立技能類別**：
+    *   在 `src/constants/skill/learned-skill/lv[1-3]/[active|passive]/index.ts` 內建立繼承 `SkillModel` 的類別。
+    *   在 `constructor()` 內調用 `super()` 並設定基本欄位：`id`, `name`, `icon` (SVG 圖示路徑), `type` ('active'|'passive'), `rarity` 等。
+    *   **主動技能**：覆寫 `description(playerStore)` 與 `execute(params)`，並設定冷卻時間 `maxCd` 與 `costSp` 等消耗。
+    *   **被動技能**：覆寫 `description()` 與 `getPassiveBonus(player)`，回傳屬性加成。
+2.  **註冊技能**：
+    *   在 `src/constants/skill/learned-skill/index.ts` 的 `SKILL_CLASS_MAP` 中導入並註冊該技能類別。
+3.  **配置進化與融合 (選填)**：
+    *   在 `src/constants/skill/learned-skill/evolution-rule.ts` 的 `EVOLUTION_RULES` 中，配置對應的進化或融合邏輯與觸發條件（`checkEligible`）。
+
+### 4. 新增狀態效果 (Status Effect)
+1.  在 `src/constants/status/unit-status.ts` (針對怪物或玩家) 或 `usual-status.ts` (或技能專屬 `skill-status.ts`) 中定義狀態模板。
+2.  設定對應屬性的 `bonus` 值（如 `{ ad: 5 }`），系統在 `getEffectiveStats()` 或玩家的 `totalBonus` 中會自動進行數值疊加。
 
 ---
 
@@ -107,4 +147,3 @@ description: "開發、維護與擴充《神祇記事》(God Note) 的純前端 
     *   **主動技能**（`type: 'active'`）：必須包含一個 1px 的外框，使用顏色為 `#3d3d4e`，定義為 `<rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />`。
     *   **被動技能**（`type: 'passive'`）：不包含任何外框，直接繪製技能圖案本身。
     *   **底色樣式**：不論主動還是被動技能，底色一律為**透明（Transparent）**，不能有任何滿版的背景填充矩形（例如刪除原本的 `fill="#1b1c20"` 或 `fill="#121216"` 等背景 `rect`）。
-

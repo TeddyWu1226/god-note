@@ -32,22 +32,6 @@ const GeneralEvent = [
 ];
 
 
-// 第二區域才開放的事件(stage >=6)
-const ScorchedSandsEvent = [
-  {
-    type: SpecialEventEnum.Fusion, // 合成功能解鎖
-    canAppear: () => true
-  },
-  {
-    type: SpecialEventEnum.NeedWater, // 求水事件
-    canAppear: () => {
-      return !(gameStateStore.otherRecord['WATER'] === 1)
-    }
-  }
-]
-// 第三區才有
-const IcyPlateauEvent = []
-
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
   let allowEvent = [...GeneralEvent]
@@ -55,14 +39,6 @@ const getAvailableEvents = () => {
   // 計算區域索引 (1-25)
   const subZoneIdx = Math.min(4, Math.floor((Math.max(1, gameStateStore.stageDays) - 1) / 20))
   const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
-
-  if (oldStageIndex >= 6 && oldStageIndex <= 10) {
-    allowEvent = allowEvent.concat(ScorchedSandsEvent)
-  }
-
-  if (oldStageIndex >= 11 && oldStageIndex <= 16) {
-    allowEvent = allowEvent.concat(IcyPlateauEvent)
-  }
 
   if (oldStageIndex >= 11) {
     // 山區開始提供樹叢事件
