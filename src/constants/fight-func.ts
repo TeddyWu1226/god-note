@@ -102,8 +102,12 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     let damageTaken = damageOutput.totalDamage
     // 額外效果
     if (outcome.isCrit && playerStore.hasStatus(ItemStatus.Block.name)) {
-        damageTaken = Math.round(damageTaken * 0.25)
-        monster.status.push(UsualStatus.Stuck)
+        let blockMultiplier = 0.50;
+        if (playerStore.hasSkill('BlockBoost')) {
+            blockMultiplier = 0.25;
+        }
+        damageTaken = Math.round(damageTaken * blockMultiplier);
+        monster.status.push(UsualStatus.Stuck);
     }
     if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
         // 直接修改 Store 裡的原始數據 info.hp

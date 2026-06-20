@@ -99,13 +99,7 @@ export class SpellProficiency extends SkillModel {
             name: "法杖精通",
             icon: "skills/passive/spell_proficiency.svg",
             type: 'passive',
-            rarity: 'common',
-            maxCd: 0,
-            costSp: 0,
-            costHp: 0,
-            costAction: 0,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            rarity: 'common'
         });
     }
 
@@ -139,13 +133,7 @@ export class ReadingProficiency extends SkillModel {
             name: "閱讀精通",
             icon: "skills/passive/reading_proficiency.svg",
             type: 'passive',
-            rarity: 'common',
-            maxCd: 0,
-            costSp: 0,
-            costHp: 0,
-            costAction: 0,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            rarity: 'common'
         });
     }
 
@@ -179,13 +167,7 @@ export class RedSkin extends SkillModel {
             name: "紅皮膚",
             icon: "skills/passive/red_skin.svg",
             type: 'passive',
-            rarity: 'common',
-            maxCd: 0,
-            costSp: 0,
-            costHp: 0,
-            costAction: 0,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            rarity: 'common'
         });
     }
 
@@ -214,13 +196,7 @@ export class BlueSkin extends SkillModel {
             name: "藍皮膚",
             icon: "skills/passive/blue_skin.svg",
             type: 'passive',
-            rarity: 'common',
-            maxCd: 0,
-            costSp: 0,
-            costHp: 0,
-            costAction: 0,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            rarity: 'common'
         });
     }
 
@@ -241,5 +217,30 @@ export class BlueSkin extends SkillModel {
         return {};
     }
 }
+
+export class BlockBoost extends SkillModel {
+    constructor() {
+        super({
+            id: 'BlockBoost',
+            name: "格擋強化",
+            icon: "skills/passive/block_boost.svg",
+            type: 'passive',
+            rarity: 'common'
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `完美格擋（格擋敵方暴擊）的受傷比例減少至25%。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        return {};
+    }
+}
+
 
 

@@ -29,6 +29,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     ReadingProficiency: Lv1SkillPassive.ReadingProficiency,
     RedSkin: Lv1SkillPassive.RedSkin,
     BlueSkin: Lv1SkillPassive.BlueSkin,
+    BlockBoost: Lv1SkillPassive.BlockBoost,
 
     // Level 2
     Cleave: Lv2SkillActive.Cleave,
