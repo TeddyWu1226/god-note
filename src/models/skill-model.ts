@@ -1,4 +1,4 @@
-import { SkillParams } from "@/types";
+import {SkillParams} from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
@@ -47,7 +47,7 @@ export abstract class SkillModel {
         this.level = data.level ?? 1;
         this.proficiency = data.proficiency ?? 0;
         this.maxProficiency = data.maxProficiency ?? 100;
-        this.proficiencyGain = data.proficiencyGain ?? 1;
+        this.proficiencyGain = data.proficiencyGain ?? 0;
         this.currentCd = data.currentCd ?? 0;
         this.maxCd = data.maxCd ?? 0;
         this.costSp = data.costSp ?? 0;

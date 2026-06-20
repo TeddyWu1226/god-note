@@ -160,7 +160,7 @@ export class KnightWay extends SkillModel {
             costAction: 1,
             maxProficiency: 0,
             proficiencyGain: 0,
-            uniqueFields: ['劍之道'],
+            uniqueFields: ['SwordProficiency'],
         });
     }
 

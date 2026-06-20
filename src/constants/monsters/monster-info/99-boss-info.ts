@@ -21,7 +21,7 @@ export class AncientSpider extends MonsterModel {
             critIncrease: 200,
             critRate: 0,
             adDefend: 10,
-            dodge: 15,
+            dodge: 20,
             hit: 30,
             hp: 300,
             hpLimit: 300,

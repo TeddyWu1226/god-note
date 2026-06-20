@@ -3,9 +3,7 @@ import {computed} from 'vue';
 import {usePlayerStore} from '@/store/player-store';
 import {useGameStateStore} from '@/store/game-state-store';
 import {SkillModel} from '@/models/skill-model';
-import {getEnumColumn} from "@/utils/enum";
-import {QualityEnum} from "@/enums/quality-enum";
-import { isImageIcon, resolveIconPath } from "@/utils/ui-helper";
+import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 const emit = defineEmits(['on-learned-skill']);
 const playerStore = usePlayerStore();
@@ -43,9 +41,9 @@ const canAfford = (skill: SkillModel) => {
   const hpCost = skill.costHp || 0;
   const actionCost = skill.costAction || 1;
   return playerStore.info.sp >= spCost &&
-         playerStore.info.hp > hpCost &&
-         skill.currentCd === 0 &&
-         gameStateStore.playerActionPoints >= actionCost;
+      playerStore.info.hp > hpCost &&
+      skill.currentCd === 0 &&
+      gameStateStore.playerActionPoints >= actionCost;
 };
 
 const clickSkill = (skill: SkillModel) => {
@@ -107,7 +105,8 @@ const clickSkill = (skill: SkillModel) => {
 
             <div class="skill-inner">
               <span class="icon">
-                <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon" alt="skill icon" />
+                <img v-if="isImageIcon(skill.icon)" :src="resolveIconPath(skill.icon)" class="skill-image-icon"
+                     alt="skill icon"/>
                 <template v-else>{{ skill.icon }}</template>
               </span>
               <div class="info">
@@ -118,7 +117,7 @@ const clickSkill = (skill: SkillModel) => {
                   </span>
                 </div>
                 <div class="sub-row">
-                  <span v-if="skill.type === 'active'" class="lv">{{ skill.proficiencyText }}</span>
+                  <span class="lv">{{ skill.proficiencyText }}</span>
                   <span v-if="skill.type === 'passive'" class="passive-tag">被動</span>
                   <span v-else-if="skill.costSp" class="cost-tag">SP:{{ skill.costSp }}</span>
                   <span v-else-if="skill.costHp" class="cost-tag hp">HP:{{ skill.costHp }}</span>

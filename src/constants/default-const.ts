@@ -60,3 +60,14 @@ export const EAST_ROOM_WEIGHTS: RoomWeights = {
     3: 8, // 特殊事件
     4: 9, // 商店
 };
+
+
+export const WeaponSkillMapping = {
+    'SwordProficiency': ['劍']
+}
+
+export const isMatchedWeapon = (key: string, weaponName: string): boolean => {
+    return WeaponSkillMapping[key].some((keyword: string) =>
+        weaponName.includes(keyword)
+    );
+}

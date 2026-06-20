@@ -33,6 +33,7 @@ import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperatio
 import {Sleep} from "@/utils/create";
 import {useDebounceFn} from "@vueuse/core";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -288,6 +289,19 @@ const onEndTurn = () => {
   resolveRoundEnd()
 }
 
+const checkWeaponProficiency = () => {
+  Object.keys(WeaponSkillMapping).forEach((key) => {
+    const weaponProficiency = playerStore.info.skills?.find((s: SkillModel) => s.uniqueFields.includes(key));
+
+    const weaponName = playerStore.info.equips?.weapon?.name || '';
+    if (weaponProficiency && isMatchedWeapon(key, weaponName)) {
+      playerStore.addSkillProficiency(weaponProficiency.id);
+    }
+  })
+
+}
+
+
 // 攻擊
 const onAttack = () => {
   if (!gameStateStore.isPlayerTurn) return
@@ -313,6 +327,8 @@ const onAttack = () => {
   if (!isPlayerStuck()) {
     selectedMonster.lastDamageResult = applyAttackDamage(playerStore.finalStats,
         getEffectiveStats(selectedMonster), selectedMonster)
+    // 武器熟練度提升
+    checkWeaponProficiency()
   }
 
   // 檢查是否回合結束

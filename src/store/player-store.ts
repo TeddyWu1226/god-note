@@ -647,8 +647,8 @@ export const usePlayerStore = defineStore('player-info', () => {
         while (info.value.currentExp >= nextExp) {
             info.value.currentExp -= nextExp;
             info.value.level += 1;
-            // 每次升級獲得 5 點升級點數
-            info.value.statPoints = (info.value.statPoints || 0) + 5;
+            // 每次升級獲得升級點數
+            info.value.statPoints = (info.value.statPoints || 0) + 3;
             nextExp = getNextLevelExp(info.value.level);
             leveledUp = true;
         }
@@ -686,6 +686,8 @@ export const usePlayerStore = defineStore('player-info', () => {
         info.value.statPoints -= 1;
         if (statKey === 'hpLimit' || statKey === 'spLimit') {
             info.value[statKey] = (info.value[statKey] || 0) + 10;
+        } else if (statKey === 'hit' || statKey === 'dodge') {
+            info.value[statKey] = (info.value[statKey] || 0) + 2;
         } else {
             info.value[statKey] = (info.value[statKey] || 0) + 1;
         }

@@ -9,7 +9,7 @@ export class SwordExpert extends SkillModel {
             icon: "skills/passive/sword_expert.svg",
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['劍之道'],
+            uniqueFields: ['SwordProficiency'],
         });
     }
 

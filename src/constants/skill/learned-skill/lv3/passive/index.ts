@@ -10,7 +10,7 @@ export class SwordMaster extends SkillModel {
             icon: "skills/passive/sword_master.svg",
             type: 'passive',
             rarity: 'legendary',
-            uniqueFields: ['劍之道'],
+            uniqueFields: ['SwordProficiency'],
         });
     }
 

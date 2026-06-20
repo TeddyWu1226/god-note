@@ -427,39 +427,39 @@ const cancelReplaceMode = () => {
 
       <div class="skills-section">
         <div class="skills-grid">
-          <div v-for="i in 6" :key="i" class="skill-slot-card">
-            <template v-if="playerStore.info.skills?.[i-1]">
+          <div v-for="skill in playerStore.info.skills" :key="skill.id" class="skill-slot-card">
+            <template v-if="skill">
               <el-tooltip placement="top" effect="light" :disabled="isDragging">
                 <template #content>
                   <div class="skill-detail-tooltip">
                     <div class="tooltip-header">
-                      <strong class="tooltip-name">{{ playerStore.info.skills[i - 1].name }}</strong>
+                      <strong class="tooltip-name">{{ skill.name }}</strong>
                       <span class="skill-tooltip-rarity"
-                            :style="{ color: getRarityColor(playerStore.info.skills[i-1].rarity) }">
-                        [{{ getRarityName(playerStore.info.skills[i - 1].rarity) }}]
+                            :style="{ color: getRarityColor(skill.rarity) }">
+                        [{{ getRarityName(skill.rarity) }}]
                       </span>
                     </div>
                     <div class="skill-tooltip-type">
-                      類型: {{ playerStore.info.skills[i - 1].type === 'active' ? '主動技能' : '被動技能' }}
+                      類型: {{ skill.type === 'active' ? '主動技能' : '被動技能' }}
                     </div>
-                    <div v-if="playerStore.info.skills[i - 1].type === 'active'" class="skill-tooltip-proficiency">
-                      {{ playerStore.info.skills[i - 1].proficiencyText }}
+                    <div v-if="skill.proficiencyGain" class="skill-tooltip-proficiency">
+                      {{ skill.proficiencyText }}
                     </div>
-                    <div class="skill-tooltip-desc" v-html="playerStore.info.skills[i-1].description(playerStore)"/>
+                    <div class="skill-tooltip-desc" v-html="skill.description(playerStore)"/>
                   </div>
                 </template>
                 <div class="skill-slot-inner"
-                     :style="{ borderColor: getRarityColor(playerStore.info.skills[i-1].rarity) }">
+                     :style="{ borderColor: getRarityColor(skill.rarity) }">
                   <span class="skill-slot-icon">
-                    <img v-if="isImageIcon(playerStore.info.skills[i - 1].icon)"
-                         :src="resolveIconPath(playerStore.info.skills[i - 1].icon)" class="skill-slot-image-icon"
+                    <img v-if="isImageIcon(skill.icon)"
+                         :src="resolveIconPath(skill.icon)" class="skill-slot-image-icon"
                          alt="skill icon"/>
-                    <template v-else>{{ playerStore.info.skills[i - 1].icon }}</template>
+                    <template v-else>{{ skill.icon }}</template>
                   </span>
                   <div class="skill-slot-info">
-                    <span class="skill-slot-name">{{ playerStore.info.skills[i - 1].name }}</span>
-                    <span v-if="playerStore.info.skills[i - 1].type === 'active'" class="skill-slot-level">
-                      {{ playerStore.info.skills[i - 1].proficiencyText }}
+                    <span class="skill-slot-name">{{ skill.name }}</span>
+                    <span v-if="skill.proficiencyGain" class="skill-slot-level">
+                      {{ skill.proficiencyText }}
                     </span>
                   </div>
                 </div>
@@ -480,7 +480,7 @@ const cancelReplaceMode = () => {
   <!-- 學習新技能 Dialog -->
   <el-dialog
       v-model="isShowLearnSkill"
-      title="🔮 獲得新的感悟：學習新技能"
+      title="🔮學習新技能"
       width="620px"
       append-to-body
       top="5vh"
@@ -558,7 +558,7 @@ const cancelReplaceMode = () => {
             <div class="replace-meta">
               <span class="replace-name">
                 {{ skill.name }}
-                <template v-if="skill.type === 'active'"> ({{ skill.proficiencyText }})</template>
+                <template v-if="skill.proficiencyGain"> ({{ skill.proficiencyText }})</template>
               </span>
               <span class="replace-type">{{ skill.type === 'active' ? '主動' : '被動' }}</span>
             </div>

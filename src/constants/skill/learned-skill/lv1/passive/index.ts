@@ -1,5 +1,5 @@
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillParams} from "@/types";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 
 export class PhysiqueBoost extends SkillModel {
@@ -17,11 +17,11 @@ export class PhysiqueBoost extends SkillModel {
         return 50
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `最大生命值增加 ${this.hpBonus} 點。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -40,24 +40,33 @@ export class SwordProficiency extends SkillModel {
             icon: "skills/passive/sword_proficiency.svg",
             type: 'passive',
             rarity: 'common',
-            uniqueFields: ['劍之道'],
+            uniqueFields: ['SwordProficiency'],
+            maxProficiency: 100,
+            proficiencyGain: 1
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return `裝備劍（名稱含有「劍」的武器）時，提升 3 點物理攻擊。`;
+    addBonus() {
+        return {
+            hit: 5 + (Math.ceil(this.proficiency * 0.05)),
+            adDefend: 1 + (Math.ceil(this.proficiency * 0.05)),
+        }
     }
 
-    protected execute(params: SkillParams): boolean {
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+            + `(裝備對應武器進行攻擊可以提升熟練度)`;
+    }
+
+    protected execute(): boolean {
         return true;
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('劍')) {
-            return {
-                ad: 3
-            };
+        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+            return this.addBonus();
         }
         return {};
     }
@@ -74,11 +83,11 @@ export class KnifeProficiency extends SkillModel {
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `裝備名稱含有「小刀」或「匕首」的武器時，提升 3 點物理攻擊。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -108,11 +117,11 @@ export class SpellProficiency extends SkillModel {
         return 5
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `裝備名稱含有「杖」的武器時，提升 ${this.apBonus} 點法術攻擊。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -142,11 +151,11 @@ export class ReadingProficiency extends SkillModel {
         return 10
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `裝備名稱含有「書」或「捲」的副手武器時，提升 ${this.apBonus}% 法術增傷。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -173,11 +182,11 @@ export class RedSkin extends SkillModel {
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `當無身體防具時，提升生命回復 2 點。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -203,11 +212,11 @@ export class BlueSkin extends SkillModel {
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `當無身體防具時，提升法力回復 2 點。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
@@ -233,15 +242,15 @@ export class BlockBoost extends SkillModel {
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
+    description(): string {
         return `完美格擋（格擋敵方暴擊）的受傷比例減少至25%。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
-    override getPassiveBonus(player?: any): Record<string, number> {
+    override getPassiveBonus(): Record<string, number> {
         return {};
     }
 }
