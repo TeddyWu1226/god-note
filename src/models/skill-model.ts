@@ -52,7 +52,7 @@ export abstract class SkillModel {
         this.maxCd = data.maxCd ?? 0;
         this.costSp = data.costSp ?? 0;
         this.costHp = data.costHp ?? 0;
-        this.costAction = data.costAction ?? 1;
+        this.costAction = data.costAction ?? 0;
         this.itemDescription = data.itemDescription;
         this.uniqueFields = data.uniqueFields ?? [];
     }

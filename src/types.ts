@@ -305,7 +305,7 @@ export interface SkillType {
     description: (prop: SkillDescriptionParams) => string; // 敘述
     costSp?: number;
     costHp?: number;
-    costAction?: number; // 消耗行動點數/行動值 (預設為 1)
+    costAction?: number; // 消耗行動點數/行動值 (預設為 0)
     use: (prop: SkillParams) => Promise<boolean> | boolean; // 回傳技能是否施展成功
     proficiency?: number // 每次使用加多少熟練度 沒有就1
 }

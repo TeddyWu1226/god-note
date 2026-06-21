@@ -123,30 +123,30 @@ export class HeartOfRebellion extends SkillModel {
     }
 }
 
-// export class CleaveFencing extends SkillModel {
-//     constructor() {
-//         super({
-//             id: 'CleaveFencing',
-//             name: "劍技-正擊",
-//             icon: "skills/passive/cleave_fencing.svg",
-//             type: 'passive',
-//             rarity: 'rare',
-//             uniqueFields: ['豎擊'],
-//         });
-//     }
-//
-//     description(playerStore: PlayerStoreType): string {
-//         return ``;
-//     }
-//
-//     protected execute(params: SkillParams): boolean {
-//         return true;
-//     }
-//
-//     override getPassiveBonus(player?: any): Record<string, number> {
-//         return {};
-//     }
-// }
+export class CleaveFencing extends SkillModel {
+    constructor() {
+        super({
+            id: 'CleaveFencing',
+            name: "劍技-正擊",
+            icon: "skills/passive/cleave_fencing.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['豎擊'],
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return ``;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        return {};
+    }
+}
 
 
 

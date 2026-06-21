@@ -221,14 +221,14 @@ export class FocusBuff extends SkillModel {
             rarity: 'common',
             maxCd: 5,
             costSp: 10,
-            costAction: 1,
+            costAction: 0,
             maxProficiency: 0,
             proficiencyGain: 0
         });
     }
 
     description(): string {
-        return `提升自身 5 點命中，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
+        return `提升自身 10 點命中，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -257,7 +257,7 @@ export class WillBuff extends SkillModel {
             rarity: 'common',
             maxCd: 5,
             costSp: 10,
-            costAction: 1,
+            costAction: 0,
             maxProficiency: 0,
             proficiencyGain: 0
         });
@@ -292,14 +292,14 @@ export class FightBuff extends SkillModel {
             rarity: 'common',
             maxCd: 5,
             costSp: 10,
-            costAction: 1,
+            costAction: 0,
             maxProficiency: 0,
             proficiencyGain: 0
         });
     }
 
     description(): string {
-        return `提升自身 10% 增傷，持續 5 回合。`;
+        return `提升自身 20% 增傷，持續 5 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {

@@ -29,7 +29,7 @@ export class AncientSpider extends MonsterModel {
             hp: 300,
             hpLimit: 300,
             level: 5,
-            dropGold: 250,
+            dropGold: 200,
             chaseIncrease: 200
         });
     }

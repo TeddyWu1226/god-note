@@ -12,8 +12,7 @@ export const MistyForestWeights2: Record<string, number> = {
     Slime: 20,
     ForestSprout: 20,
     WoodTick: 30,
-    FierceWolf: 3,
-    WoodGuardian: 10
+    FierceWolf: 5,
 };
 
 export const MistyForestWeights3: Record<string, number> = {
@@ -23,7 +22,7 @@ export const MistyForestWeights3: Record<string, number> = {
     FierceWolf: 5,
     SmallSpider: 5,
     PoisonSlime: 5,
-    WoodGuardian: 15
+    WoodGuardian: 5
 };
 
 export const MistyForestWeights4: Record<string, number> = {
@@ -31,7 +30,7 @@ export const MistyForestWeights4: Record<string, number> = {
     WoodTick: 30,
     StingerBee: 30,
     SmallSpider: 10,
-    WoodGuardian: 20
+    WoodGuardian: 10
 };
 
 /**

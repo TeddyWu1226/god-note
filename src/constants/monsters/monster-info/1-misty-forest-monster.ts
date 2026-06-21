@@ -154,7 +154,7 @@ export class FierceWolf extends MonsterModel {
             hp: 85,
             hpLimit: 85,
             level: 5,
-            dropGold: 50
+            dropGold: 33
         });
     }
 
@@ -224,7 +224,7 @@ export class PoisonSlime extends MonsterModel {
             hp: 45,
             hpLimit: 45,
             level: 5,
-            dropGold: 15,
+            dropGold: 22,
             drop: [
                 {item: Material.LowerNormal, chance: 0.5}
             ]
@@ -250,16 +250,16 @@ export class WoodGuardian extends MonsterModel {
             code: 'WoodGuardian',
             name: '樹人衛士',
             description: '守護森林的古老樹衛，外皮如鋼鐵般堅硬。',
-            ad: 8,
+            ad: 10,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 10,
             dodge: -10,
-            hit: 10,
+            hit: 5,
             hp: 60,
             hpLimit: 60,
-            level: 3,
-            dropGold: 8,
+            level: 5,
+            dropGold: 26,
             drop: [
                 {item: Material.LowerNormal, chance: 0.5}
             ]
