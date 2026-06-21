@@ -22,7 +22,7 @@ export class SandSlime extends MonsterModel {
             hpLimit: 150,
             level: 11,
             dropGold: 20,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 }
@@ -44,7 +44,7 @@ export class WastelandVulture extends MonsterModel {
             hpLimit: 130,
             level: 11,
             dropGold: 22,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 }
@@ -66,7 +66,7 @@ export class CactusFighter extends MonsterModel {
             hpLimit: 170,
             level: 12,
             dropGold: 25,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 
@@ -101,7 +101,7 @@ export class DustDevil extends MonsterModel {
             hpLimit: 140,
             level: 12,
             dropGold: 24,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 }
@@ -179,7 +179,7 @@ export class WastelandScavenger extends MonsterModel {
             hpLimit: 190,
             level: 13,
             dropGold: 30,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 
@@ -211,7 +211,7 @@ export class DesertBasilisk extends MonsterModel {
             hpLimit: 180,
             level: 13,
             dropGold: 32,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 

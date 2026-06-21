@@ -1,96 +1,52 @@
 import {ItemType} from "@/types";
 
 export const MonsterCrystals = {
-    // 下級魔物晶石
-    LowerNormal: {
-        name: '下級魔物晶石',
-        icon: '▲',
-        description: '微弱魔力的結晶，隨處可見。',
-        quality: 1,
+    BadNormal: {
+        name: '劣質魔物晶石',
+        icon: '🌫️',
+        description: '低階魔物掉落的核心，充滿雜質。',
+        quality: 0,
         price: 10
     } as ItemType,
-    LowerLarge: {
-        name: '大顆下級魔物晶石',
-        icon: '◆︎',
-        description: '體積較大的下級晶石，魔力存量較多。',
-        quality: 1,
-        price: 50
-    } as ItemType,
-    LowerGiant: {
-        name: '巨大下級魔物晶石',
-        icon: '⬜',
-        description: '極為罕見的巨大下級晶石，十分沉重。',
-        quality: 2,
-        price: 100
-    } as ItemType,
 
-    // 中級魔物晶石
-    MediumNormal: {
-        name: '中級魔物晶石',
-        icon: '🔹',
-        description: '穩定的魔力來源，是鍊金常用的素材。',
-        quality: 3,
+    LowerNormal: {
+        name: '下級魔物晶石',
+        icon: '⬜',
+        description: '低階魔物掉落的核心，較為純淨。',
+        quality: 1,
         price: 20
     } as ItemType,
-    MediumLarge: {
-        name: '大顆中級魔物晶石',
-        icon: '🔷',
-        description: '成色優良的中級晶石。',
-        quality: 3,
-        price: 100
-    } as ItemType,
-    MediumGiant: {
-        name: '巨大中級魔物晶石',
-        icon: '🟦',
-        description: '內部流動著顯著魔力光輝的巨大晶石。',
-        quality: 4,
-        price: 200
+
+    MediumNormal: {
+        name: '中級魔物晶石',
+        icon: '🟩',
+        description: '中階魔物掉落的核心，散發螢綠色光芒。',
+        quality: 2,
+        price: 40
     } as ItemType,
 
-    // 上級魔物晶石
     MediumUpperNormal: {
         name: '上級魔物晶石',
-        icon: '🔸',
-        description: '純度極高，散發著清澈的魔力光芒。',
-        quality: 5,
-        price: 50
-    } as ItemType,
-    MediumUpperLarge: {
-        name: '大顆上級魔物晶石',
-        icon: '🔶',
-        description: '僅在強大魔物體內產出的稀有晶石。',
-        quality: 5,
-        price: 250
-    } as ItemType,
-    MediumUpperGiant: {
-        name: '巨大上級魔物晶石',
-        icon: '🟧',
-        description: '足以作為城邦魔力源核心的巨大結晶。',
-        quality: 6,
-        price: 500
+        icon: '🟦',
+        description: '中階強大魔物掉落的核心，散發螢藍色光芒',
+        quality: 3,
+        price: 80
     } as ItemType,
 
-    // 優級魔物晶石
     MediumSuperiorNormal: {
         name: '優級魔物晶石',
-        icon: '🔻',
-        description: '近乎完美的結晶，魔力波動極其強大。',
-        quality: 7,
-        price: 100
+        icon: '🟪',
+        description: '受魔界影響可怕魔物掉落的核心，魔力波動極其強大。',
+        quality: 4,
+        price: 160
     } as ItemType,
-    MediumSuperiorLarge: {
-        name: '大顆優級魔物晶石',
-        icon: '♦️',
-        description: '傳說級別的素材，有價無市。',
-        quality: 7,
-        price: 500
-    } as ItemType,
-    MediumSuperiorGiant: {
-        name: '巨大優級魔物晶石',
+
+    TopNormal: {
+        name: '頂級魔物晶石',
         icon: '🟥',
-        description: '媲美魔王等級的魔物才會掉落的神話級素材。',
-        quality: 8,
-        price: 1000
+        description: '只存在於神話故事中紀錄的魔石，不敢想像擁有此核心的怪物有多麼可怕。',
+        quality: 4,
+        price: 320
     } as ItemType,
 };
 export const Material = {

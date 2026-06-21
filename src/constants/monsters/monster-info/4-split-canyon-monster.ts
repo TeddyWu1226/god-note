@@ -21,7 +21,7 @@ export class RiftSlime extends MonsterModel {
             hpLimit: 250,
             level: 16,
             dropGold: 35,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 }
@@ -43,7 +43,7 @@ export class CanyonHarpy extends MonsterModel {
             hpLimit: 220,
             level: 16,
             dropGold: 38,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 
@@ -72,7 +72,7 @@ export class WindCutter extends MonsterModel {
             hpLimit: 240,
             level: 17,
             dropGold: 40,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 }
@@ -94,7 +94,7 @@ export class ThunderLizard extends MonsterModel {
             hpLimit: 270,
             level: 17,
             dropGold: 45,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 
@@ -182,7 +182,7 @@ export class CanyonSpecter extends MonsterModel {
             hpLimit: 290,
             level: 18,
             dropGold: 50,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 }
@@ -204,7 +204,7 @@ export class ShadowLeopard extends MonsterModel {
             hpLimit: 280,
             level: 18,
             dropGold: 55,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumUpperNormal, chance: 0.5}]
         });
     }
 }

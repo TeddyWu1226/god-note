@@ -21,7 +21,7 @@ export class AbyssSlime extends MonsterModel {
             hpLimit: 450,
             level: 21,
             dropGold: 60,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 }
@@ -43,7 +43,7 @@ export class VoidGazer extends MonsterModel {
             hpLimit: 400,
             level: 21,
             dropGold: 65,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 
@@ -73,7 +73,7 @@ export class ShadowGargoyle extends MonsterModel {
             hpLimit: 500,
             level: 22,
             dropGold: 70,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 }
@@ -95,7 +95,7 @@ export class ChaosHorror extends MonsterModel {
             hpLimit: 480,
             level: 22,
             dropGold: 75,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 
@@ -185,7 +185,7 @@ export class DarkCorruptor extends MonsterModel {
             hpLimit: 550,
             level: 23,
             dropGold: 90,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 
@@ -214,7 +214,7 @@ export class CursedKnight extends MonsterModel {
             hpLimit: 600,
             level: 23,
             dropGold: 95,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.MediumSuperiorNormal, chance: 0.5}]
         });
     }
 }

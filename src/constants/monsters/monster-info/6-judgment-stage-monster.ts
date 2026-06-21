@@ -22,7 +22,7 @@ export class JudgmentSlime extends MonsterModel {
             hpLimit: 700,
             level: 26,
             dropGold: 100,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 }
@@ -44,7 +44,7 @@ export class LightInquisitor extends MonsterModel {
             hpLimit: 650,
             level: 26,
             dropGold: 110,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 
@@ -73,7 +73,7 @@ export class AngelSentry extends MonsterModel {
             hpLimit: 750,
             level: 27,
             dropGold: 120,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 }
@@ -95,7 +95,7 @@ export class HolyArchon extends MonsterModel {
             hpLimit: 800,
             level: 27,
             dropGold: 130,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 
@@ -190,7 +190,7 @@ export class JudgmentWatcher extends MonsterModel {
             hpLimit: 900,
             level: 28,
             dropGold: 150,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 }
@@ -212,7 +212,7 @@ export class FaithZealot extends MonsterModel {
             hpLimit: 850,
             level: 28,
             dropGold: 160,
-            drop: [{item: Material.LowerNormal, chance: 0.5}]
+            drop: [{item: Material.TopNormal, chance: 0.5}]
         });
     }
 
