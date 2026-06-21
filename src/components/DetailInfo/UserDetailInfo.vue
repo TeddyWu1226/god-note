@@ -121,36 +121,35 @@ const getEvolutionText = (skillId: string) => {
 
 const openLearnSkill = () => {
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
+  const learnSillUniqueSet = new Set(
+      playerStore.info.skills.flatMap(skill => skill.uniqueFields)
+  );
   const trackerStore = useTrackerStore();
 
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
-    // 1. 玩家不能已經擁有此技能
+    // 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
 
-    // 2. 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordExpert 就不能再抽 SwordProficiency)
+    // 玩家是否有學習相同[唯一字段]的技能
+    const uniqueFields = SKILL_TEMPLATES[id].uniqueFields
+    if (uniqueFields) {
+      const hasSameUnique = uniqueFields.some(field => learnSillUniqueSet.has(field));
+      if (hasSameUnique) return false;
+    }
+
+    // 玩家不能已經擁有此技能的進化後版本 (例如有了 SwordExpert 就不能再抽 SwordProficiency)
     const hasEvolvedVersion = Object.values(EVOLUTION_RULES).some(rule =>
         (rule.baseSkillId === id || rule.fuseSkillIds?.includes(id)) &&
         currentSkillIds.includes(rule.evolvedSkillId)
     );
     if (hasEvolvedVersion) return false;
 
-    // 3. 檢查可學習條件
+    // 檢查可學習條件
     const evoRule = EVOLUTION_RULES[id];
-    if (evoRule) {
-      // 進化/融合技能：必須滿足解鎖/前置條件
-      return evoRule.checkEligible(playerStore, trackerStore);
-    } else {
-      // 基礎技能：目前不能擁有相同[唯一字段]的相關技能
-      const skillUniqueFields = SKILL_TEMPLATES[id]?.uniqueFields || [];
-      if (skillUniqueFields.length > 0) {
-        const hasOverlap = playerStore.info.skills?.some(currSkill => {
-          const currFields = currSkill.uniqueFields || [];
-          return currFields.some(f => skillUniqueFields.includes(f));
-        });
-        if (hasOverlap) return false;
-      }
-      return true;
+    if (evoRule && !evoRule.checkEligible(playerStore, trackerStore)) {
+      return false;
     }
+    return true;
   });
   console.log('可學技能列', candidates)
   if (candidates.length === 0) {
