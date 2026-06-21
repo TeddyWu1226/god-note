@@ -7,8 +7,9 @@ import {useTrackerStore} from "@/store/track-store";
 import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
-import {Dagger} from "@/constants/items/equipment/weapon-info";
+import {Dagger, Sword} from "@/constants/items/equipment/weapon-info";
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
+import {CharEnum} from "@/enums/char-enum";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -24,12 +25,6 @@ const hasSave = computed(() => {
   return !!saveStore.savedSlots[0];
 });
 
-const classOptions = [
-  {value: 'Villager', label: '村民', icon: '👨‍🌾', desc: '農村的平民，擁有最基本素質以及帶著一些農產品。'},
-  {value: 'Merchant', label: '商人', icon: '🪙', desc: '商會的弟子，獲得 300 $，但戰鬥素質較差。'},
-  {value: 'Thief', label: '貧賊', icon: '🔪', desc: '貧民窟的盜賊，擁有武器「生鏽匕首」，但最大生命上限較低'},
-  {value: 'Cleric', label: '牧師', icon: '🛐', desc: '信仰教會的牧師，在神的介入下獲得較高的法術適性，卻不擅長近戰。'}
-]
 
 const confirmClassSelection = async () => {
   if (!selectedClass.value) return;
@@ -42,20 +37,28 @@ const confirmClassSelection = async () => {
   playerStore.info.char = selectedClass.value;
 
   // 套用職業初始獎勵
-  if (selectedClass.value === 'Villager') {
-    playerStore.gainItem(NormalFruits.RedApple, 3)
-  } else if (selectedClass.value === 'Merchant') {
-    playerStore.info.gold = 300;
-    playerStore.info.ad = 8
-    playerStore.info.ap = 8
-  } else if (selectedClass.value === 'Thief') {
-    playerStore.equipItem(Dagger.Dagger0);
-    playerStore.info.hpLimit = 50;
-  } else if (selectedClass.value === 'Cleric') {
-    playerStore.info.ap = 13;
-    playerStore.info.ad = 7
-    playerStore.info.spLimit = 120;
-    playerStore.info.hpLimit = 80;
+  switch (selectedClass.value) {
+    case CharEnum.Villager.value:
+      playerStore.equipItem(Sword.WoodSword);
+      playerStore.gainItem(NormalFruits.RedApple, 3)
+      break;
+    case CharEnum.Merchant.value:
+      playerStore.info.gold = 300;
+      playerStore.info.ad = 8
+      playerStore.info.ap = 8
+      break;
+    case CharEnum.Thief.value:
+      playerStore.equipItem(Dagger.Dagger0);
+      playerStore.info.hpLimit = 50;
+      break;
+    case CharEnum.Stargazer.value:
+      playerStore.info.ap = 13;
+      playerStore.info.ad = 7
+      playerStore.info.spLimit = 120;
+      playerStore.info.hpLimit = 80;
+      playerStore.equipItem(Sword.WoodSword);
+      break;
+
   }
 
   playerStore.healFull()
@@ -131,7 +134,7 @@ const continueGame = () => {
         <h1 class="select-class-title">選擇你的欽定之人</h1>
         <div class="class-cards">
           <div
-              v-for="cls in classOptions"
+              v-for="cls in CharEnum"
               :key="cls.value"
               class="class-card"
               :class="{ active: selectedClass === cls.value }"

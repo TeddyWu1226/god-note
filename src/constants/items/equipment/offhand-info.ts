@@ -68,6 +68,7 @@ export const Offhand = {
         spLimit: 40,
         skill: 'MagicRegain'
     } as EquipmentType,
+
     Book1: {
         name: '學徒之書',
         description: '記載了法術施放的竅門,能更有效地儲存精神能量,額外提供持有者保護。',
