@@ -242,8 +242,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
                   'is-active': selectedItem === item
                 }"
               :style="{ borderColor: getEnumColumn(QualityEnum, item.quality, 'color', '#fff') }"
-              @click="selectedItem = item"
-              @dblclick="handleDoubleClick(item)"
+              @click="handleSellDoubleClick(item)"
               @touchend="onTouchItem(item)"
           >
             <div class="item-icon">{{ item.icon }}</div>
@@ -275,8 +274,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
                      :key="entry.item.name"
                      class="item-card"
                      :class="{ 'is-active': selectedItem?.item?.name === entry.item.name && selectedItem?.bagType === entry.bagType }"
-                     @click="selectedItem = entry"
-                     @dblclick="handleSellDoubleClick(entry)"
+                     @click="handleSellDoubleClick(entry)"
                      @touchend="onTouchSellItem(entry)"
                 >
                   <div class="item-badge" v-if="entry.count > 1">x{{ entry.count }}</div>
