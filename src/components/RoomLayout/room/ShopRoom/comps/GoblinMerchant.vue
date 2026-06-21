@@ -55,16 +55,16 @@ const stackedBags = computed(() => {
       }));
 
   // 2. 處理裝備 (在前端進行聚合)
-  const equipMap = new Map<string, ShopDisplayItem>();
+  const equipMap: Record<string, ShopDisplayItem> = {};
   (playerStore.info.equipments || []).forEach((item) => {
     if (item.unsellable) return;
-    if (equipMap.has(item.name)) {
-      equipMap.get(item.name)!.count++;
+    if (equipMap[item.name]) {
+      equipMap[item.name].count++;
     } else {
-      equipMap.set(item.name, {item, count: 1, bagType: 'equipments'});
+      equipMap[item.name] = {item, count: 1, bagType: 'equipments'};
     }
   });
-  bags.equipments = Array.from(equipMap.values());
+  bags.equipments = Object.values(equipMap);
 
   // 排序品質高的在前面
   Object.keys(bags).forEach(key => {
@@ -82,24 +82,6 @@ const getSellPrice = (item: any) => {
   return Math.floor(item.price || 1);
 };
 
-const getQualityTagType = (quality: number) => {
-  switch (quality) {
-    case 0:
-      return 'info';
-    case 1:
-      return 'success';
-    case 2:
-      return 'warning';
-    case 3:
-      return 'primary';
-    case 4:
-      return 'danger';
-    case 5:
-      return 'danger';
-    default:
-      return 'info';
-  }
-};
 
 // 彈窗與觸發二次確認
 const triggerDetail = (item: any) => {
@@ -240,7 +222,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 </script>
 
 <template>
-  <div style="width: 100%; display: flex; flex-direction: column; height: 100%;">
+  <div style="width: 100%; display: flex; flex-direction: column; height: 80%;">
     <!-- 商人頂部導覽列 -->
     <div class="merchant-header-bar">
       <el-radio-group v-model="activeTab" size="small">
@@ -308,7 +290,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
             </template>
           </div>
           <div v-if="stackedBags.items.length === 0 && stackedBags.equipments.length === 0" class="empty-bag-text">
-            🎒 你的背包空空如也，沒有可以售出的物資。
+            你的背包空空如也，沒有可以售出的物資。
           </div>
         </div>
       </el-scrollbar>

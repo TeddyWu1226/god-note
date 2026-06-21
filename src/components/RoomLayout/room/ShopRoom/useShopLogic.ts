@@ -13,10 +13,14 @@ import {Usable} from "@/constants/items/usalbe-item/usable-info";
 // 基礎價格表 (0: Tattered ~ 5: Unique)
 export const EQUIP_BASE_PRICE = [100, 200, 400, 800, 1600, 3200];
 export const POTION_BASE_PRICE = [50, 100, 200, 400, 800, 1600];
-export const MATERIAL_BASE_PRICE = [10, 30, 100, 200, 500, 1000];
-
+const sortByQuality = <T extends { quality?: number; name: string }>(arr: T[]) =>
+    arr.sort((a, b) =>
+        (a.quality ?? 0) - (b.quality ?? 0) ||
+        a.name.localeCompare(b.name, 'zh-Hant', {
+            numeric: true,
+        })
+    );
 export function useShopLogic(currentStage: number) {
-
     /**
      * 裝備品質機率分佈演算法
      * @returns 回傳品質 Value (0 - 5)
@@ -24,48 +28,69 @@ export function useShopLogic(currentStage: number) {
     const getEquipWeightedQuality = (): number => {
         const roll = Math.random() * 100;
 
-        // --- 極深層 (36層以上) ---
-        if (currentStage > 35) {
-            if (roll < 20) return QualityEnum.Unique.value;  // 20% 獨特
-            if (roll < 50) return QualityEnum.Perfect.value; // 30% 完美
-            if (roll < 85) return QualityEnum.Rare.value;    // 35% 稀有
-            return QualityEnum.Fine.value;                   // 15% 精良
+        if (currentStage === 1) {
+            if (roll < 5) return QualityEnum.Common.value;    // 5% 普通
+            return QualityEnum.Tattered.value;                 // 95% 破爛
         }
 
-        // --- 深層區域 (26~35層) ---
-        // 目標：開始穩定出現完美，稀有成為常客
-        if (currentStage > 25) {
-            if (roll < 8) return QualityEnum.Unique.value;  // 8% 獨特
-            if (roll < 25) return QualityEnum.Perfect.value; // 17% 完美
-            if (roll < 65) return QualityEnum.Rare.value;    // 40% 稀有
-            return QualityEnum.Fine.value;                   // 35% 精良
+        if (currentStage === 2) {
+            if (roll < 5) return QualityEnum.Fine.value;    // 5% 精良
+            if (roll < 15) return QualityEnum.Tattered.value;  // 10% 破爛
+            return QualityEnum.Common.value;               // 85% 普通
         }
 
-        // --- 中層區域 (16~25) ---
-        // 目標：稀有開始普及，完美極低機率出現
-        if (currentStage > 15) {
-            if (roll < 5) return QualityEnum.Perfect.value; // 5% 完美 (稀有機遇)
-            if (roll < 25) return QualityEnum.Rare.value;    // 20% 稀有
-            if (roll < 65) return QualityEnum.Fine.value;    // 40% 精良
-            return QualityEnum.Common.value;                 // 35% 普通
+        if (currentStage === 3) {
+            if (roll < 5) return QualityEnum.Rare.value;    // 5% 精良
+            if (roll < 15) return QualityEnum.Common.value;  // 10% 普通
+            return QualityEnum.Fine.value;               // 85% 精良
         }
 
-        // --- 緩衝區域 (6 ~ 15層) ---
-        // 目標：普通(Common)開始取代破爛(Tattered)
+        if (currentStage === 4) {
+            if (roll < 5) return QualityEnum.Perfect.value;    // 5% 完美
+            if (roll < 15) return QualityEnum.Fine.value;  // 10% 普通
+            return QualityEnum.Rare.value;               // 85% 精良
+        }
+
+        if (currentStage === 5) {
+            if (roll < 5) return QualityEnum.Unique.value;    // 5% 獨特
+            if (roll < 15) return QualityEnum.Rare.value;  // 10% 稀有
+            return QualityEnum.Perfect.value;               // 85% 完美
+        }
+
         if (currentStage > 5) {
-            if (roll < 5) return QualityEnum.Rare.value;    // 5% 稀有
-            if (roll < 35) return QualityEnum.Fine.value;    // 30% 精良
-            if (roll < 75) return QualityEnum.Common.value;  // 40% 普通
-            return QualityEnum.Tattered.value;               // 25% 破爛
+            return QualityEnum.Unique.value;               // 100% 獨特
         }
 
-        if (currentStage > 2) {
-            if (roll < 2) return QualityEnum.Fine.value;      // 2% 精良 (歐皇)
-            if (roll < 12) return QualityEnum.Common.value;    // 10% 普通 (開始出現)
-            return QualityEnum.Tattered.value;                 // 88% 破爛
+        return QualityEnum.Tattered.value;                 // 100% 破爛
+    };
+
+    /**
+     * 特殊道具品質機率分佈演算法
+     * @returns 回傳品質 Value (0 - 5)
+     */
+    const getUsableWeightedQuality = (): number => {
+        const roll = Math.random() * 100;
+
+        if (currentStage === 1 || currentStage === 2) {
+            if (roll < 50) return QualityEnum.Common.value;
+            return QualityEnum.Tattered.value;
         }
 
-        return QualityEnum.Tattered.value;                 // 88% 破爛
+        if (currentStage === 3) {
+            if (roll < 33) return QualityEnum.Tattered.value;
+            if (roll < 66) return QualityEnum.Common.value;
+            return QualityEnum.Fine.value;
+        }
+
+
+        if (currentStage >= 4) {
+            if (roll < 25) return QualityEnum.Tattered.value;
+            if (roll < 50) return QualityEnum.Common.value;
+            if (roll < 75) return QualityEnum.Fine.value;
+            return QualityEnum.Rare.value;
+        }
+
+        return QualityEnum.Tattered.value;
     };
 
 
@@ -76,46 +101,33 @@ export function useShopLogic(currentStage: number) {
     const getPotionWeightedQuality = (): number => {
         const roll = Math.random() * 100;
 
+        if (currentStage === 1) {
+            if (roll < 15) return QualityEnum.Common.value;    // 15% 普通
+            return QualityEnum.Tattered.value;                 // 85% 破爛
+        }
+
+        if (currentStage === 2) {
+            if (roll < 5) return QualityEnum.Fine.value;      // 5% 精良
+            if (roll < 55) return QualityEnum.Common.value;    // 50% 普通
+            return QualityEnum.Tattered.value;                 // 45% 破爛
+        }
+
+        if (currentStage === 3) {
+            if (roll < 25) return QualityEnum.Rare.value; // 25% 稀有
+            if (roll < 60) return QualityEnum.Fine.value;    // 35% 精良
+            return QualityEnum.Common.value;                   // 40% 普通
+        }
+
         // --- 極深層 (41 ~ 50層) ---
-        if (currentStage > 40) {
+        if (currentStage > 4) {
             if (roll < 10) return QualityEnum.Perfect.value; // 10% 完美
             if (roll < 50) return QualityEnum.Rare.value; // 40% 稀有
             if (roll < 90) return QualityEnum.Fine.value; // 40% 精良
             return QualityEnum.Common.value;              // 10% 普通
         }
 
-        // --- 深層區域 (31 ~ 40層) ---
-        if (currentStage > 30) {
-            if (roll < 5) return QualityEnum.Perfect.value; // 5% 完美
-            if (roll < 25) return QualityEnum.Rare.value; // 20% 稀有
-            if (roll < 60) return QualityEnum.Fine.value;    // 35% 精良
-            return QualityEnum.Common.value;                   // 40% 普通
-        }
-
-        // --- 中層區域 (16 ~ 30層) ---
-        if (currentStage > 15) {
-            if (roll < 5) return QualityEnum.Rare.value;    // 5% 稀有
-            if (roll < 25) return QualityEnum.Fine.value;    // 20% 精良
-            if (roll < 90) return QualityEnum.Common.value;  // 65% 普通
-            return QualityEnum.Tattered.value;               // 10% 破爛
-        }
-
-        // --- 緩衝區域 (6 ~ 15層) ---
-        if (currentStage > 5) {
-            if (roll < 10) return QualityEnum.Fine.value;    // 10% 精良
-            if (roll < 60) return QualityEnum.Common.value;  // 50% 普通
-            return QualityEnum.Tattered.value;               // 40% 破爛
-        }
-
-        if (currentStage > 2) {
-            if (roll < 2) return QualityEnum.Fine.value;      // 2% 精良 (歐皇)
-            if (roll < 12) return QualityEnum.Common.value;    // 10% 普通 (開始出現)
-            return QualityEnum.Tattered.value;                 // 88% 破爛
-        }
-
         return QualityEnum.Tattered.value;                 // 100% 破爛
     };
-
 
     /**
      * 價格計算邏輯
@@ -139,39 +151,43 @@ export function useShopLogic(currentStage: number) {
     };
 
     const generateGoods = () => {
-        // 固定生成 4 件裝備
-        const equips = Array.from({length: 4}).map(() => {
+        // 固定生成 5 件裝備
+        const equips = Array.from({length: 5}).map(() => {
             const q = getEquipWeightedQuality();
             return getRandomItemsByQuality(1, q, false, Armor, Head, Offhand, Weapon)[0];
         });
-
-        // 固定生成 1 件特殊道具
-        let usable = getRandomItemsByQuality(1, Math.min(3, getEquipWeightedQuality()), false, Usable)[0];
-        const potionCount = !usable ? 4 : 3
-        // 固定生成 3 件藥水
-        const potions = Array.from({length: potionCount}).map(() => {
+        // 固定生成 3 件特殊道具
+        const usable = Array.from({length: 3}).map(() => {
+            const q = getUsableWeightedQuality();
+            return getRandomItemsByQuality(1, q, false, Usable)[0];
+        });
+        // 固定生成 7 件藥水
+        const potions = Array.from({length: 7}).map(() => {
             const q = getPotionWeightedQuality();
-            return getRandomItemsByQuality(1, q, true, Potions)[0];
-        }).filter(Boolean);
+            return getRandomItemsByQuality(1, q, false, Potions)[0];
+        });
+
+        // 附上價格
         const _equips = equips.map(item => ({
             ...item,
             price: calculatePrice(item.quality ?? 0, EQUIP_BASE_PRICE),
             sold: false
         }));
-        let _usable: object | undefined = undefined;
-        if (usable) {
-            _usable = {
-                ...usable,
-                price: usable.quality * usable.quality * 100,
-                sold: false
-            }
-        }
+        let _usable = usable.map(item => ({
+            ...item,
+            price: item.quality ? item.quality * item.quality * 50 : 50,
+            sold: false
+        }));
         const _potions = potions.map(item => ({
             ...item,
             price: calculatePrice(item.quality ?? 0, POTION_BASE_PRICE, true),
             sold: false
         }));
-        return [..._equips, _usable, ..._potions].filter(Boolean)
+        sortByQuality(_equips);
+        sortByQuality(_usable);
+        sortByQuality(_potions);
+
+        return [..._equips, ..._usable, ..._potions].filter(Boolean);
     };
 
     return {getEquipWeightedQuality, generateGoods};

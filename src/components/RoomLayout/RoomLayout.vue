@@ -11,8 +11,7 @@ import ShopRoom from "@/components/RoomLayout/room/ShopRoom/ShopRoom.vue";
 import BlessRoom from "@/components/RoomLayout/room/BlessRoom/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
-import {Potions} from "@/constants/items/usalbe-item/potion-info";
+import {GodThings, Usable} from "@/constants/items/usalbe-item/usable-info";
 import FusionRoom from "@/components/RoomLayout/room/FusionRoom/FusionRoom.vue";
 
 const emit = defineEmits(['runFailed'])
@@ -33,9 +32,9 @@ const onSkill = (skillKey: string) => {
 const onItemSkill = ({skillKey, callback, el}) => {
   const specifySkill = [
     Usable.Campfire.skill,
-    Usable.GodNotePage.skill,
+    GodThings.GodNotePage.skill,
     Usable.ShabbyTent.skill,
-    Potions.UnPoisonPotion.skill
+    Usable.UnPoisonPotion.skill
   ]
   if (specifySkill.includes(skillKey)) {
     ItemSkill[skillKey](

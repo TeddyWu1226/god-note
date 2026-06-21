@@ -33,11 +33,11 @@ watch(
       }
       // 如果生命值歸零
       if (newHp <= 0) {
-        if (playerStore.hasItem(Usable.GodStar.name)[0]) {
-          playerStore.healFull()
-          playerStore.removeItem(Usable.GodStar.name)
-          return;
-        }
+        // if (playerStore.hasItem(Usable.GodStar.name)[0]) {
+        //   playerStore.healFull()
+        //   playerStore.removeItem(Usable.GodStar.name)
+        //   return;
+        // }
         gameStore.isDead = true
       }
 

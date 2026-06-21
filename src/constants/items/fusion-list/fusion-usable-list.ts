@@ -1,4 +1,4 @@
-import {FusionListType, UsableType} from "@/types";
+import {FusionListType} from "@/types";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {Material} from "@/constants/items/material/material-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
@@ -19,7 +19,7 @@ export const FusionUsableList = [
         ]
     } as FusionListType,
     {
-        target: Potions.UnPoisonPotion,
+        target: Usable.UnPoisonPotion,
         requirements: [
             {item: Material.LowerNormal, count: 3},
         ]
@@ -29,11 +29,9 @@ export const FusionUsableList = [
 export const ExtraFusionUsableItem = {
     DuneBeastBomb:
         {
-            target: Usable.DuneBeastBomb,
+            target: Usable.CamouflageGrass,
             requirements: [
                 {item: SpecialItem.DuneBeastBombCenter, count: 1},
-                {item: Material.DesertRabbitMeat, count: 10},
-                {item: Material.SandWormBloodClot, count: 10},
             ]
         } as FusionListType,
 }

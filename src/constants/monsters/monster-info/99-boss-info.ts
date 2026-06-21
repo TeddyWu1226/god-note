@@ -77,10 +77,7 @@ export class Twilight extends MonsterModel {
             level: 10,
             dropGold: 500,
             chaseIncrease: 200,
-            drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
-            ]
+            drop: []
         });
     }
 
@@ -161,10 +158,7 @@ export class BlazingPhoenix extends MonsterModel {
             hpLimit: 1000,
             level: 12,
             dropGold: 800,
-            drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
-            ]
+            drop: []
         });
     }
 
@@ -222,10 +216,7 @@ export class LordOfEarthquakes extends MonsterModel {
             hpLimit: 2000,
             level: 17,
             dropGold: 1000,
-            drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
-            ]
+            drop: []
         });
     }
 
@@ -292,8 +283,6 @@ export class DualElementalist extends MonsterModel {
             level: 22,
             dropGold: 1500,
             drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
             ]
         });
     }
@@ -347,8 +336,7 @@ export class AbyssDespair extends MonsterModel {
             level: 27,
             dropGold: 2000,
             drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
+
             ]
         });
     }
@@ -411,8 +399,7 @@ export class GodOfJudgment extends MonsterModel {
             level: 35,
             dropGold: 5000,
             drop: [
-                {item: Usable.GodStar, chance: 1},
-                {item: Usable.GodNotePage, chance: 1}
+
             ]
         });
     }

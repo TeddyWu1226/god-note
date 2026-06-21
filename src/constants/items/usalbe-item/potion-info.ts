@@ -43,6 +43,14 @@ const Heal = {
         heal: 400,
         usable: true
     } as UsableType,
+    Heal5: {
+        name: '完美生命精華',
+        description: '完美的生命藥劑，彷彿斷肢都能瞬間復原。',
+        icon: '🧪',
+        quality: 5,
+        heal: 800,
+        usable: true
+    } as UsableType,
 };
 
 
@@ -87,25 +95,16 @@ const Magic = {
         magic: 400,
         usable: true
     } as UsableType,
+    Magic5: {
+        name: '完美魔力增幅液',
+        description: '內含精煉魔力結晶，能快速填補乾涸的氣海。',
+        icon: '🍷',
+        quality: 5,
+        magic: 800,
+        usable: true
+    } as UsableType,
 };
 
-const Special = {
-    BurningPotion: {
-        name: '燃燒藥水',
-        description: '可以使目標燃燒或燒掉某些東西',
-        icon: '🔥',
-        quality: 0,
-        usable: true,
-        skill: 'useBurningPotion'
-    } as UsableType,
-    UnPoisonPotion: {
-        name: '解毒劑',
-        description: '可以使自身消除「中毒」效果',
-        icon: '💉',
-        quality: 1,
-        usable: true,
-        skill: 'useUnPoisonPotion'
-    } as UsableType,
-}
 
-export const Potions = {...Heal, ...Magic, ...Special}
+
+export const Potions = {...Heal, ...Magic}

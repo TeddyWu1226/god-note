@@ -71,60 +71,33 @@ const cancel = (): void => {
 <template>
   <RoomTemplate :title="currentView === 'camp' ? '行商旅團' : (activeStaff?.title || '旅團營地')">
     <template #default>
-      <div class="shop-layout">
-
-        <!-- 旅團已經離開 -->
-        <div v-if="isExited" class="run-text" style="padding: 3rem; text-align: center;">
-          ⛺ 旅團已經拔營離開了...
+      <div v-if="isExited" class="run-text" style="padding: 3rem; text-align: center;">
+        旅團已經拔營離開了...
+      </div>
+      <div v-else-if="currentView === 'camp'" class="general-event">
+        <div class="event-icon">🎪</div>
+        <div class="dialog-box">
+          <p>行商旅團正在道路旁安營紮帳。</p>
+          <p>爐火熊熊，商人們的吆喝聲與鐵錘敲擊鐵砧的聲音在空中迴盪。</p>
+          <p>你可以找地精商人交易物資，或尋找鐵匠強化你的裝備。</p>
         </div>
-
-        <!-- 1. 旅團營地主頁 -->
-        <div v-else-if="currentView === 'camp'" class="camp-container">
-          <div class="event-icon">🎪</div>
-          <div class="dialog-box">
-            <p>行商旅團正在道路旁安營紮帳。</p>
-            <p>爐火熊熊，商人們的吆喝聲與鐵錘敲擊鐵砧的聲音在空中迴盪。</p>
-            <p>你可以找地精商人交易物資，或尋找鐵匠強化你的裝備。</p>
-          </div>
-        </div>
-
-        <!-- 2. 動態渲染目前拜訪的人員介面 -->
-        <div v-else-if="activeStaff" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-          <component :is="activeStaff.component" :item-list="itemList"/>
-        </div>
-
+      </div>
+      <div v-else-if="activeStaff" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+        <component :is="activeStaff.component" :item-list="itemList"/>
       </div>
     </template>
-
     <!-- 按鈕控制區域 (動態適配人員清單) -->
     <template #button>
       <template v-if="!isExited">
-        <!-- 處於營地主頁：顯示拜訪所有人的按鈕，以及離開按鈕 -->
-        <template v-if="currentView === 'camp'">
-          <el-button
-              v-for="staff in staffList"
-              :key="staff.id"
-              :type="staff.btnType"
-              @click="currentView = staff.id"
-          >
-            {{ staff.icon }} 拜訪{{ staff.name }}
-          </el-button>
-          <el-button type="info" @click="cancel">🚪 離開旅團</el-button>
-        </template>
-
-        <!-- 正在拜訪某位人員：顯示返回營地、拜訪其他人員以及離開按鈕 -->
-        <template v-else>
-          <el-button type="primary" @click="currentView = 'camp'">🎪 返回營地</el-button>
-          <el-button
-              v-for="staff in staffList.filter(s => s.id !== currentView)"
-              :key="staff.id"
-              :type="staff.btnType"
-              @click="currentView = staff.id"
-          >
-            {{ staff.icon }} 拜訪{{ staff.name }}
-          </el-button>
-          <el-button type="info" @click="cancel">🚪 離開旅團</el-button>
-        </template>
+        <el-button
+            v-for="staff in staffList"
+            :key="staff.id"
+            :type="staff.btnType"
+            @click="currentView = staff.id"
+        >
+          {{ staff.icon }} 拜訪{{ staff.name }}
+        </el-button>
+        <el-button type="info" @click="cancel">離開旅團</el-button>
       </template>
       <template v-else>
         <el-button type="info" @click="cancel">離開</el-button>
@@ -134,15 +107,6 @@ const cancel = (): void => {
 </template>
 
 <style scoped>
-.shop-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  overflow: auto;
-  box-sizing: border-box;
-}
-
 .run-text {
   font-size: 1.2rem;
   text-align: center;
