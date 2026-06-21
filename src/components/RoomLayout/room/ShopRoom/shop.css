@@ -3,10 +3,11 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: .5rem;
+    margin-top: 1rem;
 }
 
 .item-card {
-    width: 7rem;
+    width: 6rem;
     background: var(--el-card-bg-color);
     border: 2px solid #ddd;
     border-radius: 8px;

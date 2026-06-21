@@ -1,10 +1,10 @@
 import {EquipmentPosition} from "@/enums/enums";
-import {useGameStateStore} from "@/store/game-state-store";
-import {usePlayerStore} from "@/store/player-store";
-import {useLogStore} from "@/store/log-store";
-import {useTrackerStore} from "@/store/track-store";
+import type {useGameStateStore} from "@/store/game-state-store";
+import type {usePlayerStore} from "@/store/player-store";
+import type {useLogStore} from "@/store/log-store";
+import type {useTrackerStore} from "@/store/track-store";
 
-import {SkillModel} from "@/models/skill-model";
+import type {SkillModel} from "@/models/skill-model";
 import type {MonsterModel} from "@/models/monster-model";
 
 /**

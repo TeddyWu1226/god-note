@@ -1,95 +1,151 @@
 <script setup lang="ts">
 import './shop.css'
-import {ref, onMounted} from "vue";
+import {ref, onMounted, computed, watch} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {useShopLogic} from "./useShopLogic";
 import {GameState} from "@/enums/enums";
-import ShopBuyTab from "@/components/RoomLayout/room/ShopRoom/ShopBuyTab.vue";
-import ShopSellTab from "@/components/RoomLayout/room/ShopRoom/ShopSellTab.vue";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
-import BlessOperation from "@/components/RoomLayout/room/BlessRoom/BlessOperation.vue";
-import LeaveOperation from "@/components/RoomLayout/comps/LeaveOperation.vue";
 
+// 匯入分開管理的子組件
+import GoblinMerchant from "./comps/GoblinMerchant.vue";
+import DwarfBlacksmith from "./comps/DwarfBlacksmith.vue";
+// 在此處可匯入其他人員，例如：
+// import BardPanel from "./comps/BardPanel.vue";
 
 const gameStateStore = useGameStateStore();
 const {generateGoods} = useShopLogic(gameStateStore.currentStage);
 
 const itemList = ref([]);
-const activeTab = ref<'buy' | 'sell'>('buy');
+const currentView = ref<string>('camp'); // 'camp' 或 staffList 內定義的人員 ID
 const isExited = ref(false);
+
+// 🎪 旅團人員配置清單（在此擴充其他人員，例如吟遊詩人，畫面即可自動適配）
+const staffList = [
+  {
+    id: 'merchant',
+    name: '地精商人',
+    icon: '🧌',
+    btnType: 'success' as const,
+    component: GoblinMerchant,
+    title: '地精商人'
+  },
+  {
+    id: 'blacksmith',
+    name: '矮人鐵匠',
+    icon: '🔨',
+    btnType: 'warning' as const,
+    component: DwarfBlacksmith,
+    title: '矮人鐵匠'
+  },
+  /* 
+  未來擴充範例：
+  {
+    id: 'bard',
+    name: '吟遊詩人',
+    icon: '🪕',
+    btnType: 'primary' as const,
+    component: BardPanel,
+    title: '旅團樂手'
+  }
+  */
+];
+
+// 當前拜訪的人員
+const activeStaff = computed(() => staffList.find(staff => staff.id === currentView.value));
 
 onMounted(() => {
   // 只有第一次進入 EventPhase 會初始化商品
   if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
     itemList.value = generateGoods();
-    gameStateStore.transitionToNextState();
   } else {
     isExited.value = true;
   }
 });
-const emit = defineEmits(['cancel']);
 
+const emit = defineEmits(['cancel']);
 const cancel = (): void => {
   emit('cancel');
 }
 </script>
 
 <template>
-  <RoomTemplate title="商店">
+  <RoomTemplate :title="currentView === 'camp' ? '行商旅團' : (activeStaff?.title || '旅團營地')">
     <template #default>
       <div class="shop-layout">
-        <div style="width: 100%; display: flex; flex-direction: column; height: 100%;" v-if="!isExited">
-          <div class="header">
-            <h2>🧌 地精商店</h2>
-            <el-radio-group
-                v-model="activeTab"
-                style="padding-left: 1rem"
-                :fill="activeTab === 'sell'?'var(--el-color-danger)':''"
-            >
-              <el-radio-button label="buy">購買</el-radio-button>
-              <el-radio-button label="sell">販賣</el-radio-button>
-            </el-radio-group>
-          </div>
-          <el-scrollbar class="shop-content-scroll">
-            <keep-alive>
-              <component :is="activeTab === 'buy' ? ShopBuyTab : ShopSellTab" :items="itemList"/>
-            </keep-alive>
-          </el-scrollbar>
+
+        <!-- 旅團已經離開 -->
+        <div v-if="isExited" class="run-text" style="padding: 3rem; text-align: center;">
+          ⛺ 旅團已經拔營離開了...
         </div>
-        <div v-else class="run-text">商人已經離開了...</div>
+
+        <!-- 1. 旅團營地主頁 -->
+        <div v-else-if="currentView === 'camp'" class="camp-container">
+          <div class="event-icon">🎪</div>
+          <div class="dialog-box">
+            <p>行商旅團正在道路旁安營紮帳。</p>
+            <p>爐火熊熊，商人們的吆喝聲與鐵錘敲擊鐵砧的聲音在空中迴盪。</p>
+            <p>你可以找地精商人交易物資，或尋找鐵匠強化你的裝備。</p>
+          </div>
+        </div>
+
+        <!-- 2. 動態渲染目前拜訪的人員介面 -->
+        <div v-else-if="activeStaff" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+          <component :is="activeStaff.component" :item-list="itemList"/>
+        </div>
+
       </div>
     </template>
+
+    <!-- 按鈕控制區域 (動態適配人員清單) -->
     <template #button>
-      <LeaveOperation @cancel="cancel"/>
+      <template v-if="!isExited">
+        <!-- 處於營地主頁：顯示拜訪所有人的按鈕，以及離開按鈕 -->
+        <template v-if="currentView === 'camp'">
+          <el-button
+              v-for="staff in staffList"
+              :key="staff.id"
+              :type="staff.btnType"
+              @click="currentView = staff.id"
+          >
+            {{ staff.icon }} 拜訪{{ staff.name }}
+          </el-button>
+          <el-button type="info" @click="cancel">🚪 離開旅團</el-button>
+        </template>
+
+        <!-- 正在拜訪某位人員：顯示返回營地、拜訪其他人員以及離開按鈕 -->
+        <template v-else>
+          <el-button type="primary" @click="currentView = 'camp'">🎪 返回營地</el-button>
+          <el-button
+              v-for="staff in staffList.filter(s => s.id !== currentView)"
+              :key="staff.id"
+              :type="staff.btnType"
+              @click="currentView = staff.id"
+          >
+            {{ staff.icon }} 拜訪{{ staff.name }}
+          </el-button>
+          <el-button type="info" @click="cancel">🚪 離開旅團</el-button>
+        </template>
+      </template>
+      <template v-else>
+        <el-button type="info" @click="cancel">離開</el-button>
+      </template>
     </template>
-
   </RoomTemplate>
-
 </template>
+
 <style scoped>
 .shop-layout {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   box-sizing: border-box;
 }
 
-.header {
-  margin-bottom: 0.5rem;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.shop-content-scroll {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-}
-
 .run-text {
-  font-size: 1.5rem;
-  text-align: center
+  font-size: 1.2rem;
+  text-align: center;
+  color: #909399;
 }
 </style>
