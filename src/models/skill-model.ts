@@ -1,4 +1,4 @@
-import {SkillParams} from "@/types";
+import {SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
@@ -78,6 +78,11 @@ export abstract class SkillModel {
     // 💡 獲取被動加成數據 (預設為空，可由被動技能類別覆寫)
     getPassiveBonus(player?: any): Record<string, number> {
         return {};
+    }
+
+    // 💡 玩家普通攻擊命中時觸發的被動/武技 Hook
+    onPlayerAttackHit(params: SkillOnPlayerAttackHitParams): void {
+        // 預設無效果
     }
 
     // 💡 為了相容於原本 UI 讀取 .cd 的地方

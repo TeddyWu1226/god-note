@@ -50,7 +50,7 @@ export class VerticalSlash extends SkillModel {
             'ad',
             '豎擊'
         );
-        useCardImpactEffect(params.targetElement || null, 'vertical-slash');
+        useCardImpactEffect(getMonsterElement(params.monster.id), 'vertical-slash');
         return true;
     }
 }
@@ -149,7 +149,7 @@ export class Thrust extends SkillModel {
             'ad',
             '刺擊'
         );
-        useCardImpactEffect(params.targetElement || null, 'thrust');
+        useCardImpactEffect(getMonsterElement(params.monster.id), 'thrust');
         return true;
     }
 }
@@ -199,7 +199,7 @@ export class MagicBall extends SkillModel {
             'ap',
             '法力彈'
         );
-        useCardImpactEffect(params.targetElement || null, 'magic');
+        useCardImpactEffect(getMonsterElement(params.monster.id), 'magic');
         return true;
     }
 }

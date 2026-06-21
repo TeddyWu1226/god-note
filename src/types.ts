@@ -287,8 +287,13 @@ export interface SpecifyMonsterItemSkillParams extends NoneMonsterItemSkillParam
  */
 export interface SkillParams {
     monster?: MonsterModel;
-    monsterIndex?: number;
-    targetElement?: HTMLElement // 怪物的 html元素
+    playerStore?: PlayerStoreType;
+    gameStateStore?: GameStateStoreType
+}
+
+export interface SkillOnPlayerAttackHitParams {
+    monster?: MonsterModel;
+    attackOutcome: BattleOutcome
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
 }

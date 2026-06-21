@@ -1,6 +1,13 @@
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillParams} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
 import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {useLogStore} from "@/store/log-store";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {getMonsterElement} from "@/utils/create";
+import {checkProbability} from "@/utils/math";
+import {UnitStatus} from "@/constants/status/unit-status";
+import {MonsterModel} from "@/models/monster-model";
+import {applySkillDamage} from "@/constants/fight-func";
 
 export class SwordExpert extends SkillModel {
     constructor() {
@@ -123,30 +130,115 @@ export class HeartOfRebellion extends SkillModel {
     }
 }
 
-export class CleaveFencing extends SkillModel {
+export class ContinuousSwordVertical extends SkillModel {
     constructor() {
         super({
-            id: 'CleaveFencing',
-            name: "劍技-正擊",
-            icon: "skills/passive/cleave_fencing.svg",
+            id: 'ContinuousSwordVertical',
+            name: '連續劍技-豎之型',
+            icon: 'skills/passive/continuous_vertical.svg',
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['豎擊'],
+            uniqueFields: ['連續劍技']
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return ``;
+    bonus = {
+        critIncrease: 25,
+        critRate: 10,
     }
 
-    protected execute(params: SkillParams): boolean {
+    description(): string {
+        return `增加 ${this.bonus.critRate}% 爆擊率, ${this.bonus.critIncrease}% 爆擊傷害。`;
+    }
+
+    protected execute(): boolean {
         return true;
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        return {};
+        return this.bonus
     }
 }
+
+export class ContinuousSwordHorizontal extends SkillModel {
+    constructor() {
+        super({
+            id: 'ContinuousSwordHorizontal',
+            name: '連續劍技-橫之型',
+            icon: 'skills/passive/continuous_horizontal.svg',
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['連續劍技']
+        });
+    }
+
+    happenRate = 25
+    diffusionRate = 50
+
+    description(): string {
+        return `攻擊時有 ${this.happenRate}% 機率，對其餘敵人造成該次傷害 ${this.diffusionRate}% 的擴散傷害。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override onPlayerAttackHit({monster, attackOutcome, playerStore, gameStateStore}: SkillOnPlayerAttackHitParams) {
+        if (checkProbability((this.happenRate / 100))) {
+            const rate = (this.diffusionRate / 100)
+            if (attackOutcome.baseDamage * rate > 0) {
+                const enemies = gameStateStore.currentEnemy || [];
+                enemies.forEach((enemy: MonsterModel) => {
+                    if (enemy && enemy.id !== monster.id && enemy.hp > 0) {
+                        enemy.lastDamageResult = applySkillDamage(
+                            playerStore.finalStats,
+                            enemy,
+                            attackOutcome.baseDamage * rate,
+                            'ad',
+                            '連續劍技-橫之型'
+                        );
+                    }
+                });
+            }
+        }
+    }
+}
+
+export class ContinuousSwordPoint extends SkillModel {
+    constructor() {
+        super({
+            id: 'ContinuousSwordPoint',
+            name: '連續劍技-點之型',
+            icon: 'skills/passive/continuous_point.svg',
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['連續劍技']
+        });
+    }
+
+    chance = 25
+
+    description(): string {
+        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 10 點，持續 3 回合）。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override onPlayerAttackHit({monster}: SkillOnPlayerAttackHitParams) {
+        if (checkProbability((this.chance / 100))) {
+            const logStore = useLogStore();
+            monster.addEffect(UnitStatus.ArmorBreak, logStore);
+            logStore.logger.add(` ${monster.name} 陷入破甲狀態！`);
+            const el = getMonsterElement(monster.id);
+            if (el) {
+                useFloatingMessage(`破甲`, el, {color: 'red'});
+            }
+        }
+    }
+}
+
 
 
 

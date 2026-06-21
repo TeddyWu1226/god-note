@@ -37,52 +37,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
             return baseSkillMax && !!hasWill;
         }
     },
-    Cleave: {
-        evolvedSkillId: 'Cleave',
-        baseSkillId: 'VerticalSlash',
-        checkEligible: (playerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
-            const hasMastery = playerStore.info.skills?.some((s: any) =>
-                s.id === 'SwordProficiency' || s.id === 'SwordExpert' || s.id === 'SwordMaster' || s.id === 'KnightWay'
-            );
-            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'VerticalSlash');
-            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
-            return hasBase && hasMastery && isMaxProf;
-        }
-    },
-    VerticalSlashMaster: {
-        evolvedSkillId: 'VerticalSlashMaster',
-        baseSkillId: 'Cleave',
-        checkEligible: (playerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'Cleave');
-            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'Cleave');
-            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
-            return hasBase && isMaxProf;
-        }
-    },
-    SwordQi: {
-        evolvedSkillId: 'SwordQi',
-        baseSkillId: 'HorizontalSlash',
-        checkEligible: (playerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'HorizontalSlash');
-            const hasMastery = playerStore.info.skills?.some((s: any) =>
-                s.id === 'SwordProficiency' || s.id === 'SwordExpert' || s.id === 'SwordMaster' || s.id === 'KnightWay'
-            );
-            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'HorizontalSlash');
-            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
-            return hasBase && hasMastery && isMaxProf;
-        }
-    },
-    HorizontalSlashMaster: {
-        evolvedSkillId: 'HorizontalSlashMaster',
-        baseSkillId: 'SwordQi',
-        checkEligible: (playerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'SwordQi');
-            const baseSkill = playerStore.info.skills?.find((s: any) => s.id === 'SwordQi');
-            const isMaxProf = baseSkill ? (baseSkill.proficiency >= baseSkill.maxProficiency) : false;
-            return hasBase && isMaxProf;
-        }
-    },
+
     HeartOfRebellion: {
         evolvedSkillId: 'HeartOfRebellion',
         baseSkillId: 'BlockBoost',
@@ -94,22 +49,22 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     },
     PurpleSkin: {
         evolvedSkillId: 'PurpleSkin',
-        baseSkillId: 'BlueSkin',
-        fuseSkillIds: ['RedSkin'],
+        baseSkillId: 'RedSkin',
+        fuseSkillIds: ['BlueSkin', 'RedSkin'],
         checkEligible: (playerStore) => {
-            const hasBlue = playerStore.info.skills?.some((s: any) => s.id === 'BlueSkin');
-            const hasRed = playerStore.info.skills?.some((s: any) => s.id === 'RedSkin');
-            return hasBlue && hasRed;
+            const hasBlue = playerStore.hasSkill('BlueSkin');
+            const hasRed = playerStore.hasSkill('RedSkin');
+            return !!hasBlue && !!hasRed;
         }
     },
     Flurry: {
         evolvedSkillId: 'Flurry',
         fuseSkillIds: ['HorizontalSlash', 'Thrust'],
         checkEligible: (playerStore) => {
-            const hasVertical = playerStore.info.skills?.some((s: any) => s.id === 'VerticalSlash');
-            const hasHorizontal = playerStore.info.skills?.some((s: any) => s.id === 'HorizontalSlash');
-            const hasThrust = playerStore.info.skills?.some((s: any) => s.id === 'Thrust');
-            return hasVertical && hasHorizontal && hasThrust;
+            const hasVertical = playerStore.hasSkill('VerticalSlash');
+            const hasHorizontal = playerStore.hasSkill('HorizontalSlash');
+            const hasThrust = playerStore.hasSkill('Thrust');
+            return !!hasVertical && !!hasHorizontal && !!hasThrust;
         }
     }
 };

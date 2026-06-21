@@ -238,4 +238,13 @@ export const UnitStatus = {
             apIncrease: -50
         }
     } as StatusEffect,
+    ArmorBreak: {
+        name: '破甲',
+        icon: '⛓️‍💥',
+        duration: 3,
+        description: '防禦力降低 10 點',
+        bonus: {
+            adDefend: -10
+        }
+    } as StatusEffect,
 }

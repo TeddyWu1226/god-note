@@ -176,7 +176,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
 export function applySkillDamage(
     attacker: UnitType,
     defender: UnitType,
-    baseValue: number, // 技能的基礎倍率傷害 (例如 stats.ad * 0.7)
+    baseValue: number, // 技能的基礎倍率傷害
     type: 'ad' | 'ap' | 'true',
     skillName: string,
     extraCritRate: number = 0 // 技能額外提供的爆擊率

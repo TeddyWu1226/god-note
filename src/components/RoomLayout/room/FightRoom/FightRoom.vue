@@ -323,8 +323,26 @@ const onAttack = () => {
 
   // 傷害計算
   if (!isPlayerStuck()) {
-    selectedMonster.lastDamageResult = applyAttackDamage(playerStore.finalStats,
+    const outcome = applyAttackDamage(playerStore.finalStats,
         getEffectiveStats(selectedMonster), selectedMonster)
+    // 觸發玩家所有被動與技能攻擊命中 Hook
+
+    if (outcome.isHit) {
+      playerStore.info.skills.forEach((s: SkillModel) => {
+        if (s && typeof s.onPlayerAttackHit === 'function') {
+          s.onPlayerAttackHit({
+            monster: selectedMonster,
+            attackOutcome: outcome,
+            playerStore,
+            gameStateStore
+          });
+        }
+      });
+    }
+
+    // 觸發對怪物傷害特效
+    selectedMonster.lastDamageResult = outcome
+
     // 武器熟練度提升
     checkWeaponProficiency()
   }
@@ -369,13 +387,9 @@ const onSkill = async (skillKey: string) => {
 
   isUsing.value = true
   if (!isPlayerStuck()) {
-    const monsterId = selectedMonsterIndex.value !== null ? gameStateStore.currentEnemy[selectedMonsterIndex.value]?.id : null;
-    const targetElement = monsterId ? MonsterCardRefs.value[monsterId] : null;
     // 加上 await 確保技能動作執行完畢
     const success = await useSkill.use({
       monster: selectedMonster,
-      monsterIndex: selectedMonsterIndex.value,
-      targetElement: targetElement?.$el,
       playerStore: playerStore,
       gameStateStore: gameStateStore
     });
