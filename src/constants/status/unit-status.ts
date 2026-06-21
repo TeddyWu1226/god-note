@@ -247,4 +247,15 @@ export const UnitStatus = {
             adDefend: -5
         }
     } as StatusEffect,
+    SpeedDance: {
+        name: '癲狂之舞',
+        icon: '🎶',
+        duration: -1,
+        isBuff: true,
+        description: `半神攻擊如果命中，其舞動會更加凌厲，攻擊與防禦逐漸提升，當狂歡之時攻擊會視為爆擊。(得想辦法打斷...)`,
+        bonus: {
+            ad: 2,
+            adDefend: 2
+        }
+    } as StatusEffect,
 }

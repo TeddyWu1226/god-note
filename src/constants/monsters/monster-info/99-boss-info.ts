@@ -5,9 +5,11 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
-import {MonsterType} from "@/types";
+import {MonsterActionParams, MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
+import {genCustomStatus, getMonsterElement} from "@/utils/create";
+import {ItemStatus} from "@/constants/status/item-status";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -16,7 +18,7 @@ export class AncientSpider extends MonsterModel {
     constructor() {
         super({
             code: 'AncientRoots',
-            icon: '🕷️',
+            icon: '/monsters/spider.png',
             name: '古蜘蛛',
             description: '巨大古老的蜘蛛，擅長用蜘蛛網網住獵物',
             class: 'boss big',
@@ -24,20 +26,20 @@ export class AncientSpider extends MonsterModel {
             critIncrease: 200,
             critRate: 0,
             adDefend: 10,
-            dodge: 20,
-            hit: 30,
+            dodge: 25,
+            hit: 5,
             hp: 300,
             hpLimit: 300,
             level: 5,
-            dropGold: 200,
+            dropGold: 100,
             chaseIncrease: 200
         });
     }
 
-    override onStartHook({playerStore, targetElement}: any) {
+    override onStartHook({playerStore}: MonsterActionParams) {
         useFloatingMessage(
             '絲絲絲!',
-            targetElement,
+            getMonsterElement(this.id),
             {
                 duration: 2000,
                 color: 'red'
@@ -62,7 +64,7 @@ export class Twilight extends MonsterModel {
     constructor() {
         super({
             code: "Twilight",
-            icon: '🕺🏼',
+            icon: '/monsters/mad_forest_god.png',
             name: '墮落的半神',
             class: 'mystery',
             description: '掌控森林日出日落的半神，卻因失去愛人而墮落，決定讓太陽永不墜落。',
@@ -70,16 +72,18 @@ export class Twilight extends MonsterModel {
             critIncrease: 100,
             critRate: 0,
             adDefend: 10,
-            dodge: 20,
-            hit: 30,
+            dodge: 35,
+            hit: 0,
             hp: 500,
             hpLimit: 500,
             level: 10,
-            dropGold: 500,
+            dropGold: 300,
             chaseIncrease: 200,
             drop: []
         });
     }
+
+    speed = 0
 
     override onStartHook() {
         useEpicSubtitle("「餘暉已候多時，只為繼續沈溺在這曲無盡的舞。而你－－蟲子，太吵了。」", 4000);
@@ -90,18 +94,67 @@ export class Twilight extends MonsterModel {
         playerStore.removeItem(SpecialItem.PauseToken.name, -1);
     }
 
-    override onAttackHook({targetElement, logStore}: any) {
-        this.adDefend += 2;
-        this.ad += 2;
-        logStore.logger.add('半神的攻擊更凌厲了，防禦也更加堅固!');
+    override onRoundBehaviorHook({battleRound}) {
+        if (this.hasStatus('燃燒') || this.isStuck()) {
+            useFloatingMessage(
+                '阿...',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'gray'
+                }
+            );
+            this.speed = 0
+            this.removeStatus(UnitStatus.SpeedDance.name)
+        }
+
     }
 
-    override onAttackedHook({playerStore, logStore}: any) {
-        const chance = 0.2 + (((this.ad - 14) / 2) * 0.1);
-        if (checkProbability(chance)) {
-            playerStore.gainItem(SpecialItem.PauseToken);
-            logStore.logger.add(`你得到了一個神秘的符號`);
+    override onAttackHitHook(param) {
+        this.speed += 4
+        let bonus = {
+            ad: this.speed,
+            adDefend: this.speed
         }
+        if (this.speed >= 20) {
+            useFloatingMessage(
+                '狂歡吧!',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'red'
+                }
+            );
+            bonus['critRate'] = 100
+        } else {
+            // 如果身上有燃燒狀態 會反過來燃燒玩家
+            if (this.hasStatus('燃燒')) {
+                useFloatingMessage(
+                    '一起在火焰中共舞吧!',
+                    getMonsterElement(this.id),
+                    {
+                        duration: 1000,
+                        color: 'red'
+                    }
+                );
+                param.playerStore.addStatus(
+                    genCustomStatus(
+                        {
+                            base: ItemStatus.OnBurn,
+                            value: 10
+                        }
+                    )
+                )
+            }
+        }
+        this.addEffect(
+            genCustomStatus(
+                {
+                    base: UnitStatus.SpeedDance,
+                    bonus: bonus
+                }
+            )
+        )
     }
 }
 
@@ -282,8 +335,7 @@ export class DualElementalist extends MonsterModel {
             hpLimit: 4000,
             level: 22,
             dropGold: 1500,
-            drop: [
-            ]
+            drop: []
         });
     }
 
@@ -335,9 +387,7 @@ export class AbyssDespair extends MonsterModel {
             hpLimit: 8000,
             level: 27,
             dropGold: 2000,
-            drop: [
-
-            ]
+            drop: []
         });
     }
 
@@ -398,9 +448,7 @@ export class GodOfJudgment extends MonsterModel {
             hpLimit: 20000,
             level: 35,
             dropGold: 5000,
-            drop: [
-
-            ]
+            drop: []
         });
     }
 

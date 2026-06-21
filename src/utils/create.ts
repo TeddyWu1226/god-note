@@ -175,18 +175,20 @@ export const Sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 interface CustomStatus {
     base: StatusEffect
     bonus?: BonusType
+    value?: number
     duration?: number
 }
 
 export const genCustomStatus = (source: CustomStatus): StatusEffect => {
-    // 1. 深拷貝基礎模板，避免修改到原始的 StatusEffect 物件
+    // 深拷貝基礎模板
     const newStatus: StatusEffect = JSON.parse(JSON.stringify(source.base));
+    let updatedDesc = newStatus.description;
 
-    // 2. 更新回合數 (優先順序：傳入的 round > 基礎模板的 duration)
-    const finalRound = source.duration ?? newStatus.duration;
-    newStatus.duration = finalRound;
+    // 更新回合數 (優先順序：傳入的 round > 基礎模板的 duration)
+    newStatus.duration = source.duration ?? newStatus.duration
+    // 更新 value 值
+    newStatus.value = source.value;
 
-    // 3. 更新數值 (Bonus)
     // 這裡會將 source.bonus 的內容合併到 newStatus.bonus 中
     if (source.bonus) {
         newStatus.bonus = {
@@ -194,26 +196,23 @@ export const genCustomStatus = (source: CustomStatus): StatusEffect => {
             ...source.bonus
         };
     }
-
-    // 4. 動態替換描述中的標籤 (例如 %adDefend%, %round% 等)
-    if (newStatus.description) {
-        let updatedDesc = newStatus.description;
-
-        // 替換回合數標籤
-        updatedDesc = updatedDesc.replace(/%duration%/g, finalRound.toString());
-
-        // 遍歷所有 bonus 鍵值，動態替換對應標籤
-        // 這樣能支援 BonusType 裡面所有的屬性 (ad, adDefend, hpLimit 等)
+    if (updatedDesc) {
+        // 動態替換描述中的標籤 (例如 %adDefend%, %round% 等)
+        if (newStatus.duration) {
+            updatedDesc = updatedDesc.replace(/%duration%/g, newStatus.duration.toString());
+        }
+        if (newStatus.value) {
+            updatedDesc = updatedDesc.replace(/%value%/g, newStatus.value.toString());
+        }
         if (newStatus.bonus) {
             Object.entries(newStatus.bonus).forEach(([key, value]) => {
                 const regex = new RegExp(`%${key}%`, 'g');
                 updatedDesc = updatedDesc.replace(regex, value.toString());
             });
         }
-
-        newStatus.description = updatedDesc;
     }
 
+    newStatus.description = updatedDesc;
     return newStatus;
 };
 

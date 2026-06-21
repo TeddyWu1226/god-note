@@ -10,7 +10,7 @@ import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import EvnStatus from "@/constants/status/evn-status";
 import {useCardStatusEffect} from "@/components/RoomLayout/comps/useCardStatusEffect";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {getMonsterElement} from "@/utils/create";
+import {genCustomStatus, getMonsterElement} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 
 const cantUse = () => {
@@ -75,7 +75,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
             return
         }
         const saveStore = useSaveStore()
-        playerStore.removeItem(Usable.GodNotePage.name)
+        // playerStore.removeItem(Usable.GodNotePage.name)
         saveStore.saveAll()
         callback(true);
         return
@@ -120,7 +120,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
                 return
             }
             if (monster) {
-                monster.addEffect(ItemStatus.OnBurn, useLogStore())
+                monster.addEffect(genCustomStatus({base: ItemStatus.OnBurn}), useLogStore())
                 const monsterElement = getMonsterElement(monster.id)
                 if (monsterElement) {
                     useCardStatusEffect({

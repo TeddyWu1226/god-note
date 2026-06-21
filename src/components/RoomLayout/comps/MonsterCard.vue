@@ -78,7 +78,7 @@ const CardRef = ref(null);
 
 const monsterMove = () => {
   // 被暈眩
-  if (props.info.status?.some(stats => stats.type === 'stuck')) {
+  if (props.info.isStuck()) {
     return
   }
   if (props.info.hp <= 0) {
@@ -93,8 +93,7 @@ const monsterAttack = () => {
   const canAttack = props.info.triggerOnAttack({
     playerStore: playerStore,
     gameStateStore: gameStateStore,
-    logStore: logStore,
-    targetElement: CardRef.value
+    logStore: logStore
   });
   // 傷害計算
   if (!canAttack) return
@@ -104,8 +103,7 @@ const monsterAttack = () => {
       playerStore: playerStore,
       gameStateStore: gameStateStore,
       logStore: logStore,
-      damage: damageResult,
-      targetElement: CardRef.value?.$el
+      damage: damageResult
     });
   }
 }
@@ -116,7 +114,6 @@ const onMonsterAttacked = (damageOutput: BattleOutcome) => {
   props.info.triggerOnAttacked({
     gameStateStore: gameStateStore,
     playerStore: playerStore,
-    targetElement: CardRef.value?.$el,
     logStore: logStore,
     damage: damageOutput,
   });
@@ -129,8 +126,7 @@ const onMonsterDie = () => {
   props.info.triggerOnDead({
     playerStore: playerStore,
     gameStateStore: gameStateStore,
-    logStore: logStore,
-    targetElement: CardRef.value
+    logStore: logStore
   });
   if (props.info.hp > 0) {
     return
@@ -351,12 +347,16 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   transition: all 0.2s ease;
 }
 
-.death-emoji {
-  font-size: 2.2rem;
-  line-height: 1;
-  display: inline-block;
-  transition: font-size 0.2s ease;
+.mystery:deep(.monster-image-icon) {
+  width: 150%;
+  height: 150%;
 }
+
+.boss:deep(.monster-image-icon) {
+  width: 150%;
+  height: 150%;
+}
+
 
 /* 名字區 */
 .monster-name-container {

@@ -1,6 +1,6 @@
 import {
     MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams,
-    MonsterOnAttackedParams
+    MonsterOnAttackedParams, logStoreType
 } from "@/types";
 
 
@@ -144,16 +144,43 @@ export class MonsterModel implements MonsterType {
     /**
      * 施加狀態效果
      */
-    addEffect(effect: StatusEffect, logStore?: any) {
+    addEffect(effect: StatusEffect, logStore?: logStoreType) {
         if (logStore) {
             logStore.logger.add(`${this.name} 受到 [${effect.name}] 效果。`);
         }
         const existingIdx = this.status.findIndex(e => e.name === effect.name);
         if (existingIdx > -1) {
-            this.status[existingIdx].duration = effect.duration;
+            this.status[existingIdx] = effect;
         } else {
-            this.status.push({...effect});
+            this.status.push(effect);
         }
+    }
+
+    /**
+     * 移除指定的狀態 (Buff 或 Debuff)
+     * @param statusName 狀態名稱
+     */
+    removeStatus(statusName: string) {
+        const index = this.status.findIndex(e => e.name === statusName);
+        if (index !== -1) {
+            this.status.splice(index, 1);
+        }
+    }
+
+    /**
+     * 檢查是否有指定效果
+     */
+    hasStatus(statusName: string) {
+        return this.status?.find(
+            (effect) => effect.name === statusName
+        );
+    }
+
+    /**
+     * 檢查是否暈眩
+     */
+    isStuck() {
+        return this.status?.some((eff) => eff.type === 'stuck')
     }
 
     /**
@@ -213,19 +240,20 @@ export class MonsterModel implements MonsterType {
     onRoundBehaviorHook(params: MonsterActionParams & { battleRound: number }): void {
     }
 
-    /**
-     * 執行怪物在特定回合開始的獨特習性行為
-     */
-    executeRoundBehavior(params: MonsterActionParams & { battleRound: number }) {
-        if (this.hp <= 0) return;
-        this.onRoundBehaviorHook(params);
-    }
 
     /**
      * 觸發回合開始被動/效果
      */
     triggerOnStart(params: MonsterActionParams): void {
         this.onStartHook(params);
+    }
+
+    /**
+     * 執行怪物在特定回合開始的獨特習性行為
+     */
+    triggerRoundBehavior(params: MonsterActionParams & { battleRound: number }) {
+        if (this.hp <= 0) return;
+        this.onRoundBehaviorHook(params);
     }
 
     /**

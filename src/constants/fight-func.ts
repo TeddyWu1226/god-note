@@ -349,14 +349,14 @@ export function triggerDamageEffect(damageOutCome: BattleOutcome, targetElement?
 
 /**
  * 輸入一個基礎數值 (baseValue)，
- * 返回一個在 (baseValue * 0.8) 到 (baseValue * 1.5) 之間隨機浮動後，
+ * 返回一個在 (baseValue * 0.8) 到 (baseValue * 1.2) 之間隨機浮動後，
  * 再四捨五入取整數的值。
  * @param baseValue 基礎數值 (例如：攻擊力、價格等)。
  * @param minRate
  * @param maxRate
  * @returns 浮動後並四捨五入的整數值。
  */
-export function applyRandomFloatAndRound(baseValue: number, minRate = 0.8, maxRate = 1.5): number {
+export function applyRandomFloatAndRound(baseValue: number, minRate = 0.8, maxRate = 1.2): number {
 
     // 2. 隨機生成一個乘數 (Multiplier)
     // 範圍仍是 [0.8, 1.5) 之間的浮點數
@@ -554,6 +554,6 @@ export const checkHpThresholds = (entity: Entity, thresholds = [75, 50, 25]): bo
 export function calculateIsHit(attacker: UnitType, defender: UnitType): boolean {
     const BASE_HIT_RATE = 100;
     let hitRate = Math.max(0, BASE_HIT_RATE + attacker.hit - defender.dodge);
-    console.log('命中率', hitRate)
+    // console.log('命中率', hitRate)
     return Math.random() * MAX_RATE < hitRate
 }

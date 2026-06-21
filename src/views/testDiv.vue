@@ -10,6 +10,8 @@ import {Weapon} from "@/constants/items/equipment/weapon-info";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
+import {Head} from "@/constants/items/equipment/head-info";
+import {Armor} from "@/constants/items/equipment/armor-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -18,7 +20,8 @@ const saveStore = useSaveStore()
 const isClose = ref(true);
 
 const onTest = () => {
-  playerStore.gainExp({amount: 100})
+  playerStore.gainExp({amount: 800})
+  gameStateStore.stageDays = 95
   // playerStore.addSkill(Skills.FireBall.id)
   // playerStore.addSkill(Skills.MagicDefend.id)
   // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
@@ -26,15 +29,17 @@ const onTest = () => {
 const give = () => {
   // playerStore.addGold(1000)
 
-  // playerStore.gainItem(Head.HpHead2)
-  // playerStore.gainItem(Armor.Armor2)
-  playerStore.gainItem(Offhand.Book5)
+  playerStore.equipItem(Head.HpHead0)
+  playerStore.equipItem(Armor.Armor0)
+  playerStore.equipItem(Weapon.Sword0)
+  playerStore.equipItem(Offhand.Shield0)
+  // playerStore.gainItem(Offhand.Book5)
   // playerStore.gainItem(Weapon.Sword0)
   // playerStore.gainItem(Accessory2.SoulAnchor)
   // playerStore.gainItem(Accessory1.SoulAnchor)
 
-  // playerStore.gainItem(Potions.BurningPotion, 10)
-  // playerStore.gainItem(Potions.Heal0, 10)
+  playerStore.gainItem(Usable.BurningPotion, 10)
+  playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }
 const heal = () => {

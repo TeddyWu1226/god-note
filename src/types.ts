@@ -222,7 +222,6 @@ export interface BattleOutcome extends DamageResult {
 }
 
 export interface BonusType extends qualityType {
-    hpChange?: number; // 生命異動
 }
 
 export interface StatusEffect {
