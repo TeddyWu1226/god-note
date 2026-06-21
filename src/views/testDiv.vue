@@ -28,9 +28,9 @@ const give = () => {
 
   // playerStore.gainItem(Head.HpHead2)
   // playerStore.gainItem(Armor.Armor2)
-  // playerStore.gainItem(Offhand.Shield0)
-  playerStore.gainItem(Weapon.Sword0)
-  playerStore.gainItem(Accessory2.SoulAnchor)
+  playerStore.gainItem(Offhand.Shield0)
+  // playerStore.gainItem(Weapon.Sword0)
+  // playerStore.gainItem(Accessory2.SoulAnchor)
   // playerStore.gainItem(Accessory1.SoulAnchor)
 
   // playerStore.gainItem(Potions.BurningPotion, 10)

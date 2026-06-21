@@ -22,17 +22,17 @@ const hpLimit = computed(() => playerStore.finalStats.hpLimit);
 const SHAKE_DURATION_MS = 500;
 
 watch(
-    () => playerStore.info.hp,
-    (newValue, oldValue) => {
-      // 確保 HP 發生變化，且卡片元素已經掛載
-      if (newValue === oldValue || !cardRef.value) {
+    () => [playerStore.info.hp, playerStore.info.shield || 0] as const,
+    ([newHp, newShield], [oldHp, oldShield]) => {
+      // 確保值發生變化，且卡片元素已經掛載
+      if ((newHp === oldHp && newShield === oldShield) || !cardRef.value) {
         return;
       }
-      if (oldValue > newValue && newValue === hpLimit.value) {
+      if (oldHp > newHp && newHp === hpLimit.value) {
         return;
       }
       // 如果生命值歸零
-      if (playerStore.info.hp <= 0) {
+      if (newHp <= 0) {
         if (playerStore.hasItem(Usable.GodStar.name)[0]) {
           playerStore.healFull()
           playerStore.removeItem(Usable.GodStar.name)
@@ -46,38 +46,43 @@ watch(
         return;
       }
 
-      const changeAmount = newValue - oldValue;
-      const threshold = hpLimit.value * 0.2; // 定義大規模變化的閾值 (HP 上限的 20%)
+      const hpDmg = oldHp - newHp;
+      const shieldDmg = oldShield - newShield;
 
       // --- 浮動訊息邏輯 ---
-      let messageText: string;
-      let messageColor: string;
+      let messageText = '';
+      let messageColor = '#FF0000'; // 預設紅色
       let messageClass = '';
       let shouldShake = false; // 新增旗標控制是否震動
 
-      if (changeAmount < 0) {
-        // HP 減少 (傷害)
-        const damage = Math.abs(changeAmount);
-        messageText = `- ${damage} HP`;
-        messageColor = '#FF0000'; // 紅色
-
-        if (damage >= threshold) {
-          // 大額傷害特效
+      if (hpDmg > 0) {
+        // 有溢出傷害 (HP減少)：只顯示溢出的 HP 傷害部分，以吸收的不顯示
+        messageText = `- ${hpDmg} HP`;
+        const threshold = hpLimit.value * 0.2; // 定義大規模變化的閾值 (HP 上限的 20%)
+        if (hpDmg >= threshold) {
           messageColor = '#B22222'; // 磚紅色
           messageClass = 'massive-damage-font';
           shouldShake = true; // 觸發震動
         }
-
-      } else {
+      } else if (shieldDmg > 0) {
+        // 完全被護盾吸收：顯示白色護盾傷害，顏色採用白色
+        messageText = `- 🛡️${shieldDmg}`;
+        messageColor = '#ffffff'; // 白色
+      } else if (newHp > oldHp) {
         // HP 增加 (治療)
+        const changeAmount = newHp - oldHp;
+        const threshold = hpLimit.value * 0.2;
         messageText = `+ ${changeAmount} HP`;
         messageColor = '#32CD32'; // 亮綠色
 
         if (changeAmount >= threshold) {
-          // 大額治療特效
           messageColor = '#00FF00'; // 純綠色
           messageClass = 'massive-heal-font';
         }
+      }
+
+      if (!messageText) {
+        return;
       }
 
       // --- 震動控制邏輯 ---
@@ -95,7 +100,6 @@ watch(
       }
 
       // --- 觸發浮動訊息 ---
-      // 注意：對於 Vue 組件 (如 ElCard)，要獲取 DOM 元素需使用 $el
       useFloatingMessage(
           messageText,
           cardRef.value.$el,
@@ -119,6 +123,14 @@ watch(
             class="value-progress"
             :current-value="playerStore.finalStats.hp"
             :total-value="playerStore.finalStats.hpLimit"
+        />
+      </el-form-item>
+      <el-form-item v-if="playerStore.finalStats.shieldLimit && playerStore.finalStats.shieldLimit > 0" label="護盾">
+        <ValueProgress
+            class="value-progress"
+            color="#ffffff"
+            :current-value="playerStore.info.shield || 0"
+            :total-value="playerStore.finalStats.shieldLimit"
         />
       </el-form-item>
       <el-form-item label="SP">

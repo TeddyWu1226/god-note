@@ -52,7 +52,7 @@ const Magic = {
         description: '感覺放了很久，只能稍微提神。',
         icon: '🍷',
         quality: 0,
-        magic: 15,
+        magic: 25,
         usable: true
     } as UsableType,
     Magic1: {
@@ -60,7 +60,7 @@ const Magic = {
         description: '淡淡的藍色液體。',
         icon: '🍷',
         quality: 1,
-        magic: 30,
+        magic: 50,
         usable: true
     } as UsableType,
     Magic2: {
@@ -68,7 +68,7 @@ const Magic = {
         description: '精煉過的魔力液體，恢復感極強。',
         icon: '🍷',
         quality: 2,
-        magic: 60,
+        magic: 100,
         usable: true
     } as UsableType,
     Magic3: {
@@ -76,7 +76,7 @@ const Magic = {
         description: '去除了雜質的藍色液體，魔力波動穩定。',
         icon: '🍷',
         quality: 3,
-        magic: 120,
+        magic: 200,
         usable: true
     } as UsableType,
     Magic4: {
@@ -84,7 +84,7 @@ const Magic = {
         description: '內含微小魔力結晶，能快速填補乾涸的氣海。',
         icon: '🍷',
         quality: 4,
-        magic: 240,
+        magic: 400,
         usable: true
     } as UsableType,
 };

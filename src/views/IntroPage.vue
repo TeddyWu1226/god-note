@@ -10,6 +10,7 @@ import {ElMessageBox} from "element-plus";
 import {Dagger, Sword} from "@/constants/items/equipment/weapon-info";
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {CharEnum} from "@/enums/char-enum";
+import {Offhand} from "@/constants/items/equipment/offhand-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -54,9 +55,8 @@ const confirmClassSelection = async () => {
     case CharEnum.Stargazer.value:
       playerStore.info.ap = 13;
       playerStore.info.ad = 7
-      playerStore.info.spLimit = 120;
-      playerStore.info.hpLimit = 80;
-      playerStore.equipItem(Sword.WoodSword);
+      playerStore.info.spLimit = 100;
+      playerStore.equipItem(Offhand.Book0);
       break;
 
   }

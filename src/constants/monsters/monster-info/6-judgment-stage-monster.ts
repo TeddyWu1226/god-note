@@ -161,7 +161,13 @@ export class DivineExecutioner extends MonsterModel {
         if (damage && damage.totalDamage > 0) {
             // 附帶 20% 真實傷害 (不計防禦)
             const trueDmg = Math.round(this.ad * 0.2);
-            playerStore.info.hp = Math.max(1, playerStore.info.hp - trueDmg);
+            const result = playerStore.takeDamage(trueDmg);
+            if (playerStore.info.hp <= 0) {
+                playerStore.info.hp = 1;
+            }
+            if (result.shieldAbsorbed > 0) {
+                logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
+            }
             logStore.logger.add(`⚔️ 處刑者的巨劍對你造成了額外 ${trueDmg} 點神聖真實傷害！`);
         }
     }

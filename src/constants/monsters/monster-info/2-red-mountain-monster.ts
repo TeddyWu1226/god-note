@@ -233,7 +233,10 @@ export class ObsidianGolem extends MonsterModel {
         if (damage && damage.totalDamage > 0 && checkProbability(0.5)) {
             const reflect = Math.round(damage.totalDamage * 0.2);
             if (reflect > 0) {
-                playerStore.info.hp = Math.max(1, playerStore.info.hp - reflect);
+                const result = playerStore.takeDamage(reflect);
+                if (result.shieldAbsorbed > 0) {
+                    logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
+                }
                 logStore.logger.add(`黑曜石魔像的硬殼反彈了 ${reflect} 點傷害給玩家！`);
             }
         }

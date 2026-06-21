@@ -194,4 +194,10 @@ export const StatEnum = {
         icon: '⚡',
         unit: ''
     },
+    shieldLimit: {
+        value: 'shieldLimit',
+        label: '護盾上限',
+        icon: '🌐',
+        unit: ''
+    },
 };

@@ -20,6 +20,8 @@ export const DEFAULT_USER_INFO: UserType = {
     sp: 80,
     spRegen: 0,
     spLimit: 80,
+    shield: 0,
+    shieldLimit: 0,
     level: 1,
     char: CharEnum.Villager.value,
     gold: 0,

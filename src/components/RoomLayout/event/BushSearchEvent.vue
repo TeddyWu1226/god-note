@@ -50,8 +50,16 @@ const startSearch = () => {
     } else {
       type = 'hurt';
       const damage = 15;
-      playerStore.info.hp -= damage;
-      msg = `哎呀！草叢裡躲著蛇！被咬傷了（-${damage}HP）。`;
+      const result = playerStore.takeDamage(damage);
+      if (result.shieldAbsorbed > 0) {
+        if (result.hpDamage > 0) {
+          msg = `哎呀！草叢裡躲著蛇！被咬傷了，護盾吸收了 ${result.shieldAbsorbed} 點傷害，受到 ${result.hpDamage} 點傷害。`;
+        } else {
+          msg = `哎呀！草叢裡躲著蛇！被咬傷了，但護盾吸收了全部的 ${result.shieldAbsorbed} 點傷害！`;
+        }
+      } else {
+        msg = `哎呀！草叢裡躲著蛇！被咬傷了（-${damage}HP）。`;
+      }
     }
 
     // 儲存該次 Action 的結果內容

@@ -484,6 +484,9 @@ const init = () => {
     return;
   }
 
+  // 新戰鬥開始，回復護盾值到最大值
+  playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
+
   // 初始化行動點數
   gameStateStore.refillActionPoints();
 

@@ -20,7 +20,6 @@ export const Offhand = {
         quality: 1,
         adDefend: 4,
         skill: 'ShieldBlock'
-        ,
     } as EquipmentType,
     Shield2: {
         name: '鐵製鳶盾',
@@ -65,8 +64,7 @@ export const Offhand = {
         icon: '📝',
         position: EquipmentPosition.OFFHAND,
         quality: 0,
-        spLimit: 40,
-        skill: 'MagicRegain'
+        shieldLimit: 10
     } as EquipmentType,
 
     Book1: {
@@ -75,9 +73,7 @@ export const Offhand = {
         icon: '📗',
         position: EquipmentPosition.OFFHAND,
         quality: 1,
-        spLimit: 80,
-        defendIncrease: 2,
-        skill: 'MagicRegain'
+        shieldLimit: 20
     } as EquipmentType,
     Book2: {
         name: '導師典籍',
@@ -87,7 +83,7 @@ export const Offhand = {
         quality: 2,
         spLimit: 120,
         defendIncrease: 4,
-        skill: 'MagicRegain'
+        shieldLimit: 40
     } as EquipmentType,
     Book3: {
         name: '法術篇章',
@@ -97,7 +93,7 @@ export const Offhand = {
         quality: 3,
         spLimit: 160,
         defendIncrease: 6,
-        skill: 'MagicRegain'
+        shieldLimit: 60
     } as EquipmentType,
     Book4: {
         name: '魔力之書',
@@ -107,7 +103,7 @@ export const Offhand = {
         quality: 4,
         spLimit: 200,
         defendIncrease: 8,
-        skill: 'MagicRegain'
+        shieldLimit: 85
     } as EquipmentType,
     Book5: {
         name: '祕法典籍',
@@ -117,6 +113,6 @@ export const Offhand = {
         quality: 5,
         spLimit: 240,
         defendIncrease: 10,
-        skill: 'MagicRegain'
+        shieldLimit: 120
     } as EquipmentType,
 };

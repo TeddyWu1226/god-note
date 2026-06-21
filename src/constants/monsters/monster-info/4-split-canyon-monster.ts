@@ -156,7 +156,10 @@ export class EchoStone extends MonsterModel {
     override onAttackedHook({playerStore, logStore, damage}: any) {
         if (damage && damage.totalDamage > 0 && checkProbability(0.5)) {
             const reflect = Math.round(damage.totalDamage * 0.25);
-            playerStore.info.hp = Math.max(1, playerStore.info.hp - reflect);
+            const result = playerStore.takeDamage(reflect);
+            if (result.shieldAbsorbed > 0) {
+                logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
+            }
             logStore.logger.add(`🗿 迴音石像反射了音波，對玩家造成了 ${reflect} 點震盪傷害！`);
         }
     }

@@ -128,12 +128,12 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
             logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
         }
     }
-    if (defender.name === playerStore.info.name || defender.name === playerStore.info.name) {
-        // 直接修改 Store 裡的原始數據 info.hp
-        playerStore.info.hp = playerStore.info.hp - damageTaken;
-
-        // 更新同步 (讓 defender 變數也拿到最新值用於回傳 outcome)
+    if (defender.name === playerStore.info.name) {
+        const result = playerStore.takeDamage(damageTaken);
         defender.hp = playerStore.info.hp;
+        if (result.shieldAbsorbed > 0) {
+            logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
+        }
     } else {
         // 普通怪物的邏輯 (假設怪物是普通的 reactive 物件)
         monster.hp = Math.max(0, monster.hp - damageTaken);
@@ -254,8 +254,11 @@ export function applySkillDamage(
 
     // 扣除目標 HP
     if (isTargetPlayer) {
-        playerStore.info.hp = Math.max(0, playerStore.info.hp - outcome.totalDamage);
+        const result = playerStore.takeDamage(outcome.totalDamage);
         defender.hp = playerStore.info.hp;
+        if (result.shieldAbsorbed > 0) {
+            logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
+        }
     } else {
         defender.hp = Math.max(0, defender.hp - outcome.totalDamage);
     }

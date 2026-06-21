@@ -36,6 +36,7 @@ export interface qualityType {
     // 吸血
     lifeSteal?: number // 生命偷取(%)
     actionValue?: number // 行動值
+    shieldLimit?: number // 護盾上限
 }
 
 // 用來動態顯示屬性名稱的字典 (可選，讓顯示更友善)
@@ -60,6 +61,7 @@ export const statLabels: Record<keyof qualityType, string> = {
     lifeSteal: '吸血',
     runIncrease: '逃跑值',
     actionValue: '行動值',
+    shieldLimit: '護盾',
 };
 
 export interface ItemType {
@@ -146,6 +148,8 @@ export interface Equipment {
 export interface UserType extends UnitType {
     sp: number; // 當前法力值
     spLimit: number; // 法力上限
+    shield?: number; // 當前護盾值
+    shieldLimit?: number; // 護盾上限
     char: string; // 職業
     gold?: number // 持有金錢
     equips?: Equipment // 目前裝備

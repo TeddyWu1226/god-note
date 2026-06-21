@@ -70,6 +70,7 @@ export const usePlayerStore = defineStore('player-info', () => {
             actionValue: 0,
             hpRegen: 0,
             spRegen: 0,
+            shieldLimit: 0,
         };
         // 計算裝備加成
         if (info.value.equips) {
@@ -130,6 +131,7 @@ export const usePlayerStore = defineStore('player-info', () => {
             actionValue: Math.max(0, (info.value.actionValue ?? 50) + b.actionValue),
             hpRegen: info.value.hpRegen + b.hpRegen,
             spRegen: info.value.spRegen + b.spRegen,
+            shieldLimit: Math.max(0, (info.value.shieldLimit || 0) + b.shieldLimit),
         };
     });
     const setDead = () => {
@@ -700,6 +702,31 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
         return true;
     };
+
+    /**
+     * 扣除玩家受到傷害，優先由護盾扣除，若有溢傷才扣除 HP
+     */
+    const takeDamage = (amount: number) => {
+        const currentShield = info.value.shield || 0;
+        let damageTaken = amount;
+        let shieldAbsorbed = 0;
+        if (currentShield > 0) {
+            if (currentShield >= damageTaken) {
+                shieldAbsorbed = damageTaken;
+                info.value.shield = currentShield - damageTaken;
+                damageTaken = 0;
+            } else {
+                shieldAbsorbed = currentShield;
+                damageTaken -= currentShield;
+                info.value.shield = 0;
+            }
+        }
+        info.value.hp = Math.max(0, info.value.hp - damageTaken);
+        return {
+            hpDamage: damageTaken,
+            shieldAbsorbed: shieldAbsorbed
+        };
+    };
     return {
         info, skillProficiency,
         stopValueChangeAnimation,
@@ -716,7 +743,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillUniqueFields,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
-        gainExp, allocateStatPoint
+        gainExp, allocateStatPoint, takeDamage
     };
 }, {
     persist: {
