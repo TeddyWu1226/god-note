@@ -20,6 +20,7 @@ const sortByQuality = <T extends { quality?: number; name: string }>(arr: T[]) =
             numeric: true,
         })
     );
+
 export function useShopLogic(currentStage: number) {
     /**
      * 裝備品質機率分佈演算法
@@ -137,9 +138,9 @@ export function useShopLogic(currentStage: number) {
 
         const base = usePrice[quality] || 50;
 
-        // 隨層數通膨：每層增加 3% 的價格，深層後斜率加強
-        const inflationFactor = currentStage > 30 ? 1.5 : 1.0;
-        const stageMultiplier = 1 + (currentStage * 0.03 * inflationFactor);
+        // 隨層數通膨：每層增加 15% 的價格
+        const inflationFactor = currentStage > 1 ? currentStage * 0.15 : 0;
+        const stageMultiplier = 1 + inflationFactor;
 
 
         if (stack) {

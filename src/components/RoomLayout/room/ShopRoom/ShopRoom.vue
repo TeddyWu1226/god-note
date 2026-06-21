@@ -32,7 +32,7 @@ const staffList = [
   {
     id: 'blacksmith',
     name: '矮人鐵匠',
-    icon: '🔨',
+    icon: '🧔🏽‍♂️',
     btnType: 'warning' as const,
     component: DwarfBlacksmith,
     title: '矮人鐵匠'

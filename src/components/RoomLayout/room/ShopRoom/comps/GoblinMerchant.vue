@@ -307,10 +307,8 @@ const handleSellAll = (type: 'items' | 'equipments') => {
       <div v-if="selectedItem" class="detail-dialog-body">
         <!-- 顯示物品詳細資訊（不包含玩家擁有的金錢） -->
         <ItemInfo :item="activeTab === 'buy' ? selectedItem : selectedItem.item"/>
-
         <!-- 金額顯示區 -->
-        <div
-            style="margin-top: 1.2rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: right; font-weight: bold; font-size: 1.05rem;">
+        <div class="item-detail-info">
           <span v-if="activeTab === 'buy'" style="color: #67c23a;">
             購買售價: 💰 {{ selectedItem.price }} G
           </span>
@@ -433,6 +431,15 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 
 .detail-dialog-body {
   padding: 0.5rem 1rem;
+}
+
+.item-detail-info {
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.05rem
 }
 
 /* 手機板樣式適配微調 */
