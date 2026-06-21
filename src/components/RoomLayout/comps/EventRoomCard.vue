@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import {computed, onMounted} from 'vue';
+import {computed} from 'vue';
 import {useGameStateStore} from "@/store/game-state-store";
 import {eventComponentMap} from "@/components/RoomLayout/event/useEventRoom";
 import {SpecialEventEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
-import {CharEnum} from "@/enums/char-enum";
 import {useTrackerStore} from "@/store/track-store";
-import {Material} from "@/constants/items/material/material-info";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
-import {Monster} from "@/constants/monsters/monster-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -68,7 +64,7 @@ const pickRandomEvent = () => {
     pool = [SpecialEventEnum.Fusion]
   }
   const randomIndex = Math.floor(Math.random() * pool.length);
-  console.log('pool[randomIndex]', pool[randomIndex])
+  // console.log('pool[randomIndex]', pool[randomIndex])
   return pool[randomIndex] ?? SpecialEventEnum.Gamble;
 };
 

@@ -103,7 +103,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     // 額外效果
     if (outcome.isCrit && playerStore.hasStatus(ItemStatus.Block.name)) {
         let blockMultiplier = 0.50;
-        if (playerStore.hasSkill('BlockBoost') || playerStore.hasSkill('HeartOfRebellion')) {
+        if (playerStore.checkSkillUniqueFields('格擋強化')) {
             blockMultiplier = 0.25;
         }
         damageTaken = Math.round(damageTaken * blockMultiplier);

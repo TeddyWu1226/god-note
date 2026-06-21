@@ -8,6 +8,7 @@ import {checkProbability} from "@/utils/math";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {MonsterModel} from "@/models/monster-model";
 import {applySkillDamage} from "@/constants/fight-func";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 export class SwordExpert extends SkillModel {
     constructor() {
@@ -109,7 +110,7 @@ export class HeartOfRebellion extends SkillModel {
     constructor() {
         super({
             id: 'HeartOfRebellion',
-            name: "反抗之心",
+            name: "反抗鬥志",
             icon: "skills/passive/heart_of_rebellion.svg",
             type: 'passive',
             rarity: 'rare',
@@ -197,6 +198,10 @@ export class ContinuousSwordHorizontal extends SkillModel {
                             'ad',
                             '進階劍技-橫之型'
                         );
+                        const el = getMonsterElement(enemy.id)
+                        if (el) {
+                            useCardImpactEffect(el, 'horizontal-slash');
+                        }
                     }
                 });
             }
