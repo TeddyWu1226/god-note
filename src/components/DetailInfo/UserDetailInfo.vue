@@ -130,6 +130,12 @@ const openLearnSkill = () => {
     // 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
 
+    // 檢查可學習條件
+    const evoRule = EVOLUTION_RULES[id];
+    if (evoRule) {
+      return evoRule.checkEligible(playerStore, trackerStore);
+    }
+
     // 玩家是否有學習相同[唯一字段]的技能
     const uniqueFields = SKILL_TEMPLATES[id].uniqueFields
     if (uniqueFields) {
@@ -144,11 +150,7 @@ const openLearnSkill = () => {
     );
     if (hasEvolvedVersion) return false;
 
-    // 檢查可學習條件
-    const evoRule = EVOLUTION_RULES[id];
-    if (evoRule && !evoRule.checkEligible(playerStore, trackerStore)) {
-      return false;
-    }
+
     return true;
   });
   console.log('可學技能列', candidates)

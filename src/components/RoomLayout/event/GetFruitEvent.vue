@@ -6,7 +6,7 @@ import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
-import {Weapon} from "@/constants/items/equipment/weapon-info";
+import {SpecialWeapon, Weapon} from "@/constants/items/equipment/weapon-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {getRandomElements} from "@/utils/math";
 import {Accessory2} from "@/constants/items/equipment/accessories-info";
@@ -77,7 +77,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         }
         break;
       case 'destroy':
-        playerStore.gainItem(Weapon.SpikeSpear);
+        playerStore.gainItem(SpecialWeapon.SpikeSpear);
         finalText.value = "粗暴地拆下了最堅硬樹枝，削成了一把尖刺木槍。枯樹發出了最後的哀鳴後彻底枯萎了。";
         break;
       case 'sacrifice_hp':

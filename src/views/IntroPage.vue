@@ -7,7 +7,7 @@ import {useTrackerStore} from "@/store/track-store";
 import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
-import {Dagger, Sword} from "@/constants/items/equipment/weapon-info";
+import {Dagger, SpecialWeapon, Weapon} from "@/constants/items/equipment/weapon-info";
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {CharEnum} from "@/enums/char-enum";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
@@ -40,7 +40,7 @@ const confirmClassSelection = async () => {
   // 套用職業初始獎勵
   switch (selectedClass.value) {
     case CharEnum.Villager.value:
-      playerStore.equipItem(Sword.WoodSword);
+      playerStore.equipItem(SpecialWeapon.WoodSword);
       playerStore.gainItem(NormalFruits.RedApple, 3)
       break;
     case CharEnum.Merchant.value:

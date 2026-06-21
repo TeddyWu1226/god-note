@@ -60,14 +60,6 @@ export const Dagger = {
 };
 
 export const Sword = {
-	WoodSword: {
-		name: '木劍',
-		description: '用木頭削成的劍，起始武器。',
-		icon: '🗡️',
-		position: EquipmentPosition.WEAPON,
-		quality: 0,
-		ad: 1,
-	} as EquipmentType,
 	Sword0: {
 		name: '生鏽鐵劍',
 		description: '雖然破舊，但依舊鋒利。',
@@ -246,7 +238,15 @@ export const MagicStick = {
 	} as EquipmentType,
 };
 
-const SpecialWeapon = {
+export const SpecialWeapon = {
+	WoodSword: {
+		name: '木劍',
+		description: '用木頭削成的劍，起始武器。',
+		icon: '🗡️',
+		position: EquipmentPosition.WEAPON,
+		quality: 0,
+		ad: 1,
+	} as EquipmentType,
 	SpikeSpear: {
 		name: '尖刺木槍',
 		icon: '🪾',
@@ -260,4 +260,4 @@ const SpecialWeapon = {
 	} as EquipmentType,
 }
 
-export const Weapon = {...Dagger, ...Sword, ...MagicStick, ...Axe, ...SpecialWeapon}
+export const Weapon = {...Dagger, ...Sword, ...MagicStick, ...Axe}
