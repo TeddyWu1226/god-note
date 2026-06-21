@@ -75,6 +75,14 @@ export class ForestSprout extends MonsterModel {
                 logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
             } else {
                 logStore.logger.add(`對你施展了「老樹盤根」但沒命中。`);
+                useFloatingMessage(
+                    'MISS',
+                    null,
+                    {
+                        duration: 800, // 動畫時間保持不變
+                        color: 'white',
+                    }
+                );
             }
             return false
         }

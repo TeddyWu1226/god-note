@@ -4,16 +4,15 @@ import {EquipmentPosition} from "@/enums/enums";
 export const Offhand = {
     Shield0: {
         name: '殘破木門(盾)',
-        description: '從廢墟拆下來的門板,笨重但聊勝於無。',
+        description: '從廢墟拆下來的門板,聊勝於無。',
         icon: '🚪',
         position: EquipmentPosition.OFFHAND,
         quality: 0,
-        dodge: -10,
         adDefend: 2,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield1: {
-        name: '木盾',
+        name: '精良木盾',
         description: '基礎的防禦裝備。',
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
@@ -36,7 +35,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
-        adDefend: 12,
+        adDefend: 16,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield4: {
@@ -45,7 +44,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
-        adDefend: 16,
+        adDefend: 32,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield5: {
@@ -54,7 +53,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 5,
-        adDefend: 20,
+        adDefend: 64,
         skill: 'ShieldBlock'
     } as EquipmentType,
 
@@ -81,8 +80,6 @@ export const Offhand = {
         icon: '📙',
         position: EquipmentPosition.OFFHAND,
         quality: 2,
-        spLimit: 120,
-        defendIncrease: 4,
         shieldLimit: 40
     } as EquipmentType,
     Book3: {
@@ -91,9 +88,7 @@ export const Offhand = {
         icon: '📜',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
-        spLimit: 160,
-        defendIncrease: 6,
-        shieldLimit: 60
+        shieldLimit: 80
     } as EquipmentType,
     Book4: {
         name: '魔力之書',
@@ -101,9 +96,7 @@ export const Offhand = {
         icon: '📘',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
-        spLimit: 200,
-        defendIncrease: 8,
-        shieldLimit: 85
+        shieldLimit: 160
     } as EquipmentType,
     Book5: {
         name: '祕法典籍',
@@ -111,8 +104,6 @@ export const Offhand = {
         icon: '📓',
         position: EquipmentPosition.OFFHAND,
         quality: 5,
-        spLimit: 240,
-        defendIncrease: 10,
-        shieldLimit: 120
+        shieldLimit: 320
     } as EquipmentType,
 };

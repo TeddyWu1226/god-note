@@ -123,19 +123,14 @@ watch(
             class="value-progress"
             :current-value="playerStore.finalStats.hp"
             :total-value="playerStore.finalStats.hpLimit"
-        />
-      </el-form-item>
-      <el-form-item v-if="playerStore.finalStats.shieldLimit && playerStore.finalStats.shieldLimit > 0" label="護盾">
-        <ValueProgress
-            class="value-progress"
-            color="#ffffff"
-            :current-value="playerStore.info.shield || 0"
-            :total-value="playerStore.finalStats.shieldLimit"
+            :shield="playerStore.info.shield || 0"
+            :shield-limit="playerStore.finalStats.shieldLimit || 0"
         />
       </el-form-item>
       <el-form-item label="SP">
         <ValueProgress
             class="value-progress"
+            color="linear-gradient(90deg, #3498db, #2980b9)"
             :current-value="playerStore.finalStats.sp"
             :total-value="playerStore.finalStats.spLimit"
         />
