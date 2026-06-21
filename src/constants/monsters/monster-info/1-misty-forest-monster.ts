@@ -64,7 +64,7 @@ export class ForestSprout extends MonsterModel {
 
     onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
         if (isMultiple(gameStateStore.battleRound, 3)) {
-            if (checkProbability(0.5)) {
+            if (checkProbability(0.3)) {
                 playerStore.addStatus(UnitStatus.WoodStuck);
                 useHeroStatusEffect({
                     message: '老樹盤根',
@@ -272,6 +272,32 @@ export class WoodGuardian extends MonsterModel {
                 {item: Material.LowerNormal, chance: 0.5}
             ]
         });
+    }
+
+    onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        if (isMultiple(gameStateStore.battleRound, 3)) {
+            if (checkProbability(0.5)) {
+                playerStore.addStatus(UnitStatus.WoodStuck);
+                useHeroStatusEffect({
+                    message: '老樹盤根',
+                    color: '#632b2b',
+                    icon: '🪵',
+                    duration: 1000
+                })
+                logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
+            } else {
+                logStore.logger.add(`對你施展了「老樹盤根」但沒命中。`);
+                useFloatingMessage(
+                    'MISS',
+                    null,
+                    {
+                        duration: 800, // 動畫時間保持不變
+                        color: 'white',
+                    }
+                );
+            }
+            return false
+        }
     }
 }
 
