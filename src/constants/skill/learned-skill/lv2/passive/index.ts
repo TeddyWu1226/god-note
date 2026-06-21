@@ -134,11 +134,11 @@ export class ContinuousSwordVertical extends SkillModel {
     constructor() {
         super({
             id: 'ContinuousSwordVertical',
-            name: '連續劍技-豎之型',
+            name: '進階劍技-豎之型',
             icon: 'skills/passive/continuous_vertical.svg',
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['連續劍技']
+            uniqueFields: ['進階劍技']
         });
     }
 
@@ -164,11 +164,11 @@ export class ContinuousSwordHorizontal extends SkillModel {
     constructor() {
         super({
             id: 'ContinuousSwordHorizontal',
-            name: '連續劍技-橫之型',
+            name: '進階劍技-橫之型',
             icon: 'skills/passive/continuous_horizontal.svg',
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['連續劍技']
+            uniqueFields: ['進階劍技']
         });
     }
 
@@ -195,7 +195,7 @@ export class ContinuousSwordHorizontal extends SkillModel {
                             enemy,
                             attackOutcome.baseDamage * rate,
                             'ad',
-                            '連續劍技-橫之型'
+                            '進階劍技-橫之型'
                         );
                     }
                 });
@@ -208,11 +208,11 @@ export class ContinuousSwordPoint extends SkillModel {
     constructor() {
         super({
             id: 'ContinuousSwordPoint',
-            name: '連續劍技-點之型',
+            name: '進階劍技-點之型',
             icon: 'skills/passive/continuous_point.svg',
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['連續劍技']
+            uniqueFields: ['進階劍技']
         });
     }
 
