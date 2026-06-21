@@ -253,14 +253,12 @@ export interface MonsterActionParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
     logStore?: logStoreType;
-    targetElement?: HTMLElement
 }
 
 export interface MonsterOnAttackParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
     logStore?: logStoreType;
-    targetElement?: HTMLElement
 }
 
 export interface MonsterOnAttackedParams {
@@ -268,7 +266,6 @@ export interface MonsterOnAttackedParams {
     gameStateStore?: GameStateStoreType
     logStore?: logStoreType;
     damage?: BattleOutcome; // onAttack 沒有傳這值
-    targetElement?: HTMLElement
 }
 
 /**

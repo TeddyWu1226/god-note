@@ -73,20 +73,20 @@
 
 /* --- 標籤：右上角 GOD (使用 after) --- */
 .monster-card.mystery::after {
-    content: "GOD";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-weight: bold;
-    color: #ffffff;
-    background: linear-gradient(135deg, #1a0033 0%, #a020f0 100%);
+    /*content: "GOD";*/
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*right: 5px;*/
+    /*font-size: 0.6rem;*/
+    /*padding: 2px 5px;*/
+    /*border-radius: 3px;*/
+    /*font-weight: bold;*/
+    /*color: #ffffff;*/
+    /*background: linear-gradient(135deg, #1a0033 0%, #a020f0 100%);*/
 
 
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 10px rgba(160, 32, 240, 0.8);
+    /*border: 1px solid rgba(255, 255, 255, 0.3);*/
+    /*box-shadow: 0 0 10px rgba(160, 32, 240, 0.8);*/
 }
 
 /* ------------------- 動畫定義 (Animations) ------------------- */

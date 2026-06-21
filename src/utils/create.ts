@@ -1,4 +1,5 @@
 import {EquipmentType, UsableType, RoomWeights, StatusEffect, BonusType} from "@/types";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 
 /**
  * 建立物件
@@ -221,3 +222,19 @@ export const getMonsterElement = (monsterId: string): HTMLElement | null => {
     if (!monsterId) return null;
     return document.querySelector(`[data-monster-id="${monsterId}"]`) as HTMLElement;
 }
+
+export const getPlayerElement = (): HTMLElement | null => {
+    return document.querySelector(`[id="player-value-card"]`) as HTMLElement;
+}
+
+export const notHitPlayer = () => {
+    useFloatingMessage(
+        'MISS',
+        getPlayerElement(),
+        {
+            duration: 800, // 動畫時間保持不變
+            color: 'white',
+        }
+    );
+}
+

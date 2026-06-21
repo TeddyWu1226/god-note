@@ -196,12 +196,11 @@ const tickStartAllMonsters = () => {
   gameStateStore.currentEnemy.forEach(monster => {
     if (monster.hp <= 0) return;
     // 處理回合習性行為
-    monster.executeRoundBehavior(
+    monster.triggerRoundBehavior(
         {
           playerStore: playerStore,
           gameStateStore: gameStateStore,
           logStore: logStore,
-          targetElement: MonsterCardRefs.value[monster.id]?.$el,
           battleRound: gameStateStore.battleRound,
         }
     );
@@ -512,8 +511,7 @@ const init = () => {
       monster.triggerOnStart({
         playerStore: playerStore,
         gameStateStore: gameStateStore,
-        logStore: logStore,
-        targetElement: MonsterCardRefs.value[monster.id]?.$el,
+        logStore: logStore
       });
     })
   })

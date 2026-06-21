@@ -8,7 +8,7 @@ import {MonsterOnAttackParams} from "@/types";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus} from "@/utils/create";
+import {genCustomStatus, getMonsterElement, notHitPlayer} from "@/utils/create";
 
 export class Slime extends MonsterModel {
     constructor() {
@@ -21,8 +21,8 @@ export class Slime extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 0,
-            dodge: 5,
-            hit: 1,
+            dodge: 10,
+            hit: 0,
             hp: 20,
             hpLimit: 20,
             level: 1,
@@ -50,8 +50,8 @@ export class ForestSprout extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 2,
-            dodge: -5,
-            hit: 10,
+            dodge: 0,
+            hit: 0,
             hp: 30,
             hpLimit: 30,
             level: 1,
@@ -75,14 +75,7 @@ export class ForestSprout extends MonsterModel {
                 logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
             } else {
                 logStore.logger.add(`對你施展了「老樹盤根」但沒命中。`);
-                useFloatingMessage(
-                    'MISS',
-                    null,
-                    {
-                        duration: 800, // 動畫時間保持不變
-                        color: 'white',
-                    }
-                );
+                notHitPlayer()
             }
             return false
         }
@@ -100,8 +93,8 @@ export class WoodTick extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 3,
-            dodge: 12,
-            hit: 5,
+            dodge: 15,
+            hit: 0,
             hp: 30,
             hpLimit: 30,
             level: 3,
@@ -124,8 +117,8 @@ export class StingerBee extends MonsterModel {
             critIncrease: 100,
             critRate: 0,
             adDefend: 0,
-            dodge: 25,
-            hit: 20,
+            dodge: 35,
+            hit: 0,
             hp: 25,
             hpLimit: 25,
             level: 3,
@@ -157,8 +150,8 @@ export class FierceWolf extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: 10,
             adDefend: 6,
-            dodge: 25,
-            hit: 15,
+            dodge: 40,
+            hit: 10,
             hp: 85,
             hpLimit: 85,
             level: 5,
@@ -166,11 +159,11 @@ export class FierceWolf extends MonsterModel {
         });
     }
 
-    override onStartHook({playerStore, targetElement}) {
+    override onStartHook({playerStore}) {
         playerStore.addStatus(UnitStatus.WolfRoarWarning);
         useFloatingMessage(
             '啊嗚~',
-            targetElement,
+            getMonsterElement(this.id),
             {
                 duration: 1500,
                 color: 'red'
@@ -197,8 +190,8 @@ export class SmallSpider extends MonsterModel {
             critIncrease: 200,
             critRate: 5,
             adDefend: 5,
-            dodge: 0,
-            hit: 70,
+            dodge: 35,
+            hit: 5,
             hp: 80,
             hpLimit: 80,
             level: 5,
@@ -206,7 +199,7 @@ export class SmallSpider extends MonsterModel {
         });
     }
 
-    override onStartHook({playerStore, targetElement}: any) {
+    override onStartHook({playerStore}: any) {
         useFullScreenEffect({
             message: '蛛絲纏繞',
             color: 'white',
@@ -222,13 +215,13 @@ export class PoisonSlime extends MonsterModel {
             icon: '🟣',
             code: 'PoisonSlime',
             name: '毒史萊姆',
-            description: '受到毒區影響變異的史萊姆,有強烈毒性',
+            description: '受到毒區影響變異的史萊姆，受到攻擊時匯兌攻擊者噴射毒液，在進入警戒的時候會全身硬化。',
             ad: 6,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 0,
-            dodge: 10,
-            hit: 10,
+            dodge: 5,
+            hit: 0,
             hp: 45,
             hpLimit: 45,
             level: 5,
@@ -246,8 +239,15 @@ export class PoisonSlime extends MonsterModel {
         }
     }
 
-    override onStartHook({playerStore, targetElement}) {
-        this.addEffect(genCustomStatus({base: UsualStatus.AdDefendInCrease, bonus: {adDefend: 10}}))
+    override onStartHook() {
+        this.addEffect(
+            genCustomStatus(
+                {
+                    base: UsualStatus.AdDefendInCrease,
+                    bonus: {adDefend: 25}
+                }
+            )
+        )
     }
 }
 
@@ -262,8 +262,8 @@ export class WoodGuardian extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 10,
-            dodge: -10,
-            hit: 5,
+            dodge: 10,
+            hit: 0,
             hp: 60,
             hpLimit: 60,
             level: 5,
@@ -276,7 +276,7 @@ export class WoodGuardian extends MonsterModel {
 
     onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
         if (isMultiple(gameStateStore.battleRound, 3)) {
-            if (checkProbability(0.5)) {
+            if (checkProbability(0.6)) {
                 playerStore.addStatus(UnitStatus.WoodStuck);
                 useHeroStatusEffect({
                     message: '老樹盤根',
@@ -287,14 +287,7 @@ export class WoodGuardian extends MonsterModel {
                 logStore.logger.add(`對你施展了「老樹盤根」,你被捆綁了。`);
             } else {
                 logStore.logger.add(`對你施展了「老樹盤根」但沒命中。`);
-                useFloatingMessage(
-                    'MISS',
-                    null,
-                    {
-                        duration: 800, // 動畫時間保持不變
-                        color: 'white',
-                    }
-                );
+                notHitPlayer()
             }
             return false
         }

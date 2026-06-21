@@ -7,7 +7,6 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {applySkillDamage} from "@/constants/fight-func";
 
 
-
 /**
  * 冰系魔物 (Ice Monsters)
  */
@@ -22,7 +21,7 @@ export class FrostSlime extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 4,
-            dodge: 5,
+            dodge: 25,
             hit: 10,
             hp: 85,
             hpLimit: 85,
@@ -49,7 +48,7 @@ export class IceBat extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 2,
-            dodge: 25,
+            dodge: 45,
             hit: 15,
             hp: 65,
             hpLimit: 65,
@@ -79,7 +78,7 @@ export class GlacierLizard extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: 15,
             adDefend: 12,
-            dodge: 10,
+            dodge: 30,
             hit: 40,
             hp: 170,
             hpLimit: 170,
@@ -101,7 +100,7 @@ export class FrostGolem extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 18,
-            dodge: -5,
+            dodge: 30,
             hit: 20,
             hp: 220,
             hpLimit: 220,
@@ -138,7 +137,7 @@ export class LavaSlime extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 2,
-            dodge: 5,
+            dodge: 30,
             hit: 10,
             hp: 80,
             hpLimit: 80,
@@ -167,7 +166,7 @@ export class FireBat extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 0,
-            dodge: 30,
+            dodge: 45,
             hit: 15,
             hp: 70,
             hpLimit: 70,
@@ -190,7 +189,7 @@ export class CrimsonSalamander extends MonsterModel {
             critIncrease: 200,
             critRate: 25,
             adDefend: 8,
-            dodge: 15,
+            dodge: 45,
             hit: 20,
             hp: 160,
             hpLimit: 160,
@@ -219,7 +218,7 @@ export class ObsidianGolem extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 20,
-            dodge: -10,
+            dodge: 25,
             hit: 20,
             hp: 200,
             hpLimit: 200,

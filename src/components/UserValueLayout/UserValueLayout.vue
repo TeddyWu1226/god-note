@@ -116,7 +116,7 @@ watch(
 </script>
 
 <template>
-  <el-card ref="cardRef" class="player-value-card" :class="{'shaking': isShaking}">
+  <el-card id="player-value-card" ref="cardRef" class="player-value-card" :class="{'shaking': isShaking}">
     <el-form label-width="3rem">
       <el-form-item label="HP">
         <HpProgress

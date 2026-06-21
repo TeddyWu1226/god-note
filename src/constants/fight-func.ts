@@ -3,7 +3,7 @@ import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
-import {getRandomItemByWeight, genCustomStatus} from "@/utils/create";
+import {genCustomStatus, getRandomItemByWeight, notHitPlayer} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -93,6 +93,9 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     if (!outcome.isHit) {
         // 未命中，不造成傷害，直接返回
         const log = `${defender.name || '防禦者'} 閃避了攻擊。`
+        if (defender.name == playerStore.info.name) {
+            notHitPlayer()
+        }
         logStore.logger.add(log);
         return outcome;
     }
@@ -551,5 +554,6 @@ export const checkHpThresholds = (entity: Entity, thresholds = [75, 50, 25]): bo
 export function calculateIsHit(attacker: UnitType, defender: UnitType): boolean {
     const BASE_HIT_RATE = 100;
     let hitRate = Math.max(0, BASE_HIT_RATE + attacker.hit - defender.dodge);
+    console.log('命中率', hitRate)
     return Math.random() * MAX_RATE < hitRate
 }
