@@ -8,12 +8,12 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
     SwordExpert: {
         evolvedSkillId: 'SwordExpert',
         baseSkillId: 'SwordProficiency',
-        checkEligible: (playerStore, trackerStore) => {
+        checkEligible: (playerStore) => {
             const baseSkill = playerStore.hasSkill('SwordProficiency')
             if (!baseSkill) {
                 return false;
             }
-            return baseSkill.proficiency >= baseSkill.maxProficiency
+            return baseSkill.isProficiencyMax
         }
     },
     SwordMaster: {
@@ -24,7 +24,7 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
             if (!baseSkill) {
                 return false;
             }
-            return baseSkill.proficiency >= baseSkill.maxProficiency
+            return baseSkill.isProficiencyMax
         }
     },
     KnightWay: {
@@ -32,9 +32,11 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         baseSkillId: 'SwordProficiency',
         checkEligible: (playerStore) => {
             const baseSkill = playerStore.hasSkill('SwordProficiency')
-            const baseSkillMax = baseSkill ? baseSkill.proficiency >= baseSkill.maxProficiency : false
+            if (!baseSkill) {
+                return false;
+            }
             const hasWill = playerStore.hasSkill('WillBuff')
-            return baseSkillMax && !!hasWill;
+            return baseSkill.isProficiencyMax && !!hasWill;
         }
     },
 
@@ -42,9 +44,9 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
         evolvedSkillId: 'HeartOfRebellion',
         baseSkillId: 'BlockBoost',
         checkEligible: (playerStore) => {
-            const hasBase = playerStore.info.skills?.some((s: any) => s.id === 'BlockBoost');
-            const hasKnightWay = playerStore.info.skills?.some((s: any) => s.id === 'KnightWay');
-            return hasBase && hasKnightWay;
+            const hasBase = playerStore.hasSkill('BlockBoost');
+            const hasKnightWay = playerStore.hasSkill('KnightWay');
+            return !!hasBase && !!hasKnightWay;
         }
     },
     PurpleSkin: {
@@ -65,6 +67,33 @@ export const EVOLUTION_RULES: Record<string, EvolutionRule> = {
             const hasHorizontal = playerStore.hasSkill('HorizontalSlash');
             const hasThrust = playerStore.hasSkill('Thrust');
             return !!hasVertical && !!hasHorizontal && !!hasThrust;
+        }
+    },
+    ContinuousSwordVertical: {
+        evolvedSkillId: 'ContinuousSwordVertical',
+        baseSkillId: 'VerticalSlash',
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('VerticalSlash');
+            if (!baseSkill) return false
+            return playerStore.checkSkillUniqueFields('SwordProficiency');
+        }
+    },
+    ContinuousSwordHorizontal: {
+        evolvedSkillId: 'ContinuousSwordHorizontal',
+        baseSkillId: 'HorizontalSlash',
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('HorizontalSlash');
+            if (!baseSkill) return false
+            return playerStore.checkSkillUniqueFields('SwordProficiency');
+        }
+    },
+    ContinuousSwordPoint: {
+        evolvedSkillId: 'ContinuousSwordPoint',
+        baseSkillId: 'Thrust',
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('Thrust');
+            if (!baseSkill) return false
+            return playerStore.checkSkillUniqueFields('SwordProficiency');
         }
     }
 };

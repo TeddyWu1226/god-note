@@ -219,7 +219,7 @@ export class ContinuousSwordPoint extends SkillModel {
     chance = 25
 
     description(): string {
-        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 10 點，持續 3 回合）。`;
+        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 5 點，持續 3 回合）。`;
     }
 
     protected execute(): boolean {

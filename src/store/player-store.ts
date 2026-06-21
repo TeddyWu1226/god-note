@@ -596,6 +596,13 @@ export const usePlayerStore = defineStore('player-info', () => {
         return info.value.skills.find(s => s.id === skillKey);
     }
 
+
+    // 檢查有無該關聯字段的相關技能
+    const checkSkillUniqueFields = (uniqueField: string) => {
+        return info.value.skills?.some((s: any) =>
+            s.uniqueFields?.includes(uniqueField)
+        );
+    }
     /**
      * 技能熟練度
      * 技能熟練度最高 100
@@ -706,7 +713,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         gainItem, hasItem, removeItem,
         addGold,
         addStatus, hasStatus, removeStatus,
-        addSkill, removeSkill, replaceSkill, hasSkill,
+        addSkill, removeSkill, replaceSkill, hasSkill, checkSkillUniqueFields,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
         gainExp, allocateStatPoint

@@ -98,4 +98,11 @@ export abstract class SkillModel {
         return `熟練度: ${this.proficiency}/${this.maxProficiency}`;
     }
 
+    // 是否熟練度滿等
+    get isProficiencyMax(): boolean {
+        if (!this.proficiencyGain) {
+            return true
+        }
+        return this.proficiency >= this.maxProficiency;
+    }
 }

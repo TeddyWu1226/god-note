@@ -242,9 +242,9 @@ export const UnitStatus = {
         name: '破甲',
         icon: '⛓️‍💥',
         duration: 3,
-        description: '防禦力降低 10 點',
+        description: '防禦力降低 5 點',
         bonus: {
-            adDefend: -10
+            adDefend: -5
         }
     } as StatusEffect,
 }
