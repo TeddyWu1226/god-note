@@ -279,7 +279,7 @@ export class MonsterModel implements MonsterType {
     /**
      * 觸發攻擊命中後 被動/效果
      */
-    triggerOnAttackHit(params: MonsterOnAttackParams & { damage: BattleOutcome }): void {
+    triggerOnAttackHit(params: MonsterOnAttackHitParams): void {
         this.onAttackHitHook(params);
     }
 

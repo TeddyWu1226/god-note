@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import './boss-animation.css'
 import './god-animation.css'
+import './monster-animation.scss'
 import {computed, PropType, ref, watch} from 'vue';
 import {BattleOutcome} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";

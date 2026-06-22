@@ -1,5 +1,6 @@
 import {PlayerStoreType, StatusEffect} from "@/types";
 import {UnitStatus} from "@/constants/status/unit-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 /**
  * 寒冷堆疊邏輯
@@ -19,9 +20,19 @@ export const playerGetColdStackEffects = (playerStore: PlayerStoreType, stack = 
         let returnEffects: StatusEffect[] = [existing]
         if (currentStack < -30) {
             returnEffects.push(UnitStatus.Frostbite)
+            useFullScreenEffect({
+                message: '凍傷',
+                color: '#64b5f6',
+                duration: 800
+            });
         }
-        if (currentStack < -60) {
+        if (currentStack < -90) {
             returnEffects.push(UnitStatus.Frozen)
+            useFullScreenEffect({
+                message: '冰凍',
+                color: '#6964f6',
+                duration: 800
+            });
         }
         returnEffects.forEach(effect => {
             playerStore.addStatus(effect);

@@ -4,11 +4,12 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
-import {MonsterActionParams, MonsterRoundBehaviorParams, MonsterType} from "@/types";
+import {MonsterActionParams, MonsterOnAttackHitParams, MonsterRoundBehaviorParams, MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
 import {ItemStatus} from "@/constants/status/item-status";
+import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -172,13 +173,13 @@ export class FrostFlameWyrm extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
+    override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {
         if (checkProbability(0.5)) {
-            playerStore.addStatus(ItemStatus.OnBurn);
-            logStore.logger.add(`霜炎幼龍釋放了火焰，你被燒傷了！`);
+            playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
+            logStore.logger.add(`${this.name}吐出龍焰，你被燒傷了！`);
         } else {
-            playerStore.addStatus(UnitStatus.SlimeSlow);
-            logStore.logger.add(`霜炎幼龍噴出寒氣，你被減速了！`);
+            playerGetColdStackEffects(playerStore)
+            logStore.logger.add(`${this.name}噴出龍冰，你感受到寒冷！`);
         }
     }
 }

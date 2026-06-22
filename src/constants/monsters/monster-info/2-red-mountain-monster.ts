@@ -1,12 +1,10 @@
 import {MonsterModel} from "@/models/monster-model";
 import {WorldDefault} from "@/assets/const";
 import {Material} from "@/constants/items/material/material-info";
-import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability} from "@/utils/math";
-import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
-import {MonsterOnAttackHitParams} from "@/types";
+import {MonsterOnAttackedParams, MonsterOnAttackHitParams} from "@/types";
 
 
 /**
@@ -17,6 +15,7 @@ export class FrostSlime extends MonsterModel {
         super({
             icon: '🔵',
             code: 'FrostSlime',
+            class: 'icon-blue',
             name: '冰霜史萊姆',
             description: '在赤之山脈冰封縫隙中形成的變異史萊姆，極度嚴寒',
             ad: 10,
@@ -33,7 +32,7 @@ export class FrostSlime extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+    override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
         playerGetColdStackEffects(playerStore)
     }
 }
@@ -43,12 +42,13 @@ export class IceBat extends MonsterModel {
         super({
             icon: '🦇',
             code: 'IceBat',
-            name: '山地蝙蝠',
+            name: '冷光蝙蝠',
+            class: 'icon-blue',
             description: '散發著冰冷微光的蝙蝠，其銳利的牙齒可能造成寒冷',
-            ad: 13,
+            ad: 10,
             critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
-            adDefend: 2,
+            critRate: 50,
+            adDefend: 0,
             dodge: 45,
             hit: 15,
             hp: 65,
@@ -71,9 +71,8 @@ export class GlacierLizard extends MonsterModel {
         super({
             icon: '🦎',
             code: 'GlacierLizard',
-            name: '冰川蜥蜴',
-            class: 'elite',
-            description: '身上覆蓋著堅冰護甲的古老蜥蜴，攻擊沉重而精準',
+            name: '高山蜥蜴',
+            description: '生存在寒冷高山的蜥蜴魔物，雖然動作緩慢但對侵略地盤的人毫不手軟',
             ad: 26,
             critIncrease: WorldDefault.critIncrease,
             critRate: 15,
@@ -84,6 +83,7 @@ export class GlacierLizard extends MonsterModel {
             hpLimit: 170,
             level: 13,
             dropGold: 60,
+            chaseIncrease: -20
         });
     }
 }
@@ -94,8 +94,8 @@ export class FrostGolem extends MonsterModel {
             icon: '☃️',
             code: 'FrostGolem',
             name: '寒冰魔像',
-            class: 'elite',
-            description: '冰雪與魔力編織而成的重型守衛，能將敵人徹底凍結',
+            class: 'elite icon-blue',
+            description: '冰雪與魔力編織而成的重型守衛，他的攻擊都附帶寒冷效果',
             ad: 22,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -110,16 +110,8 @@ export class FrostGolem extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
-        if (checkProbability(0.3)) {
-            playerStore.addStatus(UnitStatus.Frozen);
-            useFullScreenEffect({
-                message: '深度冰凍',
-                color: '#64b5f6',
-                duration: 1200
-            });
-            logStore.logger.add(`你被寒冰魔像徹底凍結了！`);
-        }
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        playerGetColdStackEffects(playerStore, -6)
     }
 }
 
@@ -132,6 +124,7 @@ export class LavaSlime extends MonsterModel {
             icon: '🔴',
             code: 'LavaSlime',
             name: '熔岩史萊姆',
+            class: 'icon-red',
             description: '體表翻滾著岩漿的史萊姆，極度熾熱',
             ad: 12,
             critIncrease: WorldDefault.critIncrease,
@@ -147,10 +140,9 @@ export class LavaSlime extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
+    override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
         if (checkProbability(0.5)) {
-            playerStore.addStatus(ItemStatus.OnBurn);
-            logStore.logger.add(`你被熔岩灼傷，進入燒傷狀態。`);
+            playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
         }
     }
 }
@@ -160,8 +152,9 @@ export class FireBat extends MonsterModel {
         super({
             icon: '🦇',
             code: 'FireBat',
-            name: '烈火蝙蝠',
-            description: '雙翼燃燒著火焰的蝙蝠，動作極其敏捷',
+            name: '烈色蝙蝠',
+            class: 'icon-red',
+            description: '火紅色的蝙蝠，動作極其敏捷',
             ad: 14,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -183,7 +176,7 @@ export class CrimsonSalamander extends MonsterModel {
             icon: '🐊',
             code: 'CrimsonSalamander',
             name: '緋紅鱷',
-            class: 'elite',
+            class: 'elite icon-red',
             description: '棲息在火山岩縫中的大鱷魚，口吐烈火，攻擊極為致命',
             ad: 28,
             critIncrease: 200,
@@ -212,7 +205,7 @@ export class ObsidianGolem extends MonsterModel {
             icon: '🪨',
             code: 'ObsidianGolem',
             name: '黑曜石魔像',
-            class: 'elite',
+            class: 'elite icon-purple',
             description: '由高溫熔岩冷卻形成的黑曜石巨人，能將受到的攻擊反彈',
             ad: 24,
             critIncrease: WorldDefault.critIncrease,

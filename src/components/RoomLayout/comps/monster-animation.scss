@@ -1,0 +1,15 @@
+$colors: (
+        red: #ff0000,
+        purple: #a855f7,
+        green: #00ff48,
+        blue: #3b82f6,
+);
+
+@each $name, $color in $colors {
+  .icon-#{$name} .monster-icon {
+    filter:
+            drop-shadow(0 0 3px #{$color})
+            drop-shadow(0 0 6px #{$color})
+            drop-shadow(0 0 12px #{$color});
+  }
+}
