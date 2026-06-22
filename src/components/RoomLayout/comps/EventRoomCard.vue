@@ -71,7 +71,6 @@ const pickRandomEvent = () => {
 // 初始化邏輯
 const initializeEventRoom = () => {
   // 只有當前還沒有事件時才初始化，避免在某些情況下組件重新渲染導致事件變更
-  console.log('觸發了', gameStateStore.currentEventType)
   if (!gameStateStore.currentEventType) {
     const selectedEvent = pickRandomEvent();
     gameStateStore.setEvent(selectedEvent);

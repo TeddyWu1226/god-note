@@ -595,6 +595,10 @@ export const usePlayerStore = defineStore('player-info', () => {
 
     // 檢查有無該關聯字段的相關技能
     const checkSkillUniqueFields = (uniqueField: string) => {
+        console.log('info.value.skills', info.value.skills)
+        console.log('有此獨特', info.value.skills?.some((s: any) =>
+            s.uniqueFields?.includes(uniqueField)
+        ))
         return info.value.skills?.some((s: any) =>
             s.uniqueFields?.includes(uniqueField)
         );

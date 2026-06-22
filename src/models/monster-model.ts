@@ -1,6 +1,14 @@
 import {
-    MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams,
-    MonsterOnAttackedParams, logStoreType, BonusType, MonsterOnAttackHitParams, MonsterRoundBehaviorParams
+    BattleOutcome,
+    BonusType,
+    DropEntry,
+    MonsterActionParams,
+    MonsterOnAttackedParams,
+    MonsterOnAttackHitParams,
+    MonsterOnAttackParams,
+    MonsterRoundBehaviorParams,
+    MonsterType,
+    StatusEffect
 } from "@/types";
 import {genCustomStatus} from "@/utils/create";
 
@@ -152,18 +160,17 @@ export class MonsterModel implements MonsterType {
                   duration?: number
               }) {
         const existingIdx = this.status.findIndex(e => e.name === effect.name);
+        const _effect = genCustomStatus({
+                base: effect,
+                bonus: custom?.bonus,
+                value: custom?.value,
+                duration: custom?.duration,
+            }
+        )
         if (existingIdx > -1) {
-            this.status[existingIdx] = effect;
+            this.status[existingIdx] = _effect;
         } else {
-            this.status.push(
-                genCustomStatus({
-                        base: effect,
-                        bonus: custom?.bonus,
-                        value: custom?.value,
-                        duration: custom?.duration,
-                    }
-                )
-            );
+            this.status.push(_effect);
         }
     }
 

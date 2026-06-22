@@ -234,7 +234,7 @@ export class ContinuousSwordPoint extends SkillModel {
     override onPlayerAttackHit({monster}: SkillOnPlayerAttackHitParams) {
         if (checkProbability((this.chance / 100))) {
             const logStore = useLogStore();
-            monster.addEffect(UnitStatus.ArmorBreak, logStore);
+            monster.addEffect(UnitStatus.ArmorBreak);
             logStore.logger.add(` ${monster.name} 陷入破甲狀態！`);
             const el = getMonsterElement(monster.id);
             if (el) {

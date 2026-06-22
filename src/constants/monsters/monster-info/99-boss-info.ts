@@ -22,10 +22,10 @@ export class AncientSpider extends MonsterModel {
             name: '古蜘蛛',
             description: '巨大古老的蜘蛛，擅長用蜘蛛網網住獵物',
             class: 'boss big',
-            ad: 20,
+            ad: 18,
             critIncrease: 200,
             critRate: 0,
-            adDefend: 10,
+            adDefend: 8,
             dodge: 25,
             hit: 5,
             hp: 300,
@@ -68,10 +68,10 @@ export class Twilight extends MonsterModel {
             name: '墮落的半神',
             class: 'mystery',
             description: '掌控森林日出日落的半神，卻因失去愛人而墮落，決定讓太陽永不墜落。',
-            ad: 10,
+            ad: 12,
             critIncrease: 100,
             critRate: 0,
-            adDefend: 10,
+            adDefend: 12,
             dodge: 35,
             hit: 0,
             hp: 500,
@@ -126,24 +126,23 @@ export class Twilight extends MonsterModel {
                 }
             );
             bonus['critRate'] = 100
-        } else {
-            // 如果身上有燃燒狀態 會反過來燃燒玩家
-            if (this.hasStatus('燃燒')) {
-                useFloatingMessage(
-                    '一起在火焰中共舞吧!',
-                    getMonsterElement(this.id),
-                    {
-                        duration: 1000,
-                        color: 'red'
-                    }
-                );
-                param.playerStore.addStatus(
-                    ItemStatus.OnBurn,
-                    {
-                        value: 10
-                    }
-                )
-            }
+        }
+        // 如果身上有燃燒狀態 會反過來燃燒玩家
+        if (this.hasStatus('燃燒')) {
+            useFloatingMessage(
+                '一起在火焰中共舞吧!',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'red'
+                }
+            );
+            param.playerStore.addStatus(
+                ItemStatus.OnBurn,
+                {
+                    value: 10
+                }
+            )
         }
         this.addEffect(UnitStatus.SpeedDance, {bonus: bonus})
     }
@@ -152,68 +151,67 @@ export class Twilight extends MonsterModel {
 /**
  * --- 赤之山脈 (Red Mountain) Bosses ---
  */
-export class FrostFlameWyrm extends MonsterModel {
+export class FrostGiant extends MonsterModel {
     constructor() {
         super({
-            code: 'FrostFlameWyrm',
-            icon: '🐉',
-            name: '霜炎幼龍',
-            description: '掌握了冰與火雙重元素力量的巨龍幼崽，實力不容小覷',
+            code: 'FrostGiant',
+            icon: '/monsters/frost_giant.png',
+            name: '冰凍的巨人',
+            description: '被永久冰封在山脈深處的遠古巨人，揮舞著巨大的寒冰錘。',
             class: 'boss big',
-            ad: 30,
+            ad: 32,
             critIncrease: 200,
             critRate: 15,
-            adDefend: 15,
+            adDefend: 18,
             dodge: 10,
             hit: 40,
-            hp: 600,
-            hpLimit: 600,
+            hp: 650,
+            hpLimit: 650,
             level: 10,
             dropGold: 400
         });
     }
 
+    override onStartHook() {
+        useEpicSubtitle("「復仇...復仇！！！」", 4000);
+    }
+
     override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {
-        if (checkProbability(0.5)) {
-            playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
-            logStore.logger.add(`${this.name}吐出龍焰，你被燒傷了！`);
-        } else {
-            playerGetColdStackEffects(playerStore)
-            logStore.logger.add(`${this.name}噴出龍冰，你感受到寒冷！`);
-        }
+        playerGetColdStackEffects(playerStore, -6)
+        logStore.logger.add(`${this.name}砸下寒冰，你感受到刺骨的寒冷！`);
     }
 }
 
-export class BlazingPhoenix extends MonsterModel {
+export class FireWyrmling extends MonsterModel {
     constructor() {
         super({
-            code: 'BlazingPhoenix',
-            icon: '🐦',
-            name: '烈焰不死鳥',
-            description: '守護火山底層的聖獸，能於烈火中獲得永生',
+            code: 'FireWyrmling',
+            icon: '/monsters/fire_wyrmling.png',
+            name: '炎幼龍',
+            description: '在火山核心孵化的炎龍幼崽，吞吐著毀滅性的烈焰。',
             class: 'mystery',
-            ad: 50,
+            ad: 48,
             critIncrease: 200,
-            critRate: 20,
-            adDefend: 25,
+            critRate: 25,
+            adDefend: 20,
             dodge: 25,
             hit: 60,
-            hp: 1000,
-            hpLimit: 1000,
+            hp: 1050,
+            hpLimit: 1050,
             level: 12,
             dropGold: 800,
             drop: []
         });
     }
 
-    override onStartHook() {
-        useEpicSubtitle("「在無盡的烈焰中燃盡吧，卑微的闖入者！」", 4000);
+    override onStartHook({playerStore}: MonsterActionParams) {
+        useEpicSubtitle("「吼！！！」", 4000);
+        playerStore.addStatus(UnitStatus.Scared, {duration: 5});
     }
 
-    override onRoundBehaviorHook() {
-        // 每回合開始浴火重生：回復 40 HP
-        const heal = 40;
-        this.hp = Math.min(this.hpLimit, this.hp + heal);
+    override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {
+        playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 12});
+        logStore.logger.add(`${this.name}噴吐出熊熊烈焰，你被嚴重燒傷了！`);
     }
 }
 
@@ -459,8 +457,8 @@ export const Boss = {
     Twilight: new Twilight(),
 
     // --- 赤之山脈 (Red Mountain) ---
-    FrostFlameWyrm: new FrostFlameWyrm(),
-    BlazingPhoenix: new BlazingPhoenix(),
+    FrostGiant: new FrostGiant(),
+    FireWyrmling: new FireWyrmling(),
 
     // --- 大荒地 (Giants Wasteland) ---
     WastelandBehemoth: new WastelandBehemoth(),
@@ -485,8 +483,8 @@ export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType 
         main: Boss.Twilight
     },
     2: {
-        mini: Boss.FrostFlameWyrm,
-        main: Boss.BlazingPhoenix
+        mini: Boss.FrostGiant,
+        main: Boss.FireWyrmling
     },
     3: {
         mini: Boss.WastelandBehemoth,

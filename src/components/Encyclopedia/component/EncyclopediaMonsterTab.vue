@@ -14,7 +14,7 @@ const gameStateStore = useGameStateStore();
 
 const unlocked = (val: number) => {
   // return true
-  return gameStateStore.maxClearedStage >= val
+  return gameStateStore.maxClearedStage >= val || gameStateStore.currentStage >= val
 }
 const monsterInfoMapping = {
   1: MistyForestMonster,

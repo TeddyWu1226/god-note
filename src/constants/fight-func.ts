@@ -100,13 +100,12 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
         return outcome;
     }
 
-
-    // 2. 更新生命值
     let damageTaken = damageOutput.totalDamage
     // 額外效果
     if (outcome.isCrit && !!playerStore.hasStatus(ItemStatus.Block.name)) {
         let blockMultiplier = 0.50;
-        if (playerStore.checkSkillUniqueFields('格擋強化')) {
+        if (playerStore.checkSkillUniqueFields('格檔強化')) {
+            console.log('有用喔')
             blockMultiplier = 0.25;
         }
         damageTaken = Math.round(damageTaken * blockMultiplier);
@@ -130,6 +129,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
             logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
         }
     }
+    // 2. 更新生命值
     if (defender.name === playerStore.info.name) {
         const result = playerStore.takeDamage(damageTaken);
         defender.hp = playerStore.info.hp;

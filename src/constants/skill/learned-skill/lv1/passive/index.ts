@@ -235,7 +235,7 @@ export class BlockBoost extends SkillModel {
     constructor() {
         super({
             id: 'BlockBoost',
-            name: "格擋強化",
+            name: "格檔強化",
             icon: "skills/passive/block_boost.svg",
             type: 'passive',
             rarity: 'common',
