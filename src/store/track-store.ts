@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {ref} from 'vue'
 import {usePlayerStore} from "@/store/player-store";
+import {useEncyclopediaStore} from "@/store/encyclopedia-store";
 import {Sword} from "@/constants/items/equipment/weapon-info";
 
 const likeSwords = Object.values(Sword).map((sword) => sword.name)
@@ -8,14 +9,13 @@ export const useTrackerStore = defineStore('tracker', () => {
     // --- State ---
     // 當階段數據紀錄
     const currentKills = ref<Record<string, number>>({})
-    const totalKills = ref<Record<string, number>>({})
     // 成就用紀錄
     const achievementsCount = ref({
         // 和平計算
         peaceDay: 0,
         gambleWin: 0,
         gambleLose: 0,
-        withOutBless:0
+        withOutBless: 0
     })
 
     // --- Actions ---
@@ -26,16 +26,17 @@ export const useTrackerStore = defineStore('tracker', () => {
      * @param amount 增加數量 (預設 1)
      */
     function recordKill(monsterName: string, amount: number = 1) {
-        // 紀錄擊殺
-        if (monsterName.startsWith('【菁英】')) {
-            currentKills.value['ELITE'] = (currentKills.value['ELITE'] || 0) + amount
-            totalKills.value['ELITE'] = (totalKills.value['ELITE'] || 0) + amount
-        }
+        // 圖鑑解鎖
+        const encyclopediaStore = useEncyclopediaStore();
         const name = monsterName.replace(/^【菁英】/, "")
+        encyclopediaStore.unlockMonster(name);
+        // 紀錄擊殺
+        // if (monsterName.startsWith('【菁英】')) {
+        //     currentKills.value['ELITE'] = (currentKills.value['ELITE'] || 0) + amount
+        // }
+
         currentKills.value[name] = (currentKills.value[name] || 0) + amount
         currentKills.value['TOTAL'] = (currentKills.value['TOTAL'] || 0) + amount
-        totalKills.value[name] = (totalKills.value[name] || 0) + amount
-        totalKills.value['TOTAL'] = (totalKills.value['TOTAL'] || 0) + amount
         // 和平重新計算
         achievementsCount.value.peaceDay = 0
         // 武器分類計算
@@ -44,7 +45,6 @@ export const useTrackerStore = defineStore('tracker', () => {
             const use = playerStore.info.equips.weapon
             if (likeSwords.includes(use.name)) {
                 currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount
-                totalKills.value['USE_SWORD'] = (totalKills.value['USE_SWORD'] || 0) + amount
             }
         }
     }
@@ -53,13 +53,9 @@ export const useTrackerStore = defineStore('tracker', () => {
     /**
      * 獲取特定目標的進度
      * @param monsterName 全部 TOTAL,菁英 ElITE
-     * @param type  current:本階段; total: 整場遊戲
      */
-    function getKillCount(monsterName: string = 'TOTAL', type: 'current' | 'total'): number {
-        if (type === 'current') {
-            return currentKills.value[monsterName] || 0
-        }
-        return totalKills.value[monsterName] || 0
+    function getKillCount(monsterName: string = 'TOTAL'): number {
+        return currentKills.value[monsterName] || 0
     }
 
 
@@ -68,7 +64,6 @@ export const useTrackerStore = defineStore('tracker', () => {
      */
     function init(all = true) {
         if (all) {
-            totalKills.value = {}
             Object.keys(achievementsCount.value).forEach(key => {
                 achievementsCount.value[key] = 0
             })
@@ -79,7 +74,6 @@ export const useTrackerStore = defineStore('tracker', () => {
 
     return {
         currentKills,
-        totalKills,
         achievementsCount,
         recordKill,
         getKillCount,

@@ -222,6 +222,7 @@ const cancelReplaceMode = () => {
       class="learn-skill-dialog-wrapper"
       :close-on-click-modal="false"
       :show-close="false"
+      :close-on-press-escape="false"
   >
     <div class="learn-skill-container">
       <div v-if="!replaceMode" class="learn-intro">
