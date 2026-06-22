@@ -449,8 +449,9 @@ export const usePlayerStore = defineStore('player-info', () => {
      * 檢查當前是否有指定的狀態效果 (Buff/Debuff)
      * @param statusName 狀態名稱
      */
-    const hasStatus = (statusName: string): boolean => {
-        return statusEffects.value.some(
+
+    const hasStatus = (statusName: string): StatusEffect | undefined => {
+        return statusEffects.value.find(
             (effect) => effect.name === statusName
         );
     };

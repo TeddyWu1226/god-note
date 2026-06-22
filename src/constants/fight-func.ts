@@ -104,7 +104,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     // 2. 更新生命值
     let damageTaken = damageOutput.totalDamage
     // 額外效果
-    if (outcome.isCrit && playerStore.hasStatus(ItemStatus.Block.name)) {
+    if (outcome.isCrit && !!playerStore.hasStatus(ItemStatus.Block.name)) {
         let blockMultiplier = 0.50;
         if (playerStore.checkSkillUniqueFields('格擋強化')) {
             blockMultiplier = 0.25;

@@ -4,7 +4,7 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
-import {MonsterActionParams, MonsterType} from "@/types";
+import {MonsterActionParams, MonsterRoundBehaviorParams, MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
@@ -52,7 +52,7 @@ export class AncientSpider extends MonsterModel {
         playerStore.addStatus(UnitStatus.SpiderStuck);
     }
 
-    override onRoundBehaviorHook({battleRound}) {
+    override onRoundBehaviorHook({battleRound}: MonsterRoundBehaviorParams) {
         if (isMultiple(battleRound, 5)) {
             this.addEffect(UsualStatus.Angry)
         }
@@ -93,7 +93,7 @@ export class Twilight extends MonsterModel {
         playerStore.removeItem(SpecialItem.PauseToken.name, -1);
     }
 
-    override onRoundBehaviorHook({battleRound}) {
+    override onRoundBehaviorHook() {
         if (this.hasStatus('燃燒') || this.isStuck()) {
             useFloatingMessage(
                 '阿...',
@@ -174,7 +174,7 @@ export class FrostFlameWyrm extends MonsterModel {
 
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.5)) {
-            playerStore.addStatus(UnitStatus.Burn);
+            playerStore.addStatus(ItemStatus.OnBurn);
             logStore.logger.add(`霜炎幼龍釋放了火焰，你被燒傷了！`);
         } else {
             playerStore.addStatus(UnitStatus.SlimeSlow);

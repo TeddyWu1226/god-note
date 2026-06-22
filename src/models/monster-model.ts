@@ -1,6 +1,6 @@
 import {
     MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams,
-    MonsterOnAttackedParams, logStoreType, BonusType
+    MonsterOnAttackedParams, logStoreType, BonusType, MonsterOnAttackHitParams, MonsterRoundBehaviorParams
 } from "@/types";
 import {genCustomStatus} from "@/utils/create";
 
@@ -233,7 +233,7 @@ export class MonsterModel implements MonsterType {
         return true
     }
 
-    onAttackHitHook(params: MonsterOnAttackParams & { damage: BattleOutcome }): void {
+    onAttackHitHook(params: MonsterOnAttackHitParams): void {
         if (typeof this.onAttackHit === 'function') {
             this.onAttackHit({
                 ...params
@@ -248,7 +248,7 @@ export class MonsterModel implements MonsterType {
     }
 
     //怪物在特定回合開始的獨特習性行為
-    onRoundBehaviorHook(params: MonsterActionParams & { battleRound: number }): void {
+    onRoundBehaviorHook(params: MonsterRoundBehaviorParams): void {
     }
 
 
@@ -262,7 +262,7 @@ export class MonsterModel implements MonsterType {
     /**
      * 執行怪物在特定回合開始的獨特習性行為
      */
-    triggerRoundBehavior(params: MonsterActionParams & { battleRound: number }) {
+    triggerRoundBehavior(params: MonsterRoundBehaviorParams) {
         if (this.hp <= 0) return;
         this.onRoundBehaviorHook(params);
     }

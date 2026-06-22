@@ -74,19 +74,19 @@ export const UnitStatus = {
     } as StatusEffect,
     Cold: {
         name: '寒冷',
-        icon: '🔵5',
+        icon: '🔵3',
         duration: 5,
-        description: '降低 5 點閃避值與命中值，可堆疊。當寒冷達一定程度後會額外造成凍傷效果,以及可能造成冰凍而無法行動',
+        description: '降低 %dodge% 點閃避值與命中值，可堆疊。當寒冷達一定程度後會額外造成凍傷效果,最終造成冰凍而無法行動',
         bonus: {
-            dodge: -5,
-            hit: -5
+            dodge: -3,
+            hit: -3
         }
     } as StatusEffect,
     Frostbite: {
         name: '凍傷',
         icon: '❄️',
         duration: 3,
-        description: '每回合扣除 20 點生命',
+        description: '每回合扣除 %value% 點生命',
         type: 'damage',
         value: 20
     } as StatusEffect,
@@ -100,19 +100,6 @@ export const UnitStatus = {
             adDefend: -10
         }
     } as StatusEffect,
-    WhiteAngry: {
-        name: '白色盛怒',
-        icon: '🐻‍❄️',
-        duration: 5,
-        description: '覆蓋了白色魔力外衣,不只防禦提升,攻擊爆擊率大幅提升',
-        isBuff: true,
-        bonus: {
-            critIncrease: 50,
-            critRate: 100,
-            adDefend: 15,
-            apDefend: 10
-        }
-    } as StatusEffect,
     Flying: {
         name: '飛行',
         icon: '🪽',
@@ -122,14 +109,6 @@ export const UnitStatus = {
         bonus: {
             dodge: 80
         }
-    } as StatusEffect,
-    Burn: {
-        name: '燒傷',
-        icon: '🔥',
-        duration: 4,
-        description: '每回合失去 10 點生命值',
-        type: 'damage',
-        value: 10
     } as StatusEffect,
     Bleed: {
         name: '流血',

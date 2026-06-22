@@ -2,9 +2,11 @@ import {MonsterModel} from "@/models/monster-model";
 import {WorldDefault} from "@/assets/const";
 import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
-import {checkProbability, isMultiple} from "@/utils/math";
+import {checkProbability} from "@/utils/math";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {applySkillDamage} from "@/constants/fight-func";
+import {ItemStatus} from "@/constants/status/item-status";
+import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
+import {MonsterOnAttackHitParams} from "@/types";
 
 
 /**
@@ -31,9 +33,8 @@ export class FrostSlime extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
-        playerStore.addStatus(UnitStatus.SlimeSlow);
-        logStore.logger.add(`寒氣降低了你的閃避。`);
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        playerGetColdStackEffects(playerStore)
     }
 }
 
@@ -42,8 +43,8 @@ export class IceBat extends MonsterModel {
         super({
             icon: '🦇',
             code: 'IceBat',
-            name: '寒冰蝙蝠',
-            description: '散發著冰冷微光的蝙蝠，會使被咬到的目標動作變遲緩',
+            name: '山地蝙蝠',
+            description: '散發著冰冷微光的蝙蝠，其銳利的牙齒可能造成寒冷',
             ad: 13,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -58,10 +59,9 @@ export class IceBat extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
         if (checkProbability(0.5)) {
-            playerStore.addStatus(UnitStatus.Blind);
-            logStore.logger.add(`你受到了寒氣侵襲，視線變得模糊(命中降低)。`);
+            playerGetColdStackEffects(playerStore)
         }
     }
 }
@@ -149,7 +149,7 @@ export class LavaSlime extends MonsterModel {
 
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.5)) {
-            playerStore.addStatus(UnitStatus.Burn);
+            playerStore.addStatus(ItemStatus.OnBurn);
             logStore.logger.add(`你被熔岩灼傷，進入燒傷狀態。`);
         }
     }
@@ -200,7 +200,7 @@ export class CrimsonSalamander extends MonsterModel {
 
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.4)) {
-            playerStore.addStatus(UnitStatus.Burn);
+            playerStore.addStatus(ItemStatus.OnBurn);
             logStore.logger.add(`你受到了火焰侵蝕而燒傷。`);
         }
     }

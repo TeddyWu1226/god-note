@@ -108,7 +108,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
     useBurningPotion: (params: SpecifyMonsterItemSkillParams) => {
         onCanUseInFight(params, () => {
             const {monster, playerStore, gameStateStore, callback} = params;
-            if (playerStore.hasStatus(UnitStatus.SpiderStuck.name)) {
+            if (!!playerStore.hasStatus(UnitStatus.SpiderStuck.name)) {
                 playerStore.removeStatus(UnitStatus.SpiderStuck.name);
                 useFullScreenEffect({
                     message: '🔥蜘蛛絲被燒斷🔥',
@@ -139,7 +139,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
     useUnPoisonPotion: (params: SpecifyMonsterItemSkillParams) => {
         onCanUseInFight(params, () => {
             const {playerStore, callback} = params;
-            if (playerStore.hasStatus('中毒')) {
+            if (!!playerStore.hasStatus('中毒')) {
                 playerStore.removeStatus('中毒');
                 useFullScreenEffect({
                     message: '中毒狀態已消除',
