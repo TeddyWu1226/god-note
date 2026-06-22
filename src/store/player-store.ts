@@ -1,12 +1,9 @@
 import {defineStore} from 'pinia';
 import {computed, nextTick, ref, watch} from 'vue';
-import type {Equipment, EquipmentType, ItemStackType, StatusEffect, UserType} from '@/types';
+import {BonusType, Equipment, EquipmentType, ItemStackType, StatusEffect, UserType} from '@/types';
 import {DEFAULT_USER_INFO} from '@/constants/default-const';
-import {create} from "@/utils/create";
+import {create, genCustomStatus} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
-import {UnitStatus} from "@/constants/status/unit-status";
-import {checkProbability} from "@/utils/math";
-import {ItemStatus} from "@/constants/status/item-status";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -423,34 +420,29 @@ export const usePlayerStore = defineStore('player-info', () => {
     /**
      * 添加或更新狀態
      */
-    const addStatus = (effect: StatusEffect) => {
-        // 特殊邏輯
+    const addStatus = (
+        effect: StatusEffect,
+        custom?: {
+            bonus?: BonusType,
+            value?: number,
+            duration?: number
+        }
+    ) => {
         // 1. 尋找現有狀態
         const existing = statusEffects.value.find(e => e.name === effect.name);
-        if (effect.name === UnitStatus.Cold.name && !hasStatus(ItemStatus.Warming.name)) {
-            if (existing) {
-                // 更新效果
-                existing.bonus.dodge -= 5
-                existing.bonus.hit -= 5
-                existing.duration = 5
-                existing.icon = existing.icon.replace(/\d+/, Math.abs(existing.bonus.dodge).toString())
-                existing.description = existing.description.replace(/\d+/, Math.abs(existing.bonus.dodge).toString())
-                console.log(existing.bonus.dodge)
-                if (existing.bonus.dodge < -30) {
-                    addStatus(UnitStatus.Frostbite)
-                }
-                if (existing.bonus.dodge < -70 && checkProbability(0.8)) {
-                    addStatus(UnitStatus.Frozen)
-                }
-            }
-        }
-
         if (existing) {
             // 刷新持續時間
             existing.duration = effect.duration;
         } else {
-            // 2. 存入新狀態時進行深拷貝 (避免引用污染)
-            statusEffects.value.push(create(effect));
+            statusEffects.value.push(
+                genCustomStatus({
+                        base: effect,
+                        bonus: custom?.bonus,
+                        value: custom?.value,
+                        duration: custom?.duration,
+                    }
+                )
+            )
         }
     };
     /**

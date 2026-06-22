@@ -8,7 +8,7 @@ import {MonsterOnAttackParams} from "@/types";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, getMonsterElement, notHitPlayer} from "@/utils/create";
+import {getMonsterElement, notHitPlayer} from "@/utils/create";
 
 export class Slime extends MonsterModel {
     constructor() {
@@ -112,7 +112,7 @@ export class StingerBee extends MonsterModel {
             icon: '🐝',
             name: '森林毒蜂',
             code: 'StingerBee',
-            description: '擁有致命的毒刺，一旦被刺中傷口劇痛不已',
+            description: '擁有致命的刺，一旦被刺中傷口劇痛不已',
             ad: 2,
             critIncrease: 100,
             critRate: 0,
@@ -132,8 +132,8 @@ export class StingerBee extends MonsterModel {
 
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.7)) {
-            playerStore.addStatus(UnitStatus.BeePoison);
-            logStore.logger.add(`你中毒了。`);
+            playerStore.addStatus(UnitStatus.Paralysis);
+            logStore.logger.add(`你麻痹了。`);
         }
     }
 }
@@ -205,7 +205,12 @@ export class SmallSpider extends MonsterModel {
             color: 'white',
             duration: 1500
         });
-        playerStore.addStatus(UnitStatus.SmallSpiderStuck);
+        playerStore.addStatus(
+            UnitStatus.SpiderStuck,
+            {
+                duration: 2
+            }
+        );
     }
 }
 
@@ -215,7 +220,7 @@ export class PoisonSlime extends MonsterModel {
             icon: '🟣',
             code: 'PoisonSlime',
             name: '毒史萊姆',
-            description: '受到毒區影響變異的史萊姆，受到攻擊時匯兌攻擊者噴射毒液，在進入警戒的時候會全身硬化。',
+            description: '受到毒區影響變異的史萊姆，在進入警戒的時候會用毒液裝甲硬化。在硬化期間受到攻擊時會對攻擊者噴濺毒液',
             ad: 6,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -233,21 +238,14 @@ export class PoisonSlime extends MonsterModel {
     }
 
     override onAttackedHook({playerStore, logStore}: any) {
-        if (checkProbability(0.7)) {
-            playerStore.addStatus(UnitStatus.ScorpionPoison);
+        if (this.hasStatus(UnitStatus.PoisonDefend.name)) {
+            playerStore.addStatus(UnitStatus.Poison);
             logStore.logger.add(`你中毒了。`);
         }
     }
 
     override onStartHook() {
-        this.addEffect(
-            genCustomStatus(
-                {
-                    base: UsualStatus.AdDefendInCrease,
-                    bonus: {adDefend: 25}
-                }
-            )
-        )
+        this.addEffect(UnitStatus.PoisonDefend)
     }
 }
 

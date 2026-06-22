@@ -4,7 +4,7 @@ import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {genCustomStatus, getMonsterElement} from "@/utils/create";
+import {getMonsterElement} from "@/utils/create";
 import {SkillStatus} from "@/constants/status/skill-status";
 
 
@@ -235,10 +235,7 @@ export class FocusBuff extends SkillModel {
         const playerStore = params.playerStore;
         if (!playerStore) return false;
 
-        const buff = genCustomStatus({
-            base: SkillStatus.Focus,
-        });
-        playerStore.addStatus(buff);
+        playerStore.addStatus(SkillStatus.Focus);
         useFullScreenEffect({
             message: this.name,
             color: '#f1c40f',
@@ -270,10 +267,7 @@ export class WillBuff extends SkillModel {
     protected execute({playerStore}: SkillParams): boolean {
         if (!playerStore) return false;
 
-        const buff = genCustomStatus({
-            base: SkillStatus.Will,
-        });
-        playerStore.addStatus(buff);
+        playerStore.addStatus(SkillStatus.Will);
         useFullScreenEffect({
             message: this.name,
             color: '#f1c40f',
@@ -305,10 +299,7 @@ export class FightBuff extends SkillModel {
     protected execute({playerStore}: SkillParams): boolean {
         if (!playerStore) return false;
 
-        const buff = genCustomStatus({
-            base: SkillStatus.Fight,
-        });
-        playerStore.addStatus(buff);
+        playerStore.addStatus(SkillStatus.Fight);
         useFullScreenEffect({
             message: this.name,
             color: '#f1c40f',

@@ -101,7 +101,7 @@ export class ChaosHorror extends MonsterModel {
 
     override onAttackHitHook({playerStore, logStore}: any) {
         if (checkProbability(0.3)) {
-            playerStore.addStatus(UnitStatus.MandragoraScared); // 使用驚嚇 (攻擊減少 50%)
+            playerStore.addStatus(UnitStatus.Scared); // 使用驚嚇 (攻擊減少 50%)
             logStore.logger.add(`👿 你被混沌恐懼籠罩，陷入驚嚇狀態！`);
         }
     }

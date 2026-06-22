@@ -5,9 +5,9 @@ export const UnitStatus = {
         name: '黏液阻饒',
         icon: '🟢',
         duration: 4,
-        description: '降低 30 點 閃避值',
+        description: '降低 20 點閃避值',
         bonus: {
-            dodge: -30
+            dodge: -20
         }
     } as StatusEffect,
     WoodStuck: {
@@ -27,30 +27,33 @@ export const UnitStatus = {
             runIncrease: 150
         }
     } as StatusEffect,
-    SlimePoison: {
+    PoisonDefend: {
+        name: '劇毒裝甲',
+        icon: '🛡️',
+        duration: 1,
+        isBuff: true,
+        description: `大幅提升自身 %adDefend% 防禦, 並對攻擊者附加中毒效果`,
+        bonus: {
+            adDefend: 25
+        }
+    } as StatusEffect,
+    Poison: {
         name: '中毒',
         icon: '🤢',
         duration: 4,
-        description: '每回合失去 5 點生命值',
+        description: '每回合失去 %value% 點生命值',
         type: 'damage',
         value: 5
     } as StatusEffect,
-    MushroomManPoison: {
-        name: '麻痺',
-        icon: '🦠',
-        duration: 3,
-        description: '降低 50 點命中值',
+    Paralysis: {
+        name: '麻痹',
+        icon: '😩',
+        duration: 5,
+        description: '降低 %adIncrease%% 輸出',
         bonus: {
-            hit: -50
-        },
-    } as StatusEffect,
-    BeePoison: {
-        name: '中毒',
-        icon: '🤢',
-        duration: 10,
-        description: '每回合失去 3 點生命值',
-        type: 'damage',
-        value: 3
+            adIncrease: -20,
+            apIncrease: -20,
+        }
     } as StatusEffect,
     SpiderStuck: {
         name: '蜘蛛綑綁',
@@ -59,33 +62,7 @@ export const UnitStatus = {
         description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
         type: 'stuck',
     } as StatusEffect,
-    SmallSpiderStuck: {
-        name: '蜘蛛綑綁',
-        icon: '🕸',
-        duration: 2,
-        description: '你被堅韌但易燃的蜘蛛絲綑綁了,任何行動都會失效',
-        type: 'stuck',
-    } as StatusEffect,
-    SpiderHunter: {
-        name: '攻擊獵物',
-        icon: '⚠️',
-        duration: 1,
-        isBuff: true,
-        description: '蜘蛛對於被綑綁的敵人可以造成百分百爆擊',
-        bonus: {
-            critRate: 100
-        }
-    } as StatusEffect,
-    EvilWoodManCurse: {
-        name: '魔樹詛咒',
-        icon: '🪵',
-        duration: -1,
-        description: '被魔樹詛咒的單位無法逃跑以及閃避',
-        bonus: {
-            dodge: -100000
-        }
-    } as StatusEffect,
-    MandragoraScared: {
+    Scared: {
         name: '驚嚇',
         icon: '😱',
         duration: 3,
@@ -93,43 +70,6 @@ export const UnitStatus = {
         bonus: {
             adIncrease: -50,
             apIncrease: -50
-        }
-    } as StatusEffect,
-    ScorpionPoison: {
-        name: '劇毒',
-        icon: '☣︎',
-        duration: 5,
-        description: '每回合失去 5 點生命值',
-        type: 'damage',
-        value: 5
-    } as StatusEffect,
-    SmallScorpionPoison: {
-        name: '劇毒',
-        icon: '☣︎',
-        duration: 10,
-        description: '每回合失去 3 點生命值,如果連續中毒,傷害會疊加並刷新效果',
-        type: 'damage',
-        value: 3
-    } as StatusEffect,
-    MummyRancid: {
-        name: '腐臭',
-        icon: '🤮︎',
-        duration: 5,
-        description: '降低 5 點防禦',
-        bonus: {
-            adDefend: -5
-        }
-    } as StatusEffect,
-    EatMummy: {
-        name: '力量盛宴',
-        icon: '🍽️',
-        duration: 8,
-        description: '當倒數計時結束時,他會吸收場上所有木乃伊轉化為自身血量',
-        isBuff: true,
-        bonus: {
-            ad: -10,
-            adDefend: 20,
-            apDefend: 10
         }
     } as StatusEffect,
     Cold: {

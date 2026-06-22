@@ -1,7 +1,8 @@
 import {
     MonsterType, StatusEffect, DropEntry, BattleOutcome, MonsterActionParams, MonsterOnAttackParams,
-    MonsterOnAttackedParams, logStoreType
+    MonsterOnAttackedParams, logStoreType, BonusType
 } from "@/types";
+import {genCustomStatus} from "@/utils/create";
 
 
 export class MonsterModel implements MonsterType {
@@ -144,15 +145,25 @@ export class MonsterModel implements MonsterType {
     /**
      * 施加狀態效果
      */
-    addEffect(effect: StatusEffect, logStore?: logStoreType) {
-        if (logStore) {
-            logStore.logger.add(`${this.name} 受到 [${effect.name}] 效果。`);
-        }
+    addEffect(effect: StatusEffect,
+              custom?: {
+                  bonus?: BonusType,
+                  value?: number,
+                  duration?: number
+              }) {
         const existingIdx = this.status.findIndex(e => e.name === effect.name);
         if (existingIdx > -1) {
             this.status[existingIdx] = effect;
         } else {
-            this.status.push(effect);
+            this.status.push(
+                genCustomStatus({
+                        base: effect,
+                        bonus: custom?.bonus,
+                        value: custom?.value,
+                        duration: custom?.duration,
+                    }
+                )
+            );
         }
     }
 

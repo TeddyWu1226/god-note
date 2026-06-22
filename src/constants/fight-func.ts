@@ -3,7 +3,7 @@ import {BattleOutcome, DamageResult, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
-import {genCustomStatus, getRandomItemByWeight, notHitPlayer} from "@/utils/create";
+import {getRandomItemByWeight, notHitPlayer} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -114,8 +114,8 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
 
         // 反抗之心效果：完美格擋成功時，獲得下一回合 20% 增傷
         if (playerStore.hasSkill('HeartOfRebellion')) {
-            playerStore.addStatus(genCustomStatus({
-                base: {
+            playerStore.addStatus(
+                {
                     name: '反抗之心',
                     icon: '⚔️',
                     duration: 2,
@@ -125,9 +125,8 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
                         adIncrease: 20,
                         apIncrease: 20
                     }
-                },
-                duration: 2
-            }));
+                }
+            );
             logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
         }
     }

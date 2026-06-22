@@ -3,7 +3,7 @@ import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, getMonsterElement, Sleep} from "@/utils/create";
+import {getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 

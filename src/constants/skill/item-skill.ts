@@ -6,12 +6,10 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {Boss} from "../monsters/monster-info/99-boss-info";
 import {useSaveStore} from "@/store/save-store";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import EvnStatus from "@/constants/status/evn-status";
 import {useCardStatusEffect} from "@/components/RoomLayout/comps/useCardStatusEffect";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {genCustomStatus, getMonsterElement} from "@/utils/create";
-import {useLogStore} from "@/store/log-store";
+import {getMonsterElement} from "@/utils/create";
 
 const cantUse = () => {
     showEffect(
@@ -120,7 +118,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
                 return
             }
             if (monster) {
-                monster.addEffect(genCustomStatus({base: ItemStatus.OnBurn}), useLogStore())
+                monster.addEffect(ItemStatus.OnBurn)
                 const monsterElement = getMonsterElement(monster.id)
                 if (monsterElement) {
                     useCardStatusEffect({
@@ -141,9 +139,8 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
     useUnPoisonPotion: (params: SpecifyMonsterItemSkillParams) => {
         onCanUseInFight(params, () => {
             const {playerStore, callback} = params;
-            if (playerStore.hasStatus('中毒') || playerStore.hasStatus('劇毒')) {
+            if (playerStore.hasStatus('中毒')) {
                 playerStore.removeStatus('中毒');
-                playerStore.removeStatus('劇毒');
                 useFullScreenEffect({
                     message: '中毒狀態已消除',
                     color: 'green',

@@ -1,5 +1,4 @@
 import {MonsterModel} from "@/models/monster-model";
-import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
@@ -8,7 +7,7 @@ import {checkProbability, isMultiple} from "@/utils/math";
 import {MonsterActionParams, MonsterType} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
-import {genCustomStatus, getMonsterElement} from "@/utils/create";
+import {getMonsterElement} from "@/utils/create";
 import {ItemStatus} from "@/constants/status/item-status";
 
 /**
@@ -138,23 +137,14 @@ export class Twilight extends MonsterModel {
                     }
                 );
                 param.playerStore.addStatus(
-                    genCustomStatus(
-                        {
-                            base: ItemStatus.OnBurn,
-                            value: 10
-                        }
-                    )
+                    ItemStatus.OnBurn,
+                    {
+                        value: 10
+                    }
                 )
             }
         }
-        this.addEffect(
-            genCustomStatus(
-                {
-                    base: UnitStatus.SpeedDance,
-                    bonus: bonus
-                }
-            )
-        )
+        this.addEffect(UnitStatus.SpeedDance, {bonus: bonus})
     }
 }
 
