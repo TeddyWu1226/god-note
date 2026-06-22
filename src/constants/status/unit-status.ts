@@ -76,19 +76,19 @@ export const UnitStatus = {
         name: '寒冷',
         icon: '🔵3',
         duration: 5,
-        description: '降低 %dodge% 點閃避值與命中值，可堆疊。當寒冷達一定程度後會額外造成凍傷效果,最終造成冰凍而無法行動',
+        description: '降低 %dodge% 點閃避值與命中值，可堆疊。當寒冷達一定程度，再次受到寒冷時會被冰凍而無法行動',
         bonus: {
-            dodge: -3,
-            hit: -3
+            dodge: 0,
+            hit: 0
         }
     } as StatusEffect,
     Frostbite: {
         name: '凍傷',
         icon: '❄️',
-        duration: 3,
+        duration: 2,
         description: '每回合扣除 %value% 點生命',
         type: 'damage',
-        value: 20
+        value: 10
     } as StatusEffect,
     Frozen: {
         name: '冰凍',

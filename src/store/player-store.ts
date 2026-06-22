@@ -429,19 +429,20 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
     ) => {
         // 1. 尋找現有狀態
-        const existing = statusEffects.value.find(e => e.name === effect.name);
-        if (existing) {
-            // 刷新持續時間
-            existing.duration = effect.duration;
+        const existingIndex = statusEffects.value.findIndex(e => e.name === effect.name);
+        const newStat = genCustomStatus({
+                base: effect,
+                bonus: custom?.bonus,
+                value: custom?.value,
+                duration: custom?.duration,
+            }
+        )
+        if (existingIndex != -1) {
+            // 刷新
+            statusEffects[existingIndex] = newStat
         } else {
             statusEffects.value.push(
-                genCustomStatus({
-                        base: effect,
-                        bonus: custom?.bonus,
-                        value: custom?.value,
-                        duration: custom?.duration,
-                    }
-                )
+                newStat
             )
         }
     };

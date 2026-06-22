@@ -19,9 +19,24 @@ const trackerStore = useTrackerStore()
 const saveStore = useSaveStore()
 const isClose = ref(true);
 
+// 跳關
+const selectStage = (stageVal: number) => {
+  playerStore.healFull()
+  trackerStore.init(false)
+
+  // 更新最高通關進度
+  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage)
+
+  gameStateStore.currentStage = stageVal
+  gameStateStore.stageDays = 0
+  gameStateStore.isBattleWon = false
+  gameStateStore.setRoom(RoomEnum.Rest.value)
+  gameStateStore.nextRooms = []
+}
+
 const onTest = () => {
-  playerStore.gainExp({amount: 800})
-  gameStateStore.stageDays = 95
+  playerStore.gainExp({amount: 900})
+  selectStage(2)
   // playerStore.addSkill(Skills.FireBall.id)
   // playerStore.addSkill(Skills.MagicDefend.id)
   // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)

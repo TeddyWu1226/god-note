@@ -111,7 +111,7 @@ export class FrostGolem extends MonsterModel {
     }
 
     override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
-        playerGetColdStackEffects(playerStore, -6)
+        playerGetColdStackEffects(playerStore, -4)
     }
 }
 

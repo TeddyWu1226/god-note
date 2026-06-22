@@ -187,8 +187,9 @@ export const genCustomStatus = (source: CustomStatus): StatusEffect => {
     // 更新回合數 (優先順序：傳入的 round > 基礎模板的 duration)
     newStatus.duration = source.duration ?? newStatus.duration
     // 更新 value 值
-    newStatus.value = source.value;
-
+    if (source.value) {
+        newStatus.value = source.value;
+    }
     // 這裡會將 source.bonus 的內容合併到 newStatus.bonus 中
     if (source.bonus) {
         newStatus.bonus = {
