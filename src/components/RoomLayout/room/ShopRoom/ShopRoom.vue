@@ -13,7 +13,7 @@ import DwarfBlacksmith from "./comps/DwarfBlacksmith.vue";
 // import BardPanel from "./comps/BardPanel.vue";
 
 const gameStateStore = useGameStateStore();
-const {generateGoods} = useShopLogic(gameStateStore.currentStage);
+const {generateGoods} = useShopLogic(gameStateStore.currentStage, gameStateStore.days);
 
 const itemList = ref([]);
 const currentView = ref<string>('camp'); // 'camp' 或 staffList 內定義的人員 ID

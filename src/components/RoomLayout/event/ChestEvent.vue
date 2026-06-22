@@ -26,7 +26,7 @@ const isOpening = ref(false);
 const resultType = ref<'treasure' | 'trap' | 'mimic' | 'equip' | null>(null);
 const resultMsg = ref("這個地方剩下一個空空如也的寶箱。");
 
-const {getEquipWeightedQuality} = useShopLogic(gameStateStore.currentStage);
+const {getEquipWeightedQuality} = useShopLogic(gameStateStore.currentStage, gameStateStore.days);
 
 const onLeave = () => {
   gameStateStore.eventAction = 2;

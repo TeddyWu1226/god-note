@@ -21,7 +21,7 @@ const sortByQuality = <T extends { quality?: number; name: string }>(arr: T[]) =
         })
     );
 
-export function useShopLogic(currentStage: number) {
+export function useShopLogic(currentStage: number, days: number) {
     /**
      * 裝備品質機率分佈演算法
      * @returns 回傳品質 Value (0 - 5)
@@ -72,12 +72,12 @@ export function useShopLogic(currentStage: number) {
     const getUsableWeightedQuality = (): number => {
         const roll = Math.random() * 100;
 
-        if (currentStage === 1 || currentStage === 2) {
+        if (currentStage === 1) {
             if (roll < 50) return QualityEnum.Common.value;
             return QualityEnum.Tattered.value;
         }
 
-        if (currentStage === 3) {
+        if (currentStage === 2 || currentStage === 3) {
             if (roll < 33) return QualityEnum.Tattered.value;
             if (roll < 66) return QualityEnum.Common.value;
             return QualityEnum.Fine.value;
@@ -132,14 +132,14 @@ export function useShopLogic(currentStage: number) {
 
     /**
      * 價格計算邏輯
-     * 隨層數進行通膨，且 Unique 品質物品價格呈指數成長
+     * 隨days進行通膨，且 Unique 品質物品價格呈指數成長
      */
     const calculatePrice = (quality: number, usePrice: number[], stack = false) => {
 
         const base = usePrice[quality] || 50;
 
-        // 隨層數通膨：每層增加 15% 的價格
-        const inflationFactor = currentStage > 1 ? currentStage * 0.15 : 0;
+        // 隨days通膨：每10天 + 1%
+        const inflationFactor = currentStage > 1 ? Math.floor(days / 10) * 0.01 : 0;
         const stageMultiplier = 1 + inflationFactor;
 
 

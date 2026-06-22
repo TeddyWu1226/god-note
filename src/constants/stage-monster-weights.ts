@@ -39,8 +39,8 @@ export const MistyForestWeights4: Record<string, number> = {
  */
 export const RedMountainWeights1: Record<string, number> = {
     FrostSlime: 40,
-    IceBat: 20,
-    FrostGolem: 5
+    IceBat: 40,
+    FrostGolem: 1
 };
 
 export const RedMountainWeights2: Record<string, number> = {
