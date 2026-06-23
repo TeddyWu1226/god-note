@@ -3,7 +3,7 @@ import {nextTick, ref, watch} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
-import {EVOLUTION_RULES} from "@/constants/skill/learned-skill/evolution-rule";
+import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
 import {SkillModel} from "@/models/skill-model";
 import {ElMessage} from "element-plus";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
@@ -37,32 +37,39 @@ const getRarityName = (rarity: string) => {
 };
 
 const getEvolutionText = (skillId: string) => {
-  const rule = EVOLUTION_RULES[skillId];
-  if (!rule) return '';
+  const node = SKILL_TREE_NODES[skillId];
+  if (!node) return '';
   const getSkillName = (id: string) => SKILL_TEMPLATES[id]?.name || id;
 
-  if (rule.baseSkillId && rule.fuseSkillIds && rule.fuseSkillIds.length > 0) {
-    const ingredients = [rule.baseSkillId, ...rule.fuseSkillIds].map(getSkillName).join(' + ');
-    return `${ingredients}`;
-  } else if (rule.fuseSkillIds && rule.fuseSkillIds.length > 0) {
-    const ingredients = rule.fuseSkillIds.map(getSkillName).join(' + ');
-    return `${ingredients}`;
-  } else if (rule.baseSkillId) {
-    return `${getSkillName(rule.baseSkillId)}`;
+  if (node.evolvesFrom && node.fusesFrom) {
+    const ingredients = [...node.evolvesFrom, ...node.fusesFrom].map(getSkillName).join(' + ');
+    return `進階/融合自：${ingredients}`;
+  } else if (node.fusesFrom) {
+    const ingredients = node.fusesFrom.map(getSkillName).join(' + ');
+    return `融合自：${ingredients}`;
+  } else if (node.evolvesFrom) {
+    const baseNames = node.evolvesFrom.map(getSkillName).join(' 或 ');
+    return `進化自：${baseNames}`;
   }
   return '';
 };
 
 // 遞迴檢查某技能是否進化自/衍生自另一技能
 const isEvolvedFrom = (evolvedId: string, baseId: string): boolean => {
-  const rule = EVOLUTION_RULES[evolvedId];
-  if (!rule) return false;
-  if (rule.baseSkillId === baseId) return true;
-  if (rule.fuseSkillIds?.includes(baseId)) return true;
-  if (rule.baseSkillId && isEvolvedFrom(rule.baseSkillId, baseId)) return true;
-  if (rule.fuseSkillIds) {
-    for (const fuseId of rule.fuseSkillIds) {
-      if (isEvolvedFrom(fuseId, baseId)) return true;
+  const node = SKILL_TREE_NODES[evolvedId];
+  if (!node) return false;
+  
+  if (node.evolvesFrom?.includes(baseId)) return true;
+  if (node.fusesFrom?.includes(baseId)) return true;
+  
+  if (node.evolvesFrom) {
+    for (const parentId of node.evolvesFrom) {
+      if (isEvolvedFrom(parentId, baseId)) return true;
+    }
+  }
+  if (node.fusesFrom) {
+    for (const parentId of node.fusesFrom) {
+      if (isEvolvedFrom(parentId, baseId)) return true;
     }
   }
   return false;
@@ -70,31 +77,37 @@ const isEvolvedFrom = (evolvedId: string, baseId: string): boolean => {
 
 const openLearnSkill = () => {
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
-  const learnSillUniqueSet = new Set(
-      playerStore.info.skills.flatMap(skill => skill.uniqueFields || [])
-  );
   const trackerStore = useTrackerStore();
 
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
     // 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
 
-    // 1. 檢查可學習條件 (如果是進化技能)
-    const evoRule = EVOLUTION_RULES[id];
-    if (evoRule) {
-      const isEligible = evoRule.checkEligible(playerStore, trackerStore);
+    // 1. 檢查額外可學習條件
+    const node = SKILL_TREE_NODES[id];
+    if (node?.checkEligible) {
+      const isEligible = node.checkEligible(playerStore, trackerStore);
       if (!isEligible) return false;
     }
 
-    // 2. 玩家是否有學習相同[唯一字段]的技能
-    const uniqueFields = SKILL_TEMPLATES[id].uniqueFields;
-    if (uniqueFields) {
-      const hasSameUnique = uniqueFields.some(field => learnSillUniqueSet.has(field));
-      if (hasSameUnique) return false;
+    // 2. 流派排他性 (Path Exclusivity)
+    const node = SKILL_TREE_NODES[id];
+    if (node) {
+      const hasSamePathSkill = playerStore.info.skills.some((s: any) => {
+        const ownedNode = SKILL_TREE_NODES[s.id];
+        if (ownedNode && ownedNode.pathId === node.pathId) {
+          // 如果已擁有的技能是此進化技能的來源之一，則不視為排他衝突（因為會被替換）
+          const isSource = node.evolvesFrom?.includes(s.id) || node.fusesFrom?.includes(s.id);
+          return !isSource;
+        }
+        return false;
+      });
+      if (hasSamePathSkill) return false;
     }
 
     // 3. 玩家不能已經擁有此技能的進化後版本
     const hasEvolvedVersion = currentSkillIds.some(ownedId => isEvolvedFrom(ownedId, id));
+    console.log('hasEvolvedVersion', id, hasEvolvedVersion)
     return !hasEvolvedVersion;
   });
 
@@ -147,28 +160,34 @@ const selectSkill = (skill: any) => {
   }
 
   // 檢查是否為進化/融合技能
-  const evoRule = EVOLUTION_RULES[skill.id];
-  if (evoRule) {
-    // 進化/融合邏輯
-    const index = playerStore.info.skills.findIndex((s: any) => s.id === evoRule.baseSkillId);
-    if (index > -1) {
-      // 1. 替換基礎技能
-      playerStore.info.skills[index] = skill;
-
-      // 2. 如果是融合，一併從技能欄中清除
-      if (evoRule.fuseSkillIds) {
-        playerStore.info.skills = playerStore.info.skills.filter((s: any) =>
-            !evoRule.fuseSkillIds!.includes(s.id)
-        );
+  const node = SKILL_TREE_NODES[skill.id];
+  if (node && (node.evolvesFrom || node.fusesFrom)) {
+    // 1. 進化替換邏輯：替換 evolvesFrom 來源技能
+    if (node.evolvesFrom) {
+      const index = playerStore.info.skills.findIndex((s: any) => node.evolvesFrom!.includes(s.id));
+      if (index > -1) {
+        playerStore.info.skills[index] = skill;
       }
-
-      // 3. 扣減點數與提示
-      playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
-      ElMessage.success(`技能進化！成功獲得：${skill.name}！`);
-      isShowLearnSkill.value = false;
-    } else {
-      ElMessage.error('找不到進化所需的基礎技能，無法學習！');
     }
+
+    // 2. 融合消耗邏輯：移除原料技能，並用新技能替換其中一個原料格
+    if (node.fusesFrom) {
+      const replacementIndex = playerStore.info.skills.findIndex((s: any) => node.fusesFrom!.includes(s.id));
+      if (replacementIndex > -1) {
+        playerStore.info.skills[replacementIndex] = skill;
+        playerStore.info.skills = playerStore.info.skills.filter((s: any, idx: number) => {
+          if (idx === replacementIndex) return true; // 保留已替換為新技能的格
+          return !node.fusesFrom!.includes(s.id);    // 移除其他原料技能
+        });
+      } else {
+        playerStore.info.skills.push(skill);
+      }
+    }
+
+    // 3. 扣減點數與提示
+    playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
+    ElMessage.success(`技能進化！成功獲得：${skill.name}！`);
+    isShowLearnSkill.value = false;
     return;
   }
 

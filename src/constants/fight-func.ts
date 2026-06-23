@@ -104,7 +104,7 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     // 額外效果
     if (outcome.isCrit && !!playerStore.hasStatus(ItemStatus.Block.name)) {
         let blockMultiplier = 0.50;
-        if (playerStore.checkSkillUniqueFields('格檔強化')) {
+        if (playerStore.checkSkillPath('block_boost')) {
             console.log('有用喔')
             blockMultiplier = 0.25;
         }

@@ -157,9 +157,9 @@ export class FireBat extends MonsterModel {
             description: '火紅色的蝙蝠，動作極其敏捷',
             ad: 14,
             critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
+            critRate: 50,
             adDefend: 0,
-            dodge: 45,
+            dodge: 50,
             hit: 15,
             hp: 70,
             hpLimit: 70,
@@ -191,10 +191,9 @@ export class CrimsonSalamander extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
-        if (checkProbability(0.4)) {
-            playerStore.addStatus(ItemStatus.OnBurn);
-            logStore.logger.add(`你受到了火焰侵蝕而燒傷。`);
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        if (checkProbability(0.6)) {
+            playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
         }
     }
 }
@@ -221,14 +220,11 @@ export class ObsidianGolem extends MonsterModel {
         });
     }
 
-    override onAttackedHook({playerStore, logStore, damage}: any) {
-        if (damage && damage.totalDamage > 0 && checkProbability(0.5)) {
+    override onAttackedHook({playerStore, logStore, damage}: MonsterOnAttackedParams) {
+        if (damage && damage.totalDamage > 0) {
             const reflect = Math.round(damage.totalDamage * 0.2);
             if (reflect > 0) {
-                const result = playerStore.takeDamage(reflect);
-                if (result.shieldAbsorbed > 0) {
-                    logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
-                }
+                playerStore.takeDamage(reflect);
                 logStore.logger.add(`黑曜石魔像的硬殼反彈了 ${reflect} 點傷害給玩家！`);
             }
         }

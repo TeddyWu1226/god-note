@@ -162,23 +162,36 @@ export class FrostGiant extends MonsterModel {
             ad: 32,
             critIncrease: 200,
             critRate: 15,
-            adDefend: 18,
-            dodge: 10,
+            adDefend: 50,
+            dodge: 0,
             hit: 40,
-            hp: 650,
+            hp: 10000,
             hpLimit: 650,
-            level: 10,
+            level: 15,
             dropGold: 400
         });
     }
 
     override onStartHook() {
-        useEpicSubtitle("「復仇...復仇！！！」", 4000);
+        useFloatingMessage(
+            '復仇...復仇!',
+            getMonsterElement(this.id),
+            {
+                duration: 1000,
+                color: 'red'
+            }
+        );
     }
 
-    override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {
+    override onRoundBehaviorHook({playerStore, battleRound}: MonsterRoundBehaviorParams) {
         playerGetColdStackEffects(playerStore, -6)
-        logStore.logger.add(`${this.name}砸下寒冰，你感受到刺骨的寒冷！`);
+        if (battleRound >= 10) {
+            this.hp = 0
+        }
+    }
+
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        playerGetColdStackEffects(playerStore, -6)
     }
 }
 

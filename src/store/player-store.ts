@@ -7,6 +7,7 @@ import {useLogStore} from "@/store/log-store";
 import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
+import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
 
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
@@ -593,15 +594,12 @@ export const usePlayerStore = defineStore('player-info', () => {
     }
 
 
-    // 檢查有無該關聯字段的相關技能
-    const checkSkillUniqueFields = (uniqueField: string) => {
-        console.log('info.value.skills', info.value.skills)
-        console.log('有此獨特', info.value.skills?.some((s: any) =>
-            s.uniqueFields?.includes(uniqueField)
-        ))
-        return info.value.skills?.some((s: any) =>
-            s.uniqueFields?.includes(uniqueField)
-        );
+    // 檢查有無該唯一流派的相關技能
+    const checkSkillPath = (pathId: string): boolean => {
+        return info.value.skills?.some((s: any) => {
+            const node = SKILL_TREE_NODES[s.id];
+            return node && node.pathId === pathId;
+        });
     }
     /**
      * 技能熟練度
@@ -738,7 +736,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         gainItem, hasItem, removeItem,
         addGold,
         addStatus, hasStatus, removeStatus,
-        addSkill, removeSkill, replaceSkill, hasSkill, checkSkillUniqueFields,
+        addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
         gainExp, allocateStatPoint, takeDamage
