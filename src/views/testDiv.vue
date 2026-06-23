@@ -33,7 +33,9 @@ const selectStage = (stageVal: number) => {
   gameStateStore.setRoom(RoomEnum.Rest.value)
   gameStateStore.nextRooms = []
 }
-
+const onLevelUp = () => {
+  playerStore.gainExp({amount: 900})
+}
 const onTest = () => {
   playerStore.gainExp({amount: 900})
   selectStage(2)
@@ -78,6 +80,7 @@ const onSave = () => {
       <el-button @click="heal">回血</el-button>
       <el-button @click="setRoom">房間</el-button>
       <el-button @click="onTest">作弊</el-button>
+      <el-button @click="onLevelUp">升等</el-button>
       <el-button @click="onSave">存檔</el-button>
       <el-collapse>
         <el-collapse-item title="回合環境參數">

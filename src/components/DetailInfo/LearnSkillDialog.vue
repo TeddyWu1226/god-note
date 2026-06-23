@@ -91,7 +91,6 @@ const openLearnSkill = () => {
     }
 
     // 2. 流派排他性 (Path Exclusivity)
-    const node = SKILL_TREE_NODES[id];
     if (node) {
       const hasSamePathSkill = playerStore.info.skills.some((s: any) => {
         const ownedNode = SKILL_TREE_NODES[s.id];
@@ -107,7 +106,6 @@ const openLearnSkill = () => {
 
     // 3. 玩家不能已經擁有此技能的進化後版本
     const hasEvolvedVersion = currentSkillIds.some(ownedId => isEvolvedFrom(ownedId, id));
-    console.log('hasEvolvedVersion', id, hasEvolvedVersion)
     return !hasEvolvedVersion;
   });
 

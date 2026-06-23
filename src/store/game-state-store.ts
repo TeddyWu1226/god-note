@@ -148,6 +148,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         currentStage.value = stageNum;
         isBattleWon.value = false;
         currentEnemy.value = [];
+        switchEnemy.value = [];
+        nextRooms.value = [];
         currentEventType.value = null;
         battleRound.value = 1;
         playerActionPoints.value = 0;
