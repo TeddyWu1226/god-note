@@ -223,23 +223,24 @@ export class ContinuousSwordPoint extends SkillModel {
 
     chance = 25
 
-    description(): string {
-        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 5 點，持續 3 回合）。`;
+    getValue(playerStore: PlayerStoreType): number {
+        return 5 + Math.floor(playerStore.info.level * 0.2)
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 ${this.getValue(playerStore)} (5+0.2*等級) 點，持續 3 回合）。`;
     }
 
     protected execute(): boolean {
         return true;
     }
 
-    override onPlayerAttackHit({monster}: SkillOnPlayerAttackHitParams) {
+    override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
         if (checkProbability((this.chance / 100))) {
             const logStore = useLogStore();
-            monster.addEffect(UnitStatus.ArmorBreak);
+            monster.addEffect(UnitStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
             logStore.logger.add(` ${monster.name} 陷入破甲狀態！`);
-            const el = getMonsterElement(monster.id);
-            if (el) {
-                useFloatingMessage(`破甲`, el, {color: 'red'});
-            }
+            useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         }
     }
 }

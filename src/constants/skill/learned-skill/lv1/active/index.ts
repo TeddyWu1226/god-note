@@ -127,7 +127,7 @@ export class Thrust extends SkillModel {
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `蓄力向前刺擊，造成較高的${ColorText.ad(dmg)}，但降低 30% 命中率。`;
+        return `蓄力向前刺擊，造成較高的${ColorText.ad(dmg)}，但降低此招 20 命中值。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -139,7 +139,7 @@ export class Thrust extends SkillModel {
 
         const adjustedAttacker = {
             ...playerStore.finalStats,
-            hit: (playerStore.finalStats.hit || 0) - 30
+            hit: (playerStore.finalStats.hit || 0) - 20
         } as any;
 
         monster.lastDamageResult = applySkillDamage(

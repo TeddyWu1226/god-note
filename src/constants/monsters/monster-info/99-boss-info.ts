@@ -4,7 +4,13 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
-import {MonsterActionParams, MonsterOnAttackHitParams, MonsterRoundBehaviorParams, MonsterType} from "@/types";
+import {
+    MonsterActionParams,
+    MonsterOnAttackHitParams,
+    MonsterOnAttackParams,
+    MonsterRoundBehaviorParams,
+    MonsterType
+} from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
@@ -159,22 +165,23 @@ export class FrostGiant extends MonsterModel {
             name: '冰凍的巨人',
             description: '被永久冰封在山脈深處的遠古巨人，揮舞著巨大的寒冰錘。',
             class: 'boss big',
-            ad: 32,
+            ad: 25,
             critIncrease: 200,
-            critRate: 15,
+            critRate: 0,
             adDefend: 50,
             dodge: 0,
-            hit: 40,
-            hp: 10000,
-            hpLimit: 650,
+            hit: 25,
+            hp: 1200,
+            hpLimit: 5000,
             level: 15,
-            dropGold: 400
+            dropGold: 400,
+            chaseIncrease: 200
         });
     }
 
     override onStartHook() {
         useFloatingMessage(
-            '復仇...復仇!',
+            '復仇...復仇...',
             getMonsterElement(this.id),
             {
                 duration: 1000,
@@ -183,15 +190,49 @@ export class FrostGiant extends MonsterModel {
         );
     }
 
+    isFinal = false
+
     override onRoundBehaviorHook({playerStore, battleRound}: MonsterRoundBehaviorParams) {
-        playerGetColdStackEffects(playerStore, -6)
-        if (battleRound >= 10) {
-            this.hp = 0
+        if (battleRound === 10) {
+            this.isFinal = true
+            this.hp = Math.min(1000, Math.floor(this.hp / 2))
+            this.adDefend = 10
+            this.critRate = 25
+            this.ad = 30
+            this.icon = '/monsters/frost_giant_last_stand.png'
+            useFloatingMessage(
+                '神的蛆蟲!巨人是不會屈服的!',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'red'
+                }
+            );
+        }
+        if (battleRound < 10) {
+            playerGetColdStackEffects(playerStore, -10)
+            useFullScreenEffect({
+                message: '氣溫驟降',
+                color: '#0fb5f1',
+            });
+        }
+        if (battleRound > 10) {
+            this.ad += 5
         }
     }
 
-    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
-        playerGetColdStackEffects(playerStore, -6)
+    override onAttackHook({playerStore}: MonsterOnAttackParams) {
+        if (!this.isFinal) {
+            useFloatingMessage(
+                '死...',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'red'
+                }
+            );
+        }
+        return true
     }
 }
 
@@ -213,6 +254,7 @@ export class FireWyrmling extends MonsterModel {
             hpLimit: 1050,
             level: 12,
             dropGold: 800,
+            chaseIncrease: 200,
             drop: []
         });
     }

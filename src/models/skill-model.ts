@@ -1,4 +1,4 @@
-import {SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
@@ -58,7 +58,7 @@ export abstract class SkillModel {
     }
 
     // 💡 獲取描述 (由子類別實作)
-    abstract description(playerStore: any): string;
+    abstract description(playerStore: PlayerStoreType): string;
 
     // 💡 施放技能核心流程 (範本方法)
     async use(params: SkillParams): Promise<boolean> {
