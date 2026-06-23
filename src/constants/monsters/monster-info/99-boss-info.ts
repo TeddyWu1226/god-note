@@ -244,14 +244,14 @@ export class FireWyrmling extends MonsterModel {
             name: '炎幼龍',
             description: '在火山核心孵化的炎龍幼崽，吞吐著毀滅性的烈焰。',
             class: 'mystery',
-            ad: 48,
+            ad: 25,
             critIncrease: 200,
-            critRate: 25,
+            critRate: 50,
             adDefend: 20,
-            dodge: 25,
+            dodge: 35,
             hit: 60,
-            hp: 1050,
-            hpLimit: 1050,
+            hp: 1000,
+            hpLimit: 1000,
             level: 12,
             dropGold: 800,
             chaseIncrease: 200,
@@ -259,9 +259,32 @@ export class FireWyrmling extends MonsterModel {
         });
     }
 
-    override onStartHook({playerStore}: MonsterActionParams) {
-        useEpicSubtitle("「吼！！！」", 4000);
+    override onStartHook({playerStore, gameStateStore}: MonsterActionParams) {
+        useFloatingMessage(
+            '吼!!!!',
+            getMonsterElement(this.id),
+            {
+                duration: 2000,
+                color: 'red'
+            }
+        );
+        gameStateStore.triggerScreenShake(2000);
         playerStore.addStatus(UnitStatus.Scared, {duration: 5});
+    }
+
+    override onRoundBehaviorHook({playerStore, battleRound, gameStateStore}: MonsterRoundBehaviorParams) {
+        if (isMultiple(battleRound, 10)) {
+            useFloatingMessage(
+                '吼!!!!',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'red'
+                }
+            );
+            gameStateStore.triggerScreenShake(1000);
+            playerStore.addStatus(UnitStatus.Scared, {duration: 5});
+        }
     }
 
     override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {

@@ -111,7 +111,7 @@
 
 /* 應用動畫的類別 */
 .shaking {
-    animation: screen-shake 0.3s cubic-bezier(.36, .07, .19, .97) both;
+    animation: screen-shake 0.3s cubic-bezier(.36, .07, .19, .97) infinite;
     /* 確保動畫結束後，元素回到初始位置 */
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;

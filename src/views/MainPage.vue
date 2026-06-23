@@ -103,7 +103,7 @@ watch(
 
 <template>
   <el-config-provider :card="cardConfig" :button="buttonConfig" :message="{max:3}">
-    <div class="common-layout">
+    <div class="common-layout" :class="{'shaking': gameStateStore.isScreenShaking}">
       <VictoryPage v-if="gameStateStore.isVictory"/>
       <DeadPage v-else-if="isDead"/>
       <IntroPage v-else-if="gameStateStore.stateIs(GameState.INITIAL)"/>

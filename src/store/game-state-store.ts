@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {RoomEnum} from "@/enums/room-enum";
-import {computed, ref, watch} from "vue";
+import {computed, ref, watch, nextTick} from "vue";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -88,6 +88,20 @@ export const useGameStateStore = defineStore('game-state', () => {
 
     /** 下方面板的顯示模式：'backpack' (顯示背包) 或 'skills' (顯示技能) */
     const bottomPanelMode = ref<'backpack' | 'skills'>('skills');
+
+    /** 是否正在進行全螢幕震動 */
+    const isScreenShaking = ref(false);
+
+    /** 觸發全螢幕震動 */
+    function triggerScreenShake(duration = 300): void {
+        isScreenShaking.value = false;
+        nextTick(() => {
+            isScreenShaking.value = true;
+            setTimeout(() => {
+                isScreenShaking.value = false;
+            }, duration);
+        });
+    }
 
     // 深度監聽敵怪數據，自動重構為 Class 實例
     watch(() => currentEnemy.value, (newVal) => {
@@ -317,6 +331,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         isPlayerTurn,
         refillActionPoints,
         bottomPanelMode,
+        isScreenShaking,
+        triggerScreenShake,
         init, transitionToNextState,
         setRoom, switchToFightRoom, switchToEventRoom, takeSwitchEnemy,
         setCurrentEnemy, setBattleWon,
@@ -325,5 +341,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         enterJudgmentStage
     };
 }, {
-    persist: true // 持久化依然有效
+    persist: {
+        omit: ['isScreenShaking']
+    }
 });
