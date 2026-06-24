@@ -632,13 +632,13 @@ export const usePlayerStore = defineStore('player-info', () => {
      * 等級提升
      */
     const getNextLevelExp = (level: number) => {
-        return 10 + 10 * level;
+        return 10 * level;
     };
 
     const gainExp = (source: { monsterLevel?: number; amount?: number }) => {
         let earnedExp: number
         if (source.monsterLevel) {
-            earnedExp = Math.max(0, -1 + source.monsterLevel * 3);
+            earnedExp = Math.max(0, -1 + source.monsterLevel * 2);
         } else {
             earnedExp = source.amount || 0;
         }

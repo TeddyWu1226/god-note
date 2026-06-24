@@ -16,7 +16,7 @@ export class Slime extends MonsterModel {
             icon: '🟢',
             code: 'Slime',
             name: '史萊姆',
-            description: '森林中最常見的粘稠生物，帶有淡淡的草本氣味',
+            description: '森林中最常見的粘稠生物。體表覆滿綠色黏液，受到打擊時會噴濺黏液降低攻擊者的行動速度。',
             ad: 5,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -33,7 +33,7 @@ export class Slime extends MonsterModel {
         });
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
+    override onAttackedHook({playerStore, logStore}: any) {
         playerStore.addStatus(UnitStatus.SlimeSlow);
         logStore.logger.add(`你沾滿了黏液。`);
     }
@@ -45,7 +45,7 @@ export class ForestSprout extends MonsterModel {
             icon: '🌱',
             code: 'ForestSprout',
             name: '小樹人',
-            description: '植物形態的魔物，擅長施展綑綁',
+            description: '植物形態的魔物。每隔 3 回合有機率施展「老樹盤根」將對手緊緊束縛，使其無法行動。',
             ad: 3,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -88,7 +88,7 @@ export class WoodTick extends MonsterModel {
             icon: '🐜',
             name: '木兵蟻',
             code: 'WoodTick',
-            description: '體型細小但甲殼堅硬，容易躲開笨重的攻擊',
+            description: '體型細小但甲殼堅硬，擁有較佳的防禦力與極高的閃避率，容易躲避笨重的大開大合攻擊。',
             ad: 6,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -112,8 +112,8 @@ export class StingerBee extends MonsterModel {
             icon: '🐝',
             name: '森林毒蜂',
             code: 'StingerBee',
-            description: '擁有致命的刺，一旦被刺中傷口劇痛不已',
-            ad: 2,
+            description: '身手無比敏捷的森林毒蜂。尾部帶有致命的麻痺毒針，攻擊命中時有高機率使目標麻痺。',
+            ad: 7,
             critIncrease: 100,
             critRate: 0,
             adDefend: 0,
@@ -145,7 +145,7 @@ export class FierceWolf extends MonsterModel {
             icon: '🐺',
             name: '森林之狼',
             class: 'elite',
-            description: '森林中的巡邏者',
+            description: '森林中的凶猛掠食者。開戰時會施展警告性「狼嚎」，且每隔 3 回合就會陷入一次可怕的「暴怒」狀態。',
             ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: 10,
@@ -183,8 +183,8 @@ export class SmallSpider extends MonsterModel {
         super({
             code: 'SmallSpider',
             icon: '🕷️',
-            name: '古蜘蛛的眷屬',
-            description: '古蜘蛛的眷屬,強大的狩獵能力,攻擊時有機率綑綁敵人',
+            name: '迷霧蜘蛛',
+            description: '古蜘蛛的眷屬。戰鬥開始時會搶先施展「蛛絲纏繞」限制獵物前 2 回合的行動。',
             class: 'elite',
             ad: 15,
             critIncrease: 200,
@@ -220,7 +220,7 @@ export class PoisonSlime extends MonsterModel {
             icon: '🟣',
             code: 'PoisonSlime',
             name: '毒史萊姆',
-            description: '受到毒區影響變異的史萊姆，在進入警戒的時候會用毒液裝甲硬化。在硬化期間受到攻擊時會對攻擊者噴濺毒液',
+            description: '受到毒性變異的史萊姆。開戰時會生成毒液裝甲，在裝甲存在時攻擊它會導致攻擊者中毒。',
             ad: 6,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -255,7 +255,7 @@ export class WoodGuardian extends MonsterModel {
             icon: '🌳',
             code: 'WoodGuardian',
             name: '樹人衛士',
-            description: '守護森林的古老樹衛，外皮如鋼鐵般堅硬。',
+            description: '守護森林的古老樹衛。外皮堅硬如鐵（高防禦力），每 3 回合能以較高機率施展「老樹盤根」捆綁目標。',
             ad: 10,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,

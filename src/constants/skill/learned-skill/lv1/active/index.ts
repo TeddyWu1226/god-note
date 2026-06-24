@@ -29,7 +29,7 @@ export class VerticalSlash extends SkillModel {
 
     extraDamage(playerStore): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.max(ad * 0.5 + 8, ad + 3)
+        return Math.floor(ad * 1.2)
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -122,7 +122,7 @@ export class Thrust extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return ad + 5
+        return Math.floor(ad * 1.5)
     }
 
     description(playerStore: PlayerStoreType): string {
