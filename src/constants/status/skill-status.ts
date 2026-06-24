@@ -23,7 +23,7 @@ export const SkillStatus = {
     } as StatusEffect,
     Will: {
         name: '堅定意志',
-        icon: '✊',
+        icon: '🛡️',
         duration: 5,
         isBuff: true,
         description: `提升自身 %defendIncrease% 點抗性，持續 %duration% 回合`,

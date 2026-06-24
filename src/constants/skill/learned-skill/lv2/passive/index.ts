@@ -143,7 +143,7 @@ export class ContinuousSwordVertical extends SkillModel {
     }
 
     bonus = {
-        critIncrease: 25,
+        critIncrease: 20,
         critRate: 10,
     }
 

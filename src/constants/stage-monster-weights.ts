@@ -1,3 +1,5 @@
+import {CrimsonSalamander, GlacierLizard} from "@/constants/monsters/monster-info/2-red-mountain-monster";
+
 /**
  * 第一階段：迷霧森林 (Misty Forest)
  */
@@ -46,7 +48,8 @@ export const RedMountainWeights1: Record<string, number> = {
 export const RedMountainWeights2: Record<string, number> = {
     FrostSlime: 33,
     IceBat: 33,
-    FireBat: 10,
+    GlacierLizard: 15,
+    FireBat: 5,
     LavaSlime: 5,
     FrostGolem: 5
 };
@@ -54,15 +57,18 @@ export const RedMountainWeights2: Record<string, number> = {
 export const RedMountainWeights3: Record<string, number> = {
     FrostSlime: 10,
     IceBat: 10,
+    GlacierLizard: 15,
     FireBat: 33,
     LavaSlime: 33,
+    CrimsonSalamander: 15,
     FrostGolem: 5,
     ObsidianGolem: 5
 };
 
 export const RedMountainWeights4: Record<string, number> = {
-    FireBat: 50,
-    LavaSlime: 50,
+    FireBat: 40,
+    LavaSlime: 40,
+    CrimsonSalamander: 30,
     ObsidianGolem: 10
 };
 

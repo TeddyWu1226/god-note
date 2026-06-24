@@ -73,12 +73,12 @@ export class GlacierLizard extends MonsterModel {
             code: 'GlacierLizard',
             name: '高山蜥蜴',
             description: '高山上的耐寒蜥蜴。冰甲厚實（防禦力高），行動雖緩慢，但其沉重的啃咬精準度極高，防不勝防。',
-            ad: 26,
+            ad: 23,
             critIncrease: WorldDefault.critIncrease,
             critRate: 15,
             adDefend: 12,
-            dodge: 30,
-            hit: 40,
+            dodge: 15,
+            hit: 25,
             hp: 170,
             hpLimit: 170,
             level: 13,
@@ -96,16 +96,17 @@ export class FrostGolem extends MonsterModel {
             name: '寒冰魔像',
             class: 'elite icon-blue',
             description: '由冰雪編織而成的重裝魔能守衛。防禦力堅實，且每一次拳擊命中都會直接為目標施加強烈寒冷效果。',
-            ad: 22,
+            ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
-            adDefend: 18,
-            dodge: 30,
+            adDefend: 15,
+            dodge: 0,
             hit: 20,
             hp: 220,
             hpLimit: 220,
             level: 15,
             dropGold: 80,
+            chaseIncrease: -15,
             drop: [{item: Material.LowerNormal, chance: 0.5}]
         });
     }
@@ -125,7 +126,7 @@ export class LavaSlime extends MonsterModel {
             code: 'LavaSlime',
             name: '熔岩史萊姆',
             class: 'icon-red',
-            description: '體表覆蓋翻滾岩漿的史萊姆。受創時濺出的岩漿有 50% 機率使攻擊者陷入持續燃燒的灼傷狀態。',
+            description: '體表覆蓋翻滾岩漿的史萊姆。受創時濺出的岩漿使攻擊者陷入持續燃燒的灼傷狀態。',
             ad: 12,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -141,9 +142,7 @@ export class LavaSlime extends MonsterModel {
     }
 
     override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
-        if (checkProbability(0.5)) {
-            playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
-        }
+        playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
     }
 }
 
@@ -159,7 +158,7 @@ export class FireBat extends MonsterModel {
             critIncrease: WorldDefault.critIncrease,
             critRate: 50,
             adDefend: 0,
-            dodge: 50,
+            dodge: 60,
             hit: 15,
             hp: 70,
             hpLimit: 70,
@@ -178,14 +177,14 @@ export class CrimsonSalamander extends MonsterModel {
             name: '緋紅鱷',
             class: 'elite icon-red',
             description: '火山岩縫中的巨型紅鱷。尾擊與烈火噬咬極為狂暴，且攻擊命中有 60% 機率使對手燃燒。',
-            ad: 28,
-            critIncrease: 200,
+            ad: 25,
+            critIncrease: 130,
             critRate: 25,
-            adDefend: 8,
-            dodge: 45,
+            adDefend: 12,
+            dodge: 20,
             hit: 20,
-            hp: 160,
-            hpLimit: 160,
+            hp: 100,
+            hpLimit: 100,
             level: 14,
             dropGold: 60,
         });
@@ -214,7 +213,7 @@ export class ObsidianGolem extends MonsterModel {
             hit: 20,
             hp: 200,
             hpLimit: 200,
-            level: 18,
+            level: 16,
             dropGold: 80,
             drop: [{item: Material.LowerNormal, chance: 0.5}]
         });

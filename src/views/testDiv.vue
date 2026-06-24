@@ -37,7 +37,9 @@ const onLevelUp = () => {
   playerStore.gainExp({amount: 900})
 }
 const onTest = () => {
-  playerStore.gainExp({amount: 900})
+  // 第一大關破完大概 11 等
+  // 第二大關破完大概 25 等
+  playerStore.gainExp({amount: 800})
   selectStage(2)
   // playerStore.addSkill(Skills.FireBall.id)
   // playerStore.addSkill(Skills.MagicDefend.id)

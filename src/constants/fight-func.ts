@@ -458,7 +458,9 @@ export const spawnMonsters = (
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
-            monsterInstance.class = 'elite';
+            if (!monsterInstance.class.includes('elite')) {
+                monsterInstance.class += ' elite';
+            }
             strengtheningLevel += 2
         }
         // 基本階段強化

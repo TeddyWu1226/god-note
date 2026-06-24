@@ -311,10 +311,10 @@ const onAttack = () => {
   if (!selectedMonsterIndex.value) {
     selectedMonsterIndex.value = 0
   }
-  const selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
+  let selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
   if (!selectedMonster) {
-    ElMessage.warning('無攻擊目標!')
-    return
+    selectedMonsterIndex.value = 0
+    selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value]
   }
 
   // 扣除行動點數
