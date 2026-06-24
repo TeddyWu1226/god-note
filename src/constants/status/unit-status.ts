@@ -157,15 +157,6 @@ export const UnitStatus = {
             apIncrease: -50
         }
     } as StatusEffect,
-    ArmorBreak: {
-        name: '破甲',
-        icon: '⛓️‍💥',
-        duration: 3,
-        description: '防禦力降低 5 點',
-        bonus: {
-            adDefend: -5
-        }
-    } as StatusEffect,
     SpeedDance: {
         name: '癲狂之舞',
         icon: '🎶',
@@ -176,5 +167,13 @@ export const UnitStatus = {
             ad: 2,
             adDefend: 2
         }
+    } as StatusEffect,
+    IceWeak: {
+        name: '冰之凋零',
+        icon: '🧊',
+        duration: -1,
+        type: 'damage',
+        description: `受到冰封監牢禁閉的巨人，每回合都會附加寒冷給附近的人，而巨人每回合都會損失血量。當血量低於一定程度後，巨人將會衝破牢籠，依照經過的回合獲得強大的攻擊力。`,
+        value: 25
     } as StatusEffect,
 }

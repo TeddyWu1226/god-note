@@ -303,6 +303,14 @@ export class MonsterModel implements MonsterType {
     triggerOnDead(params: Omit<MonsterActionParams, 'monster'>): void {
         this.onDeadHook(params);
     }
+
+    triggerShake?: (time?: number) => void;
+
+    shake(time?: number): void {
+        if (this.triggerShake) {
+            this.triggerShake(time);
+        }
+    }
 }
 
 

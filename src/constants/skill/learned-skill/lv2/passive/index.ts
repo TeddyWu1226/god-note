@@ -2,13 +2,12 @@ import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
 import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 import {useLogStore} from "@/store/log-store";
-import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {getMonsterElement} from "@/utils/create";
 import {checkProbability} from "@/utils/math";
-import {UnitStatus} from "@/constants/status/unit-status";
 import {MonsterModel} from "@/models/monster-model";
 import {applySkillDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {UsualStatus} from "@/constants/status/usual-status";
 
 export class SwordExpert extends SkillModel {
     constructor() {
@@ -238,7 +237,7 @@ export class ContinuousSwordPoint extends SkillModel {
     override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
         if (checkProbability((this.chance / 100))) {
             const logStore = useLogStore();
-            monster.addEffect(UnitStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
+            monster.addEffect(UsualStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
             logStore.logger.add(` ${monster.name} 陷入破甲狀態！`);
             useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         }

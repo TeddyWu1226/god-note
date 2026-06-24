@@ -143,6 +143,18 @@ watch(() => props.info?.hp, () => {
   }
 }, {deep: true});
 
+// 綁定震動回呼函數到怪物實例
+watch(() => props.info, (newMonster, oldMonster) => {
+  if (oldMonster) {
+    oldMonster.triggerShake = undefined;
+  }
+  if (newMonster) {
+    newMonster.triggerShake = (time?: number) => {
+      shake(time);
+    };
+  }
+}, { immediate: true });
+
 defineExpose({
   shake,
   monsterMove,

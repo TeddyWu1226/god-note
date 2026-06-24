@@ -165,14 +165,14 @@ export class FrostGiant extends MonsterModel {
             name: '冰凍的巨人',
             description: '被永久冰封在山脈深處的遠古巨人，揮舞著巨大的寒冰錘。',
             class: 'boss big',
-            ad: 25,
+            ad: 0,
             critIncrease: 200,
             critRate: 0,
-            adDefend: 50,
+            adDefend: 40,
             dodge: 0,
             hit: 25,
-            hp: 1200,
-            hpLimit: 5000,
+            hp: 1250,
+            hpLimit: 2500,
             level: 15,
             dropGold: 400,
             chaseIncrease: 200
@@ -180,28 +180,31 @@ export class FrostGiant extends MonsterModel {
     }
 
     override onStartHook() {
+        this.addEffect(UnitStatus.IceWeak)
         useFloatingMessage(
-            '復仇...復仇...',
+            '復...復仇...',
             getMonsterElement(this.id),
             {
-                duration: 1000,
-                color: 'red'
+                duration: 2000,
+                color: 'gray'
             }
         );
     }
 
     isFinal = false
 
-    override onRoundBehaviorHook({playerStore, battleRound}: MonsterRoundBehaviorParams) {
-        if (battleRound === 10) {
+    override onRoundBehaviorHook({playerStore, gameStateStore, battleRound}: MonsterRoundBehaviorParams) {
+        const limit = 600
+        if (!this.isFinal && this.hp <= limit) {
             this.isFinal = true
-            this.hp = Math.min(1000, Math.floor(this.hp / 2))
             this.adDefend = 10
             this.critRate = 25
-            this.ad = 30
             this.icon = '/monsters/frost_giant_last_stand.png'
+            this.ad = battleRound * 5
+            this.removeStatus(UnitStatus.IceWeak.name)
+            gameStateStore.triggerScreenShake(1000);
             useFloatingMessage(
-                '神的蛆蟲!巨人是不會屈服的!',
+                '巨人是不會屈服的!',
                 getMonsterElement(this.id),
                 {
                     duration: 1000,
@@ -209,22 +212,27 @@ export class FrostGiant extends MonsterModel {
                 }
             );
         }
-        if (battleRound < 10) {
-            playerGetColdStackEffects(playerStore, -10)
+        if (this.hp > limit) {
+            playerGetColdStackEffects(playerStore, -5)
             useFullScreenEffect({
-                message: '氣溫驟降',
                 color: '#0fb5f1',
             });
-        }
-        if (battleRound > 10) {
-            this.ad += 5
+            useFloatingMessage(
+                '....',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'gray'
+                }
+            );
+            this.shake(1000)
         }
     }
 
-    override onAttackHook({playerStore}: MonsterOnAttackParams) {
-        if (!this.isFinal) {
+    override onAttackHook() {
+        if (this.ad > 50) {
             useFloatingMessage(
-                '死...',
+                '死吧!',
                 getMonsterElement(this.id),
                 {
                     duration: 1000,

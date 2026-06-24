@@ -193,6 +193,8 @@ export interface MonsterType extends UnitType {
     lastDamageResult?: BattleOutcome; // 新增：存放最後一次受傷資訊
     tick?: Record<string, number | any[]> // 行動計數器
     roundBehavior?: string // 獨特回合行動習性
+    triggerShake?: (time?: number) => void;
+    shake?: (time?: number) => void;
 }
 
 /**
