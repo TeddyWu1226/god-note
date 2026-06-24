@@ -13,6 +13,7 @@ import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {GodThings, Usable} from "@/constants/items/usalbe-item/usable-info";
 import FusionRoom from "@/components/RoomLayout/room/FusionRoom/FusionRoom.vue";
+import StationRoom from "@/components/RoomLayout/room/StationRoom/StationRoom.vue";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -48,7 +49,6 @@ const onItemSkill = ({skillKey, callback, el}) => {
     FightRoomRef.value?.onItemSkill({skillKey, callback, el})
   }
 }
-
 
 
 /** 綜合取消 **/
@@ -101,6 +101,10 @@ watch(() => gameStateStore.roomId,
       v-else-if="currentRoomValue === RoomEnum.Fusion.value"
       :key="gameStateStore.roomId"
       @cancel="onCancel"
+  />
+  <StationRoom
+      v-else-if="currentRoomValue === RoomEnum.Station.value"
+      :key="gameStateStore.roomId"
   />
 </template>
 

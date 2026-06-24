@@ -25,7 +25,7 @@ const selectStage = (stageVal: number) => {
   trackerStore.init(false)
 
   // 更新最高通關進度
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage)
+  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
 
   gameStateStore.currentStage = stageVal
   gameStateStore.stageDays = 0

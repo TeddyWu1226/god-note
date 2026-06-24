@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -20,6 +20,10 @@ const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
 const showStageSelectDialog = ref(false)
 
+const isClearedStage = computed(() => {
+  return gameStateStore.currentStage < gameStateStore.maxClearedStage
+})
+
 const createNextRooms = () => {
   gameStateStore.nextRooms = []
 
@@ -39,18 +43,28 @@ const createNextRooms = () => {
     return
   }
 
-  // 49 與 99 天必定只能休息
-  if (gameStateStore.stageDays === 48 || gameStateStore.stageDays === 98) {
-    gameStateStore.nextRooms = [RoomEnum.Rest.value]
-    return
-  }
-  // 50 與 100 天必定挑戰 BOSS
-  if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
-    gameStateStore.nextRooms = [RoomEnum.Boss.value]
-    return
+  // 當前是已通關過的大關時，套用特判邏輯
+  if (isClearedStage.value) {
+    // 第 50 天 (stageDays === 49) 與第 100 天 (stageDays === 99) 強制進入驛站
+    if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
+      gameStateStore.nextRooms = [RoomEnum.Station.value]
+      return
+    }
+  } else {
+    // 尚未通關過的大關 (原本邏輯)
+    // 49 與 99 天必定只能休息
+    if (gameStateStore.stageDays === 48 || gameStateStore.stageDays === 98) {
+      gameStateStore.nextRooms = [RoomEnum.Rest.value]
+      return
+    }
+    // 50 與 100 天必定挑戰 BOSS
+    if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
+      gameStateStore.nextRooms = [RoomEnum.Boss.value]
+      return
+    }
   }
 
-  // 建立兩個選項
+  // 建立兩個選項 (未通關大關的普通天數，或已通關大關的 49、99 天等普通天數)
   const rooms = []
   let weight = DEFAULT_ROOM_WEIGHTS
   if (gameStateStore.difficulty === DifficultyEnum.Easy.value) {
@@ -78,9 +92,12 @@ const continueStage = () => {
   gameStateStore.nextRooms = []
 }
 
-const openStageSelectDialog = () => {
+const isStageSelectClosable = ref(true)
+
+const openStageSelectDialog = (closable = true) => {
   // 破關時，打開彈窗前就更新 maxClearedStage，確保彈窗渲染時新大關已解鎖
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage)
+  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
+  isStageSelectClosable.value = closable
   showStageSelectDialog.value = true
 }
 
@@ -89,7 +106,7 @@ const selectStage = (stageVal: number) => {
   trackerStore.init(false)
 
   // 更新最高通關進度
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage)
+  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
 
   gameStateStore.currentStage = stageVal
   gameStateStore.stageDays = 0
@@ -132,14 +149,16 @@ onMounted(() => {
     </el-button>
   </template>
 
-  <!-- 已通關大關 BOSS 結算 -->
+
+
+  <!-- 已通關大關 BOSS 結算 (適用於第一次挑戰大關 Boss 勝利) -->
   <template v-else-if="gameStateStore.isBattleWon && gameStateStore.roomIs(RoomEnum.Boss.value)">
     <el-button
         v-if="gameStateStore.stageDays === 100"
         color="var(--el-color-success)"
         style="height: 3rem; font-weight: bold; width: 100%;"
         :disabled="props.disabled"
-        @click="openStageSelectDialog"
+        @click="openStageSelectDialog(false)"
     >
       選擇下一個區域 🗺️
     </el-button>
@@ -159,7 +178,7 @@ onMounted(() => {
     <el-button
         v-for="room in gameStateStore.nextRooms"
         :key="room"
-        :color="getEnumColumn(RoomEnum, room,'color')"
+        :color="room === RoomEnum.Station.value ? '#4CAF50' : getEnumColumn(RoomEnum, room,'color')"
         :disabled="props.disabled"
         @click="selectRoom(room)"
         style="width: 100%; margin: 4px 0;"
@@ -167,8 +186,8 @@ onMounted(() => {
       <el-row style="width: 100%">
         <el-col :span="8" style="text-align: left;">選擇:</el-col>
         <el-col :span="16" style="text-align: right;">
-          {{ getEnumColumn(RoomEnum, room, 'icon') }}
-          {{ getEnumColumn(RoomEnum, room) }}
+          {{ room === RoomEnum.Station.value ? '🛌🏾' : getEnumColumn(RoomEnum, room, 'icon') }}
+          {{ room === RoomEnum.Station.value ? '休息' : getEnumColumn(RoomEnum, room) }}
         </el-col>
       </el-row>
     </el-button>
@@ -180,9 +199,9 @@ onMounted(() => {
       title="🌌 選擇前往的區域"
       width="90%"
       align-center
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :show-close="false"
+      :close-on-click-modal="isStageSelectClosable"
+      :close-on-press-escape="isStageSelectClosable"
+      :show-close="isStageSelectClosable"
       destroy-on-close
   >
     <div class="stage-select-container flex flex-column gap-3">
@@ -199,16 +218,16 @@ onMounted(() => {
         <template v-if="stage.value <= 5">
           <el-button
               style="width: 100%; height: 3.5rem; text-align: left; display: flex; justify-content: space-between; align-items: center;"
-              :type="stage.value <= gameStateStore.maxClearedStage + 1 ? 'primary' : 'info'"
-              :disabled="stage.value > gameStateStore.maxClearedStage + 1"
+              :type="stage.value <= gameStateStore.maxClearedStage ? 'primary' : 'info'"
+              :disabled="stage.value > gameStateStore.maxClearedStage"
               @click="selectStage(stage.value)"
               plain
           >
               <span style="font-size: 1rem; font-weight: bold;padding-right: 0.5rem">
-                第 {{ stage.value }} 區: {{ stage.value <= gameStateStore.maxClearedStage + 1 ? stage.label : '???' }}
+                第 {{ stage.value }} 區: {{ stage.value <= gameStateStore.maxClearedStage ? stage.label : '???' }}
               </span>
             <el-tag
-                v-if="stage.value <= gameStateStore.maxClearedStage"
+                v-if="stage.value < gameStateStore.maxClearedStage"
                 type="success"
                 size="small"
                 effect="dark"
@@ -216,7 +235,7 @@ onMounted(() => {
               已通關
             </el-tag>
             <el-tag
-                v-else-if="stage.value === gameStateStore.maxClearedStage + 1"
+                v-else-if="stage.value === gameStateStore.maxClearedStage"
                 type="danger"
                 size="small"
                 effect="dark"

@@ -30,8 +30,15 @@ export const useGameStateStore = defineStore('game-state', () => {
     /** 當前關卡已度過的天數/前進步數 */
     const stageDays = ref(0);
 
-    /** 歷史最高通關關卡數 */
-    const maxClearedStage = ref(0);
+    /** 歷史最高解鎖關卡數 */
+    const maxClearedStage = ref(1);
+
+    // 當從 localStorage 還原或初始化時，若 maxClearedStage 小於 1 (例如舊存檔的 0)，自動修正為 1
+    watch(maxClearedStage, (newVal) => {
+        if (newVal < 1) {
+            maxClearedStage.value = 1;
+        }
+    }, { immediate: true });
 
     /** 遊戲是否已獲得最終勝利 */
     const isVictory = ref(false);
@@ -153,7 +160,6 @@ export const useGameStateStore = defineStore('game-state', () => {
             isDead.value = false;
             isVictory.value = false;
             days.value = 0;
-            maxClearedStage.value = 0;
             currentRoomValue.value = RoomEnum.Rest.value;
         }
         stageDays.value = 0;
@@ -173,6 +179,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         if (restart) {
             eventProcess.value = {} as Record<SpecialEventEnum, number>;
             otherRecord.value = {}
+            maxClearedStage.value = 1; // 只有在徹底 restart (重置輪迴) 時才重置為 1 (只解鎖第 1 大關)
         }
         bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
         console.log('遊戲狀態已重置');
@@ -262,6 +269,11 @@ export const useGameStateStore = defineStore('game-state', () => {
                 currentEnemy.value = [];
                 currentState.value = GameState.SELECTION_PHASE;
                 bottomPanelMode.value = 'backpack'; // 戰鬥勝利結算時，切換回背包模式以查看掉落物
+
+                // 擊敗大關 BOSS (Day 100 Boss) 時，立即更新最高解鎖大關數 (當前層數 + 1)
+                if (currentRoomValue.value === RoomEnum.Boss.value && stageDays.value === 100) {
+                    maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
+                }
             }
         }
     }

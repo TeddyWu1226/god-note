@@ -47,4 +47,10 @@ export const RoomEnum = {
 		icon: '🛠️',
 		color: '#177edf',
 	},
+	Station: {
+		value: 9,
+		label: '驛站',
+		icon: '🏕️',
+		color: '#8B4513',
+	},
 };
