@@ -195,7 +195,7 @@ export class SmallSpider extends MonsterModel {
             hp: 80,
             hpLimit: 80,
             level: 6,
-            dropGold: 250
+            dropGold: 52
         });
     }
 
@@ -265,7 +265,7 @@ export class WoodGuardian extends MonsterModel {
             hp: 60,
             hpLimit: 60,
             level: 6,
-            dropGold: 26,
+            dropGold: 34,
             drop: [
                 {item: Material.BadNormal, chance: 0.5}
             ]

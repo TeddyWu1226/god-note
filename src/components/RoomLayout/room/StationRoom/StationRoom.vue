@@ -3,18 +3,13 @@ import '../../room.css'
 import {computed, onMounted, ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
-import {useTrackerStore} from "@/store/track-store";
 import {GameState} from "@/enums/enums";
-import {StageEnum} from "@/enums/stage-enum";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 
 const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore();
-const trackerStore = useTrackerStore();
 
 const isRested = ref(false)
-const showStageSelectDialog = ref(false)
-const isStageSelectClosable = ref(true)
 const isEnded = computed(() => gameStateStore.stageDays === 100)
 const onRest = () => {
   isRested.value = true
@@ -22,49 +17,20 @@ const onRest = () => {
   gameStateStore.transitionToNextState()
 }
 
-const openStageSelectDialog = (closable = true) => {
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
-  isStageSelectClosable.value = closable
-  showStageSelectDialog.value = true
-}
-
-const selectStage = (stageVal: number) => {
-  playerStore.healFull()
-  trackerStore.init(false)
-
-  // 更新最高通關進度
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
-
-  gameStateStore.currentStage = stageVal
-  gameStateStore.stageDays = 0
-  gameStateStore.isBattleWon = false
-  gameStateStore.setRoom(0) // 休息房 RoomEnum.Rest.value
-  gameStateStore.nextRooms = []
-
-  showStageSelectDialog.value = false
-}
-
 onMounted(() => {
-  if (isEnded) {
-    openStageSelectDialog(false)
+  if (gameStateStore.stageDays === 100) {
+    gameStateStore.openStageSelectDialog(false)
   }
 })
-
-const emit = defineEmits(['cancel']);
-const cancel = (): void => {
-  emit('cancel');
-}
 </script>
 
 <template>
-  <RoomTemplate :title="isEnded ? '命運的叉路' : '驛站'">
+  <RoomTemplate :title="isEnded? '旅途之末' : '深處驛站'">
     <template #default>
       <div class="general-event">
         <div class="event-icon">
           {{ isEnded ? '🛤️' : '🏘️' }}
         </div>
-
-        <!-- 驛站故事對話盒 -->
         <div class="dialog-box">
           <template v-if="isEnded">
             <p>風景以然變色，已達區域的盡頭。</p>
@@ -84,22 +50,20 @@ const cancel = (): void => {
     </template>
 
     <template #button>
-      <template v-if="!isEnded">
+      <template v-if="isEnded">
+        <!-- 第 100 天：只有前往其他區域的選項 -->
+        <el-button type="warning" @click="gameStateStore.openStageSelectDialog(false)">
+          前往其他區域
+        </el-button>
+      </template>
+      <template v-else>
         <!-- 第 50 天且未休息：可以選擇休息或跳關 -->
         <template v-if="!isRested && gameStateStore.stateIs(GameState.EVENT_PHASE)">
-          <el-button
-              color="#4CAF50"
-              class="premium-btn"
-              @click="onRest"
-          >
-            🏹 休息一會 (繼續冒險)
+          <el-button type="success" @click="onRest">
+            休息一會
           </el-button>
-          <el-button
-              color="#d32f2f"
-              class="premium-btn border-gold"
-              @click="openStageSelectDialog(true)"
-          >
-            🌌 前往其他區域 (跳關)
+          <el-button type="warning" @click="gameStateStore.openStageSelectDialog(true)">
+            前往其他區域
           </el-button>
         </template>
       </template>
@@ -108,4 +72,5 @@ const cancel = (): void => {
 </template>
 
 <style scoped>
+
 </style>

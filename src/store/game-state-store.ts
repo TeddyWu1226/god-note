@@ -6,6 +6,7 @@ import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {usePlayerStore} from "@/store/player-store";
+import {useTrackerStore} from "@/store/track-store";
 
 export const getEffectiveStats = (monster: any): any => {
     if (monster && typeof monster.getEffectiveStats === 'function') {
@@ -39,6 +40,12 @@ export const useGameStateStore = defineStore('game-state', () => {
             maxClearedStage.value = 1;
         }
     }, { immediate: true });
+
+    /** 是否顯示大關選擇彈窗 */
+    const showStageSelectDialog = ref(false);
+
+    /** 大關選擇彈窗是否可以關閉 */
+    const isStageSelectClosable = ref(true);
 
     /** 遊戲是否已獲得最終勝利 */
     const isVictory = ref(false);
@@ -320,6 +327,27 @@ export const useGameStateStore = defineStore('game-state', () => {
     }
 
 
+    function openStageSelectDialog(closable = true): void {
+        maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
+        isStageSelectClosable.value = closable;
+        showStageSelectDialog.value = true;
+    }
+
+    function selectStage(stageVal: number): void {
+        const playerStore = usePlayerStore();
+        playerStore.healFull();
+        const trackerStore = useTrackerStore();
+        trackerStore.init(false);
+
+        maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
+        currentStage.value = stageVal;
+        stageDays.value = 0;
+        isBattleWon.value = false;
+        setRoom(RoomEnum.Rest.value);
+        nextRooms.value = [];
+        showStageSelectDialog.value = false;
+    }
+
     // --- 記得導出所有要在組件中使用的東西 ---
     return {
         currentRoomValue, difficulty, isDead,
@@ -350,7 +378,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         setCurrentEnemy, setBattleWon,
         setEvent, isEventClose,
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
-        enterJudgmentStage
+        enterJudgmentStage,
+        showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage
     };
 }, {
     persist: {

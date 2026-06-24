@@ -36,7 +36,7 @@ defineExpose({
 <template>
   <RoomTemplate title="平靜的地方">
     <template #default>
-      <div class="rest">
+      <div class="general-event">
         <template v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
           <div class="event-icon">💤</div>
           <div class="dialog-box">
@@ -67,12 +67,4 @@ defineExpose({
 </template>
 
 <style scoped>
-.rest {
-  height: auto;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 </style>

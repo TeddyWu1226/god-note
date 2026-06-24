@@ -18,7 +18,6 @@ const props = defineProps({
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
-const showStageSelectDialog = ref(false)
 
 const isClearedStage = computed(() => {
   return gameStateStore.currentStage < gameStateStore.maxClearedStage
@@ -92,30 +91,7 @@ const continueStage = () => {
   gameStateStore.nextRooms = []
 }
 
-const isStageSelectClosable = ref(true)
 
-const openStageSelectDialog = (closable = true) => {
-  // 破關時，打開彈窗前就更新 maxClearedStage，確保彈窗渲染時新大關已解鎖
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
-  isStageSelectClosable.value = closable
-  showStageSelectDialog.value = true
-}
-
-const selectStage = (stageVal: number) => {
-  playerStore.healFull()
-  trackerStore.init(false)
-
-  // 更新最高通關進度
-  gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
-
-  gameStateStore.currentStage = stageVal
-  gameStateStore.stageDays = 0
-  gameStateStore.isBattleWon = false
-  gameStateStore.setRoom(RoomEnum.Rest.value)
-  gameStateStore.nextRooms = []
-
-  showStageSelectDialog.value = false
-}
 
 const triggerJudgmentStage = () => {
   playerStore.healFull()
@@ -158,7 +134,7 @@ onMounted(() => {
         color="var(--el-color-success)"
         style="height: 3rem; font-weight: bold; width: 100%;"
         :disabled="props.disabled"
-        @click="openStageSelectDialog(false)"
+        @click="gameStateStore.openStageSelectDialog(false)"
     >
       選擇下一個區域 🗺️
     </el-button>
@@ -192,88 +168,7 @@ onMounted(() => {
       </el-row>
     </el-button>
   </template>
-
-  <!-- 大關選擇彈窗 (Dialog) -->
-  <el-dialog
-      v-model="showStageSelectDialog"
-      title="🌌 選擇前往的區域"
-      width="90%"
-      align-center
-      :close-on-click-modal="isStageSelectClosable"
-      :close-on-press-escape="isStageSelectClosable"
-      :show-close="isStageSelectClosable"
-      destroy-on-close
-  >
-    <div class="stage-select-container flex flex-column gap-3">
-      <div class="stage-select-tip text-center" style="margin-bottom: 1rem; color: var(--el-text-color-secondary);">
-        通過前一區域即可解鎖下一區域。您可以自由選擇回到已通關的區域刷取資源。
-      </div>
-
-      <div
-          v-for="(stage, key) in StageEnum"
-          :key="key"
-          style="width: 100%; margin-bottom: 8px;"
-      >
-        <!-- 只列出 1 到 5 大關供選擇 (審判之關卡 6 為天數強制進入) -->
-        <template v-if="stage.value <= 5">
-          <el-button
-              style="width: 100%; height: 3.5rem; text-align: left; display: flex; justify-content: space-between; align-items: center;"
-              :type="stage.value <= gameStateStore.maxClearedStage ? 'primary' : 'info'"
-              :disabled="stage.value > gameStateStore.maxClearedStage"
-              @click="selectStage(stage.value)"
-              plain
-          >
-              <span style="font-size: 1rem; font-weight: bold;padding-right: 0.5rem">
-                第 {{ stage.value }} 區: {{ stage.value <= gameStateStore.maxClearedStage ? stage.label : '???' }}
-              </span>
-            <el-tag
-                v-if="stage.value < gameStateStore.maxClearedStage"
-                type="success"
-                size="small"
-                effect="dark"
-            >
-              已通關
-            </el-tag>
-            <el-tag
-                v-else-if="stage.value === gameStateStore.maxClearedStage"
-                type="danger"
-                size="small"
-                effect="dark"
-            >
-              NEW
-            </el-tag>
-            <el-tag
-                v-else
-                type="info"
-                size="small"
-                effect="dark"
-            >
-              🔒未發現
-            </el-tag>
-          </el-button>
-        </template>
-      </div>
-    </div>
-  </el-dialog>
 </template>
 
 <style scoped>
-.stage-select-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.flex-column {
-  flex-direction: column;
-}
-
-
-.gap-3 {
-  gap: 12px;
-}
-
-.text-center {
-  text-align: center;
-}
 </style>
