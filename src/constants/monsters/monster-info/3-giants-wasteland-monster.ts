@@ -10,20 +10,24 @@ export class SandSlime extends MonsterModel {
         super({
             icon: '🟡',
             code: 'SandSlime',
-            name: '沙礫史萊姆',
+            name: '荒漠史萊姆',
             description: '融合了荒野黃沙的史萊姆，防禦力較高',
-            ad: 22,
+            ad: 28,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
-            adDefend: 10,
+            adDefend: 20,
             dodge: 0,
             hit: 15,
-            hp: 150,
-            hpLimit: 150,
-            level: 11,
-            dropGold: 20,
+            hp: 200,
+            hpLimit: 200,
+            level: 26,
+            dropGold: 33,
             drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
+    }
+
+    override onAttackedHook() {
+        this.adDefend += 10
     }
 }
 
@@ -34,18 +38,22 @@ export class WastelandVulture extends MonsterModel {
             code: 'WastelandVulture',
             name: '荒野禿鷹',
             description: '在荒原上空盤旋的飢餓猛禽，速度極快',
-            ad: 25,
+            ad: 30,
             critIncrease: WorldDefault.critIncrease,
-            critRate: 15,
+            critRate: 30,
             adDefend: 5,
             dodge: 25,
             hit: 30,
-            hp: 130,
-            hpLimit: 130,
-            level: 11,
-            dropGold: 22,
+            hp: 150,
+            hpLimit: 150,
+            level: 27,
+            dropGold: 38,
             drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
+    }
+
+    override onAttackedHook() {
+        this.addEffect(UnitStatus.Flying)
     }
 }
 

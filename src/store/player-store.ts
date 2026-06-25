@@ -8,6 +8,8 @@ import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
 import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import EvnStatus from "@/constants/status/evn-status";
 
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
@@ -485,7 +487,17 @@ export const usePlayerStore = defineStore('player-info', () => {
 
             // 1. 處理每回合觸發的數值效果
             if (effect.type === 'damage' && effect.value) {
-                const actualDamage = effect.value;
+                let actualDamage = effect.value;
+                if (effect.affectedByDefense) {
+                    // 先扣除固定物理防禦力
+                    actualDamage = Math.max(1, actualDamage - (finalStats.value.adDefend || 0));
+                    // 套用 defendIncrease (百分比減傷 %)
+                    if (finalStats.value.defendIncrease) {
+                        const reduction = Math.min(finalStats.value.defendIncrease, 95);
+                        actualDamage *= (1 - reduction / 100);
+                    }
+                    actualDamage = Math.max(1, Math.floor(actualDamage));
+                }
                 info.value.hp = Math.max(0, info.value.hp - actualDamage);
                 logMessage = `[${effect.name}] 讓你受到了 ${actualDamage} 點傷害。`;
             } else if (effect.type === 'heal' && effect.value) {
@@ -723,6 +735,34 @@ export const usePlayerStore = defineStore('player-info', () => {
             shieldAbsorbed: shieldAbsorbed
         };
     };
+
+    /**
+     * 更新特定大關與天數的環境 Buff / Debuff
+     */
+    const updateEnvironmentStatus = () => {
+        const gameStateStore = useGameStateStore();
+        const stage = gameStateStore.currentStage;
+        const days = gameStateStore.stageDays;
+
+        // 1. 移除舊的環境效果
+        const envStatusNames = [EvnStatus.Sandstorm.name];
+        statusEffects.value = statusEffects.value.filter(e => !envStatusNames.includes(e.name));
+
+        // 2. 根據當前關卡與天數賦予對應的環境效果
+        if (stage === 3) {
+            // 大荒地環境：魔力風暴
+            // 每回合扣 30 hp (受物理防禦減免)
+            const isStorm = (days >= 5 && days <= 20) || (days >= 35 && days <= 50) || (days >= 65 && days <= 80);
+            if (isStorm) {
+                useFullScreenEffect({
+                    message: '風暴來襲',
+                    color: 'brown'
+                });
+                addStatus(EvnStatus.Sandstorm);
+            }
+        }
+    };
+
     return {
         info, skillProficiency,
         stopValueChangeAnimation,
@@ -739,7 +779,8 @@ export const usePlayerStore = defineStore('player-info', () => {
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
-        gainExp, allocateStatPoint, takeDamage
+        gainExp, allocateStatPoint, takeDamage,
+        updateEnvironmentStatus
     };
 }, {
     persist: {

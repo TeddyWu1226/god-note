@@ -242,6 +242,7 @@ export interface StatusEffect {
      */
     type?: 'damage' | 'heal' | 'stuck' | 'scared';
     value?: number; // 每回合跳血/回血的數值
+    affectedByDefense?: boolean; // 是否受物理防禦力減免
 }
 
 export type GameStateStoreType = ReturnType<typeof useGameStateStore>;
@@ -311,34 +312,4 @@ export interface SkillOnPlayerAttackHitParams {
 
 export interface SkillDescriptionParams {
     playerStore?: PlayerStoreType;
-}
-
-export interface SkillType {
-    id: string;
-    name: string;
-    icon: string;
-    itemDescription?: string;
-    description: (prop: SkillDescriptionParams) => string; // 敘述
-    costSp?: number;
-    costHp?: number;
-    costAction?: number; // 消耗行動點數/行動值 (預設為 0)
-    use: (prop: SkillParams) => Promise<boolean> | boolean; // 回傳技能是否施展成功
-    proficiency?: number // 每次使用加多少熟練度 沒有就1
-}
-
-
-export interface FusionListType {
-    target: ItemType
-    requirements: {
-        item: ItemType;
-        count: number
-    }[]
-}
-
-// 💡 進化與融合規則定義
-export interface EvolutionRule {
-    evolvedSkillId: string;
-    baseSkillId?: string; // 進化時替換的基礎技能 ID
-    fuseSkillIds?: string[]; // 融合時需要額外移除的其他技能 ID
-    checkEligible: (playerStore: PlayerStoreType, trackerStore: TrackerStoreType) => boolean;
 }

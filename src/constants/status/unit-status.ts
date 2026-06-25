@@ -103,11 +103,11 @@ export const UnitStatus = {
     Flying: {
         name: '飛行',
         icon: '🪽',
-        duration: 3,
+        duration: 5,
         description: '這個單位正在飛行,大幅提升閃避機率',
         isBuff: true,
         bonus: {
-            dodge: 80
+            dodge: 50
         }
     } as StatusEffect,
     Bleed: {

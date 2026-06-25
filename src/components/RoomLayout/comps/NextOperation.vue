@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, computed} from "vue";
+import {computed, onMounted} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -8,9 +8,7 @@ import {getRandomLabelByWeight} from "@/utils/create";
 import {DEFAULT_ROOM_WEIGHTS, EAST_ROOM_WEIGHTS} from "@/constants/default-const";
 import {useTrackerStore} from "@/store/track-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
-import EvnStatus from "@/constants/status/evn-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
-import {StageEnum} from "@/enums/stage-enum";
 
 const props = defineProps({
   disabled: Boolean,
@@ -76,12 +74,12 @@ const createNextRooms = () => {
 }
 
 const selectRoom = (roomValue: number) => {
-  gameStateStore.setRoom(roomValue)
   if (roomValue !== RoomEnum.Event.value) {
     gameStateStore.days += 1
     gameStateStore.stageDays += 1
     trackerStore.achievementsCount.peaceDay += 1
   }
+  gameStateStore.setRoom(roomValue)
   gameStateStore.nextRooms = []
 };
 

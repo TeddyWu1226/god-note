@@ -190,6 +190,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
         bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
         console.log('遊戲狀態已重置');
+        const playerStore = usePlayerStore();
+        playerStore.updateEnvironmentStatus();
     }
 
     function enterJudgmentStage(): void {
@@ -206,6 +208,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         eventAction.value = 0;
         nextRooms.value = [];
         thisStageAppear.value = [];
+        const playerStore = usePlayerStore();
+        playerStore.updateEnvironmentStatus();
     }
 
     function setRoom(roomValue: number): void {
@@ -228,6 +232,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         } else {
             bottomPanelMode.value = 'backpack';
         }
+        playerStore.updateEnvironmentStatus();
     }
 
     function refillActionPoints(): void {
