@@ -40,7 +40,7 @@ export const UsualStatus = {
     Resistance: {
         name: '抵抗',
         icon: '3🤽🏼‍♀️',
-        duration: 5,
+        duration: 4,
         isBuff: true,
         description: '使得前 %value% 次受到的傷害歸 0',
         value: 3

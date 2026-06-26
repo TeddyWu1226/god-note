@@ -313,24 +313,24 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (!item) {
             // 情況 A：傳入空值 -> 卸下裝備
             if (info.value.equips[slot]) {
-                _unequipItem(slot);
+                unequipItem(slot);
             }
         } else {
             // 情況 B：穿上裝備
             // 雙手武器與副手互斥邏輯
             if (slot === 'weapon' && item.isTwoHanded) {
                 if (info.value.equips.offhand) {
-                    _unequipItem('offhand');
+                    unequipItem('offhand');
                 }
             } else if (slot === 'offhand') {
                 if (info.value.equips.weapon?.isTwoHanded) {
-                    _unequipItem('weapon');
+                    unequipItem('weapon');
                 }
             }
 
             // 如果該位置已有裝備，先卸下
             if (info.value.equips[slot]) {
-                _unequipItem(slot);
+                unequipItem(slot);
             }
 
             // 穿上新裝備
@@ -379,7 +379,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     /**
      * 卸下裝備 (從 equips 狀態移動到 equipments 背包)
      */
-    const _unequipItem = (slot: keyof Equipment): EquipmentType => {
+    const unequipItem = (slot: keyof Equipment): EquipmentType => {
         if (!info.value.equips || !info.value.equips[slot]) return null;
 
         const itemToUnequip = info.value.equips[slot];
@@ -773,7 +773,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         currentExpPercentage,
         statusEffects,
         equipItem, hasEquip,
-        gainItem, hasItem, removeItem,
+        gainItem, hasItem, removeItem, unequipItem,
         addGold,
         addStatus, hasStatus, removeStatus,
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
