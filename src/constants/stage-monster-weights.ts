@@ -76,32 +76,31 @@ export const RedMountainWeights4: Record<string, number> = {
  * 第三階段：大荒地 (Giants Wasteland)
  */
 export const GiantsWastelandWeights1: Record<string, number> = {
-    SandSlime: 50,
+    SandSlime: 40,
     WastelandVulture: 30,
-    CactusFighter: 15
+    RockBull: 10,
+
 };
 
 export const GiantsWastelandWeights2: Record<string, number> = {
     SandSlime: 20,
     WastelandVulture: 20,
-    CactusFighter: 30,
-    DustDevil: 20
+    RockBull: 30,
+    UnstableExplosiveBee: 10,
+    MutatedBloodworm: 5,
 };
 
 export const GiantsWastelandWeights3: Record<string, number> = {
-    CactusFighter: 20,
-    DustDevil: 30,
-    DuneCrawler: 10,
-    StoneGiant: 10,
-    WastelandScavenger: 15,
-    DesertBasilisk: 15
+    RockBull: 25,
+    WastelandScavenger: 25,
+    UnstableExplosiveBee: 25,
+    MutatedBloodworm: 25
 };
 
 export const GiantsWastelandWeights4: Record<string, number> = {
-    DuneCrawler: 25,
-    StoneGiant: 25,
-    WastelandScavenger: 25,
-    DesertBasilisk: 25
+
+    WastelandScavenger: 30,
+    MutatedBloodworm: 50
 };
 
 /**

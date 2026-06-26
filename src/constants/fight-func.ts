@@ -129,6 +129,33 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
             logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
         }
     }
+    // 檢查「抵抗」狀態效果
+    if (defender.name === playerStore.info.name) {
+        const playerResist = playerStore.statusEffects.find(e => e.name === '抵抗');
+        if (playerResist && playerResist.value !== undefined && playerResist.value > 0) {
+            damageTaken = 0;
+            outcome.totalDamage = 0;
+            playerResist.value -= 1;
+            logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${playerResist.value}`);
+            if (playerResist.value <= 0) {
+                playerStore.removeStatus('抵抗');
+                logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果已消耗殆盡！`);
+            }
+        }
+    } else {
+        const monsterResist = monster.status.find(e => e.name === '抵抗');
+        if (monsterResist && monsterResist.value !== undefined && monsterResist.value > 0) {
+            damageTaken = 0;
+            outcome.totalDamage = 0;
+            monsterResist.value -= 1;
+            logStore.logger.add(`🛡️ [${monster.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${monsterResist.value}`);
+            if (monsterResist.value <= 0) {
+                monster.removeStatus('抵抗');
+                logStore.logger.add(`🛡️ [${monster.name}] 抵抗效果已消耗殆盡！`);
+            }
+        }
+    }
+
     // 2. 更新生命值
     if (defender.name === playerStore.info.name) {
         const result = playerStore.takeDamage(damageTaken);
@@ -247,12 +274,38 @@ export function applySkillDamage(
 
     // --- 6. 取整與生命偷取 ---
     outcome.totalDamage = Math.floor(finalDamage);
+
+    // 檢查「抵抗」狀態效果
+    const isTargetPlayer = (defender.name === playerStore.info.name);
+    if (isTargetPlayer) {
+        const playerResist = playerStore.statusEffects.find(e => e.name === '抵抗');
+        if (playerResist && playerResist.value !== undefined && playerResist.value > 0) {
+            outcome.totalDamage = 0;
+            playerResist.value -= 1;
+            logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${playerResist.value}`);
+            if (playerResist.value <= 0) {
+                playerStore.removeStatus('抵抗');
+                logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果已消耗殆盡！`);
+            }
+        }
+    } else {
+        const monsterResist = (defender as MonsterClass).status?.find(e => e.name === '抵抗');
+        if (monsterResist && monsterResist.value !== undefined && monsterResist.value > 0) {
+            outcome.totalDamage = 0;
+            monsterResist.value -= 1;
+            logStore.logger.add(`🛡️ [${defender.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${monsterResist.value}`);
+            if (monsterResist.value <= 0) {
+                (defender as MonsterClass).removeStatus('抵抗');
+                logStore.logger.add(`🛡️ [${defender.name}] 抵抗效果已消耗殆盡！`);
+            }
+        }
+    }
+
     if (attacker.lifeSteal && outcome.totalDamage > 0) {
         outcome.healAmount = Math.floor(outcome.totalDamage * (attacker.lifeSteal / 100));
     }
 
     // --- 7. 更新生命值與 Store 同步 ---
-    const isTargetPlayer = (defender.name === playerStore.info.name);
 
     // 扣除目標 HP
     if (isTargetPlayer) {
