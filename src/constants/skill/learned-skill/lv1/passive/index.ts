@@ -109,15 +109,17 @@ export class KnifeProficiency extends SkillModel {
     constructor() {
         super({
             id: 'KnifeProficiency',
-            name: "短刀精通",
+            name: "基礎刺術",
             icon: "skills/passive/knife_proficiency.svg",
             type: 'passive',
             rarity: 'common',
         });
     }
 
+    adBonus = 3;
+
     description(): string {
-        return `裝備名稱含有「小刀」或「匕首」的武器時，提升 3 點物理攻擊。`;
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${this.adBonus} 點物理攻擊。`;
     }
 
     protected execute(): boolean {
@@ -126,9 +128,9 @@ export class KnifeProficiency extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('小刀') || weaponName.includes('匕首')) {
+        if (isMatchedWeapon('KnifeProficiency', weaponName)) {
             return {
-                ad: 3
+                ad: this.adBonus
             };
         }
         return {};
@@ -139,19 +141,17 @@ export class SpellProficiency extends SkillModel {
     constructor() {
         super({
             id: 'SpellProficiency',
-            name: "法杖精通",
+            name: "基礎法術",
             icon: "skills/passive/spell_proficiency.svg",
             type: 'passive',
             rarity: 'common'
         });
     }
 
-    get apBonus(): number {
-        return 5
-    }
+    apBonus = 5;
 
     description(): string {
-        return `裝備名稱含有「杖」的武器時，提升 ${this.apBonus} 點法術攻擊。`;
+        return `裝備名稱含有「${WeaponSkillMapping.SpellProficiency.join(', ')}」的武器時，提升 ${this.apBonus} 點法術攻擊。`;
     }
 
     protected execute(): boolean {
@@ -160,7 +160,7 @@ export class SpellProficiency extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (weaponName.includes('杖')) {
+            if (isMatchedWeapon('SpellProficiency', weaponName)) {
             return {
                 ap: this.apBonus
             };
@@ -173,7 +173,7 @@ export class ReadingProficiency extends SkillModel {
     constructor() {
         super({
             id: 'ReadingProficiency',
-            name: "閱讀精通",
+            name: "基礎符文理解",
             icon: "skills/passive/reading_proficiency.svg",
             type: 'passive',
             rarity: 'common'

@@ -3,6 +3,7 @@ import {ref} from 'vue'
 import {usePlayerStore} from "@/store/player-store";
 import {useEncyclopediaStore} from "@/store/encyclopedia-store";
 import {Sword} from "@/constants/items/equipment/weapon-info";
+import {isMatchedWeapon} from "@/constants/default-const";
 
 const likeSwords = Object.values(Sword).map((sword) => sword.name)
 export const useTrackerStore = defineStore('tracker', () => {
@@ -42,9 +43,15 @@ export const useTrackerStore = defineStore('tracker', () => {
         // 武器分類計算
         const playerStore = usePlayerStore();
         if (playerStore.info.equips?.weapon) {
-            const use = playerStore.info.equips.weapon
-            if (likeSwords.includes(use.name)) {
-                currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount
+            const weaponName = playerStore.info.equips.weapon.name || '';
+            if (isMatchedWeapon('SwordProficiency', weaponName)) {
+                currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount;
+            }
+            if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+                currentKills.value['USE_KNIFE'] = (currentKills.value['USE_KNIFE'] || 0) + amount;
+            }
+            if (isMatchedWeapon('SpellProficiency', weaponName)) {
+                currentKills.value['USE_SPELL'] = (currentKills.value['USE_SPELL'] || 0) + amount;
             }
         }
     }

@@ -310,6 +310,13 @@ export interface SkillOnPlayerAttackHitParams {
     gameStateStore?: GameStateStoreType
 }
 
-export interface SkillDescriptionParams {
-    playerStore?: PlayerStoreType;
+
+export interface SkillTreeNode {
+    id: string;             // 技能 ID
+    pathId: string;         // 所屬唯一流派 ID
+    tier: number;           // 技能階級 (Tier 1: 基礎, Tier 2: 進階, Tier 3: 大師)
+    isStarter?: boolean;    // 是否為流派的起手技能 (Tier 1)
+    evolvesFrom?: string[];  // 可從哪些前置技能進階而來 (學習時替換前置，任一即可)
+    fusesFrom?: string[];    // 需要哪些技能融合而成 (學習時消耗全部原料，需全數滿足)
+    checkEligible?: (playerStore: any, trackerStore: any) => boolean; // 額外的學習條件
 }

@@ -58,7 +58,7 @@ export const Offhand = {
     } as EquipmentType,
 
     Book0: {
-        name: '學徒筆記',
+        name: '理解殘捲',
         description: '寫有一些基礎法術文字的筆記,稍微拓寬了魔力的流向。',
         icon: '📝',
         position: EquipmentPosition.OFFHAND,
@@ -69,39 +69,39 @@ export const Offhand = {
     Book1: {
         name: '學徒之書',
         description: '記載了法術施放的竅門,能更有效地儲存精神能量,額外提供持有者保護。',
-        icon: '📗',
+        icon: '📜',
         position: EquipmentPosition.OFFHAND,
         quality: 1,
         shieldLimit: 20
     } as EquipmentType,
     Book2: {
-        name: '導師典籍',
+        name: '下級理解之書',
         description: '書中紀錄著祕法之力的運用,大幅提昇了魔力的容納上限,額外提供持有者保護。',
-        icon: '📙',
+        icon: '📗',
         position: EquipmentPosition.OFFHAND,
         quality: 2,
         shieldLimit: 40
     } as EquipmentType,
     Book3: {
-        name: '法術篇章',
+        name: '中級理解之書',
         description: '紀錄大量祕法的卷軸,散發著幽幽藍光,保護心智並提供龐大的魔力,額外提供持有者保護。',
-        icon: '📜',
+        icon: '📘',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
         shieldLimit: 80
     } as EquipmentType,
     Book4: {
-        name: '魔力之書',
+        name: '上級理解之書',
         description: '唯有意志堅定者方能閱讀,魔力如潮汐般湧動,額外提供持有者一定保護。',
-        icon: '📘',
+        icon: '📓',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
         shieldLimit: 160
     } as EquipmentType,
     Book5: {
-        name: '祕法典籍',
+        name: '終極理解之書',
         description: '世間法術的詳細記錄,書頁中流淌著純粹的以太,賦予佩戴者大量智慧與保護。',
-        icon: '📓',
+        icon: '📕',
         position: EquipmentPosition.OFFHAND,
         quality: 5,
         shieldLimit: 320

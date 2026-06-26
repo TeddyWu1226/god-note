@@ -43,6 +43,7 @@ const confirmClassSelection = async () => {
     case CharEnum.Villager.value:
       playerStore.equipItem(SpecialWeapon.WoodSword);
       playerStore.gainItem(NormalFruits.RedApple, 3)
+      playerStore.info.gold = 50;
       break;
     case CharEnum.Merchant.value:
       playerStore.info.gold = 300;
@@ -51,12 +52,11 @@ const confirmClassSelection = async () => {
       break;
     case CharEnum.Thief.value:
       playerStore.equipItem(Dagger.Dagger0);
-      playerStore.info.hpLimit = 50;
       break;
     case CharEnum.Stargazer.value:
       playerStore.info.ap = 13;
       playerStore.info.ad = 7
-      playerStore.info.spLimit = 100;
+      playerStore.info.sp = playerStore.info.spLimit;
       playerStore.equipItem(Offhand.Book0);
       break;
 
