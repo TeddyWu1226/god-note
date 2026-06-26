@@ -36,29 +36,41 @@ const selectStage = (stageVal: number) => {
 const onLevelUp = () => {
   playerStore.gainExp({amount: 900})
 }
-const onTest = () => {
-  // 第一大關破完大概 11 等
-  // 第二大關破完大概 25 等
-  playerStore.gainExp({amount: 800})
-  selectStage(2)
-  // playerStore.addSkill(Skills.FireBall.id)
-  // playerStore.addSkill(Skills.MagicDefend.id)
-  // playerStore.addSkillProficiency(Skills.MagicDefend.id, 100)
-}
-const give = () => {
-  // playerStore.addGold(1000)
 
+const onLeve2Test = () => {
+  selectStage(2)
+  // 第一大關破完大概 11 等
+  playerStore.gainExp({amount: 800})
+  // 第一大關破完大概 裝備
   playerStore.equipItem(Head.HpHead0)
   playerStore.equipItem(Armor.Armor0)
   playerStore.equipItem(Weapon.Sword0)
   playerStore.equipItem(Offhand.Shield0)
+}
+
+const onLeve3Test = () => {
+  selectStage(3)
+  // 第二大關破完大概 25 等
+  playerStore.gainExp({amount: 3000})
+  // 第一大關破完大概 裝備
+  playerStore.equipItem(Head.HpHead1)
+  playerStore.equipItem(Armor.Armor1)
+  playerStore.equipItem(Weapon.Sword1)
+  playerStore.equipItem(Offhand.Shield1)
+}
+const onTest = () => {
+  onLeve3Test()
+}
+const give = () => {
+  // playerStore.addGold(1000)
+
+
   // playerStore.gainItem(Offhand.Book5)
   // playerStore.gainItem(Weapon.Sword0)
-  // playerStore.gainItem(Accessory2.SoulAnchor)
-  // playerStore.gainItem(Accessory1.SoulAnchor)
+  playerStore.gainItem(Accessory2.SoulAnchor)
 
-  playerStore.gainItem(Usable.BurningPotion, 10)
-  playerStore.gainItem(Potions.Heal0, 10)
+  // playerStore.gainItem(Usable.BurningPotion, 10)
+  // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }
 const heal = () => {

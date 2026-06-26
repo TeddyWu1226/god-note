@@ -298,7 +298,14 @@ const checkWeaponProficiency = () => {
 
 }
 
-
+const initSelectedMonsterCheck = () => {
+  let selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value ?? 0];
+  if (!selectedMonster) {
+    selectedMonsterIndex.value = 0
+    selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value]
+  }
+  return selectedMonster
+}
 // 攻擊
 const onAttack = () => {
   if (!gameStateStore.isPlayerTurn) return
@@ -308,14 +315,7 @@ const onAttack = () => {
   }
 
   // 指定怪物
-  if (!selectedMonsterIndex.value) {
-    selectedMonsterIndex.value = 0
-  }
-  let selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
-  if (!selectedMonster) {
-    selectedMonsterIndex.value = 0
-    selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value]
-  }
+  let selectedMonster = initSelectedMonsterCheck()
 
   // 扣除行動點數
   gameStateStore.playerActionPoints -= 1
@@ -355,10 +355,14 @@ const onAttack = () => {
 const onItemSkill = ({skillKey, callback}) => {
   if (!gameStateStore.isPlayerTurn) return
   // 指定怪物
-  if (selectedMonsterIndex.value === null) {
+  if (selectedMonsterIndex.value === null || selectedMonsterIndex.value === undefined) {
     selectedMonsterIndex.value = 0
   }
-  const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
+  let selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
+  if (!selectedMonster) {
+    selectedMonsterIndex.value = 0
+    selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value]
+  }
   ItemSkill[skillKey](
       {
         monster: selectedMonster,
@@ -372,8 +376,14 @@ const isUsing = ref(false)
 // 技能使用
 const onSkill = async (skillKey: string) => {
   if (!gameStateStore.isPlayerTurn) return;
-  if (selectedMonsterIndex.value === null) selectedMonsterIndex.value = 0;
-  const selectedMonster = gameStateStore.currentEnemy[selectedMonsterIndex.value];
+  if (selectedMonsterIndex.value === null || selectedMonsterIndex.value === undefined) {
+    selectedMonsterIndex.value = 0;
+  }
+  let selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
+  if (!selectedMonster) {
+    selectedMonsterIndex.value = 0;
+    selectedMonster = gameStateStore.currentEnemy.filter((enemy) => enemy.hp > 0)[selectedMonsterIndex.value];
+  }
   if (isUsing.value) return
 
   const useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);

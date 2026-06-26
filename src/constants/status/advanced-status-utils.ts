@@ -1,6 +1,8 @@
 import {PlayerStoreType, StatusEffect} from "@/types";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {UsualStatus} from "@/constants/status/usual-status";
+import {MonsterModel} from "@/models/monster-model";
 
 /**
  * 寒冷堆疊邏輯
@@ -41,4 +43,25 @@ export const playerGetColdStackEffects = (playerStore: PlayerStoreType, stack = 
     } else {
         playerStore.addStatus(UnitStatus.Cold);
     }
+}
+
+
+/**
+ * 檢查並套用「抵抗」狀態效果。若套用成功（傷害歸 0），返回 true。
+ */
+export function checkAndApplyResistance(
+    defender: PlayerStoreType | MonsterModel,
+): boolean {
+    const resist = defender.hasStatus(UsualStatus.Resistance.name);
+    if (resist && resist.value !== undefined && resist.value > 0) {
+        // 更新數值
+        resist.value -= 1;
+        resist.icon = resist.icon.replace(/\d+/, Math.abs(resist.value).toString())
+        resist.description = resist.description.replace(/\d+/, Math.abs(resist.value).toString())
+        if (resist.value <= 0) {
+            defender.removeStatus(UsualStatus.Resistance.name);
+        }
+        return true;
+    }
+    return false;
 }

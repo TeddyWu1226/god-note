@@ -176,12 +176,10 @@ export const UnitStatus = {
         description: `受到冰封監牢禁閉的巨人，每回合都會附加寒冷給附近的人，而巨人每回合都會損失血量。當血量低於一定程度後，巨人將會衝破牢籠，依照經過的回合獲得強大的攻擊力。`,
         value: 25
     } as StatusEffect,
-    Resistance: {
-        name: '抵抗',
-        icon: '🤽🏼‍♀️',
-        duration: 3,
-        isBuff: true,
-        description: '使得前 %value% 次受到的傷害歸 0',
-        value: 3
+    CountDown: {
+        name: '倒數計時',
+        icon: '⏳',
+        duration: 5,
+        description: '時間到了就會發生可怕的事',
     } as StatusEffect,
 }

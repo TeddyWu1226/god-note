@@ -4,6 +4,8 @@ import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {checkProbability} from "@/utils/math";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {UsualStatus} from "@/constants/status/usual-status";
+import {MonsterActionParams} from "@/types";
 
 export class SandSlime extends MonsterModel {
     constructor() {
@@ -27,7 +29,7 @@ export class SandSlime extends MonsterModel {
     }
 
     override onAttackedHook() {
-        this.adDefend += 10
+        this.adDefend += 5
     }
 }
 
@@ -79,7 +81,7 @@ export class RockBull extends MonsterModel {
     }
 
     override onStartHook() {
-        this.addEffect(UnitStatus.Resistance);
+        this.addEffect(UsualStatus.Resistance);
     }
 }
 
@@ -107,15 +109,16 @@ export class WastelandScavenger extends MonsterModel {
 }
 
 export class UnstableExplosiveBee extends MonsterModel {
-    private roundsCount = 0;
-    private damage = 0;
+    private roundsCount = 5;
+    private damage = 50;
 
     constructor() {
         super({
             icon: '🐝',
             code: 'UnstableExplosiveBee',
+            class: 'icon-red',
             name: '不穩定的爆炸蜂',
-            description: '體內蘊含著極不穩定能量的蜂群，會在5回合後自爆並造成巨額傷害',
+            description: '體內蘊含著極不穩定能量的變異蜂，會在5回合後自爆並造成巨額傷害',
             ad: 25,
             critIncrease: WorldDefault.critIncrease,
             critRate: 5,
@@ -125,18 +128,22 @@ export class UnstableExplosiveBee extends MonsterModel {
             hp: 130,
             hpLimit: 130,
             level: 26,
-            dropGold: 30,
+            dropGold: 15,
             drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 
-    override onRoundBehaviorHook({playerStore, gameStateStore, logStore}: any) {
-        this.roundsCount++;
-        logStore.logger.add(`🐝 ${this.name} 體內能量正在聚集 (${this.roundsCount}/5 回合)`);
-        if (this.roundsCount >= 5) {
-            logStore.logger.add(`💥 ${this.name} 發生了劇烈的自爆！`);
+    override onStartHook() {
+        this.addEffect(UnitStatus.CountDown, {duration: this.roundsCount})
+    }
+
+    override onRoundBehaviorHook({playerStore, gameStateStore}: any) {
+        this.roundsCount--;
+        if (this.roundsCount <= 0) {
             gameStateStore.triggerScreenShake(500);
             playerStore.takeDamage(this.damage);
+            this.level = 0
+            this.drop = []
             this.hp = 0;
             useFullScreenEffect({
                 message: '自爆！',

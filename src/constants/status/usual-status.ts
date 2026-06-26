@@ -37,4 +37,12 @@ export const UsualStatus = {
             adDefend: -5
         }
     } as StatusEffect,
+    Resistance: {
+        name: '抵抗',
+        icon: '3🤽🏼‍♀️',
+        duration: 5,
+        isBuff: true,
+        description: '使得前 %value% 次受到的傷害歸 0',
+        value: 3
+    } as StatusEffect,
 }

@@ -1,5 +1,5 @@
 // 常數定義
-import {BattleOutcome, DamageResult, UnitType} from "@/types";
+import {BattleOutcome, DamageResult, PlayerStoreType, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
 import {usePlayerStore} from "@/store/player-store";
@@ -9,6 +9,7 @@ import {MonsterModel as MonsterClass} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
+import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -70,6 +71,7 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
     return result;
 }
 
+
 /**
  * 執行戰鬥：計算傷害，並直接更新被攻擊者的生命值 (HP)。
  *
@@ -129,31 +131,11 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
             logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
         }
     }
+    const isPlayer = defender.name === playerStore.info.name
     // 檢查「抵抗」狀態效果
-    if (defender.name === playerStore.info.name) {
-        const playerResist = playerStore.statusEffects.find(e => e.name === '抵抗');
-        if (playerResist && playerResist.value !== undefined && playerResist.value > 0) {
-            damageTaken = 0;
-            outcome.totalDamage = 0;
-            playerResist.value -= 1;
-            logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${playerResist.value}`);
-            if (playerResist.value <= 0) {
-                playerStore.removeStatus('抵抗');
-                logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果已消耗殆盡！`);
-            }
-        }
-    } else {
-        const monsterResist = monster.status.find(e => e.name === '抵抗');
-        if (monsterResist && monsterResist.value !== undefined && monsterResist.value > 0) {
-            damageTaken = 0;
-            outcome.totalDamage = 0;
-            monsterResist.value -= 1;
-            logStore.logger.add(`🛡️ [${monster.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${monsterResist.value}`);
-            if (monsterResist.value <= 0) {
-                monster.removeStatus('抵抗');
-                logStore.logger.add(`🛡️ [${monster.name}] 抵抗效果已消耗殆盡！`);
-            }
-        }
+    if (checkAndApplyResistance(isPlayer ? playerStore : monster)) {
+        damageTaken = 0;
+        outcome.totalDamage = 0;
     }
 
     // 2. 更新生命值
@@ -272,40 +254,13 @@ export function applySkillDamage(
         finalDamage *= (1 - reduction / 100);
     }
 
-    // --- 6. 取整與生命偷取 ---
+
     outcome.totalDamage = Math.floor(finalDamage);
-
-    // 檢查「抵抗」狀態效果
     const isTargetPlayer = (defender.name === playerStore.info.name);
-    if (isTargetPlayer) {
-        const playerResist = playerStore.statusEffects.find(e => e.name === '抵抗');
-        if (playerResist && playerResist.value !== undefined && playerResist.value > 0) {
-            outcome.totalDamage = 0;
-            playerResist.value -= 1;
-            logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${playerResist.value}`);
-            if (playerResist.value <= 0) {
-                playerStore.removeStatus('抵抗');
-                logStore.logger.add(`🛡️ [${playerStore.info.name}] 抵抗效果已消耗殆盡！`);
-            }
-        }
-    } else {
-        const monsterResist = (defender as MonsterClass).status?.find(e => e.name === '抵抗');
-        if (monsterResist && monsterResist.value !== undefined && monsterResist.value > 0) {
-            outcome.totalDamage = 0;
-            monsterResist.value -= 1;
-            logStore.logger.add(`🛡️ [${defender.name}] 抵抗效果生效！傷害歸 0。剩餘次數：${monsterResist.value}`);
-            if (monsterResist.value <= 0) {
-                (defender as MonsterClass).removeStatus('抵抗');
-                logStore.logger.add(`🛡️ [${defender.name}] 抵抗效果已消耗殆盡！`);
-            }
-        }
+    // 檢查「抵抗」狀態效果
+    if (checkAndApplyResistance(isTargetPlayer ? playerStore : defender as MonsterClass)) {
+        outcome.totalDamage = 0;
     }
-
-    if (attacker.lifeSteal && outcome.totalDamage > 0) {
-        outcome.healAmount = Math.floor(outcome.totalDamage * (attacker.lifeSteal / 100));
-    }
-
-    // --- 7. 更新生命值與 Store 同步 ---
 
     // 扣除目標 HP
     if (isTargetPlayer) {
@@ -319,6 +274,9 @@ export function applySkillDamage(
     }
 
     // 處理生命偷取 (若有吸血，回復攻擊者 HP)
+    if (attacker.lifeSteal && outcome.totalDamage > 0) {
+        outcome.healAmount = Math.floor(outcome.totalDamage * (attacker.lifeSteal / 100));
+    }
     if (outcome.healAmount > 0) {
         const isAttackerPlayer = (attacker.name === playerStore.info.name);
         if (isAttackerPlayer) {
