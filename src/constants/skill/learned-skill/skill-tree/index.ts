@@ -16,7 +16,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...SKIN_SKILL_TREE,
     ...BODY_SKILL_TREE,
 
-    // 7. 融合技能：狂風刺擊 (融合橫擊與刺擊)
+    // 狂風刺擊 (融合橫擊與刺擊)
     Flurry: {
         id: 'Flurry',
         pathId: 'flurry',
@@ -29,6 +29,4 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
             return !!hasVertical && !!hasHorizontal && !!hasThrust;
         }
     },
-
-
 };

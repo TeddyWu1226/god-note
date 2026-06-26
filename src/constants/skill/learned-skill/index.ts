@@ -38,6 +38,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     ContinuousSwordVertical: Lv2SkillPassive.ContinuousSwordVertical,
     ContinuousSwordHorizontal: Lv2SkillPassive.ContinuousSwordHorizontal,
     ContinuousSwordPoint: Lv2SkillPassive.ContinuousSwordPoint,
+    BloodManaLoop: Lv2SkillPassive.BloodManaLoop,
 
     // Level 3
     SwordMaster: Lv3SkillPassive.SwordMaster,

@@ -35,5 +35,17 @@ export const SKIN_SKILL_TREE: Record<string, SkillTreeNode> = {
 export const BODY_SKILL_TREE: Record<string, SkillTreeNode> = {
     PhysiqueBoost: {id: 'PhysiqueBoost', pathId: 'PhysiqueBoost', tier: 1, isStarter: true},
     BrainPowerBoost: {id: 'BrainPowerBoost', pathId: 'BrainPowerBoost', tier: 1, isStarter: true},
+    BloodManaLoop: {
+        id: 'BloodManaLoop',
+        pathId: 'bloodManaLoop',
+        tier: 2,
+        fusesFrom: ['PhysiqueBoost', 'BrainPowerBoost'],
+        checkEligible: (playerStore) => {
+            const hasPhysique = playerStore.hasSkill('PhysiqueBoost');
+            const hasBrain = playerStore.hasSkill('BrainPowerBoost');
+            return !!hasPhysique && !!hasBrain;
+        }
+    },
+
 }
 

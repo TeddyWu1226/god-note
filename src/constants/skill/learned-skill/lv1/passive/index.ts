@@ -49,7 +49,7 @@ export class BrainPowerBoost extends SkillModel {
 
 
     description(): string {
-        return `最大SP值增加 ${this.spBonus} 點但最大生命值減少 ${this.hpBonus} 點。`;
+        return `最大法力值增加 ${this.spBonus} 點但最大生命值減少 ${this.hpBonus} 點。`;
     }
 
     protected execute(): boolean {

@@ -244,6 +244,40 @@ export class ContinuousSwordPoint extends SkillModel {
     }
 }
 
+export class BloodManaLoop extends SkillModel {
+    constructor() {
+        super({
+            id: 'BloodManaLoop',
+            name: "血魔循環",
+            icon: "skills/passive/blood_mana_loop.svg",
+            type: 'passive',
+            rarity: 'rare',
+        });
+    }
+
+    hpBonus = 30
+    spBonus = 30
+    hpRegenBonus = 2
+    spRegenBonus = 2
+
+    description(): string {
+        return `最大生命值與最大法力值皆增加 ${this.hpBonus} 點。在戰鬥中，每回合回復 ${this.hpRegenBonus} 點 HP 與 ${this.spRegenBonus} 點 SP。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            hpLimit: this.hpBonus,
+            spLimit: this.spBonus,
+            hpRegen: this.hpRegenBonus,
+            spRegen: this.spRegenBonus
+        };
+    }
+}
+
 
 
 
