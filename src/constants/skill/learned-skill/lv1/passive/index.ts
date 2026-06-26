@@ -6,19 +6,19 @@ export class PhysiqueBoost extends SkillModel {
     constructor() {
         super({
             id: 'PhysiqueBoost',
-            name: "強健體魄",
-            icon: "skills/passive/physique_icon.svg",
+            name: "血魔轉換",
+            icon: "skills/passive/physique_boost.svg",
             type: 'passive',
             rarity: 'common',
         });
     }
 
-    get hpBonus(): number {
-        return 50
-    }
+    hpBonus = 25
+    spBonus = 25
+
 
     description(): string {
-        return `最大生命值增加 ${this.hpBonus} 點。`;
+        return `最大生命值增加 ${this.hpBonus} 點但最大SP值減少 ${this.spBonus} 點。`;
     }
 
     protected execute(): boolean {
@@ -27,7 +27,39 @@ export class PhysiqueBoost extends SkillModel {
 
     override getPassiveBonus(): Record<string, number> {
         return {
-            hpLimit: this.hpBonus
+            hpLimit: this.hpBonus,
+            spLimit: -this.spBonus
+        };
+    }
+}
+
+export class BrainPowerBoost extends SkillModel {
+    constructor() {
+        super({
+            id: 'BrainPowerBoost',
+            name: "魔血轉換",
+            icon: "skills/passive/brain_power_boost.svg",
+            type: 'passive',
+            rarity: 'common',
+        });
+    }
+
+    hpBonus = 25
+    spBonus = 25
+
+
+    description(): string {
+        return `最大SP值增加 ${this.spBonus} 點但最大生命值減少 ${this.hpBonus} 點。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            hpLimit: -this.hpBonus,
+            spLimit: this.spBonus
         };
     }
 }

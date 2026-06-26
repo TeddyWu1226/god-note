@@ -563,18 +563,18 @@ export const usePlayerStore = defineStore('player-info', () => {
         statusEffects.value = statusEffects.value.filter(effect => effect.isBuff || effect.duration === -1)
 
         // 💡 重置技能冷卻 CD
-        if (info.value.skills) {
-            info.value.skills.forEach(skill => {
-                if (skill instanceof SkillModel) {
-                    skill.currentCd = 0;
-                }
-            });
-        }
-        if (info.value.offhandSkillCds) {
-            Object.keys(info.value.offhandSkillCds).forEach(key => {
-                (info.value.offhandSkillCds as any)[key] = 0;
-            });
-        }
+        // if (info.value.skills) {
+        //     info.value.skills.forEach(skill => {
+        //         if (skill instanceof SkillModel) {
+        //             skill.currentCd = 0;
+        //         }
+        //     });
+        // }
+        // if (info.value.offhandSkillCds) {
+        //     Object.keys(info.value.offhandSkillCds).forEach(key => {
+        //         (info.value.offhandSkillCds as any)[key] = 0;
+        //     });
+        // }
     }
 
     const addSkill = (skillKey: string) => {
