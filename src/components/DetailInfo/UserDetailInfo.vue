@@ -15,14 +15,18 @@ import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
 
 const playerStore = usePlayerStore();
+const gameStateStore = useGameStateStore();
 
 /**
  * 拖曳圖示功能
  */
 const fabRef = ref<HTMLElement | null>(null);
-const isShowStats = ref(false);
+const isShowStats = computed({
+  get: () => gameStateStore.isShowStats,
+  set: (val) => { gameStateStore.isShowStats = val; }
+});
 const {position, isDragging, isSnapping, handleStart} = useDraggable(fabRef, {
-  onSelect: () => isShowStats.value = true
+  onSelect: () => { gameStateStore.isShowStats = true; }
 });
 
 
@@ -44,7 +48,6 @@ const getBackgroundColor = (slotKey: string) => {
 const handleUnequip = (slotKey: keyof Equipment) => {
   playerStore.equipItem(null, null, slotKey)
   // 如果在戰鬥中，自動關閉狀態彈窗以顯示受傷
-  const gameStateStore = useGameStateStore();
   const inBattle = gameStateStore.currentEnemy.length > 0 &&
       !gameStateStore.isBattleWon &&
       !gameStateStore.isDead;
@@ -141,48 +144,56 @@ const getRarityName = (rarity: string) => {
 
     </template>
     <div class="stats-container">
+      <div class="stats-layout-row">
+        <!-- 左側：角色頭像 -->
+        <div class="char-avatar-showcase" v-if="playerStore.info.char">
+          <img :src="resolveIconPath(getEnumColumn(CharEnum, playerStore.info.char, 'avatar')) + '?v=2'" class="char-avatar-img" alt="avatar" />
+        </div>
 
-      <div class="main-stats-grid">
-        <div v-for="stat in availableUpgradeStat" :key="stat.value" class="stat-item">
-          <div class="stat-info">
-            {{ stat.icon }} {{ stat.label }}:
-            <template v-if="(stat as any)?.maxKey">
-              {{ playerStore.finalStats[stat.value] }} / {{ playerStore.info[(stat as any).maxKey] }}
-              <span
-                  v-if="playerStore.totalBonus[(stat as any).maxKey]"
-                  class="stat-bonus"
-                  :class="{ 'is-positive': playerStore.totalBonus[(stat as any).maxKey] > 0, 'is-negative': playerStore.totalBonus[(stat as any).maxKey] < 0 }"
-              >
-                ({{
-                  playerStore.totalBonus[(stat as any).maxKey] > 0 ? '+' : ''
-                }}{{ playerStore.totalBonus[(stat as any).maxKey] }})
-              </span>
-            </template>
-            <template v-else>
-              {{ playerStore.info[stat.value] || 0 }}{{ stat.unit }}
-              <span
-                  v-if="playerStore.totalBonus[stat.value]"
-                  class="stat-bonus"
-                  :class="{ 'is-positive': playerStore.totalBonus[stat.value] > 0, 'is-negative': playerStore.totalBonus[stat.value] < 0 }"
-              >
-                ({{ playerStore.totalBonus[stat.value] > 0 ? '+' : '' }}{{
-                  playerStore.totalBonus[stat.value]
-                }}{{ stat.unit }})
-              </span>
-            </template>
+        <!-- 右側：素質資料 -->
+        <div class="main-stats-grid">
+          <div v-for="stat in availableUpgradeStat" :key="stat.value" class="stat-item">
+            <div class="stat-info">
+              {{ stat.icon }} {{ stat.label }}:
+              <template v-if="(stat as any)?.maxKey">
+                {{ playerStore.finalStats[stat.value] }} / {{ playerStore.info[(stat as any).maxKey] }}
+                <span
+                    v-if="playerStore.totalBonus[(stat as any).maxKey]"
+                    class="stat-bonus"
+                    :class="{ 'is-positive': playerStore.totalBonus[(stat as any).maxKey] > 0, 'is-negative': playerStore.totalBonus[(stat as any).maxKey] < 0 }"
+                >
+                  ({{
+                    playerStore.totalBonus[(stat as any).maxKey] > 0 ? '+' : ''
+                  }}{{ playerStore.totalBonus[(stat as any).maxKey] }})
+                </span>
+              </template>
+              <template v-else>
+                {{ playerStore.info[stat.value] || 0 }}{{ stat.unit }}
+                <span
+                    v-if="playerStore.totalBonus[stat.value]"
+                    class="stat-bonus"
+                    :class="{ 'is-positive': playerStore.totalBonus[stat.value] > 0, 'is-negative': playerStore.totalBonus[stat.value] < 0 }"
+                >
+                  ({{ playerStore.totalBonus[stat.value] > 0 ? '+' : '' }}{{
+                    playerStore.totalBonus[stat.value]
+                  }}{{ stat.unit }})
+                </span>
+              </template>
+            </div>
+            <el-button
+                v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0"
+                size="small"
+                type="warning"
+                circle
+                class="upgrade-btn"
+                @click="allocatePoint(stat.value)"
+            >
+              +
+            </el-button>
           </div>
-          <el-button
-              v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0"
-              size="small"
-              type="warning"
-              circle
-              class="upgrade-btn"
-              @click="allocatePoint(stat.value)"
-          >
-            +
-          </el-button>
         </div>
       </div>
+
       <div v-if="showOther" class="other-stats-grid">
         <div v-for="stat in otherUpgradeStat" :key="stat.value" class="stat-item">
           <div class="stat-info">
@@ -411,7 +422,7 @@ const getRarityName = (rarity: string) => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  padding-bottom: 12px;
+  flex-grow: 1;
 }
 
 .other-stats-grid {
@@ -419,6 +430,32 @@ const getRarityName = (rarity: string) => {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 12px;
   padding-bottom: 12px;
+}
+
+.stats-layout-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.char-avatar-showcase {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.char-avatar-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
 }
 
 .stat-item {

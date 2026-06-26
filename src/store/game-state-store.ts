@@ -106,6 +106,9 @@ export const useGameStateStore = defineStore('game-state', () => {
     /** 是否正在進行全螢幕震動 */
     const isScreenShaking = ref(false);
 
+    /** 是否顯示角色詳細狀態彈窗 */
+    const isShowStats = ref(false);
+
     /** 觸發全螢幕震動 */
     function triggerScreenShake(duration = 300): void {
         isScreenShaking.value = false;
@@ -384,10 +387,11 @@ export const useGameStateStore = defineStore('game-state', () => {
         setEvent, isEventClose,
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
         enterJudgmentStage,
-        showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage
+        showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage,
+        isShowStats
     };
 }, {
     persist: {
-        omit: ['isScreenShaking']
+        omit: ['isScreenShaking', 'isShowStats']
     }
 });

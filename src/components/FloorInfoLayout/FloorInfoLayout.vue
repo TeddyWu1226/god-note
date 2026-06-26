@@ -23,6 +23,14 @@ const isShowBackpack = ref(false);
       </template>
     </span>
     <div class="flex items-center">
+      <!-- 屬性加點提醒 -->
+      <div 
+          v-if="playerStore.info.statPoints && playerStore.info.statPoints > 0" 
+          class="stat-upgrade-reminder"
+          @click="gameStateStore.isShowStats = true"
+      >
+        ⚡可分配屬性點: {{ playerStore.info.statPoints }}
+      </div>
       <span class="gold">{{ playerStore.info.gold }}💰</span>
       <el-button
           type="info"
@@ -53,5 +61,43 @@ const isShowBackpack = ref(false);
 .gold {
   color: gold;
   font-size: 1rem;
+}
+
+.stat-upgrade-reminder {
+  cursor: pointer;
+  color: #ffd700;
+  font-size: 0.75rem;
+  font-weight: bold;
+  background-color: rgba(255, 215, 0, 0.15);
+  border: 1px dashed #ffd700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 0.8rem;
+  animation: pulse-glow 2s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transition: background-color 0.2s, border-style 0.2s, box-shadow 0.2s;
+  user-select: none;
+}
+
+.stat-upgrade-reminder:hover {
+  background-color: rgba(255, 215, 0, 0.35);
+  border-style: solid;
+}
+
+.stat-upgrade-reminder:active {
+  background-color: rgba(255, 215, 0, 0.45);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    transform: scale(1.03);
+  }
 }
 </style>

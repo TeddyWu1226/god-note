@@ -11,6 +11,7 @@ import {Dagger, SpecialWeapon, Weapon} from "@/constants/items/equipment/weapon-
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {CharEnum} from "@/enums/char-enum";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
+import {resolveIconPath} from "@/utils/ui-helper";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -140,7 +141,10 @@ const continueGame = () => {
               :class="{ active: selectedClass === cls.value }"
               @click="selectedClass = cls.value"
           >
-            <div class="class-icon">{{ cls.icon }}</div>
+            <div class="class-icon">
+              <img v-if="cls.avatar" :src="resolveIconPath(cls.avatar) + '?v=2'" class="class-avatar-img" alt="avatar"/>
+              <span v-else>{{ cls.icon }}</span>
+            </div>
             <div class="class-label">{{ cls.label }}</div>
             <div class="class-desc">{{ cls.desc }}</div>
           </div>
@@ -333,6 +337,17 @@ const continueGame = () => {
 .class-icon {
   font-size: 2.2rem;
   margin-bottom: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.class-avatar-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  border-radius: 4px;
 }
 
 .class-label {

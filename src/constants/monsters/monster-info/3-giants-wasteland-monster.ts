@@ -2,10 +2,8 @@ import {MonsterModel} from "@/models/monster-model";
 import {WorldDefault} from "@/assets/const";
 import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
-import {checkProbability} from "@/utils/math";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
-import {MonsterActionParams} from "@/types";
 
 export class SandSlime extends MonsterModel {
     constructor() {
