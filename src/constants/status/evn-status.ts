@@ -98,13 +98,25 @@ const EvnStatus = {
         name: '亢奮',
         icon: '🤩',
         duration: -1,
-        description: '理智高於 40，精神處於極度亢奮狀態。'
+        description: '亢奮狀態，在攻擊「黑夜」的魔物時，降低 50% 傷害。'
     } as StatusEffect,
     LowSanity: {
         name: '癲狂',
         icon: '🤪',
         duration: -1,
-        description: '理智低於 -40，心智陷入無盡癲狂。'
+        description: '癲狂狀態，在攻擊「白晝」的魔物時，降低 50% 傷害。'
+    } as StatusEffect,
+    DaytimeEffect: {
+        name: '白晝',
+        icon: '☀️',
+        duration: -1,
+        description: '受到「癲狂」狀態下的敵人攻擊時，降低 50% 傷害。'
+    } as StatusEffect,
+    NighttimeEffect: {
+        name: '黑夜',
+        icon: '🌙',
+        duration: -1,
+        description: '受到「亢奮」狀態下的敵人攻擊時，降低 50% 傷害。'
     } as StatusEffect,
 }
 export default EvnStatus

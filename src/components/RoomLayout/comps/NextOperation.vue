@@ -158,6 +158,8 @@ const updateEnvironmentStatus = () => {
       if (!playerStore.hasStatus('理智')) {
         playerAdjustSanity(playerStore, 0);
       }
+      const isDay = (days >= 1 && days <= 25) || (days >= 51 && days <= 75)
+      gameStateStore.setEnvironmentMode(isDay ? 'day' : 'night')
       break;
 
     default:

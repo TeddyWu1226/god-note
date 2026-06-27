@@ -138,7 +138,16 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         outcome.totalDamage = 0;
     }
 
+    if (defender instanceof MonsterClass) {
+        if (defender.hasStatus('白晝') && attacker.hasStatus('癲狂')) {
+            damageTaken = Math.floor(damageTaken * 0.5);
+        } else if (defender.hasStatus('黑夜') && attacker.hasStatus('亢奮')) {
+            damageTaken = Math.floor(damageTaken * 0.5);
+        }
+    }
+
     // 更新生命值
+    outcome.totalDamage = damageTaken;
     if (defender instanceof MonsterClass) {
         // 普通怪物的邏輯
         // 因為有生命回復/吸血等情況 所以 要給他負數讓後續好計算
@@ -280,6 +289,16 @@ export function applySkillDamage({
     // --- 檢查「抵抗」狀態效果 ---
     if (checkAndApplyResistance(target)) {
         outcome.totalDamage = 0;
+    }
+
+    if (target instanceof MonsterClass) {
+        if (target.hasStatus('白晝') && speller.hasStatus('癲狂')) {
+            outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
+            logStore.logger.add(`🛡️ [白晝] 效果觸發！受到癲狂狀態下的技能，傷害降低 50%！`);
+        } else if (target.hasStatus('黑夜') && speller.hasStatus('亢奮')) {
+            outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
+            logStore.logger.add(`🛡️ [黑夜] 效果觸發！受到亢奮狀態下的技能，傷害降低 50%！`);
+        }
     }
 
     // --- 扣除目標 HP ---

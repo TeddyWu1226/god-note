@@ -77,22 +77,27 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
         });
         existing = playerStore.hasStatus(EvnStatus.Sanity.name);
     }
-    
+
     if (existing) {
         // 增減理智值
-        existing.value = (existing.value || 0) + amount;
-        
+        if (existing.value >= 100) {
+            existing.value = 100
+        } else if (existing.value <= -100) {
+            existing.value = -100
+        } else {
+            existing.value = (existing.value || 0) + amount;
+        }
+
         // 更新圖示與描述
-        existing.icon = existing.icon.replace(/\d+/, Math.abs(existing.value).toString())
-        existing.description = existing.description.replace(/\d+/, Math.abs(existing.value).toString())
-        
+        existing.icon = existing.icon.replace(/-?\d+/, existing.value.toString())
+
         // 檢查是否觸發亢奮或癲狂
-        if (existing.value > 40) {
+        if (existing.value > 20) {
             if (!playerStore.hasStatus(EvnStatus.HighSanity.name)) {
                 playerStore.addStatus(EvnStatus.HighSanity);
             }
             playerStore.removeStatus(EvnStatus.LowSanity.name);
-        } else if (existing.value < -40) {
+        } else if (existing.value < -20) {
             if (!playerStore.hasStatus(EvnStatus.LowSanity.name)) {
                 playerStore.addStatus(EvnStatus.LowSanity);
             }

@@ -45,7 +45,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     const isVictory = ref(false);
 
     /** 環境參數 (第四階段使用：'day' | 'night'，可擴充 'hell' | 'heaven' 等) */
-    const environmentMode = ref<string | undefined>(undefined);
+    const environmentMode = ref<'day' | 'night' | undefined>(undefined);
 
     /** 隨機產生的後續可選房間類型列表 */
     const nextRooms = ref<number[]>([]);
@@ -349,7 +349,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         showStageSelectDialog.value = false;
     }
 
-    function setEnvironmentMode(mode: string | undefined): void {
+    function setEnvironmentMode(mode?: 'day' | 'night'): void {
         environmentMode.value = mode;
     }
 

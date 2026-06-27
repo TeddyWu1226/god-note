@@ -107,32 +107,23 @@ export const GiantsWastelandWeights4: Record<string, number> = {
  * 第四階段：分裂之谷 (Split Canyon)
  */
 export const SplitCanyonWeights1: Record<string, number> = {
-    RiftSlime: 50,
-    CanyonHarpy: 30,
-    WindCutter: 15
+    DaytimeSlime: 30,
+    NighttimeSlime: 30
 };
 
 export const SplitCanyonWeights2: Record<string, number> = {
-    RiftSlime: 20,
-    CanyonHarpy: 20,
-    WindCutter: 30,
-    ThunderLizard: 20
+    DaytimeSlime: 15,
+    NighttimeSlime: 15
 };
 
 export const SplitCanyonWeights3: Record<string, number> = {
-    WindCutter: 20,
-    ThunderLizard: 30,
-    SkySlasher: 10,
-    EchoStone: 10,
-    CanyonSpecter: 15,
-    ShadowLeopard: 15
+    DaytimeIllusion: 15,
+    NighttimeIllusion: 15
 };
 
 export const SplitCanyonWeights4: Record<string, number> = {
-    SkySlasher: 25,
-    EchoStone: 25,
-    CanyonSpecter: 25,
-    ShadowLeopard: 25
+    DaytimeIllusion: 15,
+    NighttimeIllusion: 15
 };
 
 /**

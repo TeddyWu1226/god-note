@@ -58,10 +58,16 @@ const environmentClass = computed(() => {
 }
 
 .env-day {
-  background-color: #fffde6 !important;
+  box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.35), 
+              inset 0 0 80px rgba(255, 215, 0, 0.15) !important;
+  border-color: rgba(255, 215, 0, 0.3) !important;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
 }
 
 .env-night {
-  background-color: #f7efff !important;
+  box-shadow: inset 0 0 40px rgba(138, 43, 226, 0.3), 
+              inset 0 0 80px rgba(138, 43, 226, 0.12) !important;
+  border-color: rgba(138, 43, 226, 0.25) !important;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
 }
 </style>
