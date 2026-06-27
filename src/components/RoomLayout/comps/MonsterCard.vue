@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import './monster-animation.scss'
 import {computed, PropType, ref, watch} from 'vue';
-import {BattleOutcome} from "@/types";
+import {BattleOutcome, MonsterType} from "@/types";
 import {HpProgress} from "@/components/Shared/Progress";
-import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
+import {useGameStateStore} from "@/store/game-state-store";
 import {applyAttackDamage, triggerDamageEffect} from "@/constants/fight-func";
 import {MonsterModel} from "@/models/monster-model";
 import {usePlayerStore} from "@/store/player-store";
@@ -23,7 +23,12 @@ const handleClick = () => {
 const playerStore = usePlayerStore()
 const gameStateStore = useGameStateStore()
 const logStore = useLogStore()
-const finalStats = computed(() => getEffectiveStats(props.info));
+const finalStats = computed(() => {
+  if (props.info?.getEffectiveStats) {
+    return props.info?.getEffectiveStats()
+  }
+  return {} as MonsterType
+});
 
 // 新增狀態：用於控制抖動動畫
 const isShaking = ref(false);
@@ -96,7 +101,7 @@ const monsterAttack = () => {
   });
   // 傷害計算
   if (!canAttack) return
-  const damageResult = applyAttackDamage(getEffectiveStats(props.info), playerStore.finalStats, gameStateStore.currentEnemy[props.index]);
+  const damageResult = applyAttackDamage(props.info, playerStore);
   if (damageResult.isHit) {
     props.info.triggerOnAttackHit({
       playerStore: playerStore,

@@ -86,12 +86,11 @@ export class MonsterModel implements MonsterType {
         this.roundBehavior = data.roundBehavior;
     }
 
-    ap?: number;
-    magic?: number;
-
     /**
      * 計算包含 Buff/Debuff 狀態後的實際屬性值
      */
+
+
     getEffectiveStats(): MonsterModel {
         const finalStats: MonsterType = {
             id: this.id,

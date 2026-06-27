@@ -77,25 +77,25 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
  *
  * @param attacker 攻擊者單元
  * @param defender 被攻擊者單元 (此物件的 HP 屬性將會被修改)
- * @param monster 怪物原本的物件(用於更新血量)
  * @returns 包含戰鬥結果的 BattleOutcome 物件
  */
-export function applyAttackDamage(attacker: UnitType, defender: UnitType, monster: MonsterClass): BattleOutcome {
+export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defender: PlayerStoreType | MonsterClass): BattleOutcome {
+    const attackerFinalStats = attacker instanceof MonsterClass ? attacker.getEffectiveStats() : attacker.finalStats
+    const defenderFinalStats = defender instanceof MonsterClass ? defender.getEffectiveStats() : defender.finalStats
     const logStore = useLogStore();
-    const playerStore = usePlayerStore();
     // 1. 執行傷害計算
-    const damageOutput: DamageResult = calculateDamage(attacker, defender);
+    const damageOutput: DamageResult = calculateDamage(attackerFinalStats, defenderFinalStats);
 
     const outcome: BattleOutcome = {
         ...damageOutput,
         isKilled: false,
-        remainingHP: defender.hp,
+        timestamp: Date.now(),
     };
 
     if (!outcome.isHit) {
         // 未命中，不造成傷害，直接返回
-        const log = `${defender.name || '防禦者'} 閃避了攻擊。`
-        if (defender.name == playerStore.info.name) {
+        const log = `${defenderFinalStats.name || '防禦者'} 閃避了攻擊。`
+        if (!(defender instanceof MonsterClass)) {
             notHitPlayer()
         }
         logStore.logger.add(log);
@@ -103,73 +103,68 @@ export function applyAttackDamage(attacker: UnitType, defender: UnitType, monste
     }
 
     let damageTaken = damageOutput.totalDamage
-    // 額外效果
-    if (outcome.isCrit && !!playerStore.hasStatus(ItemStatus.Block.name)) {
-        let blockMultiplier = 0.50;
-        if (playerStore.checkSkillPath('block_boost')) {
-            console.log('有用喔')
-            blockMultiplier = 0.25;
-        }
-        damageTaken = Math.round(damageTaken * blockMultiplier);
-        monster.status.push(UsualStatus.Stuck);
+    if (!(defender instanceof MonsterClass)) {
+        // 額外效果-格檔檢查
+        if (outcome.isCrit && !!defender.hasStatus(ItemStatus.Block.name)) {
+            let blockMultiplier = 0.50;
+            if (defender.checkSkillPath('block_boost')) {
+                blockMultiplier = 0.25;
+            }
+            damageTaken = Math.round(damageTaken * blockMultiplier);
+            (attacker as MonsterClass).status.push(UsualStatus.Stuck);
 
-        // 反抗之心效果：完美格擋成功時，獲得下一回合 20% 增傷
-        if (playerStore.hasSkill('HeartOfRebellion')) {
-            playerStore.addStatus(
-                {
-                    name: '反抗之心',
-                    icon: '⚔️',
-                    duration: 2,
-                    isBuff: true,
-                    description: '下一回合提升 20% 物理與法術傷害',
-                    bonus: {
-                        adIncrease: 20,
-                        apIncrease: 20
+            // 反抗之心效果：完美格擋成功時，獲得下一回合 20% 增傷
+            if (defender.hasSkill('HeartOfRebellion')) {
+                defender.addStatus(
+                    {
+                        name: '反抗之心',
+                        icon: '⚔️',
+                        duration: 2,
+                        isBuff: true,
+                        description: '下一回合提升 20% 物理與法術傷害',
+                        bonus: {
+                            adIncrease: 20,
+                            apIncrease: 20
+                        }
                     }
-                }
-            );
-            logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
+                );
+                logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
+            }
         }
     }
-    const isPlayer = defender.name === playerStore.info.name
     // 檢查「抵抗」狀態效果
-    if (checkAndApplyResistance(isPlayer ? playerStore : monster)) {
+    if (checkAndApplyResistance(defender)) {
         damageTaken = 0;
         outcome.totalDamage = 0;
     }
 
-    // 2. 更新生命值
-    if (defender.name === playerStore.info.name) {
-        const result = playerStore.takeDamage(damageTaken);
-        defender.hp = playerStore.info.hp;
-        if (result.shieldAbsorbed > 0) {
-            logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
-        }
+    // 更新生命值
+    if (defender instanceof MonsterClass) {
+        // 普通怪物的邏輯
+        defender.hp = Math.max(0, defender.hp - damageTaken);
     } else {
-        // 普通怪物的邏輯 (假設怪物是普通的 reactive 物件)
-        monster.hp = Math.max(0, monster.hp - damageTaken);
+        defender.takeDamage(damageTaken)
+
     }
 
-    // 3. 判斷是否擊敗
-    if (defender.hp <= 0) {
+    // 判斷是否擊敗
+    const defendHp = defender instanceof MonsterClass ? defender.hp : defender.info.hp
+    if (defendHp <= 0) {
         outcome.isKilled = true;
     }
 
-    // 記錄剩餘生命值
-    outcome.remainingHP = defender.hp;
-
-    // 生命回復
+    // 生命竊取
     if (outcome.healAmount) {
-        if (attacker.name === monster.name) {
-            monster.hp = Math.min(attacker.hpLimit, attacker.hp + outcome.healAmount);
+        if (attacker instanceof MonsterClass) {
+            attacker.hp = Math.min(attackerFinalStats.hpLimit, attacker.hp + outcome.healAmount);
         } else {
-            playerStore.info.hp = Math.min(attacker.hpLimit, playerStore.info.hp + outcome.healAmount);
+            attacker.info.hp = Math.min(attackerFinalStats.hpLimit, attacker.info.hp + outcome.healAmount);
         }
     }
 
     // 輸出戰鬥日誌
     const logMessage = [
-        `${attacker.name || '攻擊者'} 攻擊 ${defender.name || '防禦者'}，`,
+        `${attackerFinalStats.name || '攻擊者'} 攻擊 ${defenderFinalStats.name || '防禦者'}，`,
         outcome.isCrit ? `💥 暴擊` : `命中`,
         `造成 ${damageTaken} 點傷害。`
     ].join('');
@@ -204,7 +199,6 @@ export function applySkillDamage(
         isHit: false,
         isCrit: false,
         isKilled: false,
-        remainingHP: defender.hp,
         timestamp: Date.now(),
     };
 
@@ -287,7 +281,6 @@ export function applySkillDamage(
     }
 
     if (defender.hp <= 0) outcome.isKilled = true;
-    outcome.remainingHP = defender.hp;
 
     // --- 8. 輸出日誌 ---
     const typeNames = {ad: '物理', ap: '魔法', true: '真實'};

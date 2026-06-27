@@ -8,12 +8,6 @@ import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 
-export const getEffectiveStats = (monster: any): any => {
-    if (monster && typeof monster.getEffectiveStats === 'function') {
-        return monster.getEffectiveStats();
-    }
-    return monster;
-};
 
 export const useGameStateStore = defineStore('game-state', () => {
     /** 當前所處的房間類型數值 (例如：戰鬥房、休息房、商店房、祝福房等) */
@@ -39,7 +33,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         if (newVal < 1) {
             maxClearedStage.value = 1;
         }
-    }, { immediate: true });
+    }, {immediate: true});
 
     /** 是否顯示大關選擇彈窗 */
     const showStageSelectDialog = ref(false);

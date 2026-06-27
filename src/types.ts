@@ -219,7 +219,6 @@ export interface DamageResult {
 
 export interface BattleOutcome extends DamageResult {
     isKilled: boolean;       // 被攻擊者是否被擊敗 (HP <= 0)
-    remainingHP: number;     // 被攻擊者剩餘的 HP
     timestamp?: number;
 }
 

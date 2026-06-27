@@ -4,7 +4,7 @@ import {QualityEnum} from "@/enums/quality-enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {MonsterCardExposed} from "@/components/RoomLayout/comps/types";
 import MonsterCard from "@/components/RoomLayout/comps/MonsterCard.vue";
-import {getEffectiveStats, useGameStateStore} from "@/store/game-state-store";
+import {useGameStateStore} from "@/store/game-state-store";
 import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import {ItemType, MonsterType} from "@/types";
 import {
@@ -322,8 +322,7 @@ const onAttack = () => {
 
   // 傷害計算
   if (!isPlayerStuck()) {
-    const outcome = applyAttackDamage(playerStore.finalStats,
-        getEffectiveStats(selectedMonster), selectedMonster)
+    const outcome = applyAttackDamage(playerStore, selectedMonster)
     // 觸發玩家所有被動與技能攻擊命中 Hook
 
     if (outcome.isHit) {
