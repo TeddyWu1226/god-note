@@ -141,7 +141,8 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     // 更新生命值
     if (defender instanceof MonsterClass) {
         // 普通怪物的邏輯
-        defender.hp = Math.max(0, defender.hp - damageTaken);
+        // 因為有生命回復/吸血等情況 所以 要給他負數讓後續好計算
+        defender.hp = defender.hp - damageTaken;
     } else {
         defender.takeDamage(damageTaken)
 
