@@ -10,7 +10,7 @@ import {
     MonsterOnAttackParams,
     MonsterOnAttackedParams,
     MonsterRoundBehaviorParams,
-    MonsterType
+    MonsterType, GameStateStoreType
 } from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -445,9 +445,9 @@ export class RockGolemClone extends MonsterModel {
             code: 'RockGolemClone',
             icon: '/monsters/rock_golem_normal.png',
             name: '巨岩魔像',
-            description: '巨岩魔像的分身，看起來與本尊一模一樣。',
+            description: '沙塵與岩石幻化出的龐然大物，與本體具有相同的威壓與形體，但胸口核心之處似乎少了一絲靈動。',
             class: 'boss big',
-            ad: 60,
+            ad: 55,
             critIncrease: 200,
             critRate: 15,
             adDefend: 50,
@@ -490,10 +490,10 @@ export class RockGolemGroup extends MonsterModel {
             code: 'RockGolemGroup',
             icon: '/monsters/rock_golem_normal.png',
             name: '巨岩魔像',
-            description: '第三階段最終BOSS，由堅硬巨岩構成的魔像群，能製造虛實莫測的分身。',
+            description: '由無數荒野巨石聚合而成的魔力核心載體。它們在岩石中重組與分裂，只有擊破那顆恆久的魔力源泉，才能令魔像群徹底靜止。',
             class: 'boss big',
-            ad: 60,
-            critIncrease: 200,
+            ad: 55,
+            critIncrease: 150,
             critRate: 15,
             adDefend: 50,
             dodge: 10,
@@ -504,6 +504,32 @@ export class RockGolemGroup extends MonsterModel {
             dropGold: 1000,
             drop: []
         });
+    }
+
+    createGolemGroup(gameStateStore: GameStateStoreType, logStore: any) {
+        // 清除現有分身
+        gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
+
+        // 召喚分身
+        const clone1 = new RockGolemClone(this.hp);
+        const clone2 = new RockGolemClone(this.hp);
+
+        const list = [...gameStateStore.currentEnemy, clone1, clone2];
+
+        // 隨機打亂順序
+        for (let i = list.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [list[i], list[j]] = [list[j], list[i]];
+        }
+
+        gameStateStore.currentEnemy = list;
+        logStore.logger.add(`巨岩魔像群發動了【石像軍團】！`);
+        gameStateStore.triggerScreenShake(800);
+    }
+
+    override onStartHook({gameStateStore, logStore}: MonsterActionParams) {
+        useEpicSubtitle("大地震盪...無數巨石化作魔物顯現...", 3000);
+        this.createGolemGroup(gameStateStore, logStore)
     }
 
     override onAttackedHook({gameStateStore, logStore, damage}: any) {
@@ -557,34 +583,16 @@ export class RockGolemGroup extends MonsterModel {
             this.isCracked = false;
             this.icon = '/monsters/rock_golem_normal.png';
             this.adDefend = 50;
+            this.status = []
 
-            // 2. 清除現有分身
-            gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
-
-            // 3. 召喚分身
-            const clone1 = new RockGolemClone(this.hp);
-            const clone2 = new RockGolemClone(this.hp);
-            const clone3 = new RockGolemClone(this.hp);
-
-            const list = [...gameStateStore.currentEnemy, clone1, clone2, clone3];
-
-            // 隨機打亂順序
-            for (let i = list.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [list[i], list[j]] = [list[j], list[i]];
-            }
-
-            gameStateStore.currentEnemy = list;
-
-            if (logStore) {
-                logStore.logger.add(`巨岩魔像群發動了【石像軍團】！`);
-            }
+            // 召喚石頭
             useFullScreenEffect({
                 message: '石像軍團',
                 color: '#d7ccc8',
                 duration: 1200
             });
-            gameStateStore.triggerScreenShake(800);
+            this.createGolemGroup(gameStateStore, logStore)
+
         }
     }
 

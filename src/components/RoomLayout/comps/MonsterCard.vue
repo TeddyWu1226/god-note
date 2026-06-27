@@ -33,7 +33,7 @@ const finalStats = computed(() => {
 // 新增狀態：用於控制抖動動畫
 const isShaking = ref(false);
 
-const isDead = computed(() => props.info?.hp === 0)
+const isDead = computed(() => props.info?.hp <= 0)
 
 const isImageIcon = computed(() => {
   const icon = props.info?.icon;

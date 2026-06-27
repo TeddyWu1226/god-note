@@ -733,7 +733,6 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
         // 因為有生命回復/吸血等情況 所以 要給他負數讓後續好計算
         info.value.hp = info.value.hp - damageTaken;
-        console.log('info.value.hp', info.value.hp)
         return {
             hpDamage: damageTaken,
             shieldAbsorbed: shieldAbsorbed
