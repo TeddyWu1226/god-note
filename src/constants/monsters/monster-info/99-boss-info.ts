@@ -17,6 +17,7 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
 import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
+import {applySkillDamage} from "@/constants/fight-func";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -338,7 +339,14 @@ export class BurrowingBehemoth extends MonsterModel {
         if (this.inHole && this.burrowCountdown === 0) {
             if (this.hasStatus(UsualStatus.DigHoleResistance.name)) {
                 const damage = this.ad * 4;
-                playerStore.takeDamage(damage);
+                applySkillDamage({
+                    speller: this,
+                    target: playerStore,
+                    baseValue: damage,
+                    type: "true",
+                    sureHit: true,
+                    skillName: '大地裂變'
+                })
                 gameStateStore.triggerScreenShake(1000);
                 useFullScreenEffect({
                     message: '大地裂變！',
