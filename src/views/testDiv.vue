@@ -98,37 +98,42 @@ const onSave = () => {
       <el-button @click="onSave">存檔</el-button>
       <el-collapse>
         <el-collapse-item title="回合環境參數">
-          <p v-for="key in Object.keys(gameStateStore.$state)">
-            {{ key }}: {{ gameStateStore.$state[key] }}
-          </p>
+          <el-scrollbar max-height="200px">
+            <p v-for="key in Object.keys(gameStateStore.$state)">
+              {{ key }}: {{ gameStateStore.$state[key] }}
+            </p>
+          </el-scrollbar>
         </el-collapse-item>
         <el-collapse-item title="玩家資訊">
-          <p v-for="key in Object.keys(playerStore.info)">-->
-            {{ key }}: {{ playerStore.info[key] }}
-          </p>
-          <p>
-            status: {{ playerStore.statusEffects }}
-          </p>
+          <el-scrollbar max-height="200px">
+            <p v-for="key in Object.keys(playerStore.info)">-->
+              {{ key }}: {{ playerStore.info[key] }}
+            </p>
+            <p>
+              status: {{ playerStore.statusEffects }}
+            </p>
+          </el-scrollbar>
         </el-collapse-item>
         <el-collapse-item title="統計追蹤">
-          <h3>當前階段</h3>
-          <div>
-            {{ trackerStore.currentKills }}
-          </div>
-          <h3>本場遊戲</h3>
-          <div>
-            {{ trackerStore.totalKills }}
-          </div>
-          <h3>其他</h3>
-          <p v-for="key in Object.keys(trackerStore.achievementsCount)">-->
-            {{ key }}: {{ trackerStore.achievementsCount[key] }}
-          </p>
+          <el-scrollbar max-height="200px">
+            <h3>當前階段</h3>
+            <div>
+              {{ trackerStore.currentKills }}
+            </div>
+            <h3>本場遊戲</h3>
 
+            <h3>其他</h3>
+            <p v-for="key in Object.keys(trackerStore.achievementsCount)">-->
+              {{ key }}: {{ trackerStore.achievementsCount[key] }}
+            </p>
+          </el-scrollbar>
         </el-collapse-item>
         <el-collapse-item title="裝備+狀態的加成效果">
-          <p v-for="key in Object.keys(playerStore.totalBonus)">
-            {{ key }}: {{ playerStore.totalBonus[key] }}
-          </p>
+          <el-scrollbar max-height="200px">
+            <p v-for="key in Object.keys(playerStore.totalBonus)">
+              {{ key }}: {{ playerStore.totalBonus[key] }}
+            </p>
+          </el-scrollbar>
         </el-collapse-item>
       </el-collapse>
     </div>

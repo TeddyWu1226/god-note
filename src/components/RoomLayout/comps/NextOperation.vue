@@ -9,6 +9,9 @@ import {DEFAULT_ROOM_WEIGHTS, EAST_ROOM_WEIGHTS} from "@/constants/default-const
 import {useTrackerStore} from "@/store/track-store";
 import {DifficultyEnum} from "@/enums/difficulty-enum";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
+import EvnStatus from "@/constants/status/evn-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {StageEnum} from "@/enums/stage-enum";
 
 const props = defineProps({
   disabled: Boolean,
@@ -81,22 +84,22 @@ const selectRoom = (roomValue: number) => {
   }
   gameStateStore.setRoom(roomValue)
   gameStateStore.nextRooms = []
+  updateEnvironmentStatus()
 };
 
 const continueStage = () => {
   gameStateStore.isBattleWon = false
   gameStateStore.setRoom(RoomEnum.Rest.value)
   gameStateStore.nextRooms = []
+  updateEnvironmentStatus()
 }
-
 
 
 const triggerJudgmentStage = () => {
   playerStore.healFull()
   trackerStore.init(false)
-
   gameStateStore.enterJudgmentStage()
-
+  updateEnvironmentStatus()
   useEpicSubtitle("⚖️ 審判時刻已到，終焉的考驗降臨...", 4000);
 }
 
@@ -108,6 +111,42 @@ onMounted(() => {
     createNextRooms()
   }
 })
+
+/**
+ * 更新特定大關與天數的環境 Buff / Debuff
+ */
+const updateEnvironmentStatus = () => {
+  const stage = gameStateStore.currentStage;
+  const days = gameStateStore.stageDays;
+  const resetEvn = () => {
+    const envStatusNames = [EvnStatus.Sandstorm.name];
+    playerStore.statusEffects = playerStore.statusEffects.filter(e => !envStatusNames.includes(e.name));
+  }
+  // 根據當前關卡與天數賦予對應的環境效果
+  switch (stage) {
+    case StageEnum.GiantsWasteland.value:
+      // 大荒地環境：魔力風暴 - 每回合扣 30 hp (受物理防禦減免)
+      const isStorm = (days >= 5 && days <= 20) || (days >= 35 && days <= 50) || (days >= 65 && days <= 80);
+      if (isStorm) {
+        if (!playerStore.hasStatus(EvnStatus.Sandstorm.name)) {
+          useFullScreenEffect({
+            message: '風暴來襲...',
+            color: 'brown'
+          });
+        }
+        playerStore.addStatus(EvnStatus.Sandstorm);
+      } else {
+        console.log('走到這')
+        resetEvn()
+      }
+      break;
+
+    default:
+      console.log('怎ˇ麼也來')
+      resetEvn()
+  }
+
+};
 </script>
 
 <template>
@@ -122,7 +161,6 @@ onMounted(() => {
       ⚖️ 迎接命運之審判 (進入第 1001 天)
     </el-button>
   </template>
-
 
 
   <!-- 已通關大關 BOSS 結算 (適用於第一次挑戰大關 Boss 勝利) -->

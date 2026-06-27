@@ -8,8 +8,6 @@ import {SkillModel} from "@/models/skill-model";
 import {SkillFactory} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
 import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
-import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
-import EvnStatus from "@/constants/status/evn-status";
 
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
@@ -737,33 +735,6 @@ export const usePlayerStore = defineStore('player-info', () => {
         };
     };
 
-    /**
-     * 更新特定大關與天數的環境 Buff / Debuff
-     */
-    const updateEnvironmentStatus = () => {
-        const gameStateStore = useGameStateStore();
-        const stage = gameStateStore.currentStage;
-        const days = gameStateStore.stageDays;
-
-        // 1. 移除舊的環境效果
-        const envStatusNames = [EvnStatus.Sandstorm.name];
-        statusEffects.value = statusEffects.value.filter(e => !envStatusNames.includes(e.name));
-
-        // 2. 根據當前關卡與天數賦予對應的環境效果
-        if (stage === 3) {
-            // 大荒地環境：魔力風暴
-            // 每回合扣 30 hp (受物理防禦減免)
-            const isStorm = (days >= 5 && days <= 20) || (days >= 35 && days <= 50) || (days >= 65 && days <= 80);
-            if (isStorm) {
-                useFullScreenEffect({
-                    message: '風暴來襲',
-                    color: 'brown'
-                });
-                addStatus(EvnStatus.Sandstorm);
-            }
-        }
-    };
-
     return {
         info, skillProficiency,
         stopValueChangeAnimation,
@@ -780,8 +751,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
-        gainExp, allocateStatPoint, takeDamage,
-        updateEnvironmentStatus
+        gainExp, allocateStatPoint, takeDamage
     };
 }, {
     persist: {
