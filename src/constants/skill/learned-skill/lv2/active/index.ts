@@ -64,7 +64,13 @@ export class Flurry extends SkillModel {
             if (livingEnemies.length === 0) break;
 
             const target = livingEnemies[Math.floor(Math.random() * livingEnemies.length)];
-            target.lastDamageResult = applySkillDamage(playerStore.finalStats, target, dmg, 'ad', `${this.name} (${i + 1}擊)`);
+            target.lastDamageResult = applySkillDamage({
+                speller: playerStore,
+                target: target,
+                baseValue: dmg,
+                type: 'ad',
+                skillName: `${this.name} (${i + 1}擊)`
+            });
             const el = getMonsterElement(target.id)
             if (el) {
                 useCardImpactEffect(el, 'physical');

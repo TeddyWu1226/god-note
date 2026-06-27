@@ -190,13 +190,13 @@ export class ContinuousSwordHorizontal extends SkillModel {
                 const enemies = gameStateStore.currentEnemy || [];
                 enemies.forEach((enemy: MonsterModel) => {
                     if (enemy && enemy.id !== monster.id && enemy.hp > 0) {
-                        enemy.lastDamageResult = applySkillDamage(
-                            playerStore.finalStats,
-                            enemy,
-                            attackOutcome.baseDamage * rate,
-                            'ad',
-                            '進階劍技-橫之型'
-                        );
+                        enemy.lastDamageResult = applySkillDamage({
+                            speller: playerStore,
+                            target: enemy,
+                            baseValue: attackOutcome.baseDamage * rate,
+                            type: 'ad',
+                            skillName: '進階劍技-橫之型'
+                        });
                         const el = getMonsterElement(enemy.id)
                         if (el) {
                             useCardImpactEffect(el, 'horizontal-slash');

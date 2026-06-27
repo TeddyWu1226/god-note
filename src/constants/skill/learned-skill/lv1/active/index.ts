@@ -37,20 +37,18 @@ export class VerticalSlash extends SkillModel {
         return `由上往下攻擊，總計造成 ${ColorText.ad(total)} 。`;
     }
 
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        const monster = params.monster;
+    protected execute({playerStore, monster}: SkillParams): boolean {
         if (!playerStore || !monster) return false;
 
         const totalDmg = this.extraDamage(playerStore);
-        monster.lastDamageResult = applySkillDamage(
-            playerStore.finalStats,
-            monster,
-            totalDmg,
-            'ad',
-            '豎擊'
-        );
-        useCardImpactEffect(getMonsterElement(params.monster.id), 'vertical-slash');
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: totalDmg,
+            type: 'ad',
+            skillName: '豎擊'
+        });
+        useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
         return true;
     }
 }
@@ -80,9 +78,7 @@ export class HorizontalSlash extends SkillModel {
         return `橫揮手中武器，造成全部敵人 ${ColorText.ad(dmg)} 。`;
     }
 
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        const gameStateStore = params.gameStateStore;
+    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
         if (!playerStore || !gameStateStore) return false;
 
         const enemies = gameStateStore.currentEnemy || [];
@@ -90,13 +86,13 @@ export class HorizontalSlash extends SkillModel {
 
         const dmg = this.getDamage(playerStore);
         enemies.forEach((enemy) => {
-            enemy.lastDamageResult = applySkillDamage(
-                playerStore.finalStats,
-                enemy,
-                dmg,
-                'ad',
-                '橫擊'
-            );
+            enemy.lastDamageResult = applySkillDamage({
+                speller: playerStore,
+                target: enemy,
+                baseValue: dmg,
+                type: 'ad',
+                skillName: '橫擊'
+            });
             const el = getMonsterElement(enemy.id)
             if (el) {
                 useCardImpactEffect(el, 'horizontal-slash');
@@ -130,26 +126,20 @@ export class Thrust extends SkillModel {
         return `蓄力向前刺擊，造成較高的${ColorText.ad(dmg)}，但降低此招 20 命中值。`;
     }
 
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        const monster = params.monster;
+    protected execute({playerStore, monster}: SkillParams): boolean {
         if (!playerStore || !monster) return false;
 
         const dmg = this.getDamage(playerStore);
 
-        const adjustedAttacker = {
-            ...playerStore.finalStats,
-            hit: (playerStore.finalStats.hit || 0) - 20
-        } as any;
-
-        monster.lastDamageResult = applySkillDamage(
-            adjustedAttacker,
-            monster,
-            dmg,
-            'ad',
-            '刺擊'
-        );
-        useCardImpactEffect(getMonsterElement(params.monster.id), 'thrust');
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: '刺擊',
+            modifiers: {hit: -20}
+        });
+        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
     }
 }
@@ -192,13 +182,13 @@ export class MagicBall extends SkillModel {
         if (!playerStore || !monster) return false;
 
         const dmg = this.getDamage(playerStore);
-        monster.lastDamageResult = applySkillDamage(
-            playerStore.finalStats,
-            monster,
-            dmg,
-            'ap',
-            '法力彈'
-        );
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ap',
+            skillName: '法力彈'
+        });
         useCardImpactEffect(getMonsterElement(params.monster.id), 'magic');
         return true;
     }
