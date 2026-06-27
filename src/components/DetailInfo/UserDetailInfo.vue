@@ -145,9 +145,20 @@ const getRarityName = (rarity: string) => {
     </template>
     <div class="stats-container">
       <div class="stats-layout-row">
-        <!-- 左側：角色頭像 -->
-        <div class="char-avatar-showcase" v-if="playerStore.info.char">
-          <img :src="resolveIconPath(getEnumColumn(CharEnum, playerStore.info.char, 'avatar')) + '?v=2'" class="char-avatar-img" alt="avatar" />
+        <!-- 左側：角色頭像與經驗條 -->
+        <div class="avatar-and-exp-container" v-if="playerStore.info.char">
+          <div class="char-avatar-showcase">
+            <img :src="resolveIconPath(getEnumColumn(CharEnum, playerStore.info.char, 'avatar')) + '?v=2'" class="char-avatar-img" alt="avatar" />
+          </div>
+          <div class="exp-bar-wrapper">
+            <div class="exp-label">EXP: {{ playerStore.info.currentExp }} / {{ playerStore.nextLevelExp }}</div>
+            <el-progress 
+              :percentage="playerStore.currentExpPercentage" 
+              :show-text="false"
+              stroke-width="8"
+              status="success"
+            />
+          </div>
         </div>
 
         <!-- 右側：素質資料 -->
@@ -684,6 +695,32 @@ const getRarityName = (rarity: string) => {
   font-size: 0.8rem;
   line-height: 1.4;
   color: #ddd;
+}
+
+.avatar-and-exp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 126px;
+}
+
+.exp-bar-wrapper {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+}
+
+.exp-label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #e6a23c;
+  text-align: center;
+  margin-bottom: 4px;
 }
 
 

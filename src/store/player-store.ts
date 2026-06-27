@@ -176,6 +176,10 @@ export const usePlayerStore = defineStore('player-info', () => {
         return Math.min(100, Math.round((info.value.currentExp / nextExp) * 100));
     });
 
+    const nextLevelExp = computed(() => {
+        return getNextLevelExp(info.value.level);
+    });
+
     // --- Actions ---
     /**
      * 檢查背包中是否有指定名稱或 ID 的道具
@@ -642,7 +646,13 @@ export const usePlayerStore = defineStore('player-info', () => {
      * 等級提升
      */
     const getNextLevelExp = (level: number) => {
-        return 10 * level;
+        if (level <= 25) {
+            return 10 * level;
+        } else if (25 < level && level <= 50) {
+            return 20 * level;
+        } else if (level <= 50) {
+            return 30 * level;
+        }
     };
 
     const gainExp = (source: { monsterLevel?: number; amount?: number, noExp?: boolean }) => {
@@ -747,6 +757,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         totalBonus,
         finalStats,
         currentExpPercentage,
+        nextLevelExp,
         statusEffects,
         equipItem, hasEquip,
         gainItem, hasItem, removeItem, unequipItem,
