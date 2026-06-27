@@ -86,6 +86,25 @@ const EvnStatus = {
         type: "damage",
         value: 25,
         affectedByDefense: true
-    } as StatusEffect
+    } as StatusEffect,
+    Sanity: {
+        name: '理智',
+        icon: '0🧠',
+        duration: -1,
+        description: '反映心智的穩定程度。白天上升，黑夜下降。高於 40 會進入「亢奮」狀態，低於 -40 會進入「癲狂」狀態。',
+        value: 0
+    } as StatusEffect,
+    HighSanity: {
+        name: '亢奮',
+        icon: '🤩',
+        duration: -1,
+        description: '理智高於 40，精神處於極度亢奮狀態。'
+    } as StatusEffect,
+    LowSanity: {
+        name: '癲狂',
+        icon: '🤪',
+        duration: -1,
+        description: '理智低於 -40，心智陷入無盡癲狂。'
+    } as StatusEffect,
 }
 export default EvnStatus

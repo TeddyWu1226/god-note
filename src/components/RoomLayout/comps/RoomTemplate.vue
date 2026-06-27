@@ -3,6 +3,7 @@ import '../room.css'
 import {GameState} from "@/enums/enums";
 import NextOperation from "@/components/RoomLayout/comps/NextOperation.vue";
 import {useGameStateStore} from "@/store/game-state-store";
+import {computed} from "vue";
 
 const props = defineProps({
   title: {type: String, required: false},
@@ -10,10 +11,17 @@ const props = defineProps({
   class: {type: String, required: false, default: 'room-layout'},
 })
 const gameStateStore = useGameStateStore();
+
+const environmentClass = computed(() => {
+  if (gameStateStore.environmentMode) {
+    return `env-${gameStateStore.environmentMode}`;
+  }
+  return '';
+});
 </script>
 
 <template>
-  <el-card :class="props.class">
+  <el-card :class="[props.class, environmentClass]">
     <div class="title" :class="props.titleClass">
       <template v-if="props.title">
         {{ props.title }}
@@ -47,5 +55,13 @@ const gameStateStore = useGameStateStore();
   overflow-y: auto;
   container-type: size;
   container-name: room-body;
+}
+
+.env-day {
+  background-color: #fffde6 !important;
+}
+
+.env-night {
+  background-color: #f7efff !important;
 }
 </style>

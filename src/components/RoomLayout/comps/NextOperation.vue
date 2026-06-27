@@ -12,6 +12,7 @@ import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle"
 import EvnStatus from "@/constants/status/evn-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {StageEnum} from "@/enums/stage-enum";
+import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 
 const props = defineProps({
   disabled: Boolean,
@@ -81,6 +82,14 @@ const selectRoom = (roomValue: number) => {
     gameStateStore.days += 1
     gameStateStore.stageDays += 1
     trackerStore.achievementsCount.peaceDay += 1
+
+    if (gameStateStore.currentStage === 4) {
+      if (gameStateStore.environmentMode === 'day') {
+        playerAdjustSanity(playerStore, 5);
+      } else if (gameStateStore.environmentMode === 'night') {
+        playerAdjustSanity(playerStore, -5);
+      }
+    }
   }
   gameStateStore.setRoom(roomValue)
   gameStateStore.nextRooms = []
@@ -119,7 +128,12 @@ const updateEnvironmentStatus = () => {
   const stage = gameStateStore.currentStage;
   const days = gameStateStore.stageDays;
   const resetEvn = () => {
-    const envStatusNames = [EvnStatus.Sandstorm.name];
+    const envStatusNames = [
+      EvnStatus.Sandstorm.name,
+      EvnStatus.Sanity,
+      EvnStatus.HighSanity,
+      EvnStatus.LowSanity
+    ];
     playerStore.statusEffects = playerStore.statusEffects.filter(e => !envStatusNames.includes(e.name));
   }
   // 根據當前關卡與天數賦予對應的環境效果
@@ -137,6 +151,12 @@ const updateEnvironmentStatus = () => {
         playerStore.addStatus(EvnStatus.Sandstorm);
       } else {
         resetEvn()
+      }
+      break;
+
+    case 4:
+      if (!playerStore.hasStatus('理智')) {
+        playerAdjustSanity(playerStore, 0);
       }
       break;
 

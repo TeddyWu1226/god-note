@@ -44,6 +44,9 @@ export const useGameStateStore = defineStore('game-state', () => {
     /** 遊戲是否已獲得最終勝利 */
     const isVictory = ref(false);
 
+    /** 環境參數 (第四階段使用：'day' | 'night'，可擴充 'hell' | 'heaven' 等) */
+    const environmentMode = ref<string | undefined>(undefined);
+
     /** 隨機產生的後續可選房間類型列表 */
     const nextRooms = ref<number[]>([]);
 
@@ -165,6 +168,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             isVictory.value = false;
             days.value = 0;
             currentRoomValue.value = RoomEnum.Rest.value;
+            environmentMode.value = undefined;
         }
         stageDays.value = 0;
         roomId.value = 0;
@@ -345,6 +349,10 @@ export const useGameStateStore = defineStore('game-state', () => {
         showStageSelectDialog.value = false;
     }
 
+    function setEnvironmentMode(mode: string | undefined): void {
+        environmentMode.value = mode;
+    }
+
     // --- 記得導出所有要在組件中使用的東西 ---
     return {
         currentRoomValue, difficulty, isDead,
@@ -377,7 +385,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
         enterJudgmentStage,
         showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage,
-        isShowStats
+        isShowStats,
+        environmentMode, setEnvironmentMode
     };
 }, {
     persist: {

@@ -34,6 +34,7 @@ import {Sleep} from "@/utils/create";
 import {useDebounceFn} from "@vueuse/core";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -270,6 +271,15 @@ const resolveRoundEnd = async () => {
   gameStateStore.battleRound += 1
   // 記錄後續回合日誌
   logStore.logger.add(`<div style="color: #409eff; font-weight: bold; margin-top: 8px;">⚔️ === 第 ${gameStateStore.battleRound} 回合 ===</div>`);
+
+  // 特定層數效果
+  if (gameStateStore.currentStage === 4) {
+    if (gameStateStore.environmentMode === 'day') {
+      playerAdjustSanity(playerStore, 2);
+    } else if (gameStateStore.environmentMode === 'night') {
+      playerAdjustSanity(playerStore, -2);
+    }
+  }
   // 觸發怪物每回合開始的特定行為
   tickStartAllMonsters()
 
@@ -528,6 +538,14 @@ const init = () => {
   // 新戰鬥開始，寫入第一回合日誌
   logStore.logger.clear();
   logStore.logger.add('<div style="color: #409eff; font-weight: bold; margin-top: 4px;">⚔️ === 第 1 回合 ===</div>');
+
+  if (gameStateStore.currentStage === 4) {
+    if (gameStateStore.environmentMode === 'day') {
+      playerAdjustSanity(playerStore, 2);
+    } else if (gameStateStore.environmentMode === 'night') {
+      playerAdjustSanity(playerStore, -2);
+    }
+  }
 }
 
 if (!gameStateStore.isBattleWon) {

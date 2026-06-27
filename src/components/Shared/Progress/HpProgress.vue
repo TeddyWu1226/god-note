@@ -15,6 +15,7 @@ const maxScale = computed(() => Math.max(props.totalValue, props.shield));
 
 const hpPercent = computed(() => {
   if (maxScale.value === 0) return 0;
+  if (props.currentValue <= 0) return 0;
   return (props.currentValue / maxScale.value) * 100;
 });
 
@@ -33,7 +34,7 @@ const computedHpColor = computed(() => {
   const per = calculatePercentageAsNumber(props.currentValue, props.totalValue);
   const yellowLine = 75;
   const redLine = 25;
-  
+
   if (per > yellowLine) {
     // Vibrant green gradient
     return 'linear-gradient(90deg, #2ecc71, #27ae60)';
@@ -51,18 +52,18 @@ const computedHpColor = computed(() => {
   <div class="custom-progress-container">
     <div class="progress-bar-track">
       <!-- HP Segment -->
-      <div 
-        class="progress-segment hp-segment" 
-        :style="{ 
+      <div
+          class="progress-segment hp-segment"
+          :style="{
           width: hpPercent + '%', 
           background: computedHpColor 
         }"
       ></div>
       <!-- Shield Segment (Overlay) -->
-      <div 
-        v-if="shield > 0"
-        class="progress-segment shield-segment" 
-        :style="{ 
+      <div
+          v-if="shield > 0"
+          class="progress-segment shield-segment"
+          :style="{
           width: shieldPercent + '%',
           left: shieldLeft + '%'
         }"
@@ -70,7 +71,7 @@ const computedHpColor = computed(() => {
     </div>
     <!-- Combined text overlay -->
     <div class="progress-text">
-      <span class="hp-text">{{ currentValue }}</span>
+      <span class="hp-text">{{ currentValue > 0 ? currentValue : 0 }}</span>
       <span class="px-1">/</span>
       <span class="hp-text">{{ totalValue }}</span>
       <span v-if="shield > 0" class="shield-text"> (+{{ shield }} 🛡️)</span>
@@ -116,15 +117,14 @@ const computedHpColor = computed(() => {
   z-index: 2;
   /* Beautiful glowing white/silver striped design with opacity to show underlying green HP */
   background: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.65),
-    rgba(255, 255, 255, 0.65) 6px,
-    rgba(220, 220, 220, 0.75) 6px,
-    rgba(220, 220, 220, 0.75) 12px
+      45deg,
+      rgba(255, 255, 255, 0.65),
+      rgba(255, 255, 255, 0.65) 6px,
+      rgba(220, 220, 220, 0.75) 6px,
+      rgba(220, 220, 220, 0.75) 12px
   );
-  box-shadow: 
-    inset 0 1px 2px rgba(255, 255, 255, 0.4),
-    0 0 6px rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4),
+  0 0 6px rgba(255, 255, 255, 0.7);
   border-left: 1px solid rgba(255, 255, 255, 0.4);
 }
 

@@ -239,10 +239,6 @@ watch(() => props.info.lastDamageResult, (newResult) => {
           <span class="stat-icon-label">🛡️</span>
           <span class="stat-value-label">{{ finalStats.adDefend }}</span>
         </div>
-        <div v-if="finalStats.apDefend" class="stat-col" :class="valueClass('apDefend')">
-          <span class="stat-icon-label">🌐</span>
-          <span class="stat-value-label">{{ finalStats.apDefend }}</span>
-        </div>
       </div>
 
       <!-- 血量條區 -->

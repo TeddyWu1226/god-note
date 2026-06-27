@@ -3,6 +3,7 @@ import {UnitStatus} from "@/constants/status/unit-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {MonsterModel} from "@/models/monster-model";
+import EvnStatus from "@/constants/status/evn-status";
 
 /**
  * 寒冷堆疊邏輯
@@ -64,4 +65,42 @@ export function checkAndApplyResistance(
         return true;
     }
     return false;
+}
+
+export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number) => {
+    let existing = playerStore.hasStatus(EvnStatus.Sanity.name);
+    if (!existing) {
+        // 建立初始理智狀態，理智設為 0
+        playerStore.addStatus({
+            ...EvnStatus.Sanity,
+            value: 0
+        });
+        existing = playerStore.hasStatus(EvnStatus.Sanity.name);
+    }
+    
+    if (existing) {
+        // 增減理智值
+        existing.value = (existing.value || 0) + amount;
+        
+        // 更新圖示與描述
+        existing.icon = existing.icon.replace(/\d+/, Math.abs(existing.value).toString())
+        existing.description = existing.description.replace(/\d+/, Math.abs(existing.value).toString())
+        
+        // 檢查是否觸發亢奮或癲狂
+        if (existing.value > 40) {
+            if (!playerStore.hasStatus(EvnStatus.HighSanity.name)) {
+                playerStore.addStatus(EvnStatus.HighSanity);
+            }
+            playerStore.removeStatus(EvnStatus.LowSanity.name);
+        } else if (existing.value < -40) {
+            if (!playerStore.hasStatus(EvnStatus.LowSanity.name)) {
+                playerStore.addStatus(EvnStatus.LowSanity);
+            }
+            playerStore.removeStatus(EvnStatus.HighSanity.name);
+        } else {
+            // 在 -40 ~ 40 之間，移除特殊狀態
+            playerStore.removeStatus(EvnStatus.HighSanity.name);
+            playerStore.removeStatus(EvnStatus.LowSanity.name);
+        }
+    }
 }
