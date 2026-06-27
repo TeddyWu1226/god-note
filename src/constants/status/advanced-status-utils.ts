@@ -80,9 +80,9 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
 
     if (existing) {
         // 增減理智值
-        if (existing.value >= 100) {
+        if (amount > 0 && existing.value >= 100) {
             existing.value = 100
-        } else if (existing.value <= -100) {
+        } else if (amount < 0 && existing.value <= -100) {
             existing.value = -100
         } else {
             existing.value = (existing.value || 0) + amount;

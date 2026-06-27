@@ -5,6 +5,7 @@ $colors: (
         "green": #00ff48,
         "blue": #3b82f6,
         "brown": #713b0f,
+        "yellow": #ffc107
 );
 
 @each $name, $color in $colors {

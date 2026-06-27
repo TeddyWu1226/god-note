@@ -82,12 +82,12 @@ const selectRoom = (roomValue: number) => {
     gameStateStore.days += 1
     gameStateStore.stageDays += 1
     trackerStore.achievementsCount.peaceDay += 1
-
+    // 黑夜白天理智調整
     if (gameStateStore.currentStage === 4) {
       if (gameStateStore.environmentMode === 'day') {
-        playerAdjustSanity(playerStore, 5);
+        playerAdjustSanity(playerStore, 3);
       } else if (gameStateStore.environmentMode === 'night') {
-        playerAdjustSanity(playerStore, -5);
+        playerAdjustSanity(playerStore, -3);
       }
     }
   }
@@ -159,6 +159,20 @@ const updateEnvironmentStatus = () => {
         playerAdjustSanity(playerStore, 0);
       }
       const isDay = (days >= 1 && days <= 25) || (days >= 51 && days <= 75)
+      if (isDay && gameStateStore.environmentMode !== 'day') {
+        useFullScreenEffect({
+          message: '白日來臨...',
+          color: '#fdff7e',
+          duration: 2000
+        });
+      }
+      if (!isDay && gameStateStore.environmentMode !== 'night') {
+        useFullScreenEffect({
+          message: '黑夜來臨...',
+          color: '#c57eff',
+          duration: 2000
+        });
+      }
       gameStateStore.setEnvironmentMode(isDay ? 'day' : 'night')
       break;
 

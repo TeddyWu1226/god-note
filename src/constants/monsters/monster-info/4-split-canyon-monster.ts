@@ -11,6 +11,7 @@ export class DaytimeSlime extends MonsterModel {
             icon: '🟡',
             code: 'DaytimeSlime',
             name: '白晝史萊姆',
+            class: 'icon-yellow',
             description: '溫暖日光凝聚成的史萊姆，擊打它能舒緩緊繃的神經。',
             ad: 32,
             critIncrease: WorldDefault.critIncrease,
@@ -30,11 +31,11 @@ export class DaytimeSlime extends MonsterModel {
         this.addEffect(EvnStatus.DaytimeEffect);
     }
 
-    // override onAttackedHook({playerStore, logStore, damage}: any) {
-    //     if (damage && damage.isHit && damage.totalDamage > 0 && playerStore) {
-    //         playerAdjustSanity(playerStore, 5);
-    //     }
-    // }
+    override onAttackedHook({playerStore, damage}: any) {
+        if (damage && damage.isHit && damage.totalDamage > 0 && playerStore) {
+            playerAdjustSanity(playerStore, 5);
+        }
+    }
 }
 
 export class NighttimeSlime extends MonsterModel {
@@ -43,6 +44,7 @@ export class NighttimeSlime extends MonsterModel {
             icon: '🟣',
             code: 'NighttimeSlime',
             name: '黑夜史萊姆',
+            class: 'icon-purple',
             description: '幽暗月光凝聚成的史萊姆，擊打它會散發出令人不安的氣息。',
             ad: 34,
             critIncrease: WorldDefault.critIncrease,
@@ -62,11 +64,11 @@ export class NighttimeSlime extends MonsterModel {
         this.addEffect(EvnStatus.NighttimeEffect);
     }
 
-    // override onAttackedHook({playerStore,damage}: any) {
-    //     if (damage && damage.isHit && damage.totalDamage > 0 && playerStore) {
-    //         playerAdjustSanity(playerStore, -5);
-    //     }
-    // }
+    override onAttackedHook({playerStore,damage}: any) {
+        if (damage && damage.isHit && damage.totalDamage > 0 && playerStore) {
+            playerAdjustSanity(playerStore, -5);
+        }
+    }
 }
 
 export class DaytimeIllusion extends MonsterModel {

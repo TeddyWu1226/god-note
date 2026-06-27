@@ -10,6 +10,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
 import {WorldDefault} from "@/assets/const";
+import EvnStatus from "@/constants/status/evn-status";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -139,10 +140,16 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     }
 
     if (defender instanceof MonsterClass) {
-        if (defender.hasStatus('白晝') && attacker.hasStatus('癲狂')) {
+        if (attacker.hasStatus(EvnStatus.HighSanity.name) && defender.hasStatus(EvnStatus.DaytimeEffect.name)) {
             damageTaken = Math.floor(damageTaken * 0.5);
-        } else if (defender.hasStatus('黑夜') && attacker.hasStatus('亢奮')) {
+        } else if (attacker.hasStatus(EvnStatus.LowSanity.name) && defender.hasStatus(EvnStatus.NighttimeEffect.name)) {
             damageTaken = Math.floor(damageTaken * 0.5);
+        }
+    } else {
+        if (defender.hasStatus(EvnStatus.HighSanity.name) && attacker.hasStatus(EvnStatus.NighttimeEffect.name)) {
+            damageTaken = Math.floor(damageTaken * 1.5);
+        } else if (defender.hasStatus(EvnStatus.LowSanity.name) && attacker.hasStatus(EvnStatus.DaytimeEffect.name)) {
+            damageTaken = Math.floor(damageTaken * 1.5);
         }
     }
 
@@ -292,12 +299,20 @@ export function applySkillDamage({
     }
 
     if (target instanceof MonsterClass) {
-        if (target.hasStatus('白晝') && speller.hasStatus('癲狂')) {
+        if (speller.hasStatus('亢奮') && target.hasStatus('白晝')) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-            logStore.logger.add(`🛡️ [白晝] 效果觸發！受到癲狂狀態下的技能，傷害降低 50%！`);
-        } else if (target.hasStatus('黑夜') && speller.hasStatus('亢奮')) {
+            logStore.logger.add(`🛡️ [屬性克制] 玩家處於亢奮狀態攻擊白晝魔物，技能傷害降低 50%！`);
+        } else if (speller.hasStatus('癲狂') && target.hasStatus('黑夜')) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-            logStore.logger.add(`🛡️ [黑夜] 效果觸發！受到亢奮狀態下的技能，傷害降低 50%！`);
+            logStore.logger.add(`🛡️ [屬性克制] 玩家處於癲狂狀態攻擊黑夜魔物，技能傷害降低 50%！`);
+        }
+    } else {
+        if (target.hasStatus('亢奮') && speller.hasStatus('黑夜')) {
+            outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
+            logStore.logger.add(`💥 [屬性克制] 玩家處於亢奮狀態受到黑夜魔物技能攻擊，傷害增加 50%！`);
+        } else if (target.hasStatus('癲狂') && speller.hasStatus('白晝')) {
+            outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
+            logStore.logger.add(`💥 [屬性克制] 玩家處於癲狂狀態受到白晝魔物技能攻擊，傷害增加 50%！`);
         }
     }
 
