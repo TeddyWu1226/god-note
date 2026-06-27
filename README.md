@@ -1,4 +1,4 @@
-# ⚔️ 神祇記事 (God Note)
+# ⚔️ 締造
 
 [![Deploy Vite Site](https://github.com/teddywu1226/god-note/actions/workflows/deploy.yml/badge.svg)](https://github.com/teddywu1226/god-note/actions)
 ![Version](https://img.shields.io/badge/Version-v0.0.6-blue)
@@ -9,7 +9,7 @@
 
 ## 🎮 立即遊玩
 
-🚀 **傳送門：[神祇記事 作者版](https://teddywu1226.github.io/god-note/)**
+🚀 **傳送門：[締造 作者版](https://teddywu1226.github.io/god-note/)**
 
 > **💡 系統支援：** 為獲得最佳戰鬥體驗，建議使用 **Google Chrome** 瀏覽器開啟。
 
