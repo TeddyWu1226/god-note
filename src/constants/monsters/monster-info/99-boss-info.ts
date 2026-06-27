@@ -252,7 +252,7 @@ export class FireWyrmling extends MonsterModel {
             icon: '/monsters/fire_wyrmling.png',
             name: '炎幼龍',
             description: '在火山核心孵化的炎龍幼崽，吞吐著毀滅性的烈焰。',
-            class: 'mystery',
+            class: 'mystery big icon-red',
             ad: 25,
             critIncrease: 200,
             critRate: 50,
@@ -345,7 +345,7 @@ export class BurrowingBehemoth extends MonsterModel {
                     color: 'red',
                     duration: 1500
                 });
-                logStore.logger.add(`${this.name}從地面翻滔而起，造成玩家${damage}傷害!`)
+                logStore.logger.add(`${this.name}從地面翻滔而起，造成玩家 ${damage} 點真實傷害!`)
                 // 清理狀態
                 this.removeStatus(UsualStatus.DigHoleResistance.name);
                 this.emerge();
@@ -420,6 +420,7 @@ export class BurrowingBehemoth extends MonsterModel {
                 color: 'orange'
             }
         );
+        this.shake(1000)
         this.burrowCountdown = 5;
         this.inHole = true;
     }

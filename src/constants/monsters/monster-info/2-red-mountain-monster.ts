@@ -224,7 +224,7 @@ export class ObsidianGolem extends MonsterModel {
             const reflect = Math.round(damage.totalDamage * 0.2);
             if (reflect > 0) {
                 playerStore.takeDamage(reflect);
-                logStore.logger.add(`黑曜石魔像的硬殼反彈了 ${reflect} 點傷害給玩家！`);
+                logStore.logger.add(`黑曜石魔像的硬殼反彈了 ${reflect} 點真實傷害給玩家！`);
             }
         }
     }

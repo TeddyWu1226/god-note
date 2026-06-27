@@ -713,6 +713,7 @@ export const usePlayerStore = defineStore('player-info', () => {
 
     /**
      * 扣除玩家受到傷害，優先由護盾扣除，若有溢傷才扣除 HP
+     * 此傷害不會有任何額外計算 屬於真實傷害
      */
     const takeDamage = (amount: number) => {
         const currentShield = info.value.shield || 0;

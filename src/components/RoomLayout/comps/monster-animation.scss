@@ -10,6 +10,7 @@ $colors: (
 @each $name, $color in $colors {
   .icon-#{$name} .monster-icon {
     filter: drop-shadow(0 0 3px #{$color}) drop-shadow(0 0 6px #{$color}) drop-shadow(0 0 12px #{$color});
+    z-index: -1;
   }
 }
 
@@ -144,7 +145,7 @@ $colors: (
   animation: mystery-edge-glow 4s ease-in-out infinite;
 }
 
-.monster-card.mystery::before {
+.mystery.monster-card::before {
   content: '';
   position: absolute;
   inset: -100%; /* 擴大範圍以利旋轉 */
@@ -159,7 +160,7 @@ $colors: (
 }
 
 /* --- 背景：內部呼吸光暈 --- */
-.monster-card.mystery .card-inner-glow {
+.mystery.monster-card.card-inner-glow {
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at 50% 50%, rgba(160, 32, 240, 0.15), transparent 70%);
@@ -189,23 +190,6 @@ $colors: (
   z-index: -1;
   animation: mystery-smoke 2s ease-in-out infinite;
 }
-
-.mystery .monster-icon {
-  font-size: 3rem;
-  position: relative;
-  display: inline-block;
-
-  /* 1. 基礎文字發光 (核心光暈) */
-  text-shadow: 0 0 10px rgba(160, 32, 240, 0.8),
-  0 0 20px rgba(160, 32, 240, 0.5);
-
-  /* 2. 輪廓擴散螢光 (利用 drop-shadow 產生外擴氛圍) */
-  filter: drop-shadow(0 0 5px #a020f0) drop-shadow(0 0 15px rgba(160, 32, 240, 0.6));
-
-}
-
-
-/* ------------------- 動畫定義 (Animations) ------------------- */
 
 @keyframes mystery-falling {
   0% {
