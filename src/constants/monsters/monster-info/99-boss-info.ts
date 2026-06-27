@@ -5,12 +5,12 @@ import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle"
 import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
 import {
+    GameStateStoreType,
     MonsterActionParams,
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
-    MonsterOnAttackedParams,
     MonsterRoundBehaviorParams,
-    MonsterType, GameStateStoreType
+    MonsterType
 } from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";

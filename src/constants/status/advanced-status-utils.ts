@@ -92,18 +92,17 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
         existing.icon = existing.icon.replace(/-?\d+/, existing.value.toString())
 
         // 檢查是否觸發亢奮或癲狂
-        if (existing.value > 20) {
+        if (existing.value >= 50) {
             if (!playerStore.hasStatus(EvnStatus.HighSanity.name)) {
                 playerStore.addStatus(EvnStatus.HighSanity);
             }
             playerStore.removeStatus(EvnStatus.LowSanity.name);
-        } else if (existing.value < -20) {
+        } else if (existing.value <= -50) {
             if (!playerStore.hasStatus(EvnStatus.LowSanity.name)) {
                 playerStore.addStatus(EvnStatus.LowSanity);
             }
             playerStore.removeStatus(EvnStatus.HighSanity.name);
         } else {
-            // 在 -40 ~ 40 之間，移除特殊狀態
             playerStore.removeStatus(EvnStatus.HighSanity.name);
             playerStore.removeStatus(EvnStatus.LowSanity.name);
         }
