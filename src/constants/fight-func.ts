@@ -1,8 +1,7 @@
 // 常數定義
-import {BattleOutcome, DamageResult, PlayerStoreType, UnitType} from "@/types";
+import {BattleOutcome, BonusType, DamageResult, PlayerStoreType, UnitType} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {useLogStore} from "@/store/log-store";
-import {usePlayerStore} from "@/store/player-store";
 import {getRandomItemByWeight, notHitPlayer} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {MonsterModel as MonsterClass} from "@/models/monster-model";
@@ -10,6 +9,7 @@ import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
+import {WorldDefault} from "@/assets/const";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -147,12 +147,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
     }
 
-    // 判斷是否擊敗
-    const defendHp = defender instanceof MonsterClass ? defender.hp : defender.info.hp
-    if (defendHp <= 0) {
-        outcome.isKilled = true;
-    }
-
     // 生命竊取
     if (outcome.healAmount) {
         if (attacker instanceof MonsterClass) {
@@ -161,6 +155,13 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             attacker.info.hp = Math.min(attackerFinalStats.hpLimit, attacker.info.hp + outcome.healAmount);
         }
     }
+
+    // 判斷是否擊敗
+    const defendHp = defender instanceof MonsterClass ? defender.hp : defender.info.hp
+    if (defendHp <= 0) {
+        outcome.isKilled = true;
+    }
+
 
     // 輸出戰鬥日誌
     const logMessage = [
@@ -177,7 +178,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
 /**
  * 執行技能傷害：對齊 calculateDamage 邏輯。
- * 計算順序：命中 -> 增幅 -> 暴擊 -> 固定防禦 -> 百分比減傷 -> 生命偷取
+ * 計算順序：命中 -> 增幅 -> 暴擊 -> 百分比減傷(敵人) -> 固定防禦 -> 生命偷取(特定)
  */
 export interface ApplySkillDamageParams {
     speller: PlayerStoreType | MonsterClass;
@@ -186,7 +187,9 @@ export interface ApplySkillDamageParams {
     type: 'ad' | 'ap' | 'true';
     skillName?: string;
     sureHit?: boolean;
-    modifiers?: Record<string, number>;
+    canCrit?: boolean;
+    canLifeSteal?: boolean;
+    modifiers?: BonusType;
 }
 
 export function applySkillDamage({
@@ -196,12 +199,18 @@ export function applySkillDamage({
                                      type,
                                      skillName = '',
                                      sureHit = false,
+                                     canCrit = false,
+                                     canLifeSteal = false,
                                      modifiers
                                  }: ApplySkillDamageParams): BattleOutcome {
     const logStore = useLogStore();
-    const playerStore = usePlayerStore();
-    const MAX_RATE = 100;
-
+    const spellerFinalStats = speller instanceof MonsterClass ? speller.getEffectiveStats() : speller.finalStats
+    const targetFinalStats = target instanceof MonsterClass ? target.getEffectiveStats() : target.finalStats
+    const spellerStats = {
+        ...spellerFinalStats,
+        // 換成技能額外增幅
+        ...(modifiers || {})
+    };
     const outcome: BattleOutcome = {
         totalDamage: 0,
         baseDamage: 0,
@@ -213,35 +222,15 @@ export function applySkillDamage({
         timestamp: Date.now(),
     };
 
-    function getUnitStats(unit: any): any {
-        if (!unit) return {};
-        if ('finalStats' in unit) {
-            return unit.finalStats;
-        }
-        if (typeof unit.getEffectiveStats === 'function') {
-            return unit.getEffectiveStats();
-        }
-        return unit;
-    }
+    const spellerName = (spellerStats.name || '未知單位');
+    const targetName = (targetFinalStats.name || '未知單位');
 
-    const baseSpellerStats = getUnitStats(speller);
-    const spellerStats = {
-        ...baseSpellerStats,
-        ...(modifiers || {})
-    };
-    const targetStats = getUnitStats(target);
-
-    const isSpellerPlayer = 'finalStats' in speller;
-    const isTargetPlayer = 'finalStats' in target;
-    const targetName = isTargetPlayer ? playerStore.info.name : (targetStats.name || '未知單位');
-    const spellerName = isSpellerPlayer ? playerStore.info.name : (spellerStats.name || '未知單位');
-
-    // --- 1. 命中判斷 ---
+    // --- 命中判斷 ---
     if (sureHit) {
         outcome.isHit = true;
     } else {
         const BASE_HIT_RATE = 100;
-        let hitRate = Math.max(0, BASE_HIT_RATE + (spellerStats.hit || 0) - (targetStats.dodge || 0));
+        let hitRate = Math.max(0, BASE_HIT_RATE + (spellerStats.hit || 0) - (targetFinalStats.dodge || 0));
         if (Math.random() * MAX_RATE >= hitRate) {
             if (skillName) {
                 logStore.logger.add(`${targetName} 閃避了 【${skillName}】。`);
@@ -253,7 +242,7 @@ export function applySkillDamage({
         outcome.isHit = true;
     }
 
-    // --- 2. 基礎傷害與傷害增幅 ---
+    // --- 基礎傷害與傷害增幅 ---
     let damage = baseValue;
     const increaseAttr = type === 'ad' ? 'adIncrease' : (type === 'ap' ? 'apIncrease' : null);
 
@@ -261,77 +250,65 @@ export function applySkillDamage({
         damage *= (1 + spellerStats[increaseAttr] / 100);
     }
 
-    // --- 3. 暴擊判斷與增傷 (在防禦前套用) ---
-    const totalCritRate = (spellerStats.critRate || 0);
-    if (Math.random() * MAX_RATE < totalCritRate) {
-        outcome.isCrit = true;
-        damage *= ((spellerStats.critIncrease || 150) / 100);
-    }
-    outcome.baseDamage = damage;
-
-    // --- 4. 防禦力減免與抗性 ---
     let finalDamage = damage;
 
-    if (type === 'ad' || type === 'ap') {
-        // 物理與魔法：皆扣除物理防禦值 (adDefend)
-        finalDamage = Math.max(1, finalDamage - (targetStats.adDefend || 0));
+    // --- 暴擊判斷與增傷 (在防禦前套用) ---
+    if (canCrit) {
+        const totalCritRate = (spellerStats.critRate || 0);
+        if (Math.random() * MAX_RATE < totalCritRate) {
+            outcome.isCrit = true;
+            damage *= ((spellerStats.critIncrease || WorldDefault.critIncrease) / 100);
+        }
+        outcome.baseDamage = damage;
     }
-    // true 類型直接跳過固定防禦
 
-    // --- 5. 百分比減傷 (defendIncrease) ---
-    if (type !== 'true' && targetStats.defendIncrease) {
-        const reduction = Math.min(targetStats.defendIncrease, 95);
+    // --- 抗性減傷 (defendIncrease) ---
+    if (type !== 'true' && targetFinalStats.defendIncrease) {
+        const reduction = Math.min(targetFinalStats.defendIncrease, 95);
         finalDamage *= (1 - reduction / 100);
+    }
+
+    // --- 防禦減免 true 類型直接跳過固定防禦---
+    if (type === 'ad' || type === 'ap') {
+        // 物理與魔法：皆扣除防禦值 (adDefend)
+        finalDamage = Math.max(1, finalDamage - (targetFinalStats.adDefend || 0));
     }
 
     outcome.totalDamage = Math.floor(finalDamage);
 
-    // 檢查「抵抗」狀態效果
-    const checkTarget = isTargetPlayer ? playerStore : target;
-    if (checkAndApplyResistance(checkTarget)) {
+    // --- 檢查「抵抗」狀態效果 ---
+    if (checkAndApplyResistance(target)) {
         outcome.totalDamage = 0;
     }
 
-    // 扣除目標 HP
-    if (isTargetPlayer) {
-        const result = playerStore.takeDamage(outcome.totalDamage);
-        if (target && 'hp' in target) {
-            target.hp = playerStore.info.hp;
-        }
-        if (result.shieldAbsorbed > 0) {
-            logStore.logger.add(`🛡️ 護盾吸收了 ${result.shieldAbsorbed} 點傷害！`);
-        }
+    // --- 扣除目標 HP ---
+    if (target instanceof MonsterClass) {
+        // 普通怪物的邏輯
+        target.hp = Math.max(0, target.hp - outcome.totalDamage);
     } else {
-        if (target && 'hp' in target) {
-            target.hp = Math.max(0, target.hp - outcome.totalDamage);
-        }
+        target.takeDamage(outcome.totalDamage)
     }
 
-    // 處理生命偷取 (若有吸血，回復攻擊者 HP)
-    if (spellerStats.lifeSteal && outcome.totalDamage > 0) {
-        outcome.healAmount = Math.floor(outcome.totalDamage * (spellerStats.lifeSteal / 100));
-    }
-    if (outcome.healAmount > 0) {
-        if (isSpellerPlayer) {
-            playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + outcome.healAmount);
-            if (speller && 'hp' in speller) {
-                speller.hp = playerStore.info.hp;
-            }
-        } else {
-            if (speller && 'hp' in speller) {
+    // --- 生命竊取 ---
+    if (canLifeSteal) {
+        if (outcome.healAmount) {
+            if (speller instanceof MonsterClass) {
                 speller.hp = Math.min(spellerStats.hpLimit, speller.hp + outcome.healAmount);
+            } else {
+                speller.info.hp = Math.min(spellerStats.hpLimit, speller.info.hp + outcome.healAmount);
             }
         }
     }
 
-    const checkHP = isTargetPlayer ? playerStore.info.hp : (target && 'hp' in target ? target.hp : 0);
-    if (checkHP <= 0) {
+    // 判斷是否擊敗
+    const defendHp = target instanceof MonsterClass ? target.hp : target.info.hp
+    if (defendHp <= 0) {
         outcome.isKilled = true;
     }
 
-    // --- 8. 輸出日誌 ---
+    // --- 輸出日誌 ---
     const typeNames = {ad: '物理', ap: '魔法', true: '真實'};
-    let logMessage = '';
+    let logMessage: string;
     if (skillName) {
         logMessage = [
             `${spellerName} 施放 【${skillName}】，`,
@@ -340,7 +317,7 @@ export function applySkillDamage({
             outcome.healAmount > 0 ? `(恢復 ${outcome.healAmount} 點生命)` : ''
         ].join('');
     } else {
-        logMessage = `${targetName} 受到傷害，造成 ${outcome.totalDamage} 點${typeNames[type]}傷害。${outcome.isCrit ? ' (💥 暴擊)' : ''}`;
+        logMessage = `${targetName} 受到 ${outcome.totalDamage} 點${typeNames[type]}傷害。${outcome.isCrit ? ' (💥 暴擊)' : ''}`;
     }
     logStore.logger.add(logMessage);
 
