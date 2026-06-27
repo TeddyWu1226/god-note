@@ -27,7 +27,7 @@ export class AncientSpider extends MonsterModel {
             code: 'AncientRoots',
             icon: '/monsters/spider.png',
             name: '古蜘蛛',
-            description: '巨大古老的蜘蛛，擅長用蜘蛛網網住獵物',
+            description: '巨大古老的蜘蛛，會對入侵者發射蜘蛛網。',
             class: 'boss big',
             ad: 18,
             critIncrease: 200,
@@ -72,9 +72,9 @@ export class Twilight extends MonsterModel {
         super({
             code: "Twilight",
             icon: '/monsters/mad_forest_god.png',
-            name: '墮落的半神',
-            class: 'mystery',
-            description: '掌控森林日出日落的半神，卻因失去愛人而墮落，決定讓太陽永不墜落。',
+            name: '癲狂的代理者',
+            class: 'boss big',
+            description: '維持森林協調的神祗代理者，但現在陷入癲狂而墮落，在永不退去的迷霧之中無盡的舞蹈。其舞蹈會加強他的破壞力，若要阻止，必須先停下他的舞蹈。',
             ad: 12,
             critIncrease: 100,
             critRate: 0,
@@ -455,7 +455,7 @@ export class RockGolemClone extends MonsterModel {
             hit: 70,
             hp: bossHp,
             hpLimit: 2000,
-            level: 40,
+            level: 35,
             noExp: true,
             dropGold: 0,
             drop: []
@@ -500,7 +500,7 @@ export class RockGolemGroup extends MonsterModel {
             hit: 70,
             hp: 2000,
             hpLimit: 2000,
-            level: 40,
+            level: 35,
             dropGold: 1000,
             drop: []
         });
@@ -600,9 +600,8 @@ export class RockGolemGroup extends MonsterModel {
         if (logStore) {
             logStore.logger.add(`💀 巨岩魔像群本尊的核心破碎崩潰！所有分身也化為碎石消散！`);
         }
-        if (gameStateStore) {
-            gameStateStore.currentEnemy = [];
-        }
+        // 清除現有分身
+        gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
     }
 }
 
