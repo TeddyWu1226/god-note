@@ -462,15 +462,17 @@ export class RockGolemClone extends MonsterModel {
         });
     }
 
-    override onAttackedHook({logStore}: any) {
+    override onAttackedHook({logStore, damage}: any) {
         if (!this.isCracked) {
-            if (checkProbability(0.2)) {
-                this.isCracked = true;
-                this.icon = '/monsters/rock_golem_cracked_nocore.png';
-                this.adDefend = 25
-                this.defendIncrease = -500
-                if (logStore) {
-                    logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+            if (damage && damage.isHit && damage.totalDamage > 0) {
+                if (checkProbability(0.2)) {
+                    this.isCracked = true;
+                    this.icon = '/monsters/rock_golem_cracked_nocore.png';
+                    this.adDefend = 25
+                    this.defendIncrease = -500
+                    if (logStore) {
+                        logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+                    }
                 }
             }
         }
@@ -504,14 +506,27 @@ export class RockGolemGroup extends MonsterModel {
         });
     }
 
-    override onAttackedHook({logStore}: any) {
+    override onAttackedHook({gameStateStore, logStore, damage}: any) {
         if (!this.isCracked) {
-            if (checkProbability(0.2)) {
-                this.isCracked = true;
-                this.icon = '/monsters/rock_golem_cracked_core.png';
-                this.adDefend = 25
-                if (logStore) {
-                    logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+            if (damage && damage.isHit && damage.totalDamage > 0) {
+                if (checkProbability(0.2)) {
+                    this.isCracked = true;
+                    this.icon = '/monsters/rock_golem_cracked_core.png';
+                    this.adDefend = 25
+                    if (logStore) {
+                        logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+                    }
+                }
+            }
+        } else {
+            // 已暴露核心，又再次受到傷害
+            if (damage && damage.isHit && damage.totalDamage > 0 && gameStateStore) {
+                const hasClones = gameStateStore.currentEnemy.some((m: any) => m.code === 'RockGolemClone');
+                if (hasClones) {
+                    gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
+                    if (logStore) {
+                        logStore.logger.add(`💀 巨岩魔像群本尊的核心再次受到重創！所有分身化為碎石消散！`);
+                    }
                 }
             }
         }
@@ -562,10 +577,10 @@ export class RockGolemGroup extends MonsterModel {
             gameStateStore.currentEnemy = list;
 
             if (logStore) {
-                logStore.logger.add(`🔮 巨岩魔像群發動了【石像軍團】！並重新排列、回復了完好狀態！`);
+                logStore.logger.add(`巨岩魔像群發動了【石像軍團】！`);
             }
             useFullScreenEffect({
-                message: '幻影沙塵！',
+                message: '石像軍團',
                 color: '#d7ccc8',
                 duration: 1200
             });
