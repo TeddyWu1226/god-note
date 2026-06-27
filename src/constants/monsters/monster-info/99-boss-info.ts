@@ -8,6 +8,7 @@ import {
     MonsterActionParams,
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
+    MonsterOnAttackedParams,
     MonsterRoundBehaviorParams,
     MonsterType
 } from "@/types";
@@ -164,7 +165,7 @@ export class FrostGiant extends MonsterModel {
             icon: '/monsters/frost_giant.png',
             name: '冰凍的巨人',
             description: '被永久冰封在山脈深處的遠古巨人，揮舞著巨大的寒冰錘。',
-            class: 'boss big',
+            class: 'boss big icon-blue',
             ad: 0,
             critIncrease: 200,
             critRate: 0,
@@ -304,25 +305,131 @@ export class FireWyrmling extends MonsterModel {
 /**
  * --- 大荒地 (Giants Wasteland) Bosses ---
  */
-export class WastelandBehemoth extends MonsterModel {
+export class BurrowingBehemoth extends MonsterModel {
+    triggered75 = false;
+    triggered50 = false;
+    triggered25 = false;
+
+    burrowCountdown = 0;
+    inHole = false;
+
     constructor() {
         super({
-            code: 'WastelandBehemoth',
-            icon: '🦣',
-            name: '荒地巨獸',
-            description: '在大荒原生存了數百年的史前巨獸，皮糙肉厚',
-            class: 'boss big',
+            code: 'BurrowingBehemoth',
+            icon: '/monsters/burrowing_behemoth.png',
+            name: '掘地巨獸',
+            description: '第三階段中間BOSS，是一隻兇猛的土色巨獸，擁有巨大的雙手與巨嘴，擅長鑽地伏擊。',
+            class: 'boss giant icon-brown',
             ad: 50,
             critIncrease: 200,
             critRate: 10,
             adDefend: 30,
-            dodge: 5,
+            dodge: 30,
             hit: 60,
-            hp: 1200,
-            hpLimit: 1200,
-            level: 15,
+            hp: 2000,
+            hpLimit: 2000,
+            level: 30,
             dropGold: 600
         });
+    }
+
+    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        // 鑽地期間不進行普通攻擊
+        if (this.inHole && this.burrowCountdown === 0) {
+            if (this.hasStatus(UsualStatus.DigHoleResistance.name)) {
+                const damage = this.ad * 4;
+                playerStore.takeDamage(damage);
+                gameStateStore.triggerScreenShake(1000);
+                useFullScreenEffect({
+                    message: '大地裂變！',
+                    color: 'red',
+                    duration: 1500
+                });
+                logStore.logger.add(`${this.name}從地面翻滔而起，造成玩家${damage}傷害!`)
+                // 清理狀態
+                this.removeStatus(UsualStatus.DigHoleResistance.name);
+                this.emerge();
+                return false
+            } else {
+                useFloatingMessage(
+                    '重新現身...',
+                    getMonsterElement(this.id),
+                    {
+                        duration: 2000,
+                        color: 'red'
+                    }
+                );
+                this.emerge();
+                return false
+            }
+        }
+        if (this.burrowCountdown > 0) {
+            useFloatingMessage(
+                '蓄力中...',
+                getMonsterElement(this.id),
+                {
+                    duration: 1000,
+                    color: 'yellow'
+                }
+            );
+            return false
+        }
+        return true
+    }
+
+    override onRoundBehaviorHook({playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+        const hpRatio = this.hp / this.hpLimit;
+
+        if (hpRatio <= 0.75 && !this.triggered75) {
+            this.triggerBurrow();
+        } else if (hpRatio <= 0.5 && !this.triggered50) {
+            this.triggered75 = true;
+            this.triggerBurrow();
+        } else if (hpRatio <= 0.25 && !this.triggered25) {
+            this.triggered75 = true;
+            this.triggered50 = true;
+            this.triggerBurrow();
+        }
+
+        if (this.inHole && !this.hasStatus(UsualStatus.DigHoleResistance.name)) {
+            this.emerge();
+        }
+
+        if (this.burrowCountdown > 0) {
+            this.burrowCountdown--;
+        }
+    }
+
+    private triggerBurrow() {
+        const hpRatio = this.hp / this.hpLimit;
+        if (hpRatio <= 0.25) {
+            this.triggered25 = true;
+        } else if (hpRatio <= 0.5) {
+            this.triggered50 = true;
+        } else if (hpRatio <= 0.75) {
+            this.triggered75 = true;
+        }
+
+        this.icon = '🕳️';
+        this.addEffect(UsualStatus.DigHoleResistance);
+        useFloatingMessage(
+            '鑽入地洞！',
+            getMonsterElement(this.id),
+            {
+                duration: 2000,
+                color: 'orange'
+            }
+        );
+        this.burrowCountdown = 5;
+        this.inHole = true;
+    }
+
+    private emerge() {
+        this.burrowCountdown = 0;
+        this.icon = '/monsters/burrowing_behemoth.png';
+        this.inHole = false;
+        // 確保移除相關抵抗盾
+        this.removeStatus(UsualStatus.DigHoleResistance.name);
     }
 }
 
@@ -547,7 +654,7 @@ export const Boss = {
     FireWyrmling: new FireWyrmling(),
 
     // --- 大荒地 (Giants Wasteland) ---
-    WastelandBehemoth: new WastelandBehemoth(),
+    BurrowingBehemoth: new BurrowingBehemoth(),
     LordOfEarthquakes: new LordOfEarthquakes(),
 
     // --- 分裂之谷 (Split Canyon) ---
@@ -573,7 +680,7 @@ export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType 
         main: Boss.FireWyrmling
     },
     3: {
-        mini: Boss.WastelandBehemoth,
+        mini: Boss.BurrowingBehemoth,
         main: Boss.LordOfEarthquakes
     },
     4: {

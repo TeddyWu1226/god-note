@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import './boss-animation.css'
-import './god-animation.css'
 import './monster-animation.scss'
 import {computed, PropType, ref, watch} from 'vue';
 import {BattleOutcome} from "@/types";
@@ -153,7 +151,7 @@ watch(() => props.info, (newMonster, oldMonster) => {
       shake(time);
     };
   }
-}, { immediate: true });
+}, {immediate: true});
 
 defineExpose({
   shake,
@@ -360,17 +358,6 @@ watch(() => props.info.lastDamageResult, (newResult) => {
   transition: all 0.2s ease;
 }
 
-.mystery:deep(.monster-image-icon) {
-  width: 150%;
-  height: 150%;
-}
-
-.boss:deep(.monster-image-icon) {
-  width: 150%;
-  height: 150%;
-}
-
-
 /* 名字區 */
 .monster-name-container {
   width: 100%;
@@ -469,10 +456,6 @@ watch(() => props.info.lastDamageResult, (newResult) => {
 
   .monster-avatar-container {
     height: 2.5rem;
-  }
-
-  .death-emoji {
-    font-size: 1.6rem;
   }
 
   .monster-name {

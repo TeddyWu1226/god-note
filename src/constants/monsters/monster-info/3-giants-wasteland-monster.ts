@@ -133,22 +133,23 @@ export class RockBull extends MonsterModel {
     }
 
     override onRoundBehaviorHook() {
-        if (this.hp <= (this.hpLimit / 3)) {
+        if (this.hp <= (this.hpLimit / 2.5)) {
             this.addEffect(UsualStatus.Angry)
         }
     }
 
-    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+    override onAttackHitHook({playerStore, gameStateStore}: MonsterOnAttackHitParams) {
         if (this.hasStatus(UsualStatus.Angry.name)) {
             playerStore.unequipItem('weapon')
             useFloatingMessage(
-                '哞!!',
-                getMonsterElement(this.id),
+                '武器掉落了...',
+                null,
                 {
-                    duration: 800,
+                    duration: 1000,
                     color: 'red'
                 }
             );
+            gameStateStore.triggerScreenShake(500)
         }
     }
 }

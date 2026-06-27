@@ -45,4 +45,12 @@ export const UsualStatus = {
         description: '使得前 %value% 次受到的傷害歸 0',
         value: 3
     } as StatusEffect,
+    DigHoleResistance: {
+        name: '抵抗',
+        icon: '6🤽🏼‍♀️',
+        duration: 5,
+        isBuff: true,
+        description: '掘地巨獸鑽入了地洞，使得前 %value% 次受到的傷害歸 0，4回合後若仍有抵抗效果，將會造成超大量傷害！',
+        value: 6
+    } as StatusEffect,
 }
