@@ -185,6 +185,7 @@ export interface MonsterType extends UnitType {
     drop?: DropEntry[]
     dropGold?: number
     status?: StatusEffect[]
+    noExp?: boolean // 不給予經驗
     onStart?: string | ((params: MonsterActionParams) => void) // 回合開始時觸發
     onAttack?: string | ((params: MonsterOnAttackParams) => void), // 怪物攻擊前觸發
     onAttackHit?: string | ((params: MonsterOnAttackHitParams) => void), // 怪物攻擊命中後觸發

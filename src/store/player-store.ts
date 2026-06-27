@@ -645,7 +645,10 @@ export const usePlayerStore = defineStore('player-info', () => {
         return 10 * level;
     };
 
-    const gainExp = (source: { monsterLevel?: number; amount?: number }) => {
+    const gainExp = (source: { monsterLevel?: number; amount?: number, noExp?: boolean }) => {
+        if (source.noExp) {
+            return
+        }
         let earnedExp: number
         if (source.monsterLevel) {
             earnedExp = Math.max(0, -1 + source.monsterLevel * 2);

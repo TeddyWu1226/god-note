@@ -136,13 +136,11 @@ const updateEnvironmentStatus = () => {
         }
         playerStore.addStatus(EvnStatus.Sandstorm);
       } else {
-        console.log('走到這')
         resetEvn()
       }
       break;
 
     default:
-      console.log('怎ˇ麼也來')
       resetEvn()
   }
 

@@ -28,6 +28,7 @@ export class MonsterModel implements MonsterType {
     hp: number;
     hpLimit: number;
     level: number;
+    noExp?: boolean;
     adIncrease?: number;
     apIncrease?: number;
     defendIncrease?: number;
@@ -84,6 +85,7 @@ export class MonsterModel implements MonsterType {
         this.lastDamageResult = data.lastDamageResult;
         this.tick = data.tick || {};
         this.roundBehavior = data.roundBehavior;
+        this.noExp = data.noExp
     }
 
     /**

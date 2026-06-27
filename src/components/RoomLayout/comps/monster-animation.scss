@@ -10,7 +10,7 @@ $colors: (
 @each $name, $color in $colors {
   .icon-#{$name} .monster-icon {
     filter: drop-shadow(0 0 3px #{$color}) drop-shadow(0 0 6px #{$color}) drop-shadow(0 0 12px #{$color});
-    z-index: -1;
+    z-index: 0;
   }
 }
 

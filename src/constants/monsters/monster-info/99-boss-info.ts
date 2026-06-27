@@ -404,8 +404,11 @@ export class BurrowingBehemoth extends MonsterModel {
         const hpRatio = this.hp / this.hpLimit;
         if (hpRatio <= 0.25) {
             this.triggered25 = true;
+            this.triggered50 = true;
+            this.triggered75 = true;
         } else if (hpRatio <= 0.5) {
             this.triggered50 = true;
+            this.triggered75 = true;
         } else if (hpRatio <= 0.75) {
             this.triggered75 = true;
         }
@@ -434,36 +437,148 @@ export class BurrowingBehemoth extends MonsterModel {
     }
 }
 
-export class LordOfEarthquakes extends MonsterModel {
-    constructor() {
+export class RockGolemClone extends MonsterModel {
+    isCracked = false;
+
+    constructor(bossHp: number) {
         super({
-            code: 'LordOfEarthquakes',
-            icon: '🧌',
-            name: '震地領主',
-            description: '掌控荒野大地的巨石惡魔，每一次踩踏都能引發地震',
-            class: 'mystery',
-            ad: 80,
+            code: 'RockGolemClone',
+            icon: '/monsters/rock_golem_normal.png',
+            name: '巨岩魔像',
+            description: '巨岩魔像的分身，看起來與本尊一模一樣。',
+            class: 'boss big',
+            ad: 60,
             critIncrease: 200,
             critRate: 15,
-            adDefend: 40,
+            adDefend: 50,
+            dodge: 10,
+            hit: 70,
+            hp: bossHp,
+            hpLimit: 2000,
+            level: 40,
+            noExp: true,
+            dropGold: 0,
+            drop: []
+        });
+    }
+
+    override onAttackedHook({logStore}: any) {
+        if (!this.isCracked) {
+            if (checkProbability(0.2)) {
+                this.isCracked = true;
+                this.icon = '/monsters/rock_golem_cracked_nocore.png';
+                this.adDefend = 25
+                this.defendIncrease = -500
+                if (logStore) {
+                    logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+                }
+            }
+        }
+    }
+}
+
+export class RockGolemGroup extends MonsterModel {
+    triggered75 = false;
+    triggered50 = false;
+    triggered25 = false;
+    isCracked = false;
+
+    constructor() {
+        super({
+            code: 'RockGolemGroup',
+            icon: '/monsters/rock_golem_normal.png',
+            name: '巨岩魔像',
+            description: '第三階段最終BOSS，由堅硬巨岩構成的魔像群，能製造虛實莫測的分身。',
+            class: 'boss big',
+            ad: 60,
+            critIncrease: 200,
+            critRate: 15,
+            adDefend: 50,
             dodge: 10,
             hit: 70,
             hp: 2000,
             hpLimit: 2000,
-            level: 17,
+            level: 40,
             dropGold: 1000,
             drop: []
         });
     }
 
-    override onStartHook() {
-        useEpicSubtitle("「大地在此顫抖，你們的骨頭亦然！」", 4000);
+    override onAttackedHook({logStore}: any) {
+        if (!this.isCracked) {
+            if (checkProbability(0.2)) {
+                this.isCracked = true;
+                this.icon = '/monsters/rock_golem_cracked_core.png';
+                this.adDefend = 25
+                if (logStore) {
+                    logStore.logger.add(`💥 受到攻擊！${this.name} 的胸前岩石碎裂了！`);
+                }
+            }
+        }
     }
 
-    override onAttackHitHook({playerStore, logStore}: any) {
-        if (checkProbability(0.3)) {
-            playerStore.addStatus(UnitStatus.WoodStuck); // 震地擊暈，使用 stuck 機制
-            logStore.logger.add(`🧌 震地領主引發大地震動，你被震暈了！`);
+    override onRoundBehaviorHook({gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+        if (this.hp <= 0) return;
+        const hpRatio = this.hp / this.hpLimit;
+
+        let shouldSummon = false;
+        if (hpRatio <= 0.25 && !this.triggered25) {
+            this.triggered75 = true;
+            this.triggered50 = true;
+            this.triggered25 = true;
+            shouldSummon = true;
+        } else if (hpRatio <= 0.50 && !this.triggered50) {
+            this.triggered75 = true;
+            this.triggered50 = true;
+            shouldSummon = true;
+        } else if (hpRatio <= 0.75 && !this.triggered75) {
+            this.triggered75 = true;
+            shouldSummon = true;
+        }
+
+        if (shouldSummon && gameStateStore) {
+            // 1. 本尊回滿血，重置碎裂狀態、圖示與防禦力
+            this.hp = this.hpLimit;
+            this.isCracked = false;
+            this.icon = '/monsters/rock_golem_normal.png';
+            this.adDefend = 50;
+
+            // 2. 清除現有分身
+            gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
+
+            // 3. 召喚分身
+            const clone1 = new RockGolemClone(this.hp);
+            const clone2 = new RockGolemClone(this.hp);
+            const clone3 = new RockGolemClone(this.hp);
+
+            const list = [...gameStateStore.currentEnemy, clone1, clone2, clone3];
+
+            // 隨機打亂順序
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+
+            gameStateStore.currentEnemy = list;
+
+            if (logStore) {
+                logStore.logger.add(`🔮 巨岩魔像群發動了【石像軍團】！並重新排列、回復了完好狀態！`);
+            }
+            useFullScreenEffect({
+                message: '幻影沙塵！',
+                color: '#d7ccc8',
+                duration: 1200
+            });
+            gameStateStore.triggerScreenShake(800);
+        }
+    }
+
+    override onDeadHook({gameStateStore, logStore}: any) {
+        if (logStore) {
+            logStore.logger.add(`💀 巨岩魔像群本尊的核心破碎崩潰！所有分身也化為碎石消散！`);
+        }
+        if (gameStateStore) {
+            gameStateStore.currentEnemy = [];
         }
     }
 }
@@ -656,7 +771,7 @@ export const Boss = {
 
     // --- 大荒地 (Giants Wasteland) ---
     BurrowingBehemoth: new BurrowingBehemoth(),
-    LordOfEarthquakes: new LordOfEarthquakes(),
+    RockGolemGroup: new RockGolemGroup(),
 
     // --- 分裂之谷 (Split Canyon) ---
     StormColossus: new StormColossus(),
@@ -682,7 +797,7 @@ export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType 
     },
     3: {
         mini: Boss.BurrowingBehemoth,
-        main: Boss.LordOfEarthquakes
+        main: Boss.RockGolemGroup
     },
     4: {
         mini: Boss.StormColossus,

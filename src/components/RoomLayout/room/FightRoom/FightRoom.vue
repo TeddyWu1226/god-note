@@ -164,7 +164,7 @@ const whenMonsterDead = () => {
     // 紀錄擊殺
     trackStore.recordKill(selectedMonster.name)
     // 經驗取得
-    playerStore.gainExp({monsterLevel: selectedMonster.level})
+    playerStore.gainExp({monsterLevel: selectedMonster.level, noExp: selectedMonster?.noExp})
     // 掉落金幣
     const dropMoney = applyRandomFloatAndRound(selectedMonster.dropGold ?? 0)
     playerStore.addGold(dropMoney)
