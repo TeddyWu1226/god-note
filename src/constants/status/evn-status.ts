@@ -106,13 +106,6 @@ const EvnStatus = {
         duration: -1,
         description: '妄想狀態。攻擊「黑夜」魔物時傷害降低 50%；受到「白晝」魔物攻擊時傷害增加 50%。'
     } as StatusEffect,
-    SanityDieCountDown: {
-        name: '精神潰決',
-        icon: '%value%⏳',
-        duration: -1,
-        description: `若連續維持 5 天維持極端理智，將會受到 100% 最大生命值真實傷害！剩餘 %value% 天。`,
-        value: 5
-    },
     DaytimeEffect: {
         name: '白晝',
         icon: '☀️',

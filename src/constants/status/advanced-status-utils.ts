@@ -101,16 +101,5 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
             playerStore.removeStatus(EvnStatus.HighSanity.name);
             playerStore.removeStatus(EvnStatus.LowSanity.name);
         }
-
-        // --- 精神潰決倒數狀態維護 ---
-        const gameStateStore = useGameStateStore();
-        if (Math.abs(existing.value) >= 100) {
-            const daysCount = gameStateStore.otherRecord['consecutive_extreme_sanity_days'] || 0;
-            const remaining = 5 - daysCount;
-            playerStore.addStatus(EvnStatus.SanityDieCountDown, {value: remaining});
-        } else {
-            gameStateStore.otherRecord['consecutive_extreme_sanity_days'] = 0;
-            playerStore.removeStatus(EvnStatus.SanityDieCountDown.name);
-        }
     }
 }

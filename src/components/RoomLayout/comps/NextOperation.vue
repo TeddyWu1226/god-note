@@ -89,26 +89,6 @@ const selectRoom = (roomValue: number) => {
       } else if (gameStateStore.environmentMode === 'night') {
         playerAdjustSanity(playerStore, -3);
       }
-
-      // 檢查理智是否達到極端值 (100 或 -100)
-      const sanityStatus = playerStore.statusEffects.find(s => s.name === EvnStatus.Sanity.name);
-      const sanityValue = sanityStatus ? (sanityStatus.value || 0) : 0;
-      if (Math.abs(sanityValue) >= 100) {
-        gameStateStore.otherRecord['consecutive_extreme_sanity_days'] =
-            (gameStateStore.otherRecord['consecutive_extreme_sanity_days'] || 0) + 1;
-
-        const daysCount = gameStateStore.otherRecord['consecutive_extreme_sanity_days'];
-        if (daysCount >= 5) {
-          const maxHp = playerStore.finalStats.hpLimit;
-          playerStore.takeDamage(maxHp);
-        } else {
-          // 重新整理並觸發狀態上狀態/下狀態與天數剩餘天數提示
-          playerAdjustSanity(playerStore, 0);
-        }
-      } else {
-        gameStateStore.otherRecord['consecutive_extreme_sanity_days'] = 0;
-        playerStore.removeStatus(EvnStatus.SanityDieCountDown.name);
-      }
     }
   }
   gameStateStore.setRoom(roomValue)
@@ -153,10 +133,8 @@ const updateEnvironmentStatus = () => {
       EvnStatus.Sanity.name,
       EvnStatus.HighSanity.name,
       EvnStatus.LowSanity.name,
-      EvnStatus.SanityDieCountDown.name,
     ];
     playerStore.statusEffects = playerStore.statusEffects.filter(e => !envStatusNames.includes(e.name));
-    gameStateStore.otherRecord['consecutive_extreme_sanity_days'] = 0;
   }
   // 根據當前關卡與天數賦予對應的環境效果
   switch (stage) {
