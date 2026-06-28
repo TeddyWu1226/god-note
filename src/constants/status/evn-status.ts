@@ -101,10 +101,10 @@ const EvnStatus = {
         description: '亢奮狀態。攻擊「白晝」魔物時傷害降低 50%；受到「黑夜」魔物攻擊時傷害增加 50%。'
     } as StatusEffect,
     LowSanity: {
-        name: '癲狂',
+        name: '妄想',
         icon: '🤪',
         duration: -1,
-        description: '癲狂狀態。攻擊「黑夜」魔物時傷害降低 50%；受到「白晝」魔物攻擊時傷害增加 50%。'
+        description: '妄想狀態。攻擊「黑夜」魔物時傷害降低 50%；受到「白晝」魔物攻擊時傷害增加 50%。'
     } as StatusEffect,
     SanityDieCountDown: {
         name: '精神潰決',
@@ -117,13 +117,13 @@ const EvnStatus = {
         name: '白晝',
         icon: '☀️',
         duration: -1,
-        description: '開局自帶白晝守護。受到「亢奮」狀態下的敵人攻擊時，降低 50% 傷害；受到「癲狂」狀態下的敵人攻擊時，傷害增加 50%。'
+        description: '開局自帶白晝守護。受到「亢奮」狀態下的敵人攻擊時，降低 50% 傷害；攻擊「妄想」狀態下的敵人時，增加 50% 傷害。'
     } as StatusEffect,
     NighttimeEffect: {
         name: '黑夜',
         icon: '🌙',
         duration: -1,
-        description: '開局自帶黑夜守護。受到「癲狂」狀態下的敵人攻擊時，降低 50% 傷害；受到「亢奮」狀態下的敵人攻擊時，傷害增加 50%。'
+        description: '開局自帶黑夜守護。受到「妄想」狀態下的敵人攻擊時，降低 50% 傷害；攻擊「亢奮」狀態下的敵人時，增加 50% 傷害。'
     } as StatusEffect,
 
 }

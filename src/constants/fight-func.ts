@@ -299,20 +299,16 @@ export function applySkillDamage({
     }
 
     if (target instanceof MonsterClass) {
-        if (speller.hasStatus('亢奮') && target.hasStatus('白晝')) {
+        if (speller.hasStatus(EvnStatus.HighSanity.name) && target.hasStatus(EvnStatus.DaytimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-            logStore.logger.add(`🛡️ [屬性克制] 玩家處於亢奮狀態攻擊白晝魔物，技能傷害降低 50%！`);
-        } else if (speller.hasStatus('癲狂') && target.hasStatus('黑夜')) {
+        } else if (speller.hasStatus(EvnStatus.LowSanity.name) && target.hasStatus(EvnStatus.NighttimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-            logStore.logger.add(`🛡️ [屬性克制] 玩家處於癲狂狀態攻擊黑夜魔物，技能傷害降低 50%！`);
         }
     } else {
-        if (target.hasStatus('亢奮') && speller.hasStatus('黑夜')) {
+        if (target.hasStatus(EvnStatus.HighSanity.name) && speller.hasStatus(EvnStatus.NighttimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
-            logStore.logger.add(`💥 [屬性克制] 玩家處於亢奮狀態受到黑夜魔物技能攻擊，傷害增加 50%！`);
-        } else if (target.hasStatus('癲狂') && speller.hasStatus('白晝')) {
+        } else if (target.hasStatus(EvnStatus.LowSanity.name) && speller.hasStatus(EvnStatus.DaytimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
-            logStore.logger.add(`💥 [屬性克制] 玩家處於癲狂狀態受到白晝魔物技能攻擊，傷害增加 50%！`);
         }
     }
 
