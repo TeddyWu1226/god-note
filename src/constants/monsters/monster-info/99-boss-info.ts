@@ -16,8 +16,9 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
 import {ItemStatus} from "@/constants/status/item-status";
-import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
+import {playerGetColdStackEffects, playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import {applySkillDamage} from "@/constants/fight-func";
+import EvnStatus from "@/constants/status/evn-status";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -790,6 +791,141 @@ export class GodOfJudgment extends MonsterModel {
     }
 }
 
+export class DayTitan extends MonsterModel {
+    constructor() {
+        super({
+            code: 'DayTitan',
+            icon: '/monsters/day_titan.png',
+            name: '日之泰坦',
+            description: '克蘇魯風格的白晝支配者，散發著熾熱的日光光芒。',
+            class: 'boss giant',
+            ad: 85,
+            critIncrease: 200,
+            critRate: 15,
+            adDefend: 40,
+            dodge: 15,
+            hit: 80,
+            hp: 3000,
+            hpLimit: 3000,
+            level: 22,
+            dropGold: 1200
+        });
+    }
+
+    override onStartHook() {
+        useEpicSubtitle("「光芒所及之處，皆為吾之領域。凡人，直視這萬丈烈陽吧！」", 4000);
+        this.addEffect(EvnStatus.DaytimeEffect);
+    }
+
+    override onAttackHook({playerStore, logStore}: MonsterOnAttackParams) {
+        if (checkProbability(0.3)) {
+            const isMad = playerStore?.hasStatus(EvnStatus.LowSanity.name);
+            const multiplier = isMad ? 1.5 : 1.0;
+            const damage = Math.round(this.ad * 1.5 * multiplier);
+
+            if (isMad && logStore) {
+                logStore.logger.add(`🔥 [癲狂破綻] 玩家的心智破綻被日之泰坦洞悉，烈陽耀斑傷害提升 50%！`);
+            }
+
+            applySkillDamage({
+                speller: this,
+                target: playerStore as any,
+                baseValue: damage,
+                type: "ad",
+                sureHit: true,
+                skillName: '烈陽耀斑'
+            });
+
+            return false;
+        }
+        return true;
+    }
+
+    override onRoundBehaviorHook({playerStore, logStore}: MonsterRoundBehaviorParams) {
+        if (this.hp <= 0) return;
+
+        // 耀光洗禮：每回合結束時，若玩家理智值低於 0，強制 +10
+        const sanityStatus = playerStore?.statusEffects.find((s: any) => s.name === EvnStatus.Sanity.name);
+        const sanityValue = sanityStatus ? (sanityStatus.value || 0) : 0;
+        if (sanityValue < 0 && playerStore) {
+            playerAdjustSanity(playerStore, 10);
+            if (logStore) {
+                logStore.logger.add(`☀️ [耀光洗禮] 日之泰坦強行淨化心靈，玩家理智提升了 10 點！`);
+            }
+        }
+    }
+}
+
+export class NightTitan extends MonsterModel {
+    whisperCooldown = 0;
+
+    constructor() {
+        super({
+            code: 'NightTitan',
+            icon: '/monsters/night_titan.png',
+            name: '夜之泰坦',
+            description: '克蘇魯風格的黑夜支配者，驅使著無盡的暗影囈語。',
+            class: 'boss giant',
+            ad: 110,
+            critIncrease: 200,
+            critRate: 20,
+            adDefend: 50,
+            dodge: 20,
+            hit: 100,
+            hp: 5000,
+            hpLimit: 5000,
+            level: 25,
+            dropGold: 2500
+        });
+    }
+
+    override onStartHook() {
+        useEpicSubtitle("「黑暗終將籠罩一切，在永無止境的虛空呢喃中崩潰吧。」", 4000);
+        this.addEffect(EvnStatus.NighttimeEffect);
+    }
+
+    override onAttackHook({playerStore, logStore}: MonsterOnAttackParams) {
+        this.whisperCooldown++;
+        if (this.whisperCooldown >= 3) {
+            this.whisperCooldown = 0;
+            const damage = Math.round(this.ad * 1.2);
+
+            applySkillDamage({
+                speller: this,
+                target: playerStore as any,
+                baseValue: damage,
+                type: "ap",
+                sureHit: true,
+                skillName: '黯月呢喃'
+            });
+
+            if (playerStore) {
+                playerAdjustSanity(playerStore, -15);
+            }
+            if (logStore) {
+                logStore.logger.add(`🌙 [黯月呢喃] 受到暗影侵蝕，玩家理智降低了 15 點！`);
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+    override onRoundBehaviorHook({playerStore, logStore}: MonsterRoundBehaviorParams) {
+        if (this.hp <= 0) return;
+
+        // 無盡癲狂：每回合結束時，若玩家理智值高於 0，強制 -10
+        const sanityStatus = playerStore?.statusEffects.find((s: any) => s.name === EvnStatus.Sanity.name);
+        const sanityValue = sanityStatus ? (sanityStatus.value || 0) : 0;
+        if (sanityValue > 0 && playerStore) {
+            playerAdjustSanity(playerStore, -10);
+            if (logStore) {
+                logStore.logger.add(`🌌 [無盡癲狂] 夜之泰坦的暗影耳語響起，玩家理智降低了 10 點！`);
+            }
+        }
+    }
+}
+
 export const Boss = {
     // --- 迷霧森林 (Misty Forest) ---
     AncientRoots: new AncientSpider(),
@@ -813,7 +949,11 @@ export const Boss = {
 
     // --- 審判之日 (Judgment Stage) ---
     ArchangelMichael: new ArchangelMichael(),
-    GodOfJudgment: new GodOfJudgment()
+    GodOfJudgment: new GodOfJudgment(),
+
+    // --- 特殊 Boss ---
+    DayTitan: new DayTitan(),
+    NightTitan: new NightTitan()
 };
 
 export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType }> = {
