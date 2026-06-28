@@ -158,7 +158,7 @@ const updateEnvironmentStatus = () => {
       if (!playerStore.hasStatus('理智')) {
         playerAdjustSanity(playerStore, 0);
       }
-      const isDay = (days >= 1 && days <= 25) || (days >= 51 && days <= 75)
+      const isDay = (days >= 1 && days <= 10) || (days >= 21 && days <= 30) || (days >= 41 && days <= 50) || (days >= 61 && days <= 70) || (days >= 81 && days <= 90)
       if (isDay && gameStateStore.environmentMode !== 'day') {
         useFullScreenEffect({
           message: '白日來臨...',
