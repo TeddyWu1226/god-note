@@ -428,6 +428,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     const addStatus = (
         effect: StatusEffect,
         custom?: {
+            icon?: string,
             bonus?: BonusType,
             value?: number,
             duration?: number
@@ -437,6 +438,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         const existingIndex = statusEffects.value.findIndex(e => e.name === effect.name);
         const newStat = genCustomStatus({
                 base: effect,
+                icon: custom?.icon,
                 bonus: custom?.bonus,
                 value: custom?.value,
                 duration: custom?.duration,
@@ -444,7 +446,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         )
         if (existingIndex != -1) {
             // 刷新
-            statusEffects[existingIndex] = newStat
+            statusEffects.value[existingIndex] = newStat
         } else {
             statusEffects.value.push(
                 newStat

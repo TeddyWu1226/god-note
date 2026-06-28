@@ -4,6 +4,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {UsualStatus} from "@/constants/status/usual-status";
 import {MonsterModel} from "@/models/monster-model";
 import EvnStatus from "@/constants/status/evn-status";
+import {useGameStateStore} from "@/store/game-state-store";
 
 /**
  * 寒冷堆疊邏輯
@@ -80,13 +81,7 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
 
     if (existing) {
         // 增減理智值
-        if (amount > 0 && existing.value >= 100) {
-            existing.value = 100
-        } else if (amount < 0 && existing.value <= -100) {
-            existing.value = -100
-        } else {
-            existing.value = (existing.value || 0) + amount;
-        }
+        existing.value = Math.max(-100, Math.min(100, (existing.value || 0) + amount));
 
         // 更新圖示與描述
         existing.icon = existing.icon.replace(/-?\d+/, existing.value.toString())
@@ -105,6 +100,17 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
         } else {
             playerStore.removeStatus(EvnStatus.HighSanity.name);
             playerStore.removeStatus(EvnStatus.LowSanity.name);
+        }
+
+        // --- 精神潰決倒數狀態維護 ---
+        const gameStateStore = useGameStateStore();
+        if (Math.abs(existing.value) >= 100) {
+            const daysCount = gameStateStore.otherRecord['consecutive_extreme_sanity_days'] || 0;
+            const remaining = 5 - daysCount;
+            playerStore.addStatus(EvnStatus.SanityDieCountDown, {value: remaining});
+        } else {
+            gameStateStore.otherRecord['consecutive_extreme_sanity_days'] = 0;
+            playerStore.removeStatus(EvnStatus.SanityDieCountDown.name);
         }
     }
 }

@@ -174,6 +174,7 @@ export const Sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 interface CustomStatus {
     base: StatusEffect
+    icon?: string
     bonus?: BonusType
     value?: number
     duration?: number
@@ -189,6 +190,10 @@ export const genCustomStatus = (source: CustomStatus): StatusEffect => {
     // 更新 value 值
     if (source.value) {
         newStatus.value = source.value;
+    }
+    // 更新 icon
+    if (source.icon) {
+        newStatus.icon = source.icon;
     }
     // 這裡會將 source.bonus 的內容合併到 newStatus.bonus 中
     if (source.bonus) {
@@ -211,6 +216,9 @@ export const genCustomStatus = (source: CustomStatus): StatusEffect => {
                 updatedDesc = updatedDesc.replace(regex, value.toString());
             });
         }
+    }
+    if (newStatus.icon) {
+        newStatus.icon = newStatus.icon.replace(/%value%/g, newStatus.value?.toString());
     }
 
     newStatus.description = updatedDesc;
