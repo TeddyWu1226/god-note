@@ -184,7 +184,7 @@ export class SmallSpider extends MonsterModel {
             code: 'SmallSpider',
             icon: '🕷️',
             name: '迷霧蜘蛛',
-            description: '古蜘蛛的眷屬。戰鬥開始時會搶先施展「蛛絲纏繞」限制獵物前 2 回合的行動。',
+            description: '戰鬥開始時會搶先施展「蛛絲纏繞」限制獵物前 2 回合的行動。',
             class: 'elite',
             ad: 15,
             critIncrease: 200,

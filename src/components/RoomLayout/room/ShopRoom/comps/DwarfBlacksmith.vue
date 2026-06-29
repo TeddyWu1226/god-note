@@ -12,6 +12,10 @@ const isForging = ref(false);
 const showEffect = ref(false);
 const forgeResult = ref<'success' | 'fail' | 'break' | null>(null);
 
+// 強化核心機率參數配置 (可在此自由調整)
+const SUCCESS_RATE = ref(60);         // 強化成功機率 (%)
+const BREAK_RATE_ON_FAIL = ref(40);   // 強化失敗時，裝備爆裂損毀的機率 (%)
+
 // 強化過程狀態記錄
 const prevLevel = ref(0);
 const nextLevel = ref(0);
@@ -164,9 +168,9 @@ const startForge = () => {
       // 扣除材料
       playerStore.removeItem(cost.name, cost.count);
 
-      // 隨機判定：60% 成功
+      // 隨機判定
       const successRoll = Math.random() * 100;
-      if (successRoll < 60) {
+      if (successRoll < SUCCESS_RATE.value) {
         // 強化成功
         forgeResult.value = 'success';
 
@@ -202,9 +206,9 @@ const startForge = () => {
           ElMessage.error('此裝備沒有可強化的屬性！');
         }
       } else {
-        // 強化失敗：20% 機率爆裝，80% 保留
+        // 強化失敗：依設定機率爆裝，其餘保留
         const breakRoll = Math.random() * 100;
-        if (breakRoll < 20) {
+        if (breakRoll < BREAK_RATE_ON_FAIL.value) {
           forgeResult.value = 'break';
 
           // 移除裝備
@@ -309,8 +313,8 @@ const getStatPreview = (statKey: string) => {
 
             <!-- 機率標示 -->
             <div class="probability-box">
-              <div class="prob-row">成功率：<span class="success">60%</span></div>
-              <div class="prob-row">失敗且裝備爆裂率：<span class="danger">20%</span></div>
+              <div class="prob-row">成功率：<span class="success">{{ SUCCESS_RATE }}%</span></div>
+              <div class="prob-row">失敗且裝備爆裂率：<span class="danger">{{ BREAK_RATE_ON_FAIL }}%</span></div>
             </div>
             <div class="helper-text">* 每次強化會隨機挑選「一項」武器正值屬性進行升級 (+20%)</div>
 
