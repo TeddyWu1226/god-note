@@ -1,4 +1,4 @@
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams, UserType} from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'perfect' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';

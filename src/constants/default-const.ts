@@ -64,11 +64,11 @@ export const EAST_ROOM_WEIGHTS: RoomWeights = {
 };
 
 
-export const WeaponSkillMapping: Record<string, string[]> = {
+export const WeaponSkillMapping = {
     'SwordProficiency': ['劍'],
     'KnifeProficiency': ['小刀', '匕首'],
     'SpellProficiency': ['杖'],
-    'ReadingProficiency':['書','捲']
+    'ReadingProficiency': ['書', '捲']
 }
 
 export const isMatchedWeapon = (key: string, weaponName: string): boolean => {

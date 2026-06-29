@@ -109,17 +109,29 @@ export class KnifeProficiency extends SkillModel {
     constructor() {
         super({
             id: 'KnifeProficiency',
-            name: "基礎刺術",
+            name: "基礎刺殺",
             icon: "skills/passive/knife_proficiency.svg",
             type: 'passive',
             rarity: 'common',
+            uniqueFields: ['KnifeProficiency'],
+            maxProficiency: 150,
+            proficiencyGain: 1
         });
     }
 
-    adBonus = 3;
+
+    addBonus() {
+        return {
+            hit: 4 + (Math.ceil(this.proficiency * 0.04)),
+            dodge: 4 + (Math.ceil(this.proficiency * 0.04)),
+        }
+    }
+
 
     description(): string {
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${this.adBonus} 點物理攻擊。`;
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
     protected execute(): boolean {
@@ -129,9 +141,7 @@ export class KnifeProficiency extends SkillModel {
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
         if (isMatchedWeapon('KnifeProficiency', weaponName)) {
-            return {
-                ad: this.adBonus
-            };
+            return this.addBonus();
         }
         return {};
     }
@@ -160,7 +170,7 @@ export class SpellProficiency extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-            if (isMatchedWeapon('SpellProficiency', weaponName)) {
+        if (isMatchedWeapon('SpellProficiency', weaponName)) {
             return {
                 ap: this.apBonus
             };

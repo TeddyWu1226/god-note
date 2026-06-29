@@ -791,8 +791,8 @@ export const usePlayerStore = defineStore('player-info', () => {
     persist: {
         key: 'player-data',
         storage: localStorage,
-        afterRestore: (ctx) => {
-            ctx.store.restoreSkills();
-        }
+        // afterRestore: (ctx) => {
+        //     ctx.store.restoreSkills();
+        // }
     }
 });

@@ -135,13 +135,13 @@ export const StatEnum = {
     },
     adIncrease: {
         value: 'adIncrease',
-        label: '物理增傷',
+        label: '(物)增傷',
         icon: '💪🏻',
         unit: '%'
     },
     apIncrease: {
         value: 'apIncrease',
-        label: '法術增傷',
+        label: '(法)增傷',
         icon: '💫',
         unit: '%'
     },

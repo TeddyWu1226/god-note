@@ -37,7 +37,7 @@ const getRarityName = (rarity: string) => {
   return names[rarity] || '普通';
 };
 
-const canAfford = (skill: SkillModel) => {
+const canAfford = (skill: SkillModel | any) => {
   if (!gameStateStore.isPlayerTurn) return false;
 
   // 💡 安全性防禦：如果此技能尚未被實例化（快取回復時序差），嘗試立刻同步還原它
@@ -48,11 +48,11 @@ const canAfford = (skill: SkillModel) => {
 
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
-  
+
   // 讀取屬性，若依然未實例化則回退到 costAction
   const actionCost = typeof skill.getActualCostAction === 'function'
-    ? skill.getActualCostAction(playerStore)
-    : (skill.costAction || 0);
+      ? skill.getActualCostAction(playerStore)
+      : (skill.costAction || 0);
 
   return playerStore.info.sp >= spCost &&
       playerStore.info.hp > hpCost &&
@@ -60,7 +60,7 @@ const canAfford = (skill: SkillModel) => {
       gameStateStore.playerActionPoints >= actionCost;
 };
 
-const clickSkill = (skill: SkillModel) => {
+const clickSkill = (skill: SkillModel | any) => {
   if (!gameStateStore.isPlayerTurn) return;
   if (skill.type === 'passive') return;
   // 檢查是否足夠點數和冷卻
@@ -106,7 +106,8 @@ const clickSkill = (skill: SkillModel) => {
                   <span v-if="skill.costSp">SP 消耗: {{ skill.costSp }}</span>
                   <span v-if="skill.costHp && skill.costSp" style="margin: 0 4px">|</span>
                   <span v-if="skill.costHp">HP 消耗: {{ skill.costHp }}</span>
-                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp) && skill.cd" style="margin: 0 4px">|</span>
+                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp) && skill.cd"
+                        style="margin: 0 4px">|</span>
                   <template v-if="skill.type === 'active'">
                     <span v-if="skill.cd">冷卻: {{ skill.cd }} 回合</span>
                     <span v-if="skill.proficiencyGain" style="margin: 0 4px">|</span>
@@ -170,7 +171,7 @@ const clickSkill = (skill: SkillModel) => {
 
 .skill-item-box {
   background: #2d2f31;
-  border: 1.5px solid #444;
+  border: 1px solid #444;
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;

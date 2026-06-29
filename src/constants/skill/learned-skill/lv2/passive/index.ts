@@ -317,3 +317,46 @@ export class PurpleSkin extends SkillModel {
         return {};
     }
 }
+
+export class KnifeExpert extends SkillModel {
+    constructor() {
+        super({
+            id: 'KnifeExpert',
+            name: "進階刺殺",
+            icon: "skills/passive/knife_expert.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['KnifeProficiency'],
+            maxProficiency: 150,
+            proficiencyGain: 1
+        });
+    }
+
+    addBonus() {
+        return {
+            hit: 25,
+            ad: 1 + (Math.ceil(this.proficiency * 0.06)),
+            dodge: 6 + (Math.ceil(this.proficiency * 0.06)),
+        }
+    }
+
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`
+            ;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+            return this.addBonus();
+        }
+        return {};
+    }
+}
+
