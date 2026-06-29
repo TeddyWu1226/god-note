@@ -36,3 +36,13 @@ The project uses Pinia persisted state. When the page is reloaded (F5) or a save
 - `addExp(exp)`: Add experience, automatically triggers `levelUp()` when full.
 - `checkAndTriggerEvolutions()`: Check and trigger eligible skill evolutions/fusions.
 - `totalBonus`: Computes final player stats including all equipment, active status effects, and passive skills.
+
+---
+
+### 3. Equipment Enhancement System (裝備熔煉與強化)
+Equipment can be enhanced at the Dwarf Blacksmith in the shop:
+- **Level Limit**: Up to `+5` max.
+- **Cost**: Scaled using `Math.pow(2, currentLvl)` of `Monster Crystal` matching the equipment quality.
+- **Success & Failure Rate**: 60% Success, 32% Safe Fail, 8% Break Fail (destroys equipment).
+- **Attribute Boost**: On success, one of the positive base stats (> 0) is chosen randomly and increased by 20% of its base value per upgrade level. Negative stats are not eligible for enhancement.
+- **Removal Action**: If an equipment breaks, it is removed from the inventory using the exported `_removeItemFromBag(type, index)` action in `player-store.ts`. Ensure any changes to equipment removal logic keep this function available.

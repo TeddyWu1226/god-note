@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { usePlayerStore } from "@/store/player-store";
-import { statLabels, EquipmentType } from "@/types";
-import { ElMessage } from "element-plus";
+import {ref, computed} from "vue";
+import {usePlayerStore} from "@/store/player-store";
+import {statLabels, EquipmentType} from "@/types";
+import {ElMessage} from "element-plus";
 
 const playerStore = usePlayerStore();
 const selectedKey = ref<string>(""); // Format: 'equip:slotKey' or 'bag:index'
@@ -13,26 +13,40 @@ const forgeResult = ref<'success' | 'fail' | 'break' | null>(null);
 // 1. 取得魔物晶石名稱對照表
 const getCrystalNameForQuality = (quality: number): string => {
   switch (quality) {
-    case 0: return '劣質魔物晶石';
-    case 1: return '下級魔物晶石';
-    case 2: return '中級魔物晶石';
-    case 3: return '上級魔物晶石';
-    case 4: return '優級魔物晶石';
-    case 5: return '頂級魔物晶石';
-    default: return '下級魔物晶石';
+    case 0:
+      return '劣質魔物晶石';
+    case 1:
+      return '下級魔物晶石';
+    case 2:
+      return '中級魔物晶石';
+    case 3:
+      return '上級魔物晶石';
+    case 4:
+      return '優級魔物晶石';
+    case 5:
+      return '頂級魔物晶石';
+    default:
+      return '下級魔物晶石';
   }
 };
 
 // 2. 獲取晶石對應的 Icon 顏色/Emoji
 const getCrystalEmoji = (quality: number): string => {
   switch (quality) {
-    case 0: return '🌫️';
-    case 1: return '⬜';
-    case 2: return '🟩';
-    case 3: return '🟦';
-    case 4: return '🟪';
-    case 5: return '🟥';
-    default: return '⬜';
+    case 0:
+      return '🌫️';
+    case 1:
+      return '⬜';
+    case 2:
+      return '🟩';
+    case 3:
+      return '🟦';
+    case 4:
+      return '🟪';
+    case 5:
+      return '🟥';
+    default:
+      return '⬜';
   }
 };
 
@@ -49,10 +63,10 @@ const getSlotName = (slot: string): string => {
   return slots[slot] || '裝備';
 };
 
-// 4. 取得裝備屬性（過濾出不為 0 且在 statLabels 定義中的屬性）
+// 4. 取得裝備屬性（過濾出大於 0 且在 statLabels 定義中的屬性）
 const getEligibleStats = (item: any): string[] => {
   const keys = Object.keys(statLabels);
-  return keys.filter(key => typeof item[key] === 'number' && item[key] !== 0);
+  return keys.filter(key => typeof item[key] === 'number' && item[key] > 0);
 };
 
 // 5. 整合已裝備與未裝備的列表
@@ -103,7 +117,7 @@ const selectedEquip = computed<DisplayEquip | undefined>(() => {
 
 // 計算強化晶石消耗
 const crystalCost = computed(() => {
-  if (!selectedEquip.value) return { name: '', count: 0, available: 0, hasEnough: false, emoji: '' };
+  if (!selectedEquip.value) return {name: '', count: 0, available: 0, hasEnough: false, emoji: ''};
   const item = selectedEquip.value.item;
   const currentLvl = item.enhanceLevel || 0;
   const costCount = Math.pow(2, currentLvl); // 1, 2, 4, 8, 16
@@ -121,7 +135,7 @@ const crystalCost = computed(() => {
 // 進行熔煉強化
 const startForge = () => {
   if (!selectedEquip.value || isForging.value) return;
-  const { item, source, slotKey, index } = selectedEquip.value;
+  const {item, source, slotKey, index} = selectedEquip.value;
   const currentLvl = item.enhanceLevel || 0;
 
   if (currentLvl >= 5) {
@@ -172,13 +186,7 @@ const startForge = () => {
         // 計算強化後的屬性值
         const baseVal = item.baseStats![selectedStat];
         const upgradeCount = item.enhancements![selectedStat];
-        if (baseVal > 0) {
-          // 正值屬性：增加 20%
-          (item as any)[selectedStat] = Math.round(baseVal * (1 + 0.2 * upgradeCount));
-        } else {
-          // 負值屬性：向 0 靠近 (例如 -10 變為 -8)
-          (item as any)[selectedStat] = Math.round(baseVal * (1 - 0.2 * upgradeCount));
-        }
+        (item as any)[selectedStat] = Math.round(baseVal * (1 + 0.2 * upgradeCount));
 
         item.enhanceLevel!++;
         ElMessage.success(`🎉 熔煉成功！裝備已強化至 +${item.enhanceLevel}！[${statLabels[selectedStat as keyof typeof statLabels]}] 獲得了提升。`);
@@ -219,15 +227,10 @@ const getStatPreview = (statKey: string) => {
   const item = selectedEquip.value.item;
   const baseVal = item.baseStats ? item.baseStats[statKey] : (item as any)[statKey];
   const count = item.enhancements ? (item.enhancements[statKey] || 0) : 0;
-  
+
   // 計算如果是這項屬性被隨機選到，下一個強化的數值預估
   const nextCount = count + 1;
-  let nextVal = 0;
-  if (baseVal > 0) {
-    nextVal = Math.round(baseVal * (1 + 0.2 * nextCount));
-  } else {
-    nextVal = Math.round(baseVal * (1 - 0.2 * nextCount));
-  }
+  const nextVal = Math.round(baseVal * (1 + 0.2 * nextCount));
   return {
     current: (item as any)[statKey],
     next: nextVal,
@@ -237,82 +240,52 @@ const getStatPreview = (statKey: string) => {
 </script>
 
 <template>
-  <div class="blacksmith-workspace">
+  <el-row>
     <!-- 1. 裝備選擇列表 (左側) -->
-    <div class="equip-selector">
-      <div class="panel-header">🔨 選擇強化裝備</div>
-      <div class="equip-list-container">
-        <div
-            v-for="eq in allEquipments"
-            :key="eq.key"
-            class="equip-item-row"
-            :class="{ active: selectedKey === eq.key }"
-            @click="selectedKey = eq.key"
-        >
-          <div class="equip-icon">{{ eq.item.icon }}</div>
-          <div class="equip-name-info">
-            <div class="equip-title">
-              {{ eq.item.name }}
-              <span v-if="eq.item.enhanceLevel" class="lvl-badge">+{{ eq.item.enhanceLevel }}</span>
-            </div>
-            <div class="equip-meta">
-              <span class="slot">{{ getSlotName(eq.source === 'equip' ? eq.slotKey! : eq.item.position) }}</span>
-              <span class="dot">|</span>
-              <span class="source-tag" :class="eq.source">
+    <el-col :span="8" class="equip-selector">
+      <el-card class="selection-list">
+        <div class="panel-header">🔨 選擇強化裝備</div>
+        <div class="equip-list-container">
+          <div
+              v-for="eq in allEquipments"
+              :key="eq.key"
+              class="equip-item-row"
+              :class="{ active: selectedKey === eq.key }"
+              @click="selectedKey = eq.key"
+          >
+            <div class="equip-icon">{{ eq.item.icon }}</div>
+            <div class="equip-name-info">
+              <div class="equip-title">
+                {{ eq.item.name }}
+                <span v-if="eq.item.enhanceLevel" class="lvl-badge">+{{ eq.item.enhanceLevel }}</span>
+              </div>
+              <div class="equip-meta">
+                <span class="slot">{{ getSlotName(eq.source === 'equip' ? eq.slotKey! : eq.item.position) }}</span>
+                <span class="dot">|</span>
+                <span class="source-tag" :class="eq.source">
                 {{ eq.source === 'equip' ? '已裝備' : '背包' }}
               </span>
+              </div>
             </div>
           </div>
+          <div v-if="allEquipments.length === 0" class="no-items">
+            目前身上和背包中沒有可強化的裝備...
+          </div>
         </div>
-        <div v-if="allEquipments.length === 0" class="no-items">
-          目前身上和背包中沒有可強化的裝備...
-        </div>
-      </div>
-    </div>
+      </el-card>
+
+    </el-col>
 
     <!-- 2. 強化熔煉控制台 (右側) -->
-    <div class="forge-panel">
+    <el-col :span="16" class="forge-panel">
       <div v-if="selectedEquip" class="forge-area-content">
-        <!-- 裝備精鍊卡與對應光暈 -->
-        <div class="weapon-display-box" :class="`glow-lvl-${selectedEquip.item.enhanceLevel || 0}`">
-          <!-- 背景火星與煙霧 -->
-          <div class="sparkles"></div>
-          <div class="selected-equip-icon">{{ selectedEquip.item.icon }}</div>
-          <h4 class="selected-equip-title">
-            {{ selectedEquip.item.name }}
-            <span v-if="selectedEquip.item.enhanceLevel" class="lvl-title">+{{ selectedEquip.item.enhanceLevel }}</span>
-          </h4>
-          <p class="selected-equip-desc">{{ selectedEquip.item.description }}</p>
-        </div>
-
-        <!-- 屬性詳細與強化預覽 -->
-        <div class="stats-preview-card">
-          <div class="card-title">🔬 屬性熔煉變更預覽</div>
-          <div class="stats-grid">
-            <div
-                v-for="statKey in getEligibleStats(selectedEquip.item)"
-                :key="statKey"
-                class="stat-preview-row"
-            >
-              <span class="stat-label">{{ statLabels[statKey as keyof typeof statLabels] }}</span>
-              <span class="stat-current">{{ (selectedEquip.item as any)[statKey] }}</span>
-              <span class="arrow">➡️</span>
-              <span class="stat-next">
-                {{ getStatPreview(statKey)?.next }}
-                <span class="chance-tag">(20%機率)</span>
-              </span>
-            </div>
-          </div>
-          <div class="helper-text">* 每次強化會隨機挑選上述其中「一項」屬性進行升級 (＋20%)</div>
-        </div>
-
         <!-- 強化材料與判定區域 -->
         <div class="forge-actions-card">
           <div v-if="selectedEquip.item.enhanceLevel! >= 5" class="max-level-box">
             🌟 該裝備已熔煉至最高強化上限 (+5)！
           </div>
           <div v-else class="forge-requirements">
-            <div class="req-title">熔煉所需材料：</div>
+            <div class="req-title">強化所需材料：</div>
             <div class="material-row">
               <span class="mat-emoji">{{ crystalCost.emoji }}</span>
               <span class="mat-name">{{ crystalCost.name }}</span>
@@ -329,6 +302,7 @@ const getStatPreview = (statKey: string) => {
               <div class="prob-row">成功率：<span class="success">60%</span></div>
               <div class="prob-row">失敗且裝備爆裂率：<span class="danger">20%</span></div>
             </div>
+            <div class="helper-text">* 每次強化會隨機挑選「一項」武器正值屬性進行升級 (+20%)</div>
 
             <!-- 按鈕 -->
             <el-button
@@ -339,7 +313,8 @@ const getStatPreview = (statKey: string) => {
                 :disabled="!crystalCost.hasEnough"
                 @click="startForge"
             >
-              🔥 啟動熔煉鍛造 ({{ selectedEquip.item.enhanceLevel || 0 }} ➡️ {{ (selectedEquip.item.enhanceLevel || 0) + 1 }})
+              強化 ({{ selectedEquip.item.enhanceLevel || 0 }} ➡️
+              {{ (selectedEquip.item.enhanceLevel || 0) + 1 }})
             </el-button>
           </div>
         </div>
@@ -351,7 +326,7 @@ const getStatPreview = (statKey: string) => {
         <p class="title">矮人鐵匠鋪</p>
         <p class="subtitle">請在左側選擇一件裝備以進行熔煉強化</p>
       </div>
-    </div>
+    </el-col>
 
     <!-- 3. 全螢幕打鐵敲擊動畫/結果特效 -->
     <Transition name="fade">
@@ -379,34 +354,23 @@ const getStatPreview = (statKey: string) => {
         </div>
       </div>
     </Transition>
-  </div>
+  </el-row>
 </template>
 
 <style scoped>
-.blacksmith-workspace {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  height: 520px;
-  background-color: #16171c;
-  color: #e0e6ed;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+.equip-selector{
+  height: 100%;
 }
-
-/* 1. 裝備選擇列表 (左側) */
-.equip-selector {
-  width: 320px;
-  border-right: 1px solid #2d2e38;
+.selection-list:deep(.el-card__body) {
+  padding: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #1a1b22;
 }
 
 .panel-header {
-  padding: 1rem;
-  font-size: 1.1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
   font-weight: bold;
   background-color: #20222a;
   border-bottom: 1px solid #2d2e38;
@@ -414,7 +378,6 @@ const getStatPreview = (statKey: string) => {
 }
 
 .equip-list-container {
-  flex: 1;
   overflow-y: auto;
   padding: 0.5rem;
 }
@@ -508,9 +471,7 @@ const getStatPreview = (statKey: string) => {
 
 /* 2. 強化控制面板 (右側) */
 .forge-panel {
-  flex: 1;
-  background-color: #16171c;
-  padding: 1.5rem;
+  padding-left: 0.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -600,13 +561,21 @@ const getStatPreview = (statKey: string) => {
 }
 
 @keyframes pulse-blue {
-  0% { box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
-  100% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.7); }
+  0% {
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
+  }
 }
 
 @keyframes flash-purple {
-  0% { box-shadow: 0 0 10px rgba(155, 89, 182, 0.4); }
-  100% { box-shadow: 0 0 25px rgba(232, 67, 147, 0.75); }
+  0% {
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(232, 67, 147, 0.75);
+  }
 }
 
 @keyframes gold-flame {
@@ -616,14 +585,6 @@ const getStatPreview = (statKey: string) => {
   100% {
     box-shadow: 0 0 30px rgba(241, 196, 15, 0.9), 0 0 45px rgba(230, 126, 34, 0.8), 0 0 60px rgba(231, 76, 60, 0.6);
   }
-}
-
-/* 屬性預覽卡 */
-.stats-preview-card {
-  background-color: #1d1e26;
-  border: 1px solid #2d2e38;
-  border-radius: 8px;
-  padding: 1rem;
 }
 
 .card-title {
@@ -682,7 +643,6 @@ const getStatPreview = (statKey: string) => {
 .helper-text {
   font-size: 0.8rem;
   color: #747d8c;
-  margin-top: 0.75rem;
 }
 
 /* 強化控制區 */
@@ -846,8 +806,12 @@ const getStatPreview = (statKey: string) => {
 }
 
 @keyframes strike {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(-45deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-45deg);
+  }
 }
 
 .forge-result-display {
@@ -881,8 +845,14 @@ const getStatPreview = (statKey: string) => {
 }
 
 @keyframes zoomIn {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Transitions */

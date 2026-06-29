@@ -765,7 +765,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         nextLevelExp,
         statusEffects,
         equipItem, hasEquip,
-        gainItem, hasItem, removeItem, unequipItem,
+        gainItem, hasItem, removeItem, _removeItemFromBag, unequipItem,
         addGold,
         addStatus, hasStatus, removeStatus,
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
