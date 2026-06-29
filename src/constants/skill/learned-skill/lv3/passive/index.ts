@@ -7,10 +7,10 @@ export class SwordMaster extends SkillModel {
     constructor() {
         super({
             id: 'SwordMaster',
-            name: "劍術大師",
+            name: "大師劍術",
             icon: "skills/passive/sword_master.svg",
             type: 'passive',
-            rarity: 'legendary',
+            rarity: 'perfect',
             uniqueFields: ['SwordProficiency'],
         });
     }
@@ -43,44 +43,5 @@ export class SwordMaster extends SkillModel {
     }
 }
 
-/**
- * 紫皮膚 (PurpleSkin) - 融合自 藍皮膚 + 紅皮膚
- * 被動技能，無裝備時加強很多能力。
- */
-export class PurpleSkin extends SkillModel {
-    constructor() {
-        super({
-            id: 'PurpleSkin',
-            name: "紫皮膚",
-            icon: "skills/passive/purple_skin.svg",
-            type: 'passive',
-            rarity: 'legendary',
-            uniqueFields: ['藍皮膚', '紅皮膚'],
-        });
-    }
-
-    regen = 2
-    increase = 10
-
-    description(playerStore: PlayerStoreType): string {
-        return `當無身體防具時，提升生命與法力回復各 ${this.regen} 點且總輸出提升 ${this.increase}%。`;
-    }
-
-    protected execute(params: SkillParams): boolean {
-        return true;
-    }
-
-    override getPassiveBonus(player?: any): Record<string, number> {
-        if (!player?.equips?.body) {
-            return {
-                hpRegen: this.regen,
-                spRegen: this.regen,
-                adIncrease: this.increase,
-                apIncrease: this.increase
-            };
-        }
-        return {};
-    }
-}
 
 

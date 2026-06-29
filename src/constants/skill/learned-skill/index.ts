@@ -39,10 +39,11 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     ContinuousSwordHorizontal: Lv2SkillPassive.ContinuousSwordHorizontal,
     ContinuousSwordPoint: Lv2SkillPassive.ContinuousSwordPoint,
     BloodManaLoop: Lv2SkillPassive.BloodManaLoop,
+    PurpleSkin: Lv2SkillPassive.PurpleSkin,
 
     // Level 3
     SwordMaster: Lv3SkillPassive.SwordMaster,
-    PurpleSkin: Lv3SkillPassive.PurpleSkin,
+
 
     // 副手技能
     ShieldBlock: ShieldBlock,

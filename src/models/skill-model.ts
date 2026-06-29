@@ -1,6 +1,6 @@
 import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams} from "@/types";
 
-export type SkillRarity = 'common' | 'rare' | 'legendary' | 'unique';
+export type SkillRarity = 'common' | 'rare' | 'perfect' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
 
 export abstract class SkillModel {
