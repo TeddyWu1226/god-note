@@ -170,11 +170,13 @@ const handleSellConfirmOne = () => {
 const handleSellStack = (entry: any) => {
   if (!entry) return;
   const singlePrice = getSellPrice(entry.item);
-  const success = playerStore.removeItem(entry.item.name, entry.count, entry.item.enhanceLevel);
+  const count = entry.count;
+  const totalPrice = singlePrice * count;
+  const success = playerStore.removeItem(entry.item.name, count, entry.item.enhanceLevel);
 
   if (success) {
     playerStore.addGold(totalPrice);
-    ElMessage.success(`賣出了全部 ${entry.item.name}${entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : ''} x${entry.count}，獲得了 💰 ${totalPrice} G`);
+    ElMessage.success(`賣出了全部 ${entry.item.name}${entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : ''} x${count}，獲得了 💰 ${totalPrice} G`);
     selectedItem.value = null;
   }
 };

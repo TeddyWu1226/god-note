@@ -12,6 +12,7 @@ import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
 import {Head} from "@/constants/items/equipment/head-info";
 import {Armor} from "@/constants/items/equipment/armor-info";
+import {Material} from "@/constants/items/material/material-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -64,10 +65,10 @@ const onTest = () => {
 const give = () => {
   // playerStore.addGold(1000)
 
-
-  playerStore.gainItem(Offhand.Book5)
-  playerStore.gainItem(Weapon.Sword0)
-  playerStore.gainItem(SpecialAccessory.SoulAnchor)
+  playerStore.gainItem(Material.BadNormal, 100)
+  // playerStore.gainItem(Offhand.Book5)
+  // playerStore.gainItem(Weapon.Sword0)
+  // playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
   // playerStore.gainItem(Usable.BurningPotion, 10)
   // playerStore.gainItem(Potions.Heal0, 10)

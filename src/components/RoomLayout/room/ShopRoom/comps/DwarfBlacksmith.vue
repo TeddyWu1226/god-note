@@ -3,6 +3,8 @@ import {ref, computed} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {statLabels, EquipmentType} from "@/types";
 import {ElMessage} from "element-plus";
+import {MonsterCrystals} from "@/constants/items/material/material-info";
+import ForgeOverlay from "./ForgeOverlay.vue";
 
 const playerStore = usePlayerStore();
 const selectedKey = ref<string>(""); // Format: 'equip:slotKey' or 'bag:index'
@@ -10,45 +12,26 @@ const isForging = ref(false);
 const showEffect = ref(false);
 const forgeResult = ref<'success' | 'fail' | 'break' | null>(null);
 
-// 1. 取得魔物晶石名稱對照表
-const getCrystalNameForQuality = (quality: number): string => {
-  switch (quality) {
-    case 0:
-      return '劣質魔物晶石';
-    case 1:
-      return '下級魔物晶石';
-    case 2:
-      return '中級魔物晶石';
-    case 3:
-      return '上級魔物晶石';
-    case 4:
-      return '優級魔物晶石';
-    case 5:
-      return '頂級魔物晶石';
-    default:
-      return '下級魔物晶石';
-  }
+// 強化過程狀態記錄
+const prevLevel = ref(0);
+const nextLevel = ref(0);
+const upgradedStatKey = ref("");
+const lastForgedItem = ref<any>(null);
+const isFlashWhite = ref(false);
+
+// 1. 取得對應質量的魔物晶石配置
+const getCrystalForQuality = (quality: number) => {
+  const crystalList = [
+    MonsterCrystals.BadNormal,
+    MonsterCrystals.LowerNormal,
+    MonsterCrystals.MediumNormal,
+    MonsterCrystals.MediumUpperNormal,
+    MonsterCrystals.MediumSuperiorNormal,
+    MonsterCrystals.TopNormal
+  ];
+  return crystalList[quality] || MonsterCrystals.DemonJewelry;
 };
 
-// 2. 獲取晶石對應的 Icon 顏色/Emoji
-const getCrystalEmoji = (quality: number): string => {
-  switch (quality) {
-    case 0:
-      return '🌫️';
-    case 1:
-      return '⬜';
-    case 2:
-      return '🟩';
-    case 3:
-      return '🟦';
-    case 4:
-      return '🟪';
-    case 5:
-      return '🟥';
-    default:
-      return '⬜';
-  }
-};
 
 // 3. 取得部位中文名稱
 const getSlotName = (slot: string): string => {
@@ -121,16 +104,23 @@ const crystalCost = computed(() => {
   const item = selectedEquip.value.item;
   const currentLvl = item.enhanceLevel || 0;
   const costCount = Math.pow(2, currentLvl); // 1, 2, 4, 8, 16
-  const crystalName = getCrystalNameForQuality(item.quality || 0);
-  const [hasEnough, availableCount] = playerStore.hasItem(crystalName, costCount);
+  const crystal = getCrystalForQuality(item.quality || 0);
+  const [hasEnough, availableCount] = playerStore.hasItem(crystal.name, costCount);
   return {
-    name: crystalName,
+    name: crystal.name,
     count: costCount,
     available: availableCount,
     hasEnough,
-    emoji: getCrystalEmoji(item.quality || 0)
+    emoji: crystal.icon
   };
 });
+
+// 關閉結果特效面板
+const closeResultOverlay = () => {
+  showEffect.value = false;
+  forgeResult.value = null;
+  lastForgedItem.value = null;
+};
 
 // 進行熔煉強化
 const startForge = () => {
@@ -149,76 +139,93 @@ const startForge = () => {
     return;
   }
 
+  // 1. 記錄強化前的資訊
+  prevLevel.value = currentLvl;
+  nextLevel.value = currentLvl;
+  upgradedStatKey.value = "";
+  lastForgedItem.value = null;
+  isFlashWhite.value = false;
+
   isForging.value = true;
   forgeResult.value = null;
   showEffect.value = true;
 
-  // 模擬打鐵的敲擊動畫與停頓延遲 (約 2 秒)
+  // 2. 模擬打鐵擊打序列（用力敲三下 -> 蓄力抖動 -> 奮力敲下閃白光）
+  // 2.6 秒時敲到底，瞬間閃出白光
   setTimeout(() => {
-    // 扣除材料
-    playerStore.removeItem(cost.name, cost.count);
+    isFlashWhite.value = true;
+  }, 2600);
 
-    // 隨機判定：60% 成功
-    const successRoll = Math.random() * 100;
-    if (successRoll < 60) {
-      // 強化成功
-      forgeResult.value = 'success';
+  // 2.8 秒時白光退去，結算結果並顯示
+  setTimeout(() => {
+    isFlashWhite.value = false;
 
-      // 初始化基礎數據備份（如果尚未備份過）
-      if (item.enhanceLevel === undefined) {
-        item.enhanceLevel = 0;
-        item.baseStats = {};
-        item.enhancements = {};
+    try {
+      // 扣除材料
+      playerStore.removeItem(cost.name, cost.count);
 
-        const eligibleStats = getEligibleStats(item);
-        eligibleStats.forEach(stat => {
-          item.baseStats![stat] = item[stat as keyof EquipmentType] as number;
-          item.enhancements![stat] = 0;
-        });
-      }
+      // 隨機判定：60% 成功
+      const successRoll = Math.random() * 100;
+      if (successRoll < 60) {
+        // 強化成功
+        forgeResult.value = 'success';
 
-      // 隨機挑選一項屬性加成
-      const eligibleStats = Object.keys(item.baseStats!);
-      if (eligibleStats.length > 0) {
-        const selectedStat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
-        item.enhancements![selectedStat] = (item.enhancements![selectedStat] || 0) + 1;
+        // 初始化基礎數據備份（如果尚未備份過）
+        if (!item.baseStats) {
+          item.enhanceLevel = item.enhanceLevel || 0;
+          item.baseStats = {};
+          item.enhancements = {};
 
-        // 計算強化後的屬性值
-        const baseVal = item.baseStats![selectedStat];
-        const upgradeCount = item.enhancements![selectedStat];
-        (item as any)[selectedStat] = Math.round(baseVal * (1 + 0.2 * upgradeCount));
-
-        item.enhanceLevel!++;
-        ElMessage.success(`🎉 熔煉成功！裝備已強化至 +${item.enhanceLevel}！[${statLabels[selectedStat as keyof typeof statLabels]}] 獲得了提升。`);
-      } else {
-        ElMessage.error('此裝備沒有可強化的屬性！');
-      }
-    } else {
-      // 強化失敗：20% 機率爆裝，80% 保留
-      const breakRoll = Math.random() * 100;
-      if (breakRoll < 20) {
-        forgeResult.value = 'break';
-        ElMessage.error('💥 熔煉失敗！強大的能量不穩定，裝備在高熱中爆裂損毀了！');
-
-        // 移除裝備
-        if (source === 'equip') {
-          playerStore.info.equips[slotKey!] = null;
-        } else {
-          playerStore._removeItemFromBag('equipments', index!);
+          const eligibleStats = getEligibleStats(item);
+          eligibleStats.forEach(stat => {
+            item.baseStats![stat] = item[stat as keyof EquipmentType] as number;
+            item.enhancements![stat] = 0;
+          });
         }
-        selectedKey.value = ""; // 重置選擇
-      } else {
-        forgeResult.value = 'fail';
-        ElMessage.warning('⚡ 熔煉失敗！還好鐵匠及時冷卻，裝備完好無損。');
-      }
-    }
 
-    isForging.value = false;
-    // 0.8秒後關閉結果特效面板
-    setTimeout(() => {
-      showEffect.value = false;
-    }, 800);
-  }, 1800);
+        // 隨機挑選一項屬性加成
+        const eligibleStats = Object.keys(item.baseStats!);
+        if (eligibleStats.length > 0) {
+          const selectedStat = eligibleStats[Math.floor(Math.random() * eligibleStats.length)];
+          item.enhancements![selectedStat] = (item.enhancements![selectedStat] || 0) + 1;
+
+          // 計算強化後的屬性值
+          const baseVal = item.baseStats![selectedStat];
+          const upgradeCount = item.enhancements![selectedStat];
+          (item as any)[selectedStat] = Math.round(baseVal * (1 + 0.2 * upgradeCount));
+
+          item.enhanceLevel!++;
+          nextLevel.value = item.enhanceLevel;
+          upgradedStatKey.value = selectedStat;
+          lastForgedItem.value = item;
+        } else {
+          ElMessage.error('此裝備沒有可強化的屬性！');
+        }
+      } else {
+        // 強化失敗：20% 機率爆裝，80% 保留
+        const breakRoll = Math.random() * 100;
+        if (breakRoll < 20) {
+          forgeResult.value = 'break';
+
+          // 移除裝備
+          if (source === 'equip') {
+            playerStore.info.equips[slotKey!] = null;
+          } else {
+            playerStore._removeItemFromBag('equipments', index!);
+          }
+          selectedKey.value = ""; // 重置選擇
+        } else {
+          forgeResult.value = 'fail';
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      ElMessage.error('強化過程發生錯誤！');
+      forgeResult.value = 'fail';
+    } finally {
+      isForging.value = false;
+    }
+  }, 2800);
 };
 
 // 屬性變更預覽
@@ -285,7 +292,10 @@ const getStatPreview = (statKey: string) => {
             🌟 該裝備已熔煉至最高強化上限 (+5)！
           </div>
           <div v-else class="forge-requirements">
-            <div class="req-title">強化所需材料：</div>
+            <div class="req-title">
+              +{{ selectedEquip.item.enhanceLevel || 0 }} ➡
+              +{{ (selectedEquip.item.enhanceLevel || 0) + 1 }} 強化所需材料：
+            </div>
             <div class="material-row">
               <span class="mat-emoji">{{ crystalCost.emoji }}</span>
               <span class="mat-name">{{ crystalCost.name }}</span>
@@ -313,8 +323,7 @@ const getStatPreview = (statKey: string) => {
                 :disabled="!crystalCost.hasEnough"
                 @click="startForge"
             >
-              強化 ({{ selectedEquip.item.enhanceLevel || 0 }} ➡️
-              {{ (selectedEquip.item.enhanceLevel || 0) + 1 }})
+              強化!
             </el-button>
           </div>
         </div>
@@ -328,44 +337,48 @@ const getStatPreview = (statKey: string) => {
       </div>
     </el-col>
 
-    <!-- 3. 全螢幕打鐵敲擊動畫/結果特效 -->
-    <Transition name="fade">
-      <div v-if="showEffect" class="forge-overlay">
-        <!-- 打鐵火星 -->
-        <div class="forge-anim-area">
-          <div v-if="isForging" class="forge-hammering">
-            <div class="hammer">🔨</div>
-            <div class="anvil">🔥</div>
-            <div class="spark-particles"></div>
-            <div class="status-msg">矮人鐵匠正在極力敲擊與熔煉...</div>
-          </div>
-          <div v-else class="forge-result-display" :class="forgeResult">
-            <div class="result-icon">
-              <span v-if="forgeResult === 'success'">✨</span>
-              <span v-if="forgeResult === 'fail'">🛡️</span>
-              <span v-if="forgeResult === 'break'">💥</span>
-            </div>
-            <div class="result-text">
-              <span v-if="forgeResult === 'success'">熔煉強化成功！</span>
-              <span v-if="forgeResult === 'fail'">強化失敗（裝備完好）</span>
-              <span v-if="forgeResult === 'break'">裝備已爆裂損毀！</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
+    <!-- 3. 全螢幕打鐵敲擊動畫/結果特效組件 -->
+    <ForgeOverlay
+        :show="showEffect"
+        :is-forging="isForging"
+        :is-flash-white="isFlashWhite"
+        :forge-result="forgeResult"
+        :prev-level="prevLevel"
+        :next-level="nextLevel"
+        :last-forged-item="lastForgedItem"
+        :upgraded-stat-key="upgradedStatKey"
+        :equip-icon="selectedEquip?.item.icon || '🔥'"
+        @close="closeResultOverlay"
+    />
   </el-row>
 </template>
 
 <style scoped>
-.equip-selector{
+.el-row {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.equip-selector {
   height: 100%;
 }
+
+.selection-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .selection-list:deep(.el-card__body) {
   padding: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .panel-header {
@@ -378,6 +391,8 @@ const getStatPreview = (statKey: string) => {
 }
 
 .equip-list-container {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0.5rem;
 }
@@ -406,7 +421,7 @@ const getStatPreview = (statKey: string) => {
 }
 
 .equip-icon {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-right: 0.75rem;
 }
 
@@ -475,6 +490,7 @@ const getStatPreview = (statKey: string) => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .forge-area-content {
@@ -486,159 +502,6 @@ const getStatPreview = (statKey: string) => {
   width: 100%;
 }
 
-/* 裝備展示區 + 特效光暈 */
-.weapon-display-box {
-  background: radial-gradient(circle, #2d3043 0%, #1c1d27 100%);
-  border: 1px solid #373a4e;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s ease;
-}
-
-.selected-equip-icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  display: inline-block;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
-}
-
-.selected-equip-title {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin: 0.25rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.lvl-title {
-  color: #e040fb;
-  font-weight: bold;
-  text-shadow: 0 0 8px rgba(224, 64, 251, 0.6);
-}
-
-.selected-equip-desc {
-  font-size: 0.85rem;
-  color: #a4b0be;
-  margin: 0;
-}
-
-/* 🧪 強化分級光暈效果 CSS 實作 */
-
-/* +1: 柔和白光 */
-.glow-lvl-1 {
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
-}
-
-/* +2: 生機綠光 */
-.glow-lvl-2 {
-  border-color: rgba(46, 204, 113, 0.5) !important;
-  box-shadow: 0 0 15px rgba(46, 204, 113, 0.35);
-}
-
-/* +3: 藍紫炫光 */
-.glow-lvl-3 {
-  border-color: rgba(52, 152, 219, 0.6) !important;
-  animation: pulse-blue 2.5s infinite alternate;
-}
-
-/* +4: 紫紅魔光 */
-.glow-lvl-4 {
-  border-color: rgba(155, 89, 182, 0.7) !important;
-  animation: flash-purple 1.8s infinite alternate;
-}
-
-/* +5: 金黃烈焰 */
-.glow-lvl-5 {
-  border-color: rgba(241, 196, 15, 0.8) !important;
-  animation: gold-flame 1.2s infinite alternate;
-}
-
-@keyframes pulse-blue {
-  0% {
-    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
-  }
-}
-
-@keyframes flash-purple {
-  0% {
-    box-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 25px rgba(232, 67, 147, 0.75);
-  }
-}
-
-@keyframes gold-flame {
-  0% {
-    box-shadow: 0 0 15px rgba(241, 196, 15, 0.6), 0 0 25px rgba(230, 126, 34, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 30px rgba(241, 196, 15, 0.9), 0 0 45px rgba(230, 126, 34, 0.8), 0 0 60px rgba(231, 76, 60, 0.6);
-  }
-}
-
-.card-title {
-  font-size: 0.95rem;
-  font-weight: bold;
-  color: #ff9f43;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid #2d2e38;
-  padding-bottom: 0.5rem;
-}
-
-.stats-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.stat-preview-row {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.stat-label {
-  width: 100px;
-  color: #a4b0be;
-}
-
-.stat-current {
-  width: 50px;
-  font-weight: bold;
-  text-align: right;
-  color: #ffffff;
-}
-
-.arrow {
-  margin: 0 1rem;
-  font-size: 0.8rem;
-  color: #636e72;
-}
-
-.stat-next {
-  font-weight: bold;
-  color: #2ecc71;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.chance-tag {
-  font-size: 0.75rem;
-  color: #747d8c;
-  font-weight: normal;
-}
 
 .helper-text {
   font-size: 0.8rem;
@@ -761,108 +624,5 @@ const getStatPreview = (statKey: string) => {
   margin: 0;
 }
 
-/* 3. 打鐵敲擊動畫層 */
-.forge-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(22, 23, 28, 0.85);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
 
-.forge-anim-area {
-  text-align: center;
-}
-
-.forge-hammering {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.forge-hammering .hammer {
-  font-size: 4rem;
-  animation: strike 0.4s infinite alternate;
-  transform-origin: bottom right;
-}
-
-.forge-hammering .anvil {
-  font-size: 4rem;
-  margin-top: -10px;
-}
-
-.status-msg {
-  margin-top: 1.5rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #ff9f43;
-}
-
-@keyframes strike {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-45deg);
-  }
-}
-
-.forge-result-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: zoomIn 0.3s ease-out;
-}
-
-.result-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 0 15px currentColor);
-}
-
-.result-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.forge-result-display.success {
-  color: #2ecc71;
-}
-
-.forge-result-display.fail {
-  color: #ff9f43;
-}
-
-.forge-result-display.break {
-  color: #ff7675;
-}
-
-@keyframes zoomIn {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Transitions */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 </style>

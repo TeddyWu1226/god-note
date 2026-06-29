@@ -45,8 +45,16 @@ export const MonsterCrystals = {
         name: '頂級魔物晶石',
         icon: '🟥',
         description: '只存在於神話故事中紀錄的魔石，不敢想像擁有此核心的怪物有多麼可怕。',
-        quality: 4,
+        quality: 5,
         price: 320
+    } as ItemType,
+
+    DemonJewelry: {
+        name: '魔神石',
+        icon: '💎',
+        description: '神力的來源...',
+        quality: 6,
+        price: 1000
     } as ItemType,
 };
 export const Material = {
