@@ -10,7 +10,7 @@ This guide helps developers maintain active/passive skills and configure evoluti
 ## 📂 Key File Paths
 - **Base Class**: [skill-model.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/models/skill-model.ts)
 - **Skill Factory**: [learned-skill/index.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/constants/skill/learned-skill/index.ts)
-- **Evolution Rules**: [evolution-rule.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/constants/skill/learned-skill/evolution-rule.ts)
+- **Evolution & Skill Trees**: `src/constants/skill/learned-skill/skill-tree/` (including `index.ts` containing `SKILL_TREE_NODES`, `sword-skill-tree.ts`, `knife-skill-tree.ts`, etc.)
 - **Categorized Skills**: `src/constants/skill/learned-skill/lv[1-3]/`
 - **Offhand Skills**: `src/constants/skill/offhand-skill/`
 
@@ -25,12 +25,17 @@ All skills subclass `SkillModel` and override the following core methods:
 - **`getPassiveBonus(player)`**: (Passive skills only) Returns attribute bonuses (e.g., `{ ad: 5, hit: 10 }`), which are automatically summed in `playerStore.totalBonus`.
 - **`toJSON()`**: Limits serialization to dynamic fields (`id`, `level`, `proficiency`, `currentCd`) to keep save file sizes small.
 
-### 2. Evolution & Fusion Rules (`EVOLUTION_RULES`)
-Defined in `evolution-rule.ts` under `EVOLUTION_RULES`:
-- `evolvedSkillId`: Resulting skill ID.
-- `baseSkillId`: Base skill to be replaced (optional).
-- `fuseSkillIds`: Supplementary materials/skills to remove.
-- `checkEligible(playerStore, trackerStore)`: Validation logic (e.g., max proficiency, having specific combinations).
+### 2. Evolution & Fusion Rules (`SKILL_TREE_NODES`)
+Defined in `src/constants/skill/learned-skill/skill-tree/` (e.g. `index.ts`, `sword-skill-tree.ts`):
+- `id`: Skill ID.
+- `pathId`: Unique branch/flow ID.
+- `tier`: Skill tier (1, 2, or 3).
+- `isStarter`: Whether it is a starter skill.
+- `evolvesFrom`: Base skills to replace when this skill is learned (optional).
+- `fusesFrom`: Ingredient skills to consume/remove when this skill is learned (optional).
+- `checkEligible(playerStore, trackerStore)`: Validation logic.
+  > [!TIP]
+  > Use **`playerStore.checkSkillPath(pathId)`** to check if the player possesses any passive or active skill belonging to a specific branch/flow (e.g. `checkSkillPath('knifeplay')` for dagger/assassination passive requirements).
 
 ---
 
@@ -41,7 +46,7 @@ Defined in `evolution-rule.ts` under `EVOLUTION_RULES`:
 2. **Register in Factory**:
    - Register the class under `SKILL_CLASS_MAP` in `learned-skill/index.ts`.
 3. **Configure Evolution (Optional)**:
-   - Add rules to `EVOLUTION_RULES` in `evolution-rule.ts`.
+   - Add rules/nodes to the relevant skill tree file under `src/constants/skill/learned-skill/skill-tree/`.
 
 ---
 

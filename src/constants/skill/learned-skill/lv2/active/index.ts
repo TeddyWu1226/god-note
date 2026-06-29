@@ -21,9 +21,7 @@ export class Flurry extends SkillModel {
             rarity: 'rare',
             maxCd: 0,
             costSp: 15,
-            costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            costAction: 1
         });
     }
 
@@ -82,6 +80,101 @@ export class Flurry extends SkillModel {
             }
         }
 
+        return true;
+    }
+}
+
+export class SwiftStrike extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwiftStrike',
+            name: "迅捷一擊",
+            icon: "skills/active/swift_strike.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 2,
+            costSp: 10,
+            costAction: 1
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.floor(ad);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const dmg = this.getDamage(playerStore);
+        return `快速前刺攻擊，造成 ${ColorText.ad(dmg)} 物理傷害。若裝備「匕首」類武器，有 40% 機率獲得 1 點行動點。`;
+    }
+
+    protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+
+        const dmg = this.getDamage(playerStore);
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: '迅捷一擊'
+        });
+
+        // 匕首專屬機率獲得行動點數
+        const weaponName = playerStore.info?.equips?.weapon?.name || "";
+        const isKnife = weaponName.includes("匕首") || weaponName.includes("小刀");
+        if (isKnife && Math.random() < 0.4) {
+            if (gameStateStore) {
+                gameStateStore.playerActionPoints += 1;
+            }
+        }
+
+        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        return true;
+    }
+}
+
+export class Assassinate extends SkillModel {
+    constructor() {
+        super({
+            id: 'Assassinate',
+            name: "刺殺",
+            icon: "skills/active/assassinate.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 3,
+            costSp: 20,
+            costAction: 2
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.floor(ad * 1.5);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const dmg = this.getDamage(playerStore);
+        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(dmg)} 物理傷害。此技能爆擊傷害額外提升 50%。`;
+    }
+
+    protected execute({playerStore, monster}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+
+        const dmg = this.getDamage(playerStore);
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: '刺殺',
+            canCrit: true,
+            modifiers: {
+                critIncrease: (playerStore.finalStats?.critIncrease ?? 150) + 50
+            }
+        });
+
+        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
     }
 }

@@ -42,5 +42,15 @@ export const SkillStatus = {
             adIncrease: 20,
             apIncrease: 20
         }
+    } as StatusEffect,
+    Agility: {
+        name: '敏捷意志',
+        icon: '💨',
+        duration: 5,
+        isBuff: true,
+        description: `提升自身 %dodge% 點閃避，持續 %duration% 回合`,
+        bonus: {
+            dodge: 10
+        }
     } as StatusEffect
 }

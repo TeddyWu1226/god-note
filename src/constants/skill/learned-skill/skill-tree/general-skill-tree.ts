@@ -8,7 +8,7 @@ export const GENERAL_SKILL_TREE: Record<string, SkillTreeNode> = {
     WillBuff: {id: 'WillBuff', pathId: 'will', tier: 1, isStarter: true},
     FocusBuff: {id: 'FocusBuff', pathId: 'focus', tier: 1, isStarter: true},
     FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 1, isStarter: true},
-
+    AgilityBuff: {id: 'AgilityBuff', pathId: 'agility', tier: 1, isStarter: true},
 }
 /**
  * 皮膚系列

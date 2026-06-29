@@ -19,6 +19,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     WillBuff: Lv1SkillActive.WillBuff,
     FocusBuff: Lv1SkillActive.FocusBuff,
     FightBuff: Lv1SkillActive.FightBuff,
+    AgilityBuff: Lv1SkillActive.AgilityBuff,
 
     PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
     BrainPowerBoost: Lv1SkillPassive.BrainPowerBoost,
@@ -31,6 +32,8 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     BlockBoost: Lv1SkillPassive.BlockBoost,
 
     Flurry: Lv2SkillActive.Flurry,
+    SwiftStrike: Lv2SkillActive.SwiftStrike,
+    Assassinate: Lv2SkillActive.Assassinate,
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
     KnightWay: Lv2SkillPassive.KnightWay,
@@ -40,6 +43,8 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     ContinuousSwordPoint: Lv2SkillPassive.ContinuousSwordPoint,
     BloodManaLoop: Lv2SkillPassive.BloodManaLoop,
     PurpleSkin: Lv2SkillPassive.PurpleSkin,
+
+    KnifeExpert: Lv2SkillPassive.KnifeExpert,
 
     // Level 3
     SwordMaster: Lv3SkillPassive.SwordMaster,

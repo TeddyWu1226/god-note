@@ -26,7 +26,7 @@ export class ShieldBlock extends SkillModel {
 
     description(playerStore: PlayerStoreType): string {
         const shield = this.getDefend(playerStore);
-        return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。如果敵方爆擊，則額外造成對方暫時暈眩。[冷卻: ${this.maxCd} 回合]`;
+        return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。如果敵方爆擊，則額外造成對方暫時暈眩。`;
     }
 
     protected execute(params: SkillParams): boolean {

@@ -218,7 +218,7 @@ export class FocusBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10 點命中，持續 5 回合。[冷卻: ${this.maxCd} 回合]`;
+        return `提升自身 10 點命中，持續 5 回合。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -298,6 +298,38 @@ export class FightBuff extends SkillModel {
     }
 }
 
+export class AgilityBuff extends SkillModel {
+    constructor() {
+        super({
+            id: 'AgilityBuff',
+            name: "敏捷意志",
+            icon: "skills/active/agility_buff.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 5,
+            costSp: 10,
+            costAction: 0,
+            maxProficiency: 0,
+            proficiencyGain: 0
+        });
+    }
+
+    description(): string {
+        return `提升自身 10 點閃避，持續 5 回合。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+
+        playerStore.addStatus(SkillStatus.Agility);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
+        return true;
+    }
+}
+
 /**
  * 其他相關
  */
@@ -322,7 +354,7 @@ export class CommonHeal extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `自身 ${ColorText.heal(this.healVal)}。 [冷卻: ${this.maxCd} 回合]`;
+        return `自身 ${ColorText.heal(this.healVal)}。`;
     }
 
     protected execute(params: SkillParams): boolean {

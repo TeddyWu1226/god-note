@@ -316,7 +316,7 @@ export interface SkillOnPlayerAttackHitParams {
 
 export interface SkillTreeNode {
     id: string;             // 技能 ID
-    pathId: string;         // 所屬唯一流派 ID
+    pathId: string;         // 所屬唯一流派 ID (同一流派只能有一個)
     tier: number;           // 技能階級 (Tier 1: 基礎, Tier 2: 進階, Tier 3: 大師)
     isStarter?: boolean;    // 是否為流派的起手技能 (Tier 1)
     evolvesFrom?: string[];  // 可從哪些前置技能進階而來 (學習時替換前置，任一即可)
