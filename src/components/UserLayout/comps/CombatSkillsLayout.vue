@@ -41,7 +41,7 @@ const canAfford = (skill: SkillModel) => {
   if (!gameStateStore.isPlayerTurn) return false;
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
-  const actionCost = skill.costAction || 0;
+  const actionCost = skill.getActualCostAction(playerStore);
   return playerStore.info.sp >= spCost &&
       playerStore.info.hp > hpCost &&
       skill.currentCd === 0 &&
@@ -87,7 +87,7 @@ const clickSkill = (skill: SkillModel) => {
                 <div class="type">
                   類型: {{ skill.type === 'active' ? '主動技能' : '被動技能' }}
                   <span v-if="skill.type === 'active'" style="margin-left: 8px">
-                    消耗行動點: {{ skill.costAction || 0 }}
+                    消耗行動點: {{ skill.costMaxAction ? '最大' : (skill.costAction || 0) }}
                   </span>
                 </div>
                 <div class="costs">

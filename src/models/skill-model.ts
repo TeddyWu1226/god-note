@@ -18,6 +18,7 @@ export abstract class SkillModel {
     costSp: number;          // 施放技能所消耗的魔法值 (SP)
     costHp: number;          // 施放技能所消耗的生命值 (HP)
     costAction: number;      // 施放技能所消耗的行動點數 (AP)
+    costMaxAction: boolean;  // 是否消耗最大行動點數 (AP)
     itemDescription?: string;// 技能的靜態說明描述 (用於背包/商店 Tooltips)
     uniqueFields: string[];  // 唯一字段列表 (用於學習衝突檢查)
 
@@ -36,6 +37,7 @@ export abstract class SkillModel {
         costSp?: number;         // 施放技能所消耗的魔法值 (選填，預設為 0)
         costHp?: number;         // 施放技能所消耗的生命值 (選填，預設為 0)
         costAction?: number;     // 施放技能所消耗的行動點數 (選填，預設為 1)
+        costMaxAction?: boolean; // 是否消耗最大行動點數 (選填，預設為 false)
         itemDescription?: string;// 技能的靜態說明描述 (選填)
         uniqueFields?: string[]; // 唯一字段 (選填)
     }) {
@@ -53,8 +55,16 @@ export abstract class SkillModel {
         this.costSp = data.costSp ?? 0;
         this.costHp = data.costHp ?? 0;
         this.costAction = data.costAction ?? 0;
+        this.costMaxAction = data.costMaxAction ?? false;
         this.itemDescription = data.itemDescription;
         this.uniqueFields = data.uniqueFields ?? [];
+    }
+
+    getActualCostAction(playerStore: any): number {
+        if (this.costMaxAction) {
+            return Math.max(1, Math.floor((playerStore.finalStats?.actionValue ?? 50) / 50));
+        }
+        return this.costAction;
     }
 
     // 💡 獲取描述 (由子類別實作)

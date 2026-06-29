@@ -396,7 +396,7 @@ const onSkill = async (skillKey: string) => {
   if (isUsing.value) return
 
   const useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
-  const costAction = useSkill?.costAction ?? 0
+  const costAction = useSkill ? useSkill.getActualCostAction(playerStore) : 0
 
   if (gameStateStore.playerActionPoints < costAction) {
     ElMessage.warning('行動點數不足！')

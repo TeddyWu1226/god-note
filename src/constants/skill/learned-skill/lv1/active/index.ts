@@ -311,7 +311,7 @@ export class CommonHeal extends SkillModel {
             rarity: 'common',
             maxCd: 2,
             costSp: 25,
-            costAction: 1,
+            costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
         });
