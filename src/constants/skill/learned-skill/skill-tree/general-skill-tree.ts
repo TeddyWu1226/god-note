@@ -1,7 +1,7 @@
 import {SkillTreeNode} from "@/types";
 
 /**
- * 皮膚系列
+ * Buff系列
  * */
 export const GENERAL_SKILL_TREE: Record<string, SkillTreeNode> = {
     CommonHeal: {id: 'CommonHeal', pathId: 'heal', tier: 1, isStarter: true},

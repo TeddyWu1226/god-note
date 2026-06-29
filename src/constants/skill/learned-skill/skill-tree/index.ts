@@ -29,4 +29,16 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
             return !!hasVertical && !!hasHorizontal && !!hasThrust;
         }
     },
+    // 魔人體 (融合紫皮膚與血魔循環)
+    DemonBody: {
+        id: 'DemonBody',
+        pathId: 'demon_body',
+        tier: 3,
+        fusesFrom: ['PurpleSkin', 'BloodManaLoop'],
+        checkEligible: (playerStore) => {
+            const hasPurple = playerStore.hasSkill('PurpleSkin');
+            const hasBloodMana = playerStore.hasSkill('BloodManaLoop');
+            return !!hasPurple && !!hasBloodMana;
+        }
+    },
 };

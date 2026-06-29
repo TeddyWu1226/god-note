@@ -80,6 +80,7 @@ const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
     common: '#b2bec3',
     rare: '#0984e3',
+    perfect: '#9C27B0',
     legendary: '#a335ee',
     unique: '#ff8000'
   };
@@ -90,6 +91,7 @@ const getRarityName = (rarity: string) => {
   const names: Record<string, string> = {
     common: '普通',
     rare: '稀有',
+    perfect: '完美',
     legendary: '傳奇',
     unique: '唯一'
   };

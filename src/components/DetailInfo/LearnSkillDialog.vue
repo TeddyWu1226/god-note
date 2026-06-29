@@ -4,7 +4,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
 import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
-import {SkillModel} from "@/models/skill-model";
+import {SkillModel, SkillRarity} from "@/models/skill-model";
 import {ElMessage} from "element-plus";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
 
@@ -20,6 +20,7 @@ const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
     common: '#b2bec3',
     rare: '#0984e3',
+    perfect: '#9C27B0',
     legendary: '#a335ee',
     unique: '#ff8000'
   };
@@ -27,9 +28,10 @@ const getRarityColor = (rarity: string) => {
 };
 
 const getRarityName = (rarity: string) => {
-  const names: Record<string, string> = {
+  const names: Record<SkillRarity, string> = {
     common: '普通',
     rare: '稀有',
+    perfect: '完美',
     legendary: '傳奇',
     unique: '唯一'
   };
@@ -58,10 +60,10 @@ const getEvolutionText = (skillId: string) => {
 const isEvolvedFrom = (evolvedId: string, baseId: string): boolean => {
   const node = SKILL_TREE_NODES[evolvedId];
   if (!node) return false;
-  
+
   if (node.evolvesFrom?.includes(baseId)) return true;
   if (node.fusesFrom?.includes(baseId)) return true;
-  
+
   if (node.evolvesFrom) {
     for (const parentId of node.evolvesFrom) {
       if (isEvolvedFrom(parentId, baseId)) return true;

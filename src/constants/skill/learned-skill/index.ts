@@ -43,6 +43,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 
     // Level 3
     SwordMaster: Lv3SkillPassive.SwordMaster,
+    DemonBody: Lv3SkillPassive.DemonBody,
 
 
     // 副手技能
