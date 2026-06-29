@@ -47,9 +47,8 @@ const onTouchHandleEquip = createDoubleTapHandler((item: any, index: number) => 
         >
           <span style="font-size: 1.2rem">{{ item.icon }}</span>
           <div class="equip-info">
-            <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color') }">{{
-                item.name
-              }}
+            <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color') }">
+              {{ item.name }}{{ item.enhanceLevel ? ' +' + item.enhanceLevel : '' }}
             </div>
             <div class="pos-tag">{{ getEnumColumn(EquipmentEnum, item.position) }}</div>
           </div>

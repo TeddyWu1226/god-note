@@ -97,6 +97,13 @@ const cancel = (): void => {
         >
           {{ staff.icon }} 拜訪{{ staff.name }}
         </el-button>
+        <el-button
+            v-if="currentView !== 'camp'"
+            type="info"
+            @click="currentView = 'camp'"
+        >
+          ⛺ 返回營地
+        </el-button>
         <el-button type="info" @click="cancel">離開旅團</el-button>
       </template>
       <template v-else>

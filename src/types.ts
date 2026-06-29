@@ -78,6 +78,9 @@ export interface EquipmentType extends ItemType, qualityType {
     position: EquipmentPosition
     skill?: string
     isTwoHanded?: boolean
+    enhanceLevel?: number
+    baseStats?: Record<string, number>
+    enhancements?: Record<string, number>
 }
 
 export interface UsableType extends ItemType, qualityType {

@@ -54,14 +54,15 @@ const stackedBags = computed(() => {
         bagType: 'items' as const
       }));
 
-  // 2. 處理裝備 (在前端進行聚合)
+  // 2. 處理裝備 (在前端進行聚合，區分強化等級)
   const equipMap: Record<string, ShopDisplayItem> = {};
   (playerStore.info.equipments || []).forEach((item) => {
     if (item.unsellable) return;
-    if (equipMap[item.name]) {
-      equipMap[item.name].count++;
+    const key = `${item.name}_${item.enhanceLevel || 0}`;
+    if (equipMap[key]) {
+      equipMap[key].count++;
     } else {
-      equipMap[item.name] = {item, count: 1, bagType: 'equipments'};
+      equipMap[key] = {item, count: 1, bagType: 'equipments'};
     }
   });
   bags.equipments = Object.values(equipMap);
@@ -143,11 +144,11 @@ const handleBuyConfirm = () => {
 const handleSell = (entry: any) => {
   if (!entry) return;
   const price = getSellPrice(entry.item);
-  const success = playerStore.removeItem(entry.item.name, 1);
+  const success = playerStore.removeItem(entry.item.name, 1, entry.item.enhanceLevel);
 
   if (success) {
     playerStore.addGold(price);
-    ElMessage.success(`賣出了 ${entry.item.name}，獲得了 💰 ${price} G`);
+    ElMessage.success(`賣出了 ${entry.item.name}${entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : ''}，獲得了 💰 ${price} G`);
 
     if (entry.count > 1) {
       entry.count--;
@@ -169,12 +170,11 @@ const handleSellConfirmOne = () => {
 const handleSellStack = (entry: any) => {
   if (!entry) return;
   const singlePrice = getSellPrice(entry.item);
-  const totalPrice = singlePrice * entry.count;
-  const success = playerStore.removeItem(entry.item.name, entry.count);
+  const success = playerStore.removeItem(entry.item.name, entry.count, entry.item.enhanceLevel);
 
   if (success) {
     playerStore.addGold(totalPrice);
-    ElMessage.success(`賣出了全部 ${entry.item.name} x${entry.count}，獲得了 💰 ${totalPrice} G`);
+    ElMessage.success(`賣出了全部 ${entry.item.name}${entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : ''} x${entry.count}，獲得了 💰 ${totalPrice} G`);
     selectedItem.value = null;
   }
 };
@@ -271,16 +271,16 @@ const handleSellAll = (type: 'items' | 'equipments') => {
               </div>
               <div class="shop-grid">
                 <div v-for="entry in stackedBags[type]"
-                     :key="entry.item.name"
+                     :key="entry.item.name + '_' + (entry.item.enhanceLevel || 0)"
                      class="item-card"
-                     :class="{ 'is-active': selectedItem?.item?.name === entry.item.name && selectedItem?.bagType === entry.bagType }"
+                     :class="{ 'is-active': selectedItem?.item?.name === entry.item.name && selectedItem?.item?.enhanceLevel === entry.item.enhanceLevel && selectedItem?.bagType === entry.bagType }"
                      @click="handleSellDoubleClick(entry)"
                      @touchend="onTouchSellItem(entry)"
                 >
                   <div class="item-badge" v-if="entry.count > 1">x{{ entry.count }}</div>
                   <div class="item-icon">{{ entry.item.icon }}</div>
                   <div class="item-name" :style="{color:getEnumColumn(QualityEnum, entry.item.quality, 'color')}">
-                    {{ entry.item.name }}
+                    {{ entry.item.name }}{{ entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : '' }}
                   </div>
                   <div class="price-tag">💰 {{ getSellPrice(entry.item) }}</div>
                 </div>

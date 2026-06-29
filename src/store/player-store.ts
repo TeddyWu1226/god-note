@@ -203,7 +203,7 @@ export const usePlayerStore = defineStore('player-info', () => {
      * @param itemName 道具名稱
      * @param amount 要移除的個數，傳入 -1 則移除所有同名道具
      */
-    const removeItem = (itemName: string, amount: number = 1): boolean => {
+    const removeItem = (itemName: string, amount: number = 1, enhanceLevel?: number): boolean => {
         const isRemoveAll = amount === -1;
         if (!isRemoveAll && !hasItem(itemName, amount)[0]) return false;
 
@@ -212,7 +212,10 @@ export const usePlayerStore = defineStore('player-info', () => {
         // 1. 先從 裝備背包 移除 (非堆疊)
         if (info.value.equipments) {
             for (let i = info.value.equipments.length - 1; i >= 0; i--) {
-                if (info.value.equipments[i].name === itemName) {
+                const eq = info.value.equipments[i];
+                const matchesName = eq.name === itemName;
+                const matchesEnhance = enhanceLevel === undefined || (eq.enhanceLevel || 0) === enhanceLevel;
+                if (matchesName && matchesEnhance) {
                     info.value.equipments.splice(i, 1);
                     if (!isRemoveAll) {
                         remainingToRemove--;

@@ -29,7 +29,7 @@ const skillInstance = computed(() => {
   <div class="detail-container">
     <div class="detail-icon">{{ props.item.icon }}</div>
     <h3 :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
-      {{ props.item.name }}{{ props.item.usable ? '(消耗品)' : '' }}
+      {{ props.item.name }}{{ props.item.enhanceLevel ? ' +' + props.item.enhanceLevel : '' }}{{ props.item.usable ? '(消耗品)' : '' }}
     </h3>
 
     <p class="detail-desc">{{ props.item.description }}</p>
