@@ -6,9 +6,10 @@ export const SkillStatus = {
         icon: '💪',
         duration: 2,
         isBuff: true,
-        description: '提升 %adIncrease%% 物理傷害',
+        description: '提升 %adIncrease%% 物理傷害 與 %hit% 點命中值',
         bonus: {
-            adIncrease: 100
+            adIncrease: 100,
+            hit: 20
         }
     },
     Focus: {

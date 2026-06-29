@@ -63,7 +63,7 @@ export class PowerCharge extends SkillModel {
             costSp: 5,
             costAction: 1,
             maxCd: 2,
-            itemDescription: '下一回合提升 50% 物理傷害。[冷卻: 2 回合]'
+            itemDescription: '下一回合提升 50% 物理傷害與 20 點命中值。[冷卻: 2 回合]'
         });
     }
 
