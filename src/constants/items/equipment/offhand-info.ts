@@ -8,7 +8,7 @@ export const Offhand = {
         icon: '🚪',
         position: EquipmentPosition.OFFHAND,
         quality: 0,
-        adDefend: 2,
+        adDefend: 3,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield1: {
@@ -17,7 +17,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 1,
-        adDefend: 4,
+        adDefend: 6,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield2: {
@@ -26,7 +26,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 2,
-        adDefend: 8,
+        adDefend: 12,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield3: {
@@ -35,7 +35,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
-        adDefend: 16,
+        adDefend: 24,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield4: {
@@ -44,7 +44,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
-        adDefend: 32,
+        adDefend: 48,
         skill: 'ShieldBlock'
     } as EquipmentType,
     Shield5: {
@@ -53,7 +53,7 @@ export const Offhand = {
         icon: '🛡️',
         position: EquipmentPosition.OFFHAND,
         quality: 5,
-        adDefend: 64,
+        adDefend: 96,
         skill: 'ShieldBlock'
     } as EquipmentType,
 

@@ -2,7 +2,7 @@
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {ref} from "vue";
-import {Accessory2} from "@/constants/items/equipment/accessories-info";
+import {Accessory2, SpecialAccessory} from "@/constants/items/equipment/accessories-info";
 import {RoomEnum} from "@/enums/room-enum";
 import {useSaveStore} from "@/store/save-store";
 import {useTrackerStore} from "@/store/track-store";
@@ -43,7 +43,7 @@ const onLeve2Test = () => {
   playerStore.gainExp({amount: 800})
   // 第一大關破完大概 裝備
   playerStore.equipItem(Head.HpHead0)
-  playerStore.equipItem(Armor.Armor0)
+  playerStore.equipItem(Armor.DefendArmor0)
   playerStore.equipItem(Weapon.Sword0)
   playerStore.equipItem(Offhand.Shield0)
 }
@@ -54,7 +54,7 @@ const onLeve3Test = () => {
   playerStore.gainExp({amount: 3000})
   // 第一大關破完大概 裝備
   playerStore.equipItem(Head.HpHead1)
-  playerStore.equipItem(Armor.Armor1)
+  playerStore.equipItem(Armor.DefendArmor1)
   playerStore.equipItem(Weapon.Sword1)
   playerStore.equipItem(Offhand.Shield1)
 }
@@ -67,7 +67,7 @@ const give = () => {
 
   // playerStore.gainItem(Offhand.Book5)
   // playerStore.gainItem(Weapon.Sword0)
-  playerStore.gainItem(Accessory2.SoulAnchor)
+  playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
   // playerStore.gainItem(Usable.BurningPotion, 10)
   // playerStore.gainItem(Potions.Heal0, 10)

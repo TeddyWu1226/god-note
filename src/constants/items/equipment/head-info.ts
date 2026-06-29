@@ -25,7 +25,7 @@ export const Head = {
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 2,
-        hpLimit: 150
+        hpLimit: 200
     } as EquipmentType,
     HpHead3: {
         name: '守衛重盔',
@@ -33,7 +33,7 @@ export const Head = {
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 3,
-        hpLimit: 200
+        hpLimit: 400
     } as EquipmentType,
     HpHead4: {
         name: '騎士之盔',
@@ -41,7 +41,7 @@ export const Head = {
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 4,
-        hpLimit: 250
+        hpLimit: 700
     } as EquipmentType,
     HpHead5: {
         name: '巨像戰盔',
@@ -49,6 +49,6 @@ export const Head = {
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 5,
-        hpLimit: 300
+        hpLimit: 1000
     } as EquipmentType
 };
