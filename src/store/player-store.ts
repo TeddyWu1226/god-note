@@ -23,30 +23,43 @@ export const usePlayerStore = defineStore('player-info', () => {
         _onEquipActionCallback = cb;
     };
 
+    const restoreSkills = () => {
+        if (!info.value.skills) return;
+        console.log("[PlayerStore] restoreSkills started. Current skills:", JSON.stringify(info.value.skills));
+        let changed = false;
+        const restored = info.value.skills.map(s => {
+            if (s && typeof s === 'object' && 'id' in s && typeof (s as any).getActualCostAction !== 'function') {
+                changed = true;
+                const created = SkillFactory.createSkill((s as any).id, s);
+                console.log("[PlayerStore] Hydrating object skill:", (s as any).id, "-> Created instance:", created);
+                return created || s; // 如果還原失敗則保留原 Plain Object 以免變成 undefined
+            }
+            if (typeof s === 'string') {
+                changed = true;
+                const prof = skillProficiency.value[s] || 0;
+                const created = SkillFactory.createSkill(s, {level: 1, proficiency: prof, currentCd: 0});
+                console.log("[PlayerStore] Hydrating string skill:", s, "-> Created instance:", created);
+                return created || s;
+            }
+            return s;
+        });
+        if (changed) {
+            info.value.skills = restored;
+            console.log("[PlayerStore] restoreSkills finished. Hydrated skills:", JSON.stringify(info.value.skills));
+        }
+    };
+
     // 💡 監聽並自動將 plain object 技能或 string 技能還原成 SkillModel 類別實例
     watch(
         () => info.value.skills,
-        (newSkills) => {
-            if (!newSkills) return;
-            let changed = false;
-            const restored = newSkills.map(s => {
-                if (s && typeof s === 'object' && 'id' in s && !(s instanceof SkillModel)) {
-                    changed = true;
-                    return SkillFactory.createSkill(s.id, s);
-                }
-                if (typeof s === 'string') {
-                    changed = true;
-                    const prof = skillProficiency.value[s] || 0;
-                    return SkillFactory.createSkill(s, {level: 1, proficiency: prof, currentCd: 0});
-                }
-                return s;
-            });
-            if (changed) {
-                info.value.skills = restored;
-            }
+        () => {
+            restoreSkills();
         },
         {immediate: true, deep: true}
     );
+
+    // 初始同步還原一次，確保首刷渲染前快取資料已實例化完成
+    restoreSkills();
 
     // --- Getters ---
     const totalBonus = computed(() => {
@@ -771,11 +784,15 @@ export const usePlayerStore = defineStore('player-info', () => {
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
-        gainExp, allocateStatPoint, takeDamage
+        gainExp, allocateStatPoint, takeDamage,
+        restoreSkills
     };
 }, {
     persist: {
         key: 'player-data',
         storage: localStorage,
+        afterRestore: (ctx) => {
+            ctx.store.restoreSkills();
+        }
     }
 });
