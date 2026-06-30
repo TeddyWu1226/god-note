@@ -57,5 +57,15 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
             return !!hasKnifePath && !!hasAgility;
         }
     },
+    KnifeMaster: {
+        id: 'KnifeMaster',
+        pathId: 'knifeplay',
+        tier: 3,
+        evolvesFrom: ['KnifeExpert'],
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('KnifeExpert');
+            return !!baseSkill?.isProficiencyMax;
+        }
+    },
 }
 

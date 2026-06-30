@@ -343,7 +343,7 @@ export class KnifeExpert extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`
             ;
     }
