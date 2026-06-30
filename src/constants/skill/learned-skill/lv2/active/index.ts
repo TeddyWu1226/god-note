@@ -150,12 +150,12 @@ export class Assassinate extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.floor(ad * 1.5);
+        return Math.floor(ad * 2);
     }
 
     description(playerStore: PlayerStoreType): string {
         const dmg = this.getDamage(playerStore);
-        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(dmg)} 物理傷害。此技能爆擊傷害額外提升 50%。`;
+        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(dmg)} 物理傷害。此技能爆擊機率提升50%。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -170,11 +170,11 @@ export class Assassinate extends SkillModel {
             skillName: '刺殺',
             canCrit: true,
             modifiers: {
-                critIncrease: (playerStore.finalStats?.critIncrease ?? 150) + 50
+                critRate: (playerStore.finalStats?.critIncrease ?? 0) + 50
             }
         });
 
-        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        useCardImpactEffect(getMonsterElement(monster.id), 'assassinate');
         return true;
     }
 }

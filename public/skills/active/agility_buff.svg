@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Retro Item Frame -->
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+
+  <!-- Swiftness Wind Trails (Back of the boot indicating speed) -->
+  <rect x="0" y="8" width="2" height="1" fill="#81ecec" opacity="0.6" />
+  <rect x="1" y="9" width="3" height="1" fill="#81ecec" opacity="0.8" />
+  <rect x="0" y="10" width="3" height="1" fill="#55efc4" opacity="0.6" />
+  <rect x="1" y="13" width="4" height="1" fill="#a6ebd8" opacity="0.7" />
+  <rect x="2" y="14" width="2" height="1" fill="#a6ebd8" opacity="0.4" />
+
+  <!-- Wing on the heel (Hermes style) -->
+  <!-- Top Feather -->
+  <rect x="1" y="5" width="2" height="1" fill="#ffffff" />
+  <rect x="3" y="6" width="1" height="1" fill="#ffffff" />
+  <rect x="2" y="6" width="1" height="1" fill="#dfe6e9" />
+  <rect x="1" y="6" width="1" height="1" fill="#bdc3c7" />
+  <!-- Middle Feather -->
+  <rect x="2" y="7" width="2" height="1" fill="#ffffff" />
+  <rect x="4" y="8" width="1" height="1" fill="#ffffff" />
+  <rect x="3" y="8" width="1" height="1" fill="#dfe6e9" />
+  <rect x="2" y="8" width="1" height="1" fill="#bdc3c7" />
+  <!-- Lower Feather -->
+  <rect x="3" y="9" width="2" height="1" fill="#ffffff" />
+  <rect x="3" y="10" width="1" height="1" fill="#dfe6e9" />
+
+  <!-- Boot Outline -->
+  <rect x="5" y="5" width="1" height="2" fill="#2d3436" />
+  <rect x="6" y="4" width="2" height="1" fill="#2d3436" />
+  <rect x="8" y="5" width="1" height="1" fill="#2d3436" />
+  <rect x="9" y="6" width="1" height="1" fill="#2d3436" />
+  <rect x="10" y="7" width="1" height="1" fill="#2d3436" />
+  <rect x="11" y="8" width="1" height="1" fill="#2d3436" />
+  <rect x="12" y="9" width="1" height="1" fill="#2d3436" />
+  <rect x="13" y="10" width="1" height="2" fill="#2d3436" />
+  <rect x="12" y="12" width="1" height="1" fill="#2d3436" />
+  <rect x="7" y="12" width="5" height="1" fill="#2d3436" />
+  <rect x="6" y="11" width="1" height="1" fill="#2d3436" />
+  <rect x="5" y="7" width="1" height="4" fill="#2d3436" />
+
+  <!-- Boot Body Fill (Teal/Mint Theme for Agility) -->
+  <rect x="6" y="5" width="1" height="4" fill="#81ecec" />
+  <rect x="7" y="5" width="1" height="4" fill="#00cec9" />
+  <rect x="6" y="9" width="3" height="1" fill="#00cec9" />
+  <rect x="9" y="9" width="2" height="1" fill="#81ecec" />
+  <rect x="10" y="8" width="1" height="1" fill="#81ecec" />
+  <rect x="6" y="10" width="1" height="1" fill="#00b894" /> <!-- Shadow heel -->
+  <rect x="7" y="10" width="3" height="1" fill="#00cec9" />
+  <rect x="10" y="10" width="2" height="1" fill="#81ecec" />
+  <rect x="12" y="10" width="1" height="1" fill="#ffffff" /> <!-- Toe Highlight -->
+  <rect x="7" y="11" width="3" height="1" fill="#00b894" />
+  <rect x="10" y="11" width="2" height="1" fill="#00cec9" />
+  <rect x="12" y="11" width="1" height="1" fill="#81ecec" />
+
+  <!-- Golden Buckles/Straps -->
+  <rect x="8" y="6" width="1" height="1" fill="#f1c40f" />
+  <rect x="9" y="7" width="1" height="1" fill="#f1c40f" />
+  <rect x="10" y="8" width="1" height="1" fill="#f1c40f" />
+
+  <!-- Agility/Speed Sparkles -->
+  <rect x="14" y="3" width="1" height="1" fill="#f1c40f" />
+  <rect x="13" y="2" width="1" height="1" fill="#ffffff" />
+  <rect x="14" y="5" width="1" height="1" fill="#55efc4" />
+  <rect x="11" y="2" width="1" height="1" fill="#74b9ff" />
+  <rect x="14" y="11" width="1" height="1" fill="#55efc4" />
+  <rect x="13" y="13" width="1" height="1" fill="#f1c40f" />
+</svg>
