@@ -51,4 +51,4 @@ The base implementation uses `this.constructor` and `Object.assign` to clone the
 
 ## ⚠️ Important Cautions
 1. **Vue Key Collision Prevention**: Never hardcode a static `id` field in the subclass `constructor()`. All IDs must be dynamically assigned by the `MonsterModel` base constructor (e.g., via random hash) to prevent Vue virtual DOM crash during `v-for` rendering.
-2. **Icons/Assets**: If adding monster icons, ensure a pixel/realistic art style. Generate using `generate_image` and save as PNG.
+2. **Icons/Assets**: If adding monster icons, ensure an **8-bit high-granularity pixel art style with a transparent background and thick black outlines** (similar to classic retro RPG battle sprites). Generate using `generate_image` and save as PNG.

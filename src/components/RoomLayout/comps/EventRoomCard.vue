@@ -23,7 +23,7 @@ const GeneralEvent = [
   },
   {
     type: SpecialEventEnum.GetFruit, // 魔樹事件
-    canAppear: () => !gameStateStore.thisStageAlreadyAppear(SpecialEventEnum.GetFruit)
+    canAppear: () => gameStateStore.currentStage === 1
   },
 ];
 
@@ -31,18 +31,6 @@ const GeneralEvent = [
 const getAvailableEvents = () => {
   // 過濾出所有符合出現條件的事件 Type
   let allowEvent = [...GeneralEvent]
-
-  // 計算區域索引 (1-25)
-  const subZoneIdx = Math.min(4, Math.floor((Math.max(1, gameStateStore.stageDays) - 1) / 20))
-  const oldStageIndex = (gameStateStore.currentStage - 1) * 5 + 1 + subZoneIdx
-
-  if (oldStageIndex >= 11) {
-    // 山區開始提供樹叢事件
-    allowEvent.push({
-      type: SpecialEventEnum.BushSearch,
-      canAppear: () => oldStageIndex >= 11
-    })
-  }
 
   return allowEvent
       .filter(event => !gameStateStore.isEventClose(event.type))

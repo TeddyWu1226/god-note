@@ -6,10 +6,12 @@ import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {computed, ref} from "vue";
 import {GameState, SpecialEventEnum} from "@/enums/enums";
 import {ElMessage} from "element-plus";
-import {SpecialWeapon, Weapon} from "@/constants/items/equipment/weapon-info";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {getRandomElements} from "@/utils/math";
-import {Accessory2} from "@/constants/items/equipment/accessories-info";
+import {GodThings} from "@/constants/items/usalbe-item/usable-info";
+import {RoomEnum} from "@/enums/room-enum";
+import {MonsterFactory} from "@/constants/monsters/monster-factory";
+import {Boss} from "@/constants/monsters/monster-info/99-boss-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -50,35 +52,26 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
     switch (type) {
       case 'herb':
         finalText.value = '枯樹吸收了草藥水，'
-        const picked = getRandomElements(['ad', 'apIncrease', 'hit'])[0]
-        if (picked === 'ad') {
-          playerStore.info.ad += 3;
-          finalText.value += "生長出一個咖啡色的果實，吃下後攻擊力永久提升了！";
+        const picked = getRandomElements(['adIncrease', 'apIncrease', 'defendIncrease'])[0]
+        if (picked === 'adIncrease') {
+          playerStore.info.adIncrease += 2;
+          finalText.value += "生長出一個咖啡色的果實，吃下後物理增傷永久提升了！";
         } else if (picked === 'apIncrease') {
-          playerStore.info.apIncrease += 3;
-          finalText.value += "生長出一個藍色的果實，吃下後法術傷害永久提升了！";
+          playerStore.info.apIncrease += 2;
+          finalText.value += "生長出一個藍色的果實，吃下後法術增傷永久提升了！";
         } else {
-          playerStore.info.hit += 3;
-          finalText.value += "生長出一個綠色的果實，吃下後命中值永久提升了！";
+          playerStore.info.defendIncrease += 2;
+          finalText.value += "生長出一個綠色的果實，吃下後抗性永久提升了！";
         }
         break;
       case 'juice':
         finalText.value = '枯樹長出了嫩芽，'
-        const picked2 = getRandomElements(['critRate', 'adDefend', 'dodge'])[0]
-        if (picked2 === 'critRate') {
-          playerStore.info.critRate += 3;
-          finalText.value += "生長出一個鮮紅色的嫩葉，吃下後爆擊率永久提升了！";
-        } else if (picked2 === 'adDefend') {
-          playerStore.info.adDefend += 1;
-          finalText.value += "生長出一個鐵灰色的嫩葉，吃下後物理防禦永久提升了！";
-        } else {
-          playerStore.info.dodge += 3;
-          finalText.value += "生長出一個青綠色的嫩葉，吃下後閃避值永久提升了！";
-        }
+        playerStore.gainExp({amount: 50})
+        finalText.value += "生長出一個鮮紅色的嫩葉，吃下後經驗提升了！";
         break;
       case 'destroy':
-        playerStore.gainItem(SpecialWeapon.SpikeSpear);
-        finalText.value = "粗暴地拆下了最堅硬樹枝，削成了一把尖刺木槍。枯樹發出了最後的哀鳴後彻底枯萎了。";
+        playerStore.gainItem(GodThings.BurningWood, getRandomElements([2, 2, 3, 3, 4])[0]);
+        finalText.value = "粗暴地拆下了樹枝，從中取得幾個柴火。枯樹發出了最後的哀鳴後彻底枯萎了。";
         break;
       case 'sacrifice_hp':
         if (playerStore.info.hp <= 50) {
@@ -102,9 +95,10 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         break;
       case 'sacrifice_all':
         // 第五階段：獻祭全部生命
-        playerStore.info.hp = 0;
-        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，邪氣從樹中爆發,伴隨龐大的魔力瀰漫後消失在空氣之中,而你在剩下空殼的樹洞中發現了一個強大的項鍊";
-        playerStore.gainItem(Accessory2.EvilWoodenHeart)
+        playerStore.gainExp({amount: 200})
+        playerStore.info.hp = 1;
+        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，邪氣從樹中爆發,伴隨龐大的魔力瀰漫後消失在空氣之中,化作經驗給你吸收。";
+
         break;
     }
     gameStateStore.eventAction = 2;
@@ -119,8 +113,11 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
 
 const onLeave = () => {
   if (gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5) {
-    // SpecialBoss 待重新設計，暫不觸發戰鬥，直接離開並結束事件
-    gameStateStore.transitionToNextState();
+    const boss = Boss.DemonWood
+    // 怪物強化
+    boss.hpLimit += playerStore.finalStats.hpLimit
+    boss.hp += playerStore.finalStats.hpLimit
+    gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [MonsterFactory.createMonster(boss.code, boss)])
     gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true);
   } else {
     gameStateStore.transitionToNextState();
@@ -130,7 +127,7 @@ const onLeave = () => {
 /**初始化**/
 const init = () => {
   gameStateStore.recordThisStageAppear(SpecialEventEnum.GetFruit)
-  
+
   // 解決重載頁面時 eventAction 為 2 但本地 finalText 丟失導致空白的 Bug
   if (gameStateStore.eventAction === 2 && !finalText.value) {
     const process = gameStateStore.getEventProcess(SpecialEventEnum.GetFruit);

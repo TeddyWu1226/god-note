@@ -19,6 +19,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects, playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import {applySkillDamage} from "@/constants/fight-func";
 import EvnStatus from "@/constants/status/evn-status";
+import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -926,6 +927,53 @@ export class NightTitan extends MonsterModel {
     }
 }
 
+export class DemonWood extends MonsterModel {
+    constructor() {
+        super({
+            code: "DemonWood",
+            icon: '/monsters/demon_wood.png',
+            name: '背叛的樹妖',
+            class: 'boss big icon-purple',
+            description: '背叛森林的樹之魔物。',
+            ad: 12,
+            critIncrease: 150,
+            critRate: 25,
+            adDefend: 10,
+            dodge: 10,
+            hit: 10,
+            hp: 200,
+            hpLimit: 200,
+            level: 15,
+            dropGold: 0,
+            chaseIncrease: 0,
+            drop: []
+        });
+    }
+
+    override onStartHook() {
+        useEpicSubtitle("「你是我的救命稻草，也是我復仇的第一滴血！」", 2500);
+    }
+
+    override onRoundBehaviorHook({playerStore, logStore}: MonsterRoundBehaviorParams) {
+        this.ad += 2
+    }
+
+    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        const round = gameStateStore?.battleRound ?? 1;
+        if (isMultiple(round, 3)) {
+            playerStore.addStatus(UnitStatus.WoodStuck);
+            useHeroStatusEffect({
+                message: '老樹盤根',
+                color: '#632b2b',
+                icon: '🪵',
+                duration: 1000
+            });
+            return false;
+        }
+        return true;
+    }
+}
+
 export const Boss = {
     // --- 迷霧森林 (Misty Forest) ---
     AncientRoots: new AncientSpider(),
@@ -953,7 +1001,8 @@ export const Boss = {
 
     // --- 特殊 Boss ---
     DayTitan: new DayTitan(),
-    NightTitan: new NightTitan()
+    NightTitan: new NightTitan(),
+    DemonWood: new DemonWood()
 };
 
 export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType }> = {

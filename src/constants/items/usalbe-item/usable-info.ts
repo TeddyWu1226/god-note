@@ -53,6 +53,14 @@ export const Usable = {
 };
 
 export const GodThings = {
+    BurningWood: {
+        name: '燃燒枯枝',
+        description: '神秘樹木的枯枝，可以拿來當作燃燒火種，可以使目標燃燒或燒掉某些東西',
+        icon: '🌿',
+        quality: 0,
+        usable: true,
+        skill: 'useBurningPotion'
+    } as UsableType,
     GodStar: {
         name: '神性星輝',
         quality: 8,
