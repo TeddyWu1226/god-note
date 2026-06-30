@@ -1,4 +1,10 @@
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams, UserType} from "@/types";
+import {
+    PlayerStoreType,
+    SkillOnPlayerAttackedHitParams,
+    SkillOnPlayerAttackHitParams,
+    SkillOnStartParams,
+    SkillParams
+} from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'perfect' | 'legendary' | 'unique';
 export type SkillTypeCategory = 'active' | 'passive';
@@ -92,6 +98,16 @@ export abstract class SkillModel {
 
     // 💡 玩家普通攻擊命中時觸發的被動/武技 Hook
     onPlayerAttackHit(params: SkillOnPlayerAttackHitParams): void {
+        // 預設無效果
+    }
+
+    // 💡 戰鬥回合開局時觸發的 Hook
+    onRoundStart(params: SkillOnStartParams): void {
+        // 預設無效果
+    }
+
+    // 💡 玩家受到攻擊命中時觸發的 Hook
+    onPlayerAttacked(params: SkillOnPlayerAttackedHitParams): void {
         // 預設無效果
     }
 

@@ -7,6 +7,7 @@ export const ItemStatus = {
         duration: 1,
         isBuff: true,
         description: `格擋`,
+        untilAttacked: true,
         bonus: {
             adDefend: 5
         }

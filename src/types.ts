@@ -237,6 +237,8 @@ export interface StatusEffect {
     // 屬性加成 (正數為 Buff, 負數為 Debuff)
     bonus?: BonusType
     isBuff?: boolean // 是否為正向BUFF,不填都是負向
+    untilAttack?: boolean; // 當擁有效果者攻擊時會移除本效果
+    untilAttacked?: boolean; // 當擁有效果者被攻擊命中時會移除本效果
     /** 每回合觸發的邏輯類型
      * damage:傷害
      * heal:治療
@@ -250,20 +252,20 @@ export interface StatusEffect {
 
 export type GameStateStoreType = ReturnType<typeof useGameStateStore>;
 export type PlayerStoreType = ReturnType<typeof usePlayerStore>;
-export type logStoreType = ReturnType<typeof useLogStore>;
+export type LogStoreType = ReturnType<typeof useLogStore>;
 export type TrackerStoreType = ReturnType<typeof useTrackerStore>;
 
 
 export interface MonsterActionParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
-    logStore?: logStoreType;
+    logStore?: LogStoreType;
 }
 
 export interface MonsterOnAttackParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
-    logStore?: logStoreType;
+    logStore?: LogStoreType;
 }
 
 export interface MonsterOnAttackHitParams extends MonsterOnAttackParams {
@@ -278,7 +280,7 @@ export interface MonsterRoundBehaviorParams extends MonsterOnAttackParams {
 export interface MonsterOnAttackedParams {
     playerStore?: PlayerStoreType;
     gameStateStore?: GameStateStoreType
-    logStore?: logStoreType;
+    logStore?: LogStoreType;
     damage?: BattleOutcome; // onAttack 沒有傳這值
 }
 
@@ -306,11 +308,19 @@ export interface SkillParams {
     gameStateStore?: GameStateStoreType
 }
 
-export interface SkillOnPlayerAttackHitParams {
-    monster?: MonsterModel;
-    attackOutcome: BattleOutcome
+export interface SkillOnStartParams {
     playerStore?: PlayerStoreType;
-    gameStateStore?: GameStateStoreType
+    gameStateStore?: GameStateStoreType;
+    logStore?: LogStoreType;
+}
+
+export interface SkillOnPlayerAttackHitParams extends SkillParams {
+    attackOutcome: BattleOutcome
+}
+
+export interface SkillOnPlayerAttackedHitParams extends SkillParams {
+    logStore?: LogStoreType;
+    attackedOutcome: BattleOutcome;
 }
 
 

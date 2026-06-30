@@ -11,6 +11,7 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
 import {WorldDefault} from "@/assets/const";
 import EvnStatus from "@/constants/status/evn-status";
+import {useGameStateStore} from "@/store/game-state-store";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -189,6 +190,29 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
     logStore.logger.add(logMessage);
 
+    // 觸發攻擊時消失狀態 (untilAttack)
+    attacker.handleUntilAttack();
+
+    // 觸發受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
+    if (outcome.isHit) {
+        defender.handleUntilAttacked();
+
+        if (!(defender instanceof MonsterClass)) {
+            const gameStateStore = useGameStateStore();
+            defender.info.skills.forEach((s: any) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        playerStore: defender,
+                        gameStateStore,
+                        logStore,
+                        monster: attacker as any,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
+        }
+    }
+
     return outcome;
 }
 
@@ -351,6 +375,29 @@ export function applySkillDamage({
         logMessage = `${targetName} 受到 ${outcome.totalDamage} 點${typeNames[type]}傷害。${outcome.isCrit ? ' (💥 暴擊)' : ''}`;
     }
     logStore.logger.add(logMessage);
+
+    // 觸發施放者攻擊時消失狀態 (untilAttack)
+    speller.handleUntilAttack();
+
+    // 觸發目標受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
+    if (outcome.isHit) {
+        target.handleUntilAttacked();
+
+        if (!(target instanceof MonsterClass)) {
+            const gameStateStore = useGameStateStore();
+            target.info.skills.forEach((s: any) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        monster: speller,
+                        playerStore: target,
+                        gameStateStore,
+                        logStore,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
+        }
+    }
 
     return outcome;
 }

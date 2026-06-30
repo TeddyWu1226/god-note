@@ -45,6 +45,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     PurpleSkin: Lv2SkillPassive.PurpleSkin,
 
     KnifeExpert: Lv2SkillPassive.KnifeExpert,
+    ConcealBreath: Lv2SkillPassive.ConcealBreath,
 
     // Level 3
     SwordMaster: Lv3SkillPassive.SwordMaster,

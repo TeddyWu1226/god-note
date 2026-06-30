@@ -46,5 +46,16 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
             return !!hasKnifePath && !!hasThrust;
         }
     },
+    ConcealBreath: {
+        id: 'ConcealBreath',
+        pathId: 'conceal_breath',
+        tier: 2,
+        evolvesFrom: ['AgilityBuff'],
+        checkEligible: (playerStore) => {
+            const hasKnifePath = playerStore.checkSkillPath('knifeplay');
+            const hasAgility = playerStore.hasSkill('AgilityBuff');
+            return !!hasKnifePath && !!hasAgility;
+        }
+    },
 }
 

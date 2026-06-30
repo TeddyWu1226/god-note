@@ -287,6 +287,17 @@ const resolveRoundEnd = async () => {
   // 補滿行動點數
   gameStateStore.refillActionPoints()
 
+  // 觸發玩家技能回合開始 Hook
+  playerStore.info.skills.forEach((s: SkillModel) => {
+    if (s && typeof s.onRoundStart === 'function') {
+      s.onRoundStart({
+        playerStore,
+        gameStateStore,
+        logStore
+      });
+    }
+  });
+
   // 開啟玩家操作
   gameStateStore.isPlayerTurn = true
 }
@@ -402,8 +413,8 @@ const onSkill = async (skillKey: string) => {
     useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
   }
   const costAction = useSkill && typeof useSkill.getActualCostAction === 'function'
-    ? useSkill.getActualCostAction(playerStore)
-    : (useSkill?.costAction || 0);
+      ? useSkill.getActualCostAction(playerStore)
+      : (useSkill?.costAction || 0);
 
   if (gameStateStore.playerActionPoints < costAction) {
     ElMessage.warning('行動點數不足！')
@@ -545,6 +556,17 @@ const init = () => {
   // 新戰鬥開始，寫入第一回合日誌
   logStore.logger.clear();
   logStore.logger.add('<div style="color: #409eff; font-weight: bold; margin-top: 4px;">⚔️ === 第 1 回合 ===</div>');
+
+  // 戰鬥開局，觸發玩家技能開局/回合開始勾子
+  playerStore.info.skills.forEach((s: any) => {
+    if (s && typeof s.onRoundStart === 'function') {
+      s.onRoundStart({
+        playerStore,
+        gameStateStore,
+        logStore
+      });
+    }
+  });
 
   if (gameStateStore.currentStage === 4) {
     if (gameStateStore.environmentMode === 'day') {

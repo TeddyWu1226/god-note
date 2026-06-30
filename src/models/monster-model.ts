@@ -11,6 +11,7 @@ import {
     StatusEffect
 } from "@/types";
 import {genCustomStatus} from "@/utils/create";
+import {useLogStore} from "@/store/log-store";
 
 
 export class MonsterModel implements MonsterType {
@@ -184,6 +185,18 @@ export class MonsterModel implements MonsterType {
         if (index !== -1) {
             this.status.splice(index, 1);
         }
+    }
+
+    handleUntilAttack() {
+        this.status = this.status.filter(eff => {
+            return !eff.untilAttack;
+        });
+    }
+
+    handleUntilAttacked() {
+        this.status = this.status.filter(eff => {
+            return !eff.untilAttacked;
+        });
     }
 
     /**

@@ -495,6 +495,28 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
     };
 
+    const handleUntilAttack = () => {
+        statusEffects.value = statusEffects.value.filter(eff => {
+            if (eff.untilAttack) {
+                const logStore = useLogStore();
+                logStore.logger.add(`[${info.value.name || '玩家'}] 的 [${eff.name}] 效果因發動攻擊而消失。`);
+                return false;
+            }
+            return true;
+        });
+    };
+
+    const handleUntilAttacked = () => {
+        statusEffects.value = statusEffects.value.filter(eff => {
+            if (eff.untilAttacked) {
+                const logStore = useLogStore();
+                logStore.logger.add(`[${info.value.name || '玩家'}] 的 [${eff.name}] 效果因受到攻擊而消失。`);
+                return false;
+            }
+            return true;
+        });
+    };
+
     /**
      * 每回合觸發 (在戰鬥回合結束時呼叫)
      */
@@ -780,7 +802,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         equipItem, hasEquip,
         gainItem, hasItem, removeItem, _removeItemFromBag, unequipItem,
         addGold,
-        addStatus, hasStatus, removeStatus,
+        addStatus, hasStatus, removeStatus, handleUntilAttack, handleUntilAttacked,
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
         init, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
