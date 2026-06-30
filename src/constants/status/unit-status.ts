@@ -43,7 +43,7 @@ export const UnitStatus = {
         duration: 4,
         description: '每回合失去 %value% 點生命值',
         type: 'damage',
-        value: 5
+        value: 10
     } as StatusEffect,
     Paralysis: {
         name: '麻痹',

@@ -186,16 +186,16 @@ export class SmallSpider extends MonsterModel {
             name: '迷霧蜘蛛',
             description: '戰鬥開始時會搶先施展「蛛絲纏繞」限制獵物前 2 回合的行動。',
             class: 'elite',
-            ad: 15,
-            critIncrease: 200,
-            critRate: 5,
-            adDefend: 5,
-            dodge: 35,
+            ad: 12,
+            critIncrease: 150,
+            critRate: 25,
+            adDefend: 3,
+            dodge: 25,
             hit: 5,
             hp: 80,
             hpLimit: 80,
             level: 6,
-            dropGold: 52
+            dropGold: 48
         });
     }
 

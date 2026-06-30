@@ -57,6 +57,9 @@ export const MonsterCrystals = {
         price: 1000
     } as ItemType,
 };
+export const SpecialItems = {
+
+}
 export const Material = {
     ...MonsterCrystals
 }
