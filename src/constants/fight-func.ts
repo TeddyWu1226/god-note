@@ -460,11 +460,8 @@ export function escapePercent(runner: UnitType, chasers: MonsterClass[]): number
     // 額外 追擊/逃跑值補正(每點 1%)
     const chaseModifier = (runner.runIncrease || 0) - totalChaserChasing;
 
-    // 閃避值加強
-    let dodgeIncrease = (runner.dodge) * 0.2;
-
     // 最終計算的理論成功率
-    let finalChance = BASE_CHANCE + levelModifier + chaseModifier + dodgeIncrease;
+    let finalChance = BASE_CHANCE + levelModifier + chaseModifier;
 
     // 套用最大/最小機率限制
     finalChance = Math.max(MIN_CHANCE, Math.min(MAX_CHANCE, Math.round((finalChance) * 100) / 100));
