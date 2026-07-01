@@ -38,7 +38,7 @@ export class VerticalSlash extends SkillModel {
             baseValue: this.extraDamage(playerStore),
             type: 'ad'
         })
-        return `由上往下攻擊，總計造成 ${ColorText.ad(damage)} 。`;
+        return `由上往下攻擊，總計造成 ${ColorText.ad(damage)}。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {

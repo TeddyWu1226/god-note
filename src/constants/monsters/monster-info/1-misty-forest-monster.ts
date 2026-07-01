@@ -192,8 +192,8 @@ export class SmallSpider extends MonsterModel {
             adDefend: 3,
             dodge: 25,
             hit: 5,
-            hp: 80,
-            hpLimit: 80,
+            hp: 60,
+            hpLimit: 60,
             level: 6,
             dropGold: 48
         });

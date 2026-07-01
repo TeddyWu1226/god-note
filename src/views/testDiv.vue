@@ -70,9 +70,9 @@ const give = () => {
   // playerStore.gainItem(Material.BadNormal, 100)
   // playerStore.gainItem(Offhand.Book5)
   // playerStore.gainItem(Weapon.Sword0)
-  playerStore.gainItem(SpecialAccessory.SoulAnchor)
+  // playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
-  // playerStore.gainItem(Usable.BurningPotion, 10)
+  playerStore.gainItem(Usable.BurningPotion, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }

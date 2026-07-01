@@ -50,7 +50,6 @@ export const usePlayerStore = defineStore('player-info', () => {
     assignInitialEquipmentIds();
 
 
-
     // --- Getters ---
     const totalBonus = computed(() => {
         const bonus: Record<string, number> = {
@@ -186,7 +185,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     // --- Actions ---
     /**
      * 檢查背包中是否有指定名稱或 ID 的道具
-     * @param itemName 道具名稱
+     * @param itemOrName 道具名稱
      * @param amount 需要的數量 (預設為 1)
      */
     const hasItem = (itemOrName: string | any, amount: number = 1): [boolean, number] => {
@@ -231,12 +230,12 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (info.value.equipments) {
             for (let i = info.value.equipments.length - 1; i >= 0; i--) {
                 const eq = info.value.equipments[i];
-                
+
                 // 比對唯一 ID 或 單純比對名稱
                 const matchesItem = (targetId !== undefined && eq.id)
                     ? eq.id === targetId
                     : eq.name === itemName;
-                
+
                 if (matchesItem) {
                     info.value.equipments.splice(i, 1);
                     if (!isRemoveAll) {
@@ -830,9 +829,10 @@ export const usePlayerStore = defineStore('player-info', () => {
             serialize: (state) => JSON.stringify(state),
             deserialize: (value) => {
                 const state = JSON.parse(value);
-                
+
                 // 1. 還原技能類別實體
                 if (state.info && state.info.skills) {
+                    console.log('state.info.skills', state.info.skills)
                     state.info.skills = state.info.skills.map((s: any) => {
                         if (s && typeof s === 'object' && 'id' in s) {
                             return SkillFactory.createSkill(s.id, s);
@@ -844,7 +844,7 @@ export const usePlayerStore = defineStore('player-info', () => {
                         return s;
                     });
                 }
-
+                console.log('觸發了', state.info.skills)
                 // 2. 確保背包中所有載入的裝備都有唯一 ID
                 if (state.info && state.info.equipments) {
                     state.info.equipments.forEach((eq: any) => {
@@ -862,7 +862,7 @@ export const usePlayerStore = defineStore('player-info', () => {
                         }
                     });
                 }
-                
+
                 return state;
             }
         }

@@ -5,6 +5,7 @@ import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 
 /**
@@ -113,7 +114,7 @@ export class SwiftStrike extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         })
-        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 40% 機率獲得 1 點行動點。`;
+        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
     }
 
     protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
@@ -131,10 +132,14 @@ export class SwiftStrike extends SkillModel {
         // 匕首專屬機率獲得行動點數
         const weaponName = playerStore.info?.equips?.weapon?.name || "";
         const isKnife = weaponName.includes("匕首") || weaponName.includes("小刀");
-        if (isKnife && Math.random() < 0.4) {
-            if (gameStateStore) {
-                gameStateStore.playerActionPoints += 1;
-            }
+        if (isKnife && Math.random() <= 0.5) {
+            gameStateStore.playerActionPoints += 1;
+            showEffect(
+                {
+                    text: "獲得額外行動點數!",
+                    type: "buff"
+                }
+            )
         }
 
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');

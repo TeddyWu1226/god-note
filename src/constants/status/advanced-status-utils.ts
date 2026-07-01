@@ -23,14 +23,6 @@ export const playerGetColdStackEffects = (playerStore: PlayerStoreType, stack = 
         existing.icon = existing.icon.replace(/\d+/, Math.abs(currentStack).toString())
         existing.description = existing.description.replace(/\d+/, Math.abs(currentStack).toString())
         let returnEffects: StatusEffect[] = [existing]
-        // if (currentStack < -30) {
-        //     returnEffects.push(UnitStatus.Frostbite)
-        //     useFullScreenEffect({
-        //         message: '凍傷',
-        //         color: '#64b5f6',
-        //         duration: 800
-        //     });
-        // }
         if (currentStack < -60) {
             returnEffects.push(UnitStatus.Frozen)
             useFullScreenEffect({

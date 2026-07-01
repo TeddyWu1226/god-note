@@ -78,14 +78,14 @@ export class Twilight extends MonsterModel {
             name: '癲狂的代理者',
             class: 'boss big',
             description: '維持森林協調的神祗代理者，但現在陷入癲狂而墮落，在永不退去的迷霧之中無盡的舞蹈。其舞蹈會加強他的破壞力，若要阻止，必須先停下他的舞蹈。',
-            ad: 12,
+            ad: 10,
             critIncrease: 100,
             critRate: 0,
-            adDefend: 12,
+            adDefend: 10,
             dodge: 35,
             hit: 0,
-            hp: 500,
-            hpLimit: 500,
+            hp: 650,
+            hpLimit: 650,
             level: 10,
             dropGold: 300,
             chaseIncrease: 200,
@@ -124,7 +124,7 @@ export class Twilight extends MonsterModel {
         this.speed += 4
         let bonus = {
             ad: this.speed,
-            adDefend: this.speed
+            adDefend: this.speed / 4
         }
         if (this.speed >= 20) {
             useFloatingMessage(
