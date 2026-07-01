@@ -258,7 +258,7 @@ export const getSkillFinalDamage = (
 
     return {
         spellerStats,
-        damage,
+        damage: Math.floor(damage),
     }
 }
 
@@ -316,9 +316,6 @@ export function applySkillDamage({
         outcome.isHit = true;
     }
 
-
-    let finalDamage = damage;
-
     // --- 暴擊判斷與增傷 (在防禦前套用) ---
     if (canCrit) {
         const totalCritRate = (spellerStats.critRate || 0);
@@ -328,6 +325,8 @@ export function applySkillDamage({
         }
         outcome.baseDamage = damage;
     }
+    // 施法者素質加成完畢計算
+    let finalDamage = damage;
 
     // --- 抗性減傷 (defendIncrease) ---
     if (type !== 'true' && targetFinalStats.defendIncrease) {

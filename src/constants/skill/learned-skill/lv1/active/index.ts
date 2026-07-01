@@ -1,7 +1,7 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
-import {applySkillDamage} from "@/constants/fight-func";
+import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement} from "@/utils/create";
@@ -33,8 +33,12 @@ export class VerticalSlash extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const total = this.extraDamage(playerStore);
-        return `由上往下攻擊，總計造成 ${ColorText.ad(total)} 。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.extraDamage(playerStore),
+            type: 'ad'
+        })
+        return `由上往下攻擊，總計造成 ${ColorText.ad(damage)} 。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -74,8 +78,12 @@ export class HorizontalSlash extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getDamage(playerStore);
-        return `橫揮手中武器，造成全部敵人 ${ColorText.ad(dmg)} 。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `橫揮手中武器，造成全部敵人 ${ColorText.ad(damage)} 。`;
     }
 
     protected execute({playerStore, gameStateStore}: SkillParams): boolean {
@@ -122,8 +130,12 @@ export class Thrust extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getDamage(playerStore);
-        return `蓄力向前刺擊，造成較高的${ColorText.ad(dmg)}，但降低此招 20 命中值。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `蓄力向前刺擊，造成較高的${ColorText.ad(damage)}，但降低此招 20 命中值。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -172,8 +184,12 @@ export class MagicBall extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getDamage(playerStore);
-        return `對目標丟出一法力凝聚的光彈,造成 ${ColorText.ap(dmg)}。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ap'
+        })
+        return `對目標丟出一法力凝聚的光彈,造成 ${ColorText.ap(damage)}。`;
     }
 
     protected execute(params: SkillParams): boolean {

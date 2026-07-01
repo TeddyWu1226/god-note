@@ -1,7 +1,7 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams} from "@/types";
 import {ColorText} from "@/utils/color";
-import {applySkillDamage} from "@/constants/fight-func";
+import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
@@ -35,8 +35,12 @@ export class Flurry extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getSingleDamage(playerStore);
-        return `狂亂地連續揮打，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(dmg)} 物理傷害。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getSingleDamage(playerStore),
+            type: 'ad'
+        })
+        return `狂亂地連續揮打，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
     }
 
     protected async execute(params: SkillParams): Promise<boolean> {
@@ -104,8 +108,12 @@ export class SwiftStrike extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getDamage(playerStore);
-        return `快速前刺攻擊，造成 ${ColorText.ad(dmg)} 物理傷害。若裝備「匕首」類武器，有 40% 機率獲得 1 點行動點。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 40% 機率獲得 1 點行動點。`;
     }
 
     protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
@@ -138,7 +146,7 @@ export class Assassinate extends SkillModel {
     constructor() {
         super({
             id: 'Assassinate',
-            name: "刺殺",
+            name: "精準刺殺",
             icon: "skills/active/assassinate.svg",
             type: 'active',
             rarity: 'rare',
@@ -154,8 +162,12 @@ export class Assassinate extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        const dmg = this.getDamage(playerStore);
-        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(dmg)} 物理傷害。此技能爆擊機率提升50%。`;
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(damage)} 物理傷害。此技能爆擊傷害提升25%。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -170,7 +182,7 @@ export class Assassinate extends SkillModel {
             skillName: '刺殺',
             canCrit: true,
             modifiers: {
-                critRate: (playerStore.finalStats?.critIncrease ?? 0) + 50
+                critIncrease: (playerStore.finalStats?.critIncrease ?? 0) + 25
             }
         });
 
