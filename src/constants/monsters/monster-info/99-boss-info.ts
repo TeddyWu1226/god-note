@@ -172,7 +172,7 @@ export class FrostGiant extends MonsterModel {
             ad: 0,
             critIncrease: 200,
             critRate: 0,
-            adDefend: 40,
+            adDefend: 10,
             dodge: 0,
             hit: 25,
             hp: 1250,

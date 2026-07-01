@@ -452,6 +452,58 @@ export const usePlayerStore = defineStore('player-info', () => {
     };
 
     /**
+     * 從外部數據載入並還原狀態 (還原 class 實體與補齊 ID)
+     */
+    const loadState = (playerData: any) => {
+        if (!playerData) return;
+        
+        if (playerData.info) {
+            info.value = JSON.parse(JSON.stringify(playerData.info));
+        }
+        if (playerData.skillProficiency) {
+            skillProficiency.value = JSON.parse(JSON.stringify(playerData.skillProficiency));
+        }
+        if (playerData.statusEffects) {
+            statusEffects.value = JSON.parse(JSON.stringify(playerData.statusEffects));
+        }
+        if (playerData.stopValueChangeAnimation !== undefined) {
+            stopValueChangeAnimation.value = playerData.stopValueChangeAnimation;
+        }
+
+        // 1. 還原技能類別實體
+        if (info.value && info.value.skills) {
+            info.value.skills = info.value.skills.map((s: any) => {
+                if (s && typeof s === 'object' && 'id' in s) {
+                    return SkillFactory.createSkill(s.id, s);
+                }
+                if (typeof s === 'string') {
+                    const prof = (skillProficiency.value && skillProficiency.value[s]) || 0;
+                    return SkillFactory.createSkill(s, {level: 1, proficiency: prof, currentCd: 0});
+                }
+                return s;
+            });
+        }
+
+        // 2. 確保背包中所有載入的裝備都有唯一 ID
+        if (info.value && info.value.equipments) {
+            info.value.equipments.forEach((eq: any) => {
+                if (eq && !eq.id) {
+                    eq.id = generateUUID();
+                }
+            });
+        }
+
+        // 3. 確保裝備欄位中所有載入的裝備都有唯一 ID
+        if (info.value && info.value.equips) {
+            Object.values(info.value.equips).forEach((eq: any) => {
+                if (eq && !eq.id) {
+                    eq.id = generateUUID();
+                }
+            });
+        }
+    };
+
+    /**
      * 添加或更新狀態
      */
     const addStatus = (
@@ -817,7 +869,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         addGold,
         addStatus, hasStatus, removeStatus, handleUntilAttack, handleUntilAttacked,
         addSkill, removeSkill, replaceSkill, hasSkill, checkSkillPath,
-        init, nextTurnStatus, healFull,
+        init, loadState, nextTurnStatus, healFull,
         addSkillProficiency, getSkillProficiency,
         gainExp, allocateStatPoint, takeDamage
     };

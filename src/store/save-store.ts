@@ -72,10 +72,7 @@ export const useSaveStore = defineStore('save-management', () => {
         playerStore.isRestoring = true;
 
         // --- 還原 Player Store ---
-        // 使用 $patch 可以一次更新多個屬性，且性能較好
-        playerStore.$patch((state) => {
-            Object.assign(state, rawData.player);
-        });
+        playerStore.loadState(rawData.player);
 
         // --- 還原 Game State Store ---
         gameStore.$patch((state) => {

@@ -165,8 +165,11 @@ export const UnitStatus = {
         icon: '🧊',
         duration: -1,
         type: 'damage',
-        description: `受到冰封監牢禁閉的巨人，每回合都會附加寒冷給附近的人，而巨人每回合都會損失血量。當血量低於一定程度後，巨人將會衝破牢籠，依照經過的回合獲得強大的攻擊力。`,
-        value: 25
+        description: `受到冰封監牢禁閉的巨人，獲得高額抗性且每回合都會附加寒冷給附近的人，但巨人每回合都會損失血量。當血量低於一定程度後，巨人將會衝破牢籠，依照經過的回合獲得強大的攻擊力。`,
+        value: 25,
+        bonus: {
+            defendIncrease: 70
+        }
     } as StatusEffect,
     CountDown: {
         name: '倒數計時',
