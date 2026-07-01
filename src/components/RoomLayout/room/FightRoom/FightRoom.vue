@@ -495,7 +495,16 @@ const init = () => {
   isEscape.value = false;
   selectedMonsterIndex.value = null;
 
-  // 💡 重置技能冷卻時間
+  // 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取 (不重置技能冷卻)
+  if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {
+    if (gameStateStore.playerActionPoints <= 0) {
+      gameStateStore.refillActionPoints();
+      whenMonsterDead()
+    }
+    return;
+  }
+
+  // 💡 新戰鬥開始，重置技能冷卻時間
   if (playerStore.info.skills) {
     playerStore.info.skills.forEach((skill: any) => {
       if (skill instanceof SkillModel) {
@@ -503,14 +512,8 @@ const init = () => {
       }
     });
   }
-
-  // 讀檔檢查：如果 Store 裡面已經有怪物資料，直接讀取
-  if (gameStateStore.currentEnemy && gameStateStore.currentEnemy.length > 0) {
-    if (gameStateStore.playerActionPoints <= 0) {
-      gameStateStore.refillActionPoints();
-      whenMonsterDead()
-    }
-    return;
+  if (playerStore.info.offhandSkillCds) {
+    playerStore.info.offhandSkillCds = {};
   }
 
   // 新戰鬥開始，回復護盾值到最大值

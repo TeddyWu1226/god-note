@@ -157,7 +157,7 @@ const getRarityName = (rarity: string) => {
             <el-progress 
               :percentage="playerStore.currentExpPercentage" 
               :show-text="false"
-              stroke-width="8"
+              :stroke-width="8"
               status="success"
             />
           </div>

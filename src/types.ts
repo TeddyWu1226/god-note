@@ -81,6 +81,7 @@ export interface EquipmentType extends ItemType, qualityType {
     enhanceLevel?: number
     baseStats?: Record<string, number>
     enhancements?: Record<string, number>
+    id?: string // 唯一 ID
 }
 
 export interface UsableType extends ItemType, qualityType {

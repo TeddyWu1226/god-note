@@ -144,7 +144,7 @@ const handleBuyConfirm = () => {
 const handleSell = (entry: any) => {
   if (!entry) return;
   const price = getSellPrice(entry.item);
-  const success = playerStore.removeItem(entry.item.name, 1, entry.item.enhanceLevel);
+  const success = playerStore.removeItem(entry.item, 1);
 
   if (success) {
     playerStore.addGold(price);
@@ -172,7 +172,22 @@ const handleSellStack = (entry: any) => {
   const singlePrice = getSellPrice(entry.item);
   const count = entry.count;
   const totalPrice = singlePrice * count;
-  const success = playerStore.removeItem(entry.item.name, count, entry.item.enhanceLevel);
+
+  let success = true;
+  if (entry.bagType === 'equipments') {
+    // 裝備依強化等級與 ID 逐一精準移除
+    const targets = (playerStore.info.equipments || []).filter(
+      (eq: any) => eq.name === entry.item.name && (eq.enhanceLevel || 0) === (entry.item.enhanceLevel || 0)
+    ).slice(0, count);
+
+    targets.forEach(target => {
+      const ok = playerStore.removeItem(target, 1);
+      if (!ok) success = false;
+    });
+  } else {
+    // 普通材料維持原品名移除
+    success = playerStore.removeItem(entry.item.name, count);
+  }
 
   if (success) {
     playerStore.addGold(totalPrice);

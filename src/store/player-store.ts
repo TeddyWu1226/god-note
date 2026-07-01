@@ -9,6 +9,17 @@ import {SkillFactory} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
 import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
 
+const generateUUID = (): string => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+};
+
 const MAX_SKILLS = 6;
 export const usePlayerStore = defineStore('player-info', () => {
     // --- State ---
@@ -22,6 +33,21 @@ export const usePlayerStore = defineStore('player-info', () => {
     const setEquipActionCallback = (cb: (() => void) | null) => {
         _onEquipActionCallback = cb;
     };
+
+    // 為初始裝備指派唯一 ID
+    const assignInitialEquipmentIds = () => {
+        if (info.value.equipments) {
+            info.value.equipments.forEach(eq => {
+                if (eq && !eq.id) eq.id = generateUUID();
+            });
+        }
+        if (info.value.equips) {
+            Object.values(info.value.equips).forEach((eq: any) => {
+                if (eq && !eq.id) eq.id = generateUUID();
+            });
+        }
+    };
+    assignInitialEquipmentIds();
 
 
 
@@ -163,27 +189,41 @@ export const usePlayerStore = defineStore('player-info', () => {
      * @param itemName 道具名稱
      * @param amount 需要的數量 (預設為 1)
      */
-    const hasItem = (itemName: string, amount: number = 1): [boolean, number] => {
-        // 裝備依舊是陣列長度
-        const equipCount = (info.value.equipments || []).filter(i => i.name === itemName).length;
+    const hasItem = (itemOrName: string | any, amount: number = 1): [boolean, number] => {
+        const targetId = typeof itemOrName === 'object' && itemOrName !== null ? itemOrName.id : undefined;
+        const itemName = typeof itemOrName === 'object' && itemOrName !== null ? itemOrName.name : itemOrName;
 
-        // 堆疊物品則加總 count
+        // 裝備長度：如果是物件比對（且有 id），則只比對唯一的 id；否則單純比對名稱
+        const equipCount = (info.value.equipments || []).filter(i => {
+            if (targetId !== undefined && i.id) {
+                return i.id === targetId;
+            }
+            return i.name === itemName;
+        }).length;
+
+        // 堆疊物品則加總 count (如果是物件比對，看該 item 物件本身是否相等)
         const getStackCount = (list: ItemStackType[] = []) =>
-            list.filter(i => i.item.name === itemName).reduce((sum, i) => sum + i.count, 0);
+            list.filter(i => {
+                if (typeof itemOrName === 'object' && itemOrName !== null) {
+                    return i.item === itemOrName;
+                }
+                return i.item.name === itemName;
+            }).reduce((sum, i) => sum + i.count, 0);
 
         const totalCount = equipCount + getStackCount(info.value.items) + getStackCount(info.value.consumeItems);
 
         return [totalCount >= amount, totalCount];
     };
     /**
-     * 移除指定名稱的道具
-     * @param itemName 道具名稱
+     * 移除指定名稱或特定物件的道具
+     * @param itemOrName 道具名稱或特定道具物件
      * @param amount 要移除的個數，傳入 -1 則移除所有同名道具
-     * @param enhanceLevel 指定進階
      */
-    const removeItem = (itemName: string, amount: number = 1, enhanceLevel?: number): boolean => {
+    const removeItem = (itemOrName: string | any, amount: number = 1): boolean => {
         const isRemoveAll = amount === -1;
-        if (!isRemoveAll && !hasItem(itemName, amount)[0]) return false;
+        const targetId = typeof itemOrName === 'object' && itemOrName !== null ? itemOrName.id : undefined;
+        const itemName = typeof itemOrName === 'object' && itemOrName !== null ? itemOrName.name : itemOrName;
+        if (!isRemoveAll && !hasItem(itemOrName, amount)[0]) return false;
 
         let remainingToRemove = amount;
 
@@ -191,9 +231,13 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (info.value.equipments) {
             for (let i = info.value.equipments.length - 1; i >= 0; i--) {
                 const eq = info.value.equipments[i];
-                const matchesName = eq.name === itemName;
-                const matchesEnhance = enhanceLevel === undefined || (eq.enhanceLevel || 0) === enhanceLevel;
-                if (matchesName && matchesEnhance) {
+                
+                // 比對唯一 ID 或 單純比對名稱
+                const matchesItem = (targetId !== undefined && eq.id)
+                    ? eq.id === targetId
+                    : eq.name === itemName;
+                
+                if (matchesItem) {
                     info.value.equipments.splice(i, 1);
                     if (!isRemoveAll) {
                         remainingToRemove--;
@@ -237,7 +281,11 @@ export const usePlayerStore = defineStore('player-info', () => {
         if (item.position) {
             info.value.equipments = info.value.equipments || [];
             Array.from({length: amount}).forEach(() => {
-                info.value.equipments.push(create(item));
+                const newEquip = create(item);
+                if (!newEquip.id) {
+                    newEquip.id = generateUUID();
+                }
+                info.value.equipments.push(newEquip);
             });
             return;
         }
@@ -401,6 +449,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         info.value = JSON.parse(JSON.stringify(DEFAULT_USER_INFO));
         statusEffects.value = []
         skillProficiency.value = {}
+        assignInitialEquipmentIds();
     };
 
     /**
@@ -781,6 +830,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             serialize: (state) => JSON.stringify(state),
             deserialize: (value) => {
                 const state = JSON.parse(value);
+                
+                // 1. 還原技能類別實體
                 if (state.info && state.info.skills) {
                     state.info.skills = state.info.skills.map((s: any) => {
                         if (s && typeof s === 'object' && 'id' in s) {
@@ -793,6 +844,25 @@ export const usePlayerStore = defineStore('player-info', () => {
                         return s;
                     });
                 }
+
+                // 2. 確保背包中所有載入的裝備都有唯一 ID
+                if (state.info && state.info.equipments) {
+                    state.info.equipments.forEach((eq: any) => {
+                        if (eq && !eq.id) {
+                            eq.id = generateUUID();
+                        }
+                    });
+                }
+
+                // 3. 確保裝備欄位中所有載入的裝備都有唯一 ID
+                if (state.info && state.info.equips) {
+                    Object.values(state.info.equips).forEach((eq: any) => {
+                        if (eq && !eq.id) {
+                            eq.id = generateUUID();
+                        }
+                    });
+                }
+                
                 return state;
             }
         }
