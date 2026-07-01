@@ -39,21 +39,9 @@ const getRarityName = (rarity: string) => {
 
 const canAfford = (skill: SkillModel | any) => {
   if (!gameStateStore.isPlayerTurn) return false;
-
-  // 💡 安全性防禦：如果此技能尚未被實例化（快取回復時序差），嘗試立刻同步還原它
-  if (skill && typeof skill.getActualCostAction !== 'function') {
-    console.warn("[CombatSkillsLayout] Skill not hydrated, forcing playerStore.restoreSkills(). id:", skill.id);
-    playerStore.restoreSkills();
-  }
-
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
-
-  // 讀取屬性，若依然未實例化則回退到 costAction
-  const actionCost = typeof skill.getActualCostAction === 'function'
-      ? skill.getActualCostAction(playerStore)
-      : (skill.costAction || 0);
-
+  const actionCost = skill.getActualCostAction(playerStore);
   return playerStore.info.sp >= spCost &&
       playerStore.info.hp > hpCost &&
       skill.currentCd === 0 &&

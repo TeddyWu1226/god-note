@@ -95,6 +95,35 @@ export class SkillFactory {
             Object.assign(instance, {currentCd: cd, ...savedData});
             return instance;
         }
+
+        // 💡 找不到對照 Class 時的相容回溯處理 (使用匿名類別實例繼承 SkillModel，確保不返回 undefined 導致崩潰)
+        const fallback = new class extends SkillModel {
+            protected execute(): boolean {
+                return false;
+            }
+            description(): string {
+                return this.itemDescription || "";
+            }
+        }({
+            id: id,
+            name: savedData.name || id,
+            icon: savedData.icon || "",
+            type: savedData.type || "active",
+            rarity: savedData.rarity || "common",
+            level: savedData.level || 1,
+            proficiency: savedData.proficiency || 0,
+            maxProficiency: savedData.maxProficiency || 100,
+            proficiencyGain: savedData.proficiencyGain || 0,
+            currentCd: savedData.currentCd || 0,
+            maxCd: savedData.maxCd || 0,
+            costSp: savedData.costSp || 0,
+            costHp: savedData.costHp || 0,
+            costAction: savedData.costAction || 0,
+            costMaxAction: savedData.costMaxAction || false,
+            uniqueFields: savedData.uniqueFields || []
+        });
+        Object.assign(fallback, savedData);
+        return fallback;
     }
 }
 

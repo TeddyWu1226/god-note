@@ -406,15 +406,8 @@ const onSkill = async (skillKey: string) => {
   }
   if (isUsing.value) return
 
-  let useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
-  if (useSkill && typeof useSkill.getActualCostAction !== 'function') {
-    console.warn("[FightRoom] useSkill is not hydrated, forcing restoreSkills(). id:", skillKey);
-    playerStore.restoreSkills();
-    useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
-  }
-  const costAction = useSkill && typeof useSkill.getActualCostAction === 'function'
-      ? useSkill.getActualCostAction(playerStore)
-      : (useSkill?.costAction || 0);
+  const useSkill = playerStore.info.skills.find((s: any) => s.id === skillKey) || SkillFactory.createSkill(skillKey);
+  const costAction = useSkill ? useSkill.getActualCostAction(playerStore) : 0
 
   if (gameStateStore.playerActionPoints < costAction) {
     ElMessage.warning('行動點數不足！')
