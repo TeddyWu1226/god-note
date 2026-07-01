@@ -5,6 +5,7 @@ import {checkProbability} from "@/utils/math";
 import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
 import {MonsterOnAttackedParams, MonsterOnAttackHitParams} from "@/types";
+import {UnitStatus} from "@/constants/status/unit-status";
 
 
 /**
@@ -153,8 +154,8 @@ export class FireBat extends MonsterModel {
             code: 'FireBat',
             name: '烈色蝙蝠',
             class: 'icon-red',
-            description: '通體赤紅的凶猛蝙蝠。在火山口的熱風中飛速掠行，具備極高的閃避率，且特別擅長發起暴擊。',
-            ad: 14,
+            description: '通體赤紅的凶猛蝙蝠。在火山口的熱風中飛速掠行，具備極高的閃避率，且受到咬傷時有機率會中毒。',
+            ad: 10,
             critIncrease: WorldDefault.critIncrease,
             critRate: 50,
             adDefend: 0,
@@ -166,6 +167,12 @@ export class FireBat extends MonsterModel {
             dropGold: 15,
             drop: [{item: Material.LowerNormal, chance: 0.5}]
         });
+    }
+
+    override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        if (checkProbability(0.8)) {
+            playerStore.addStatus(UnitStatus.Poison);
+        }
     }
 }
 
@@ -191,7 +198,7 @@ export class CrimsonSalamander extends MonsterModel {
     }
 
     override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
-        if (checkProbability(0.6)) {
+        if (checkProbability(0.5)) {
             playerStore.addStatus(ItemStatus.OnBurn, {duration: 5, value: 10});
         }
     }

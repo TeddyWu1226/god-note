@@ -18,7 +18,7 @@ export const playerGetColdStackEffects = (playerStore: PlayerStoreType, stack = 
         existing.bonus.dodge += stack
         existing.bonus.hit += stack
         // 刷新回合
-        existing.duration = 6
+        existing.duration = 5
         const currentStack = existing.bonus.dodge;
         existing.icon = existing.icon.replace(/\d+/, Math.abs(currentStack).toString())
         existing.description = existing.description.replace(/\d+/, Math.abs(currentStack).toString())

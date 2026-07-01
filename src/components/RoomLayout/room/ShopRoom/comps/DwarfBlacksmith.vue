@@ -41,7 +41,7 @@ const getCrystalForQuality = (quality: number) => {
 const getSlotName = (slot: string): string => {
   const slots: Record<string, string> = {
     weapon: '武器',
-    body: '身體防具',
+    body: '防具',
     head: '頭盔',
     offhand: '副手',
     accessory1: '飾品一',

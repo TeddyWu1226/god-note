@@ -94,7 +94,7 @@ export class MonsterModel implements MonsterType {
      */
 
 
-    getEffectiveStats(): MonsterModel {
+    getEffectiveStats(): MonsterType {
         const finalStats: MonsterType = {
             id: this.id,
             code: this.code,
@@ -122,14 +122,8 @@ export class MonsterModel implements MonsterType {
             class: this.class,
             drop: this.drop,
             dropGold: this.dropGold,
-            onStart: this.onStart,
-            onAttack: this.onAttack,
-            onAttackHit: this.onAttackHit,
-            onAttacked: this.onAttacked,
-            onDead: this.onDead,
             lastDamageResult: this.lastDamageResult,
-            tick: this.tick,
-            roundBehavior: this.roundBehavior,
+            tick: this.tick
         };
 
         // 遍歷所有狀態，疊加 Bonus
@@ -146,10 +140,7 @@ export class MonsterModel implements MonsterType {
             }
         });
 
-        const Constructor = this.constructor as any;
-        const instance = new Constructor(finalStats);
-        Object.assign(instance, finalStats);
-        return instance;
+        return finalStats;
     }
 
     /**

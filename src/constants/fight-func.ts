@@ -94,6 +94,9 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         timestamp: Date.now(),
     };
 
+    // 觸發攻擊時消失狀態 (untilAttack)
+    attacker.handleUntilAttack();
+
     if (!outcome.isHit) {
         // 未命中，不造成傷害，直接返回
         const log = `${defenderFinalStats.name || '防禦者'} 閃避了攻擊。`
@@ -190,9 +193,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
     logStore.logger.add(logMessage);
 
-    // 觸發攻擊時消失狀態 (untilAttack)
-    attacker.handleUntilAttack();
-
     // 觸發受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
     if (outcome.isHit) {
         defender.handleUntilAttacked();
@@ -217,10 +217,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 }
 
 
-/**
- * 執行技能傷害：對齊 calculateDamage 邏輯。
- * 計算順序：命中 -> 增幅 -> 暴擊 -> 百分比減傷(敵人) -> 固定防禦 -> 生命偷取(特定)
- */
 export interface ApplySkillDamageParams {
     speller: PlayerStoreType | MonsterClass;
     target: PlayerStoreType | MonsterClass;
@@ -233,6 +229,43 @@ export interface ApplySkillDamageParams {
     modifiers?: BonusType;
 }
 
+/**
+ * 取得技能輸出傷害最後數值。
+ */
+export const getSkillFinalDamage = (
+    {
+        speller,
+        baseValue,
+        type,
+        modifiers
+    }: Omit<ApplySkillDamageParams, 'target'>
+): {
+    spellerStats: UnitType,
+    damage: number
+} => {
+    const spellerFinalStats = speller instanceof MonsterClass ? speller.getEffectiveStats() : speller.finalStats
+    const spellerStats = {
+        ...spellerFinalStats,
+        ...(modifiers || {})
+    };
+    // --- 基礎傷害與傷害增幅 ---
+    let damage = baseValue || 0;
+    const increaseAttr = type === 'ad' ? 'adIncrease' : (type === 'ap' ? 'apIncrease' : null);
+
+    if (increaseAttr && spellerStats[increaseAttr]) {
+        damage *= (1 + spellerStats[increaseAttr] / 100);
+    }
+
+    return {
+        spellerStats,
+        damage,
+    }
+}
+
+/**
+ * 執行技能傷害：對齊 calculateDamage 邏輯。
+ * 計算順序：命中 -> 增幅 -> 暴擊 -> 百分比減傷(敵人) -> 固定防禦 -> 生命偷取(特定)
+ */
 export function applySkillDamage({
                                      speller,
                                      target,
@@ -245,13 +278,13 @@ export function applySkillDamage({
                                      modifiers
                                  }: ApplySkillDamageParams): BattleOutcome {
     const logStore = useLogStore();
-    const spellerFinalStats = speller instanceof MonsterClass ? speller.getEffectiveStats() : speller.finalStats
     const targetFinalStats = target instanceof MonsterClass ? target.getEffectiveStats() : target.finalStats
-    const spellerStats = {
-        ...spellerFinalStats,
-        // 換成技能額外增幅
-        ...(modifiers || {})
-    };
+    let {spellerStats, damage} = getSkillFinalDamage({
+        speller,
+        baseValue,
+        type,
+        modifiers
+    })
     const outcome: BattleOutcome = {
         totalDamage: 0,
         baseDamage: 0,
@@ -283,13 +316,6 @@ export function applySkillDamage({
         outcome.isHit = true;
     }
 
-    // --- 基礎傷害與傷害增幅 ---
-    let damage = baseValue;
-    const increaseAttr = type === 'ad' ? 'adIncrease' : (type === 'ap' ? 'apIncrease' : null);
-
-    if (increaseAttr && spellerStats[increaseAttr]) {
-        damage *= (1 + spellerStats[increaseAttr] / 100);
-    }
 
     let finalDamage = damage;
 
