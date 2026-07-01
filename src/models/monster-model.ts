@@ -42,14 +42,8 @@ export class MonsterModel implements MonsterType {
     drop?: DropEntry[];
     dropGold?: number;
     status: StatusEffect[];
-    onStart?: MonsterType["onStart"];
-    onAttack?: MonsterType["onAttack"];
-    onAttackHit?: MonsterType["onAttackHit"];
-    onAttacked?: MonsterType["onAttacked"];
-    onDead?: MonsterType["onDead"];
     lastDamageResult?: BattleOutcome;
     tick?: Record<string, number | any[]>;
-    roundBehavior?: string;
 
     constructor(data: MonsterType) {
         this.id = data.id;
@@ -78,14 +72,8 @@ export class MonsterModel implements MonsterType {
         this.dropGold = data.dropGold;
         this.status = data.status || [];
         this.hpRegen = data.hpRegen || 0;
-        this.onStart = data.onStart;
-        this.onAttack = data.onAttack;
-        this.onAttackHit = data.onAttackHit;
-        this.onAttacked = data.onAttacked;
-        this.onDead = data.onDead;
         this.lastDamageResult = data.lastDamageResult;
         this.tick = data.tick || {};
-        this.roundBehavior = data.roundBehavior;
         this.noExp = data.noExp
     }
 
@@ -246,11 +234,6 @@ export class MonsterModel implements MonsterType {
     }
 
     onAttackHitHook(params: MonsterOnAttackHitParams): void {
-        if (typeof this.onAttackHit === 'function') {
-            this.onAttackHit({
-                ...params
-            });
-        }
     }
 
     onAttackedHook(params: MonsterOnAttackedParams): void {
