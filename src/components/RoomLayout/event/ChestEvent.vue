@@ -62,17 +62,9 @@ const openChest = () => {
     } else if (rnd < 60) {
       // 20% 機率：陷阱 (Trap)
       resultType.value = 'trap';
-      const dmg = 10 + (stage * 5);
-      const result = playerStore.takeDamage(dmg);
-      if (result.shieldAbsorbed > 0) {
-        if (result.hpDamage > 0) {
-          resultMsg.value = `咔噠！觸發了箭矢陷阱！護盾吸收了 <span style="color: #ffffff; font-weight: bold;">${result.shieldAbsorbed}</span> 點傷害，受到 <span style="color: #f56c6c; font-weight: bold;">${result.hpDamage}</span> 點傷害`;
-        } else {
-          resultMsg.value = `咔噠！觸發了箭矢陷阱！但被護盾吸收了全部的 <span style="color: #ffffff; font-weight: bold;">${result.shieldAbsorbed}</span> 點傷害！`;
-        }
-      } else {
-        resultMsg.value = `咔噠！觸發了箭矢陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
-      }
+      const dmg = (stage * 10);
+      playerStore.takeDamage(dmg);
+      resultMsg.value = `咔噠！觸發了陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
     } else {
       resultType.value = 'treasure';
       playerStore.addGold(goldFound);

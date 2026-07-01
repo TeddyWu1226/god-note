@@ -5,8 +5,9 @@ import {usePlayerStore} from "@/store/player-store";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 import {ref, reactive, computed} from "vue";
 import {GameState} from "@/enums/enums";
-import {ColdRegionFruits, NormalFruits} from "@/constants/items/usalbe-item/bush-info";
+import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {getRandomFromArray} from "@/utils/create";
+import EvnStatus from "@/constants/status/evn-status";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -14,23 +15,22 @@ const playerStore = usePlayerStore();
 /**
  * eventAction 狀態控制
  * 0: 初始狀態 (還沒開始翻)
- * 1: 第一次翻找的結果
- * 2: 第二次翻找的結果
- * 3: 第三次翻找的結果
+ * 1~3: 第N次翻找的結果
  */
 
+const max = ref(2)
 const isRolling = ref(false);
 const results = reactive<Record<number, { type: 'item' | 'empty' | 'hurt', msg: string }>>({});
 
 const allowFruits = computed(
     () => {
-      return {...NormalFruits, ...ColdRegionFruits}
+      return {...NormalFruits}
     }
 )
 
 const startSearch = () => {
   const nextAction = (gameStateStore.eventAction as number) + 1;
-  if (nextAction > 3) return;
+  if (nextAction > max.value) return;
 
   isRolling.value = true;
 
@@ -50,16 +50,9 @@ const startSearch = () => {
     } else {
       type = 'hurt';
       const damage = 15;
-      const result = playerStore.takeDamage(damage);
-      if (result.shieldAbsorbed > 0) {
-        if (result.hpDamage > 0) {
-          msg = `哎呀！草叢裡躲著蛇！被咬傷了，護盾吸收了 ${result.shieldAbsorbed} 點傷害，受到 ${result.hpDamage} 點傷害。`;
-        } else {
-          msg = `哎呀！草叢裡躲著蛇！被咬傷了，但護盾吸收了全部的 ${result.shieldAbsorbed} 點傷害！`;
-        }
-      } else {
-        msg = `哎呀！草叢裡躲著蛇！被咬傷了（-${damage}HP）。`;
-      }
+      playerStore.takeDamage(damage);
+      playerStore.addStatus(EvnStatus.Poison)
+      msg = `哎呀！草叢裡躲著蛇！被咬傷了（-${damage}HP）並使你中毒了!。`;
     }
 
     // 儲存該次 Action 的結果內容
@@ -90,7 +83,7 @@ const onLeave = () => {
             <div class="event-icon">🌿🌿🌿</div>
             <div class="dialog-box">
               這片草叢看起來非常深，感覺裡面藏著東西。<br/>
-              要試著翻找看看嗎？（最多可翻找 3 次）
+              要試著翻找看看嗎？（最多可翻找 {{ max}} 次）
             </div>
           </div>
 
@@ -112,7 +105,7 @@ const onLeave = () => {
             </template>
             <template v-else>
               <div class="dialog-box">
-                繼續翻找?(剩餘次數: {{ 3 - gameStateStore.eventAction }}/3 次)
+                繼續翻找?(剩餘次數: {{ max - gameStateStore.eventAction }}/{{ max }} 次)
               </div>
             </template>
           </div>
@@ -123,7 +116,7 @@ const onLeave = () => {
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="!isRolling">
         <el-button
-            v-if="gameStateStore.eventAction < 3"
+            v-if="gameStateStore.eventAction < max"
             type="warning"
             @click="startSearch"
         >
@@ -131,7 +124,7 @@ const onLeave = () => {
         </el-button>
 
         <el-button type="info" @click="onLeave">
-          {{ gameStateStore.eventAction === 3 ? '已經翻完了，離開' : '離開' }}
+          {{ gameStateStore.eventAction === max ? '已經翻完了，離開' : '離開' }}
         </el-button>
       </template>
     </template>

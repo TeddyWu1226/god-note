@@ -19,7 +19,7 @@ const playerStore = usePlayerStore();
 const isDrinking = ref(false);
 const resultType = ref<'heal' | 'mana' | 'debuff' | 'neutral' | null>(null);
 
-const isShowPotion = computed(() => gameStateStore.currentStage <= 5)
+const isShowPotion = computed(() => false)
 const resultMsg = ref(isShowPotion.value ? "這裡剩下滿地的空瓶子。" : '這裡剩下一口乾涸的水井。');
 const buff = ref<StatusEffect | undefined>();
 
@@ -61,8 +61,8 @@ const drinkPotion = () => {
     const rnd = Math.random() * 100;
     const stage = gameStateStore.currentStage;
 
-    if (rnd < 50) {
-      // 50% 機率：恢復效果 (Heal)
+    if (rnd < 45) {
+      // 45% 機率：恢復效果 (Heal)
       resultType.value = 'heal';
       const healAmount = 20 + (stage * 20);
       playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + healAmount);
@@ -73,9 +73,9 @@ const drinkPotion = () => {
         gameStateStore.otherRecord['WATER'] = 2
       }
     } else if (rnd < 55) {
-      // 5% 惡作劇
+      // 10% 惡作劇
       resultType.value = 'neutral';
-      resultMsg.value = `喝完之後你的皮膚變成了 <span style="color: #9c27b0; font-weight: bold;">紫色</span>，雖然感覺沒什麼用，但你覺得自己變帥了。`;
+      resultMsg.value = `<br/>喝完後你緩解了口渴。`;
 
       if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
         resultMsg.value += `<br/>你想起手上的空瓶,順手用這奇怪的液體裝了滿了它。`

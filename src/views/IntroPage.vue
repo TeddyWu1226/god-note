@@ -7,7 +7,7 @@ import {useTrackerStore} from "@/store/track-store";
 import {computed, ref} from "vue";
 import {useSaveStore} from "@/store/save-store";
 import {ElMessageBox} from "element-plus";
-import {Dagger, SpecialWeapon, Weapon} from "@/constants/items/equipment/weapon-info";
+import {Dagger, SpecialWeapon} from "@/constants/items/equipment/weapon-info";
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {CharEnum} from "@/enums/char-enum";
 import {Offhand} from "@/constants/items/equipment/offhand-info";
@@ -42,7 +42,7 @@ const confirmClassSelection = async () => {
   switch (selectedClass.value) {
     case CharEnum.Villager.value:
       playerStore.equipItem(SpecialWeapon.WoodSword);
-      playerStore.gainItem(NormalFruits.RedApple, 3)
+      playerStore.gainItem(NormalFruits.RedApple, 2)
       playerStore.info.gold = 50;
       break;
     case CharEnum.Merchant.value:

@@ -4,7 +4,6 @@ import GambleEvent from "@/components/RoomLayout/event/GambleEvent.vue";
 import GetFruitEvent from "@/components/RoomLayout/event/GetFruitEvent.vue";
 import ChestEvent from "@/components/RoomLayout/event/ChestEvent.vue";
 import PotionEvent from "@/components/RoomLayout/event/PotionEvent.vue";
-import StorytellerEvent from "@/components/RoomLayout/event/StorytellerEvent.vue";
 import FusionEvent from "@/components/RoomLayout/event/FusionEvent.vue";
 import NeedWaterEvent from "@/components/RoomLayout/event/NeedWaterEvent.vue";
 import BushSearchEvent from "@/components/RoomLayout/event/BushSearchEvent.vue";
@@ -15,7 +14,6 @@ export const eventComponentMap = {
 	[SpecialEventEnum.GetFruit]: GetFruitEvent,
 	[SpecialEventEnum.Chest]: ChestEvent,
 	[SpecialEventEnum.Potion]: PotionEvent,
-	[SpecialEventEnum.Storyteller]: StorytellerEvent,
 	[SpecialEventEnum.Fusion]: FusionEvent,
 	[SpecialEventEnum.NeedWater]: NeedWaterEvent,
 	[SpecialEventEnum.BushSearch]: BushSearchEvent,

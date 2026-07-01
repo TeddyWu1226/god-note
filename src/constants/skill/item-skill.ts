@@ -168,20 +168,5 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
                 callback(false)
             }
         })
-    },
-    useWarmFruit: (params: SpecifyMonsterItemSkillParams) => {
-        onCanUseInFight(params, () => {
-            const {playerStore, callback} = params;
-            playerStore.addStatus(ItemStatus.Warming)
-            callback(true)
-        })
-    },
-    useHotFruit: (params: SpecifyMonsterItemSkillParams) => {
-        onCanUseInFight(params, () => {
-            const {playerStore, callback} = params;
-            playerStore.removeStatus('寒冷');
-            playerStore.addStatus(EvnStatus.Poison)
-            callback(true)
-        })
-    },
+    }
 };

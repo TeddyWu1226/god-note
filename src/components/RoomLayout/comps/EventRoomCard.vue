@@ -25,6 +25,14 @@ const GeneralEvent = [
     type: SpecialEventEnum.GetFruit, // 魔樹事件
     canAppear: () => gameStateStore.currentStage === 1
   },
+  {
+    type: SpecialEventEnum.BushSearch, // 草叢翻找事件
+    canAppear: () => gameStateStore.currentStage === 1
+  },
+  {
+    type: SpecialEventEnum.Potion, // 藥水事件
+    canAppear: () => gameStateStore.currentStage > 1
+  },
 ];
 
 
