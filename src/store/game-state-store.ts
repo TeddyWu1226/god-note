@@ -337,9 +337,6 @@ export const useGameStateStore = defineStore('game-state', () => {
     function selectStage(stageVal: number): void {
         const playerStore = usePlayerStore();
         playerStore.healFull();
-        const trackerStore = useTrackerStore();
-        trackerStore.init(false);
-
         maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
         currentStage.value = stageVal;
         stageDays.value = 0;

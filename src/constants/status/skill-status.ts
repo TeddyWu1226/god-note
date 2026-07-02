@@ -70,7 +70,7 @@ export const SkillStatus = {
         icon: '🍂',
         duration: 2,
         isBuff: true,
-        untilAttack: true,
+        untilAttacked: true,
         description: `閃避率歸0,並轉化為 %adDefend% 點防禦，受到攻擊會移除此效果`,
         bonus: {
             dodge: 0,

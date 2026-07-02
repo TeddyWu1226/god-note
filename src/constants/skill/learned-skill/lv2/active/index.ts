@@ -185,7 +185,7 @@ export class Assassinate extends SkillModel {
             target: monster,
             baseValue: dmg,
             type: 'ad',
-            skillName: '刺殺',
+            skillName: this.name,
             canCrit: true,
             modifiers: {
                 critIncrease: (playerStore.finalStats?.critIncrease ?? 0) + 25
@@ -252,7 +252,7 @@ export class Breakfall extends SkillModel {
 
     transformRate(playerStore: PlayerStoreType): number {
         const weapon = playerStore.info.equips?.weapon
-        const offhand = playerStore.info.equips?.weapon
+        const offhand = playerStore.info.equips?.offhand
         let rate = 0.5
         if (!weapon) {
             rate += 0.5

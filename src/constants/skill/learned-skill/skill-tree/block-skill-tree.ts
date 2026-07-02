@@ -18,6 +18,10 @@ export const BLOCK_SKILL_TREE: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['BlockBoost'],
         checkEligible: (playerStore) => {
+            const hasBase = playerStore.hasSkill('BlockBoost');
+            if (!hasBase) {
+                return false;
+            }
             const offhand = playerStore.info.equips?.offhand
             const hasShield = offhand && offhand.name.includes('盾')
             const currentLevel = playerStore.info.level

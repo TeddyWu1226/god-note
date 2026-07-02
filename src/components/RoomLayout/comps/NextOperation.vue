@@ -106,7 +106,6 @@ const continueStage = () => {
 
 const triggerJudgmentStage = () => {
   playerStore.healFull()
-  trackerStore.init(false)
   gameStateStore.enterJudgmentStage()
   updateEnvironmentStatus()
   useEpicSubtitle("⚖️ 審判時刻已到，終焉的考驗降臨...", 4000);

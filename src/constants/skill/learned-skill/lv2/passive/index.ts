@@ -110,7 +110,7 @@ export class BlockExpert extends SkillModel {
     constructor() {
         super({
             id: 'BlockExpert',
-            name: "格檔專精",
+            name: "格擋專精",
             icon: "skills/passive/block_expert.svg",
             type: 'passive',
             rarity: 'rare',

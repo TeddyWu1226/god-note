@@ -30,7 +30,7 @@ const hasSave = computed(() => {
 
 const confirmClassSelection = async () => {
   if (!selectedClass.value) return;
-
+  trackStore.init()
   playerStore.init();
   saveStore.clearSaves()
   gameStateStore.init(1, true);
@@ -156,7 +156,7 @@ const continueGame = () => {
               :disabled="!selectedClass"
               @click="confirmClassSelection"
           >
-            開始締造之旅
+            開始
           </el-button>
           <el-button
               class="back-btn"

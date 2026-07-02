@@ -52,7 +52,8 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
         checkEligible: (playerStore) => {
             const hasKnifePath = playerStore.checkSkillPath('knifeplay');
             const hasThrust = playerStore.hasSkill('Thrust');
-            return !!hasKnifePath && !!hasThrust;
+            const currentLevel = playerStore.info.level
+            return !!hasKnifePath && !!hasThrust && (currentLevel >= 15);
         }
     }
 }

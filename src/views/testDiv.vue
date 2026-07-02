@@ -23,7 +23,6 @@ const isClose = ref(true);
 // 跳關
 const selectStage = (stageVal: number) => {
   playerStore.healFull()
-  trackerStore.init(false)
 
   // 更新最高通關進度
   gameStateStore.maxClearedStage = Math.max(gameStateStore.maxClearedStage, gameStateStore.currentStage + 1)
@@ -41,11 +40,12 @@ const onLevelUp = () => {
 const onLeve2Test = () => {
   selectStage(2)
   // 第一大關破完大概 11 等
-  playerStore.gainExp({amount: 800})
+  playerStore.gainExp({amount: 750})
+  playerStore.addGold(300)
   // 第一大關破完大概 裝備
+  // playerStore.equipItem(Weapon.Sword0)
   playerStore.equipItem(Head.HpHead0)
   playerStore.equipItem(Armor.DefendArmor0)
-  playerStore.equipItem(Weapon.Sword0)
   playerStore.equipItem(Offhand.Shield0)
 }
 

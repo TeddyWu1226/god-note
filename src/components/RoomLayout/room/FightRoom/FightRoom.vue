@@ -360,7 +360,9 @@ const onAttack = () => {
     }
 
     // 觸發對怪物傷害特效
-    selectedMonster.lastDamageResult = outcome
+    if (selectedMonster) {
+      selectedMonster.lastDamageResult = outcome
+    }
 
     // 武器熟練度提升
     checkWeaponProficiency()

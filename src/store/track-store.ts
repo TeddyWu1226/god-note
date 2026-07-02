@@ -2,10 +2,8 @@ import {defineStore} from 'pinia'
 import {ref} from 'vue'
 import {usePlayerStore} from "@/store/player-store";
 import {useEncyclopediaStore} from "@/store/encyclopedia-store";
-import {Sword} from "@/constants/items/equipment/weapon-info";
 import {isMatchedWeapon} from "@/constants/default-const";
 
-const likeSwords = Object.values(Sword).map((sword) => sword.name)
 export const useTrackerStore = defineStore('tracker', () => {
     // --- State ---
     // 當階段數據紀錄
@@ -67,14 +65,12 @@ export const useTrackerStore = defineStore('tracker', () => {
 
 
     /**
-     * 跨關卡重置 (如果你的任務是每關重新計算)
+     * 重置
      */
-    function init(all = true) {
-        if (all) {
-            Object.keys(achievementsCount.value).forEach(key => {
-                achievementsCount.value[key] = 0
-            })
-        }
+    function init() {
+        Object.keys(achievementsCount.value).forEach(key => {
+            achievementsCount.value[key] = 0
+        })
         currentKills.value = {}
     }
 
