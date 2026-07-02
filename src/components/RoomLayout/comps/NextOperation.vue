@@ -13,6 +13,7 @@ import EvnStatus from "@/constants/status/evn-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {StageEnum} from "@/enums/stage-enum";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
+import {useRelicStore} from "@/store/relic-store";
 
 const props = defineProps({
   disabled: Boolean,
@@ -20,6 +21,7 @@ const props = defineProps({
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
+const relicStore = useRelicStore();
 
 const isClearedStage = computed(() => {
   return gameStateStore.currentStage < gameStateStore.maxClearedStage
@@ -63,6 +65,10 @@ const createNextRooms = () => {
       gameStateStore.nextRooms = [RoomEnum.Boss.value]
       return
     }
+  }
+  if (relicStore.hasRelic && gameStateStore.currentStage === relicStore.lastStage && gameStateStore.stageDays === 10) {
+    gameStateStore.nextRooms = [RoomEnum.Event.value]
+    return;
   }
 
   // 建立兩個選項 (未通關大關的普通天數，或已通關大關的 49、99 天等普通天數)

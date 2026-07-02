@@ -5,10 +5,12 @@ import {eventComponentMap} from "@/components/RoomLayout/event/useEventRoom";
 import {SpecialEventEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
+import {useRelicStore} from "@/store/relic-store";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 const trackerStore = useTrackerStore();
+const relicStore = useRelicStore();
 /**
  * 事件配置表：控制隨機權限
  */
@@ -32,8 +34,15 @@ const GeneralEvent = [
   {
     type: SpecialEventEnum.Potion, // 藥水事件
     canAppear: () => gameStateStore.currentStage > 1
-  },
+  }
 ];
+
+const SpecifyEvent = [
+  {
+    type: SpecialEventEnum.UnknownGrave, // 不知名的墓事件
+    canAppear: () => relicStore.hasRelic && gameStateStore.currentStage === relicStore.lastStage && gameStateStore.stageDays === 10
+  },
+]
 
 
 const getAvailableEvents = () => {
@@ -47,18 +56,30 @@ const getAvailableEvents = () => {
       .map(event => event.type);
 };
 
+const getSpecifyEvents = () => {
+  // 過濾出所有符合出現條件的事件 Type
+  return SpecifyEvent
+      .filter(event => !gameStateStore.isEventClose(event.type))
+      .filter(event => event.canAppear())
+      .filter(event => event.type !== gameStateStore.lastEventType)
+      .map(event => event.type);
+};
+
 /**
  * 隨機抽取事件
  */
 const pickRandomEvent = () => {
-  let pool = getAvailableEvents();
+  const specifyPool = getSpecifyEvents()
+  let pool: SpecialEventEnum[]
+  if (specifyPool.length > 0) {
+    // 強制事件
+    pool = specifyPool
+  } else {
+    pool = getAvailableEvents();
+  }
   console.log('pool', pool)
   // 設置防錯，如果沒有可用事件則給一個預設
   if (pool.length === 0) return SpecialEventEnum.Gamble;
-  // 強制事件
-  if (pool.includes(SpecialEventEnum.Fusion)) {
-    pool = [SpecialEventEnum.Fusion]
-  }
   const randomIndex = Math.floor(Math.random() * pool.length);
   // console.log('pool[randomIndex]', pool[randomIndex])
   return pool[randomIndex] ?? SpecialEventEnum.Gamble;

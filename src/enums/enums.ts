@@ -37,7 +37,9 @@ export enum SpecialEventEnum {
     Potion = 'Potion', // 藥水事件
     BushSearch = 'BushSearch', // 草叢翻找事件
 
+
     // 單次完成事件
+    UnknownGrave = 'UnknownGrave', // 不知名的墓
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘

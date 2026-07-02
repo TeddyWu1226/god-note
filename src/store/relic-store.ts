@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {EquipmentType} from '@/types';
 
 export const useRelicStore = defineStore('relic', () => {
@@ -37,9 +37,14 @@ export const useRelicStore = defineStore('relic', () => {
         savedEquipment.value = null;
     };
 
+    const hasRelic = computed(() => {
+        return !!lastStage.value && lastLevel.value >= 5;
+    })
+
     return {
         lastStage,
         lastLevel,
+        hasRelic,
         savedEquipment,
         recordRelic,
         clearRelic
