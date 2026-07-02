@@ -234,7 +234,7 @@ export class Breakfall extends SkillModel {
         super({
             id: 'Breakfall',
             name: "受身技巧",
-            icon: "skills/active/conceal_breath.svg",
+            icon: "skills/active/breakfall.svg",
             type: 'active',
             rarity: 'rare',
             uniqueFields: ['受身'],
@@ -242,7 +242,7 @@ export class Breakfall extends SkillModel {
             proficiencyGain: 1,
             costMaxAction: true,
             costSp: 20,
-            maxCd: this.currentMaxCd()
+            maxCd: 6
         });
     }
 
@@ -273,6 +273,7 @@ export class Breakfall extends SkillModel {
     }
 
     protected execute({playerStore}: SkillParams): boolean {
+        this.maxCd = this.currentMaxCd()
         const currentDodge = playerStore.finalStats?.dodge ?? 0;
         playerStore.addStatus(SkillStatus.BreakfallStatus, {
             bonus: {

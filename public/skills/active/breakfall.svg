@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Retro Item Frame (Border Only, Transparent Background) -->
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+
+  <!-- Swiftness/Wind Indicator (losing balance) -->
+  <rect x="1" y="2" width="2" height="1" fill="#81ecec" opacity="0.6" />
+  <rect x="2" y="3" width="1" height="1" fill="#81ecec" opacity="0.8" />
+  <rect x="3" y="1" width="1" height="1" fill="#81ecec" opacity="0.4" />
+
+  <!-- Ground Line -->
+  <rect x="2" y="14" width="12" height="1" fill="#3d3d4e" />
+  <rect x="4" y="13" width="9" height="1" fill="#2c3e50" opacity="0.6" />
+
+  <!-- Impact Sparks / Shock Absorption energy at bottom-right -->
+  <rect x="11" y="12" width="1" height="1" fill="#81ecec" />
+  <rect x="12" y="11" width="1" height="1" fill="#ffffff" />
+  <rect x="12" y="12" width="2" height="1" fill="#81ecec" />
+  <rect x="10" y="13" width="2" height="1" fill="#55efc4" />
+  <rect x="13" y="13" width="1" height="1" fill="#55efc4" />
+
+  <!-- ================= FALLING CHARACTER SILHOUETTE ================= -->
+
+  <!-- Head -->
+  <!-- Outline -->
+  <rect x="3" y="4" width="1" height="1" fill="#2c3e50" />
+  <rect x="4" y="3" width="2" height="1" fill="#2c3e50" />
+  <rect x="6" y="4" width="1" height="2" fill="#2c3e50" />
+  <rect x="5" y="6" width="1" height="1" fill="#2c3e50" />
+  <rect x="4" y="6" width="1" height="1" fill="#2c3e50" />
+  <rect x="3" y="5" width="1" height="1" fill="#2c3e50" />
+  <!-- Fill -->
+  <rect x="4" y="4" width="2" height="2" fill="#ffffff" />
+
+  <!-- Torso (Tilted diagonally down-right) -->
+  <!-- Outline & Fill -->
+  <rect x="5" y="7" width="2" height="1" fill="#2c3e50" />
+  <rect x="6" y="8" width="2" height="1" fill="#2c3e50" />
+  <rect x="7" y="9" width="2" height="1" fill="#2c3e50" />
+  <rect x="8" y="10" width="1" height="1" fill="#2c3e50" />
+  <!-- Highlights/Infill -->
+  <rect x="6" y="7" width="1" height="1" fill="#bdc3c7" />
+  <rect x="7" y="8" width="1" height="1" fill="#ffffff" />
+  <rect x="8" y="9" width="1" height="1" fill="#bdc3c7" />
+
+  <!-- Left Arm (Flailing upwards for balance) -->
+  <rect x="3" y="2" width="1" height="1" fill="#2c3e50" />
+  <rect x="4" y="2" width="1" height="1" fill="#2c3e50" />
+  <rect x="3" y="3" width="1" height="1" fill="#ffffff" />
+  <rect x="4" y="4" width="1" height="1" fill="#bdc3c7" />
+
+  <!-- Right Arm (Reaching down-right to break the fall / absorb shock) -->
+  <rect x="8" y="7" width="1" height="1" fill="#2c3e50" />
+  <rect x="9" y="6" width="2" height="1" fill="#2c3e50" />
+  <rect x="11" y="7" width="1" height="2" fill="#2c3e50" />
+  <rect x="10" y="9" width="1" height="1" fill="#2c3e50" />
+  <rect x="9" y="8" width="1" height="1" fill="#2c3e50" />
+  <!-- Fill -->
+  <rect x="9" y="7" width="2" height="1" fill="#ffffff" />
+  <rect x="10" y="8" width="1" height="1" fill="#bdc3c7" />
+
+  <!-- Left Leg (Kicked high up-left in the air) -->
+  <rect x="2" y="6" width="1" height="1" fill="#2c3e50" />
+  <rect x="1" y="7" width="1" height="2" fill="#2c3e50" />
+  <rect x="2" y="9" width="2" height="1" fill="#2c3e50" />
+  <!-- Fill -->
+  <rect x="2" y="7" width="1" height="2" fill="#ffffff" />
+  <rect x="3" y="8" width="1" height="1" fill="#bdc3c7" />
+
+  <!-- Right Leg (Bent and preparing to land/slide) -->
+  <rect x="6" y="11" width="1" height="1" fill="#2c3e50" />
+  <rect x="7" y="10" width="1" height="1" fill="#2c3e50" />
+  <rect x="8" y="11" width="1" height="2" fill="#2c3e50" />
+  <rect x="7" y="13" width="1" height="1" fill="#2c3e50" />
+  <rect x="6" y="12" width="1" height="1" fill="#2c3e50" />
+  <!-- Fill -->
+  <rect x="7" y="11" width="1" height="2" fill="#bdc3c7" />
+  <rect x="6" y="11" width="1" height="1" fill="#ffffff" />
+</svg>
