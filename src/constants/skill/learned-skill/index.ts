@@ -40,7 +40,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
     KnightWay: Lv2SkillPassive.KnightWay,
-    HeartOfRebellion: Lv2SkillPassive.HeartOfRebellion,
+    BlockExpert: Lv2SkillPassive.BlockExpert,
     ContinuousSwordVertical: Lv2SkillPassive.ContinuousSwordVertical,
     ContinuousSwordHorizontal: Lv2SkillPassive.ContinuousSwordHorizontal,
     ContinuousSwordPoint: Lv2SkillPassive.ContinuousSwordPoint,
@@ -55,8 +55,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     SwordMaster: Lv3SkillPassive.SwordMaster,
     DemonBody: Lv3SkillPassive.DemonBody,
     KnifeMaster: Lv3SkillPassive.KnifeMaster,
-
-
+    HeartOfRebellion: Lv3SkillPassive.HeartOfRebellion,
 
 
     // 副手技能
@@ -107,6 +106,7 @@ export class SkillFactory {
             protected execute(): boolean {
                 return false;
             }
+
             description(): string {
                 return this.itemDescription || "";
             }

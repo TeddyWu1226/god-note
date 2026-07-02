@@ -79,26 +79,5 @@ export const SWORD_SKILL_TREE: Record<string, SkillTreeNode> = {
             if (!baseSkill) return false;
             return playerStore.checkSkillPath('swordplay');
         }
-    },
-
-    // 格擋強化系列
-    BlockBoost: {
-        id: 'BlockBoost',
-        pathId: 'block_boost',
-        tier: 1,
-        checkEligible: (playerStore) => {
-            const offhand = playerStore.info.equips?.offhand
-            return offhand && offhand.name.includes('盾');
-        }
-    },
-    HeartOfRebellion: {
-        id: 'HeartOfRebellion',
-        pathId: 'block_boost',
-        tier: 2,
-        evolvesFrom: ['BlockBoost'],
-        checkEligible: (playerStore) => {
-            const hasKnightWay = playerStore.hasSkill('KnightWay');
-            return !!hasKnightWay;
-        }
-    },
+    }
 };

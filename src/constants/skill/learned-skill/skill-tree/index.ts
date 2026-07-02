@@ -23,7 +23,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
         id: 'Flurry',
         pathId: 'flurry',
         tier: 2,
-        fusesFrom: ['HorizontalSlash', 'Thrust'],
+        fusesFrom: ['HorizontalSlash', 'Thrust', 'VerticalSlash'],
         checkEligible: (playerStore) => {
             const hasVertical = playerStore.hasSkill('VerticalSlash');
             const hasHorizontal = playerStore.hasSkill('HorizontalSlash');

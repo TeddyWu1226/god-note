@@ -1,5 +1,6 @@
 import {SkillModel} from "@/models/skill-model";
 import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {PlayerStoreType, SkillParams} from "@/types";
 
 
 export class SwordMaster extends SkillModel {
@@ -119,6 +120,30 @@ export class KnifeMaster extends SkillModel {
     }
 }
 
+export class HeartOfRebellion extends SkillModel {
+    constructor() {
+        super({
+            id: 'HeartOfRebellion',
+            name: "反抗鬥志",
+            icon: "skills/passive/heart_of_rebellion.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['格檔強化'],
+        });
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `提升格擋效率並完美格擋（格擋敵方暴擊）的受傷比例減少至25%。且完美格擋成功時，獲得下一回合 20% 物理與法術增傷。`;
+    }
+
+    protected execute(params: SkillParams): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        return {};
+    }
+}
 
 
 

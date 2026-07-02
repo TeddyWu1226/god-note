@@ -106,27 +106,27 @@ export class KnightWay extends SkillModel {
     }
 }
 
-export class HeartOfRebellion extends SkillModel {
+export class BlockExpert extends SkillModel {
     constructor() {
         super({
-            id: 'HeartOfRebellion',
-            name: "反抗鬥志",
-            icon: "skills/passive/heart_of_rebellion.svg",
+            id: 'BlockExpert',
+            name: "格檔專精",
+            icon: "skills/passive/block_expert.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['格檔強化'],
         });
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return `完美格擋（格擋敵方暴擊）的受傷比例減少至 25%。且完美格擋成功時，獲得下一回合 20% 物理與法術增傷。`;
+    description(): string {
+        return `提升格擋效率並完美格擋（格擋敵方暴擊）的受傷比例減少至25%。`;
     }
 
-    protected execute(params: SkillParams): boolean {
+    protected execute(): boolean {
         return true;
     }
 
-    override getPassiveBonus(player?: any): Record<string, number> {
+    override getPassiveBonus(): Record<string, number> {
         return {};
     }
 }

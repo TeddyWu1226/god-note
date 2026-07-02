@@ -297,6 +297,3 @@ export class BlockBoost extends SkillModel {
         return {};
     }
 }
-
-
-
