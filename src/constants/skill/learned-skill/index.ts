@@ -7,6 +7,7 @@ import * as Lv3SkillActive from "./lv3/active";
 import * as Lv3SkillPassive from "./lv3/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
+import {Breakfall} from "./lv2/active";
 
 
 // 💡 技能 ID 與 Subclass 類別對照表
@@ -37,6 +38,7 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     SwiftStrike: Lv2SkillActive.SwiftStrike,
     Assassinate: Lv2SkillActive.Assassinate,
     ConcealBreath: Lv2SkillActive.ConcealBreath,
+    Breakfall: Lv2SkillActive.Breakfall,
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
     KnightWay: Lv2SkillPassive.KnightWay,

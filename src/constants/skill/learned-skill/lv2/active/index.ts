@@ -228,3 +228,62 @@ export class ConcealBreath extends SkillModel {
     }
 }
 
+
+export class Breakfall extends SkillModel {
+    constructor() {
+        super({
+            id: 'Breakfall',
+            name: "受身技巧",
+            icon: "skills/active/conceal_breath.svg",
+            type: 'active',
+            rarity: 'rare',
+            uniqueFields: ['受身'],
+            maxProficiency: 30,
+            proficiencyGain: 1,
+            costMaxAction: true,
+            costSp: 20,
+            maxCd: this.currentMaxCd()
+        });
+    }
+
+    currentMaxCd() {
+        return 6 - Math.floor(this.proficiency / 10)
+    }
+
+    transformRate(playerStore: PlayerStoreType): number {
+        const weapon = playerStore.info.equips?.weapon
+        const offhand = playerStore.info.equips?.weapon
+        let rate = 0.5
+        if (!weapon) {
+            rate += 0.5
+        }
+        if (!offhand) {
+            rate += 0.5
+        }
+        return rate;
+    }
+
+    transformValue(playerStore: PlayerStoreType): number {
+        const currentDodge = playerStore.finalStats?.dodge ?? 0;
+        return currentDodge > 0 ? Math.floor(currentDodge * this.transformRate(playerStore)) : 0;
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `獲得「受身」效果。將自身閃避率歸0, 並轉化爲${this.transformValue(playerStore)}(閃避值*${this.transformRate(playerStore)}) 點防禦力\n(如果沒有裝備武器或副手武器,轉化效率會提升)。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        const currentDodge = playerStore.finalStats?.dodge ?? 0;
+        playerStore.addStatus(SkillStatus.BreakfallStatus, {
+            bonus: {
+                dodge: currentDodge > 0 ? -currentDodge : 0,
+                adDefend: this.transformValue(playerStore),
+            }
+        });
+        useFullScreenEffect({
+            message: this.name,
+            color: '#ba7346',
+        });
+        return true;
+    }
+}

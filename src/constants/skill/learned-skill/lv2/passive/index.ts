@@ -360,6 +360,3 @@ export class KnifeExpert extends SkillModel {
         return {};
     }
 }
-
-
-

@@ -9,7 +9,6 @@ export const DEFAULT_USER_INFO: UserType = {
     ad: 10,
     ap: 10,
     adDefend: 0,
-    apDefend: 0,
     critIncrease: WorldDefault.critIncrease,
     critRate: WorldDefault.critRate,
     dodge: 0,

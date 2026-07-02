@@ -16,17 +16,21 @@ export class ShieldBlock extends SkillModel {
             costSp: 10,
             costAction: 1,
             maxCd: 3,
-            itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則大幅降低該次傷害並額外造成對方暫時暈眩。[冷卻: 2 回合]'
+            itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則降低該次傷害並額外造成對方暫時暈眩。[冷卻: 2 回合]'
         });
     }
 
     getDefend(playerStore: PlayerStoreType): number {
-        return playerStore?.info?.equips?.offhand?.adDefend ? playerStore?.info?.equips?.offhand?.adDefend * 2 : 0
+        const shellDefend = playerStore?.info?.equips?.offhand?.adDefend
+        if (playerStore.hasSkill('BlockExpert')) {
+            return shellDefend ? (shellDefend * 1.5) + 10 : 0
+        }
+        return shellDefend ? (shellDefend) + 5 : 0
     }
 
     description(playerStore: PlayerStoreType): string {
         const shield = this.getDefend(playerStore);
-        return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。如果敵方爆擊，則額外造成對方暫時暈眩。`;
+        return `舉起盾牌進行防禦，本回合內提升 ${shield} 點防禦。\n完美格擋:如果抵擋敵方爆擊傷害，可以額外降低該次傷害，並造成對方暫時暈眩。`;
     }
 
     protected execute(params: SkillParams): boolean {

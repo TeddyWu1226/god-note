@@ -23,7 +23,6 @@ export class MonsterModel implements MonsterType {
     critIncrease: number;
     critRate: number;
     adDefend: number;
-    apDefend: number;
     dodge: number;
     hit: number;
     hp: number;
@@ -54,7 +53,6 @@ export class MonsterModel implements MonsterType {
         this.critIncrease = data.critIncrease;
         this.critRate = data.critRate;
         this.adDefend = data.adDefend;
-        this.apDefend = data.apDefend || 0;
         this.dodge = data.dodge;
         this.hit = data.hit;
         this.hp = data.hp;
@@ -94,7 +92,6 @@ export class MonsterModel implements MonsterType {
             ad: this.ad,
             hpRegen: this.hpRegen,
             adDefend: this.adDefend,
-            apDefend: this.apDefend,
             hpLimit: this.hpLimit,
             dodge: this.dodge,
             hit: this.hit,

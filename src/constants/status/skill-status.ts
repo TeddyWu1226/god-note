@@ -64,5 +64,17 @@ export const SkillStatus = {
             critRate: 50,
             dodge: 50
         }
+    } as StatusEffect,
+    BreakfallStatus: {
+        name: '受身',
+        icon: '🍂',
+        duration: 2,
+        isBuff: true,
+        untilAttack: true,
+        description: `閃避率歸0,並轉化為 %adDefend% 點防禦，受到攻擊會移除此效果`,
+        bonus: {
+            dodge: 0,
+            adDefend: 0,
+        }
     } as StatusEffect
 }

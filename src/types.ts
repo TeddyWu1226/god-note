@@ -19,7 +19,6 @@ export interface qualityType {
     critRate?: number // 爆擊率(100%)
     // 有關防禦
     adDefend?: number // 物理防禦值
-    apDefend?: number // 魔法防禦值
     // 有關是否命中
     dodge?: number // 閃避值
     hit?: number // 命中值
@@ -46,7 +45,6 @@ export const statLabels: Record<keyof qualityType, string> = {
     critRate: '暴擊率',
     critIncrease: '爆傷',
     adDefend: '防禦',
-    apDefend: '法防',
     dodge: '閃避值',
     hit: '命中值',
     hpLimit: '生命上限',
@@ -117,7 +115,6 @@ export interface UnitType {
     critRate: number // 爆擊率(%)
     // 有關防禦
     adDefend: number // 物理防禦值
-    apDefend?: number // 魔法防禦值
     // 有關是否命中
     dodge: number // 閃避值
     hit: number // 命中值
@@ -322,7 +319,7 @@ export interface SkillOnPlayerAttackedHitParams extends SkillParams {
 export interface SkillTreeNode {
     id: string;             // 技能 ID
     pathId: string;         // 所屬唯一流派 ID (同一流派只能有一個)
-    tier: number;           // 技能階級 (Tier 1: 基礎, Tier 2: 進階, Tier 3: 大師)
+    tier: number;           // 技能階級
     evolvesFrom?: string[];  // 可從哪些前置技能進階而來 (學習時替換前置，任一即可)
     fusesFrom?: string[];    // 需要哪些技能融合而成 (學習時消耗全部原料，需全數滿足)
     checkEligible?: (playerStore: PlayerStoreType, trackerStore: TrackerStoreType) => boolean; // 額外的學習條件

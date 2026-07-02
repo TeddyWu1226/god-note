@@ -708,9 +708,9 @@ export const usePlayerStore = defineStore('player-info', () => {
         }
     }
 
-    const hasSkill = (skillKey: string): SkillModel | undefined => {
+    const hasSkill = (skillId: string): SkillModel | undefined => {
         // @ts-ignore
-        return info.value.skills.find(s => s.id === skillKey);
+        return info.value.skills.find(s => s.id === skillId);
     }
 
 
