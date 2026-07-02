@@ -10,13 +10,12 @@ export const SPELL_SKILL_TREE: Record<string, SkillTreeNode> = {
         id: 'SpellProficiency',
         pathId: 'spellplay',
         tier: 1,
-        isStarter: true,
         checkEligible: (playerStore, trackerStore) => {
             return trackerStore.getKillCount('USE_SPELL') >= 3;
         }
     },
 
     // 護盾提升
-    ReadingProficiency: {id: 'ReadingProficiency', pathId: 'reading', tier: 1, isStarter: true},
+    ReadingProficiency: {id: 'ReadingProficiency', pathId: 'reading', tier: 1},
 }
 

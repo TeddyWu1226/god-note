@@ -9,7 +9,6 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
         id: 'KnifeProficiency',
         pathId: 'knifeplay',
         tier: 1,
-        isStarter: true,
         checkEligible: (playerStore, trackerStore) => {
             return trackerStore.getKillCount('USE_KNIFE') >= 3;
         }
@@ -55,32 +54,6 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
             const hasThrust = playerStore.hasSkill('Thrust');
             return !!hasKnifePath && !!hasThrust;
         }
-    },
-    ConcealBreath: {
-        id: 'ConcealBreath',
-        pathId: 'conceal_breath',
-        tier: 2,
-        evolvesFrom: ['AgilityBuff'],
-        checkEligible: (playerStore) => {
-            const hasBase = playerStore.hasSkill('AgilityBuff');
-            if (!hasBase) {
-                return false;
-            }
-            return !!playerStore.checkSkillPath('knifeplay');
-        }
-    },
-    ConcealBreathInstinct: {
-        id: 'ConcealBreathInstinct',
-        pathId: 'conceal_breath',
-        tier: 3,
-        evolvesFrom: ['ConcealBreath'],
-        checkEligible: (playerStore) => {
-            if (!playerStore.hasSkill('ConcealBreath')) {
-                return false;
-            }
-            return !!playerStore.checkSkillPath('knifeplay');
-        }
-    },
-
+    }
 }
 

@@ -573,7 +573,6 @@ export function canEscape(runner: UnitType, chasers: MonsterClass[]): boolean {
 
     // 生成一個 0 到 100 之間的隨機數
     const roll = Math.random() * 100;
-    console.log('finalChance', finalChance)
     // 判斷是否成功逃跑
     return roll <= finalChance;
 }

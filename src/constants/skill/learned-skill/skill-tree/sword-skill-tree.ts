@@ -7,7 +7,6 @@ export const SWORD_SKILL_TREE: Record<string, SkillTreeNode> = {
         id: 'SwordProficiency',
         pathId: 'swordplay',
         tier: 1,
-        isStarter: true,
         checkEligible: (playerStore, trackerStore) => {
             return trackerStore.getKillCount('USE_SWORD') >= 3;
         }
@@ -44,9 +43,9 @@ export const SWORD_SKILL_TREE: Record<string, SkillTreeNode> = {
         }
     },
 
-    VerticalSlash: {id: 'VerticalSlash', pathId: 'vertical_slash', tier: 1, isStarter: true},
-    HorizontalSlash: {id: 'HorizontalSlash', pathId: 'horizontal_slash', tier: 1, isStarter: true},
-    Thrust: {id: 'Thrust', pathId: 'thrust', tier: 1, isStarter: true},
+    VerticalSlash: {id: 'VerticalSlash', pathId: 'vertical_slash', tier: 1},
+    HorizontalSlash: {id: 'HorizontalSlash', pathId: 'horizontal_slash', tier: 1},
+    Thrust: {id: 'Thrust', pathId: 'thrust', tier: 1},
     // 進階劍技三招 (只能三選一)
     ContinuousSwordVertical: {
         id: 'ContinuousSwordVertical',
@@ -83,7 +82,15 @@ export const SWORD_SKILL_TREE: Record<string, SkillTreeNode> = {
     },
 
     // 格擋強化系列
-    BlockBoost: {id: 'BlockBoost', pathId: 'block_boost', tier: 1, isStarter: true},
+    BlockBoost: {
+        id: 'BlockBoost',
+        pathId: 'block_boost',
+        tier: 1,
+        checkEligible: (playerStore) => {
+            const offhand = playerStore.info.equips?.offhand
+            return offhand && offhand.name.includes('盾');
+        }
+    },
     HeartOfRebellion: {
         id: 'HeartOfRebellion',
         pathId: 'block_boost',

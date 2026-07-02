@@ -30,7 +30,6 @@ Defined in `src/constants/skill/learned-skill/skill-tree/` (e.g. `index.ts`, `sw
 - `id`: Skill ID.
 - `pathId`: Unique branch/flow ID.
 - `tier`: Skill tier (1, 2, or 3).
-- `isStarter`: Whether it is a starter skill.
 - `evolvesFrom`: Base skills to replace when this skill is learned (optional).
 - `fusesFrom`: Ingredient skills to consume/remove when this skill is learned (optional).
 - `checkEligible(playerStore, trackerStore)`: Validation logic.

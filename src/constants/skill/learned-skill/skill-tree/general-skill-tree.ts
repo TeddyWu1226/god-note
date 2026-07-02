@@ -4,18 +4,18 @@ import {SkillTreeNode} from "@/types";
  * Buff系列
  * */
 export const GENERAL_SKILL_TREE: Record<string, SkillTreeNode> = {
-    CommonHeal: {id: 'CommonHeal', pathId: 'heal', tier: 1, isStarter: true},
-    WillBuff: {id: 'WillBuff', pathId: 'will', tier: 1, isStarter: true},
-    FocusBuff: {id: 'FocusBuff', pathId: 'focus', tier: 1, isStarter: true},
-    FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 1, isStarter: true},
-    AgilityBuff: {id: 'AgilityBuff', pathId: 'agility', tier: 1, isStarter: true},
+    CommonHeal: {id: 'CommonHeal', pathId: 'heal', tier: 1},
+    WillBuff: {id: 'WillBuff', pathId: 'will', tier: 1},
+    FocusBuff: {id: 'FocusBuff', pathId: 'focus', tier: 1},
+    FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 1},
+    AgilityBuff: {id: 'AgilityBuff', pathId: 'agility', tier: 1},
 }
 /**
  * 皮膚系列
  * */
 export const SKIN_SKILL_TREE: Record<string, SkillTreeNode> = {
-    BlueSkin: {id: 'BlueSkin', pathId: 'blue_skin', tier: 1, isStarter: true},
-    RedSkin: {id: 'RedSkin', pathId: 'red_skin', tier: 1, isStarter: true},
+    BlueSkin: {id: 'BlueSkin', pathId: 'blue_skin', tier: 1},
+    RedSkin: {id: 'RedSkin', pathId: 'red_skin', tier: 1},
     PurpleSkin: {
         id: 'PurpleSkin',
         pathId: 'purple_skin',
@@ -33,8 +33,8 @@ export const SKIN_SKILL_TREE: Record<string, SkillTreeNode> = {
  * 素質強化
  * */
 export const BODY_SKILL_TREE: Record<string, SkillTreeNode> = {
-    PhysiqueBoost: {id: 'PhysiqueBoost', pathId: 'PhysiqueBoost', tier: 1, isStarter: true},
-    BrainPowerBoost: {id: 'BrainPowerBoost', pathId: 'BrainPowerBoost', tier: 1, isStarter: true},
+    PhysiqueBoost: {id: 'PhysiqueBoost', pathId: 'PhysiqueBoost', tier: 1},
+    BrainPowerBoost: {id: 'BrainPowerBoost', pathId: 'BrainPowerBoost', tier: 1},
     BloodManaLoop: {
         id: 'BloodManaLoop',
         pathId: 'bloodManaLoop',

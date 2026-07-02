@@ -7,6 +7,7 @@ import {
 } from "@/constants/skill/learned-skill/skill-tree/general-skill-tree";
 import {KNIFE_SKILL_TREE} from "@/constants/skill/learned-skill/skill-tree/knife-skill-tree";
 import {SPELL_SKILL_TREE} from "@/constants/skill/learned-skill/skill-tree/spell-skill-tree";
+import {CONCEAL_BREATH_SKILL_TREE} from "@/constants/skill/learned-skill/skill-tree/conceal-breath-skill-tree";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...GENERAL_SKILL_TREE,
@@ -15,6 +16,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...SPELL_SKILL_TREE,
     ...SKIN_SKILL_TREE,
     ...BODY_SKILL_TREE,
+    ...CONCEAL_BREATH_SKILL_TREE,
 
     // 狂風刺擊 (融合橫擊與刺擊)
     Flurry: {
