@@ -66,9 +66,9 @@ export abstract class SkillModel {
         this.uniqueFields = data.uniqueFields ?? [];
     }
 
-    getActualCostAction(playerStore: any): number {
+    getActualCostAction(playerStore: PlayerStoreType): number {
         if (this.costMaxAction) {
-            return Math.max(1, Math.floor((playerStore.finalStats?.actionValue ?? 50) / 50));
+            return playerStore.maxActionPoint
         }
         return this.costAction;
     }

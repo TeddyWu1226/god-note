@@ -3,6 +3,7 @@ import * as Lv1SkillActive from "./lv1/active";
 import * as Lv1SkillPassive from "./lv1/passive";
 import * as Lv2SkillActive from "./lv2/active";
 import * as Lv2SkillPassive from "./lv2/passive";
+import * as Lv3SkillActive from "./lv3/active";
 import * as Lv3SkillPassive from "./lv3/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
@@ -30,10 +31,12 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     RedSkin: Lv1SkillPassive.RedSkin,
     BlueSkin: Lv1SkillPassive.BlueSkin,
     BlockBoost: Lv1SkillPassive.BlockBoost,
+    // Level 2
 
     Flurry: Lv2SkillActive.Flurry,
     SwiftStrike: Lv2SkillActive.SwiftStrike,
     Assassinate: Lv2SkillActive.Assassinate,
+    ConcealBreath: Lv2SkillActive.ConcealBreath,
 
     SwordExpert: Lv2SkillPassive.SwordExpert,
     KnightWay: Lv2SkillPassive.KnightWay,
@@ -45,12 +48,15 @@ export const SKILL_CLASS_MAP: Record<string, any> = {
     PurpleSkin: Lv2SkillPassive.PurpleSkin,
 
     KnifeExpert: Lv2SkillPassive.KnifeExpert,
-    ConcealBreath: Lv2SkillPassive.ConcealBreath,
 
     // Level 3
+    ConcealBreathInstinct: Lv3SkillActive.ConcealBreathInstinct,
+
     SwordMaster: Lv3SkillPassive.SwordMaster,
     DemonBody: Lv3SkillPassive.DemonBody,
     KnifeMaster: Lv3SkillPassive.KnifeMaster,
+
+
 
 
     // 副手技能

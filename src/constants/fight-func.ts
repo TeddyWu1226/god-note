@@ -82,8 +82,20 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
  * @returns 包含戰鬥結果的 BattleOutcome 物件
  */
 export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defender: PlayerStoreType | MonsterClass): BattleOutcome {
-    const attackerFinalStats = attacker instanceof MonsterClass ? attacker.getEffectiveStats() : attacker.finalStats
-    const defenderFinalStats = defender instanceof MonsterClass ? defender.getEffectiveStats() : defender.finalStats
+    const attackerFinalStats = attacker instanceof MonsterClass ? attacker?.getEffectiveStats() : attacker?.finalStats
+    const defenderFinalStats = defender instanceof MonsterClass ? defender?.getEffectiveStats() : defender?.finalStats
+    if (!attackerFinalStats || !defenderFinalStats) {
+        return {
+            totalDamage: 0,
+            type: 'true',
+            isHit: false,
+            isCrit: false,
+            baseDamage: 0,
+            healAmount: 0,
+            isKilled: false,
+            timestamp: Date.now(),
+        };
+    }
     const logStore = useLogStore();
     // 1. 執行傷害計算
     const damageOutput: DamageResult = calculateDamage(attackerFinalStats, defenderFinalStats);

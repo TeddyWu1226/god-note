@@ -6,6 +6,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {getMonsterElement, Sleep} from "@/utils/create";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 
 /**
@@ -196,4 +197,34 @@ export class Assassinate extends SkillModel {
     }
 }
 
+export class ConcealBreath extends SkillModel {
+    constructor() {
+        super({
+            id: 'ConcealBreath',
+            name: "隱蔽氣息",
+            icon: "skills/active/conceal_breath.svg",
+            type: 'active',
+            rarity: 'rare',
+            uniqueFields: ['隱蔽氣息'],
+            maxProficiency: 0,
+            proficiencyGain: 0,
+            costAction: 1,
+            costSp: 20,
+            maxCd: 4
+        });
+    }
+
+    description(): string {
+        return `獲得「藏匿」效果（提升 50% 爆擊與 50 點閃避，最多持續 2 回合，若攻擊則消失）。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        playerStore.addStatus(SkillStatus.HideStatus);
+        useFullScreenEffect({
+            message: this.name,
+            color: '#ffffff',
+        });
+        return true;
+    }
+}
 

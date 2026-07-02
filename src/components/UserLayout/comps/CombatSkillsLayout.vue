@@ -14,7 +14,6 @@ const sortedSkills = computed(() => {
   const skills = playerStore.info.skills || [];
   return skills.filter((s: SkillModel) => s.type === 'active');
 });
-console.log('sortedSkills', sortedSkills)
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
     common: '#b2bec3',
@@ -42,12 +41,13 @@ const canAfford = (skill: SkillModel | any) => {
   const spCost = skill.costSp || 0;
   const hpCost = skill.costHp || 0;
   try {
-    const actionCost = skill?.getActualCostAction(playerStore) || 99;
+    const actionCost = skill.getActualCostAction(playerStore);
     return playerStore.info.sp >= spCost &&
         playerStore.info.hp > hpCost &&
         skill.currentCd === 0 &&
         gameStateStore.playerActionPoints >= actionCost;
   } catch (error) {
+    console.error(error)
     return false;
   }
 

@@ -134,6 +134,7 @@ export const usePlayerStore = defineStore('player-info', () => {
             shieldLimit: Math.max(0, (info.value.shieldLimit || 0) + b.shieldLimit),
         };
     });
+    const maxActionPoint = computed(() => Math.floor(((finalStats as any).actionValue ?? 50) / 50))
     const setDead = () => {
         const gameStateStore = useGameStateStore();
         gameStateStore.isDead = true
@@ -456,7 +457,7 @@ export const usePlayerStore = defineStore('player-info', () => {
      */
     const loadState = (playerData: any) => {
         if (!playerData) return;
-        
+
         if (playerData.info) {
             info.value = JSON.parse(JSON.stringify(playerData.info));
         }
@@ -860,7 +861,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         isRestoring,
         setEquipActionCallback,
         totalBonus,
-        finalStats,
+        finalStats, maxActionPoint,
         currentExpPercentage,
         nextLevelExp,
         statusEffects,

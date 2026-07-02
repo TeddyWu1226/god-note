@@ -24,6 +24,16 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
             return !!baseSkill?.isProficiencyMax;
         }
     },
+    KnifeMaster: {
+        id: 'KnifeMaster',
+        pathId: 'knifeplay',
+        tier: 3,
+        evolvesFrom: ['KnifeExpert'],
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('KnifeExpert');
+            return !!baseSkill?.isProficiencyMax;
+        }
+    },
     SwiftStrike: {
         id: 'SwiftStrike',
         pathId: 'swift_strike',
@@ -52,20 +62,25 @@ export const KNIFE_SKILL_TREE: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['AgilityBuff'],
         checkEligible: (playerStore) => {
-            const hasKnifePath = playerStore.checkSkillPath('knifeplay');
-            const hasAgility = playerStore.hasSkill('AgilityBuff');
-            return !!hasKnifePath && !!hasAgility;
+            const hasBase = playerStore.hasSkill('AgilityBuff');
+            if (!hasBase) {
+                return false;
+            }
+            return !!playerStore.checkSkillPath('knifeplay');
         }
     },
-    KnifeMaster: {
-        id: 'KnifeMaster',
-        pathId: 'knifeplay',
+    ConcealBreathInstinct: {
+        id: 'ConcealBreathInstinct',
+        pathId: 'conceal_breath',
         tier: 3,
-        evolvesFrom: ['KnifeExpert'],
+        evolvesFrom: ['ConcealBreath'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('KnifeExpert');
-            return !!baseSkill?.isProficiencyMax;
+            if (!playerStore.hasSkill('ConcealBreath')) {
+                return false;
+            }
+            return !!playerStore.checkSkillPath('knifeplay');
         }
     },
+
 }
 

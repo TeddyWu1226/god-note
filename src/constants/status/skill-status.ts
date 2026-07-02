@@ -59,10 +59,10 @@ export const SkillStatus = {
         duration: 2,
         isBuff: true,
         untilAttack: true,
-        description: `提升 100% 爆擊與 30 點閃避，攻擊或施展技能會提前結束`,
+        description: `提升 %critRate%% 爆擊率與 %dodge% 點閃避，攻擊或施展技能會提前結束`,
         bonus: {
-            critRate: 100,
-            dodge: 30
+            critRate: 50,
+            dodge: 50
         }
     } as StatusEffect
 }

@@ -361,36 +361,5 @@ export class KnifeExpert extends SkillModel {
     }
 }
 
-export class ConcealBreath extends SkillModel {
-    constructor() {
-        super({
-            id: 'ConcealBreath',
-            name: "隱蔽氣息",
-            icon: "skills/passive/conceal_breath.svg",
-            type: 'passive',
-            rarity: 'rare',
-            uniqueFields: ['隱蔽氣息'],
-            maxProficiency: 0,
-            proficiencyGain: 0
-        });
-    }
 
-    description(): string {
-        return `戰鬥開局時，獲得「藏匿」效果（提升 100% 爆擊與 30 點閃避，最多持續 2 回合，若攻擊則消失）。`;
-    }
-
-    protected execute(): boolean {
-        return true;
-    }
-
-    override onRoundStart({ playerStore, gameStateStore, logStore }: any) {
-        const round = gameStateStore?.battleRound ?? 1;
-        if (round === 1 && playerStore) {
-            playerStore.addStatus(SkillStatus.HideStatus);
-            if (logStore) {
-                logStore.logger.add(`[隱蔽氣息] 戰鬥開始！玩家獲得「藏匿」效果。`);
-            }
-        }
-    }
-}
 
