@@ -64,15 +64,19 @@ const onTest = () => {
   // onLeve3Test()
   // playerStore.gainExp({amount: 1000})
 }
+
+const giveMoney = () => {
+  playerStore.addGold(1000)
+}
 const give = () => {
   // playerStore.addGold(1000)
 
   // playerStore.gainItem(Material.BadNormal, 100)
   // playerStore.gainItem(Offhand.Book5)
   // playerStore.gainItem(Weapon.Sword0)
-  // playerStore.gainItem(SpecialAccessory.SoulAnchor)
+  playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
-  playerStore.gainItem(Usable.BurningPotion, 3)
+  // playerStore.gainItem(Usable.BurningPotion, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }
@@ -93,6 +97,7 @@ const onSave = () => {
   <el-card class="test">
     <el-button @click="isClose = !isClose" style="width: 100% ">縮放</el-button>
     <div style="padding-top: 5px" v-if="!isClose">
+      <el-button @click="giveMoney">給錢</el-button>
       <el-button @click="give">給道具</el-button>
       <el-button @click="heal">回血</el-button>
       <el-button @click="setRoom">房間</el-button>

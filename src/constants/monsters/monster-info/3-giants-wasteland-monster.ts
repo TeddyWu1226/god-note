@@ -29,13 +29,18 @@ export class SandSlime extends MonsterModel {
         });
     }
 
+    count = 4
+
     override onStartHook() {
         this.addEffect(UsualStatus.Resistance);
     }
 
     override onAttackedHook() {
-        this.adDefend += 5
-        this.ad += 5
+        if (this.count > 0) {
+            this.adDefend += 5
+            this.ad += 5
+            this.count--
+        }
     }
 }
 

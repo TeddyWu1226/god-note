@@ -70,7 +70,7 @@ export const Armor = {
 		description: '材質優良的皮甲，兼顧防護與動作靈活性。',
 		icon: '🧥',
 		position: EquipmentPosition.BODY,
-		quality: 2,
+		quality: 3,
 		dodge: 20,
 		adDefend: 10
 	} as EquipmentType,
@@ -79,7 +79,7 @@ export const Armor = {
 		description: '複合皮革製成的護甲，使閃避動作更流暢。',
 		icon: '🧥',
 		position: EquipmentPosition.BODY,
-		quality: 2,
+		quality: 4,
 		dodge: 40,
 		adDefend: 20
 	} as EquipmentType,
@@ -88,7 +88,7 @@ export const Armor = {
 		description: '頂級皮甲，質地輕盈，讓穿戴者身輕如燕。',
 		icon: '🧥',
 		position: EquipmentPosition.BODY,
-		quality: 2,
+		quality: 5,
 		dodge: 80,
 		adDefend: 40
 	} as EquipmentType,
