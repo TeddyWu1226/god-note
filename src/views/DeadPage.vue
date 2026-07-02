@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
+import {useRelicStore} from "@/store/relic-store";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
 
 const gameStateStore = useGameStateStore()
+const playerStore = usePlayerStore()
+const relicStore = useRelicStore()
 
 const restartGame = async () => {
+  // 記錄當前玩家所待的層級、等級以及隨機一件穿在身上的裝備
+  relicStore.recordRelic(
+    gameStateStore.currentStage,
+    playerStore.info.level,
+    playerStore.info.equips
+  );
+
   gameStateStore.init()
 }
 
