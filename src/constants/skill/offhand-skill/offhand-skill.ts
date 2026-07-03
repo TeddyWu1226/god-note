@@ -22,10 +22,17 @@ export class ShieldBlock extends SkillModel {
 
     getDefend(playerStore: PlayerStoreType): number {
         const shellDefend = playerStore?.info?.equips?.offhand?.adDefend
-        if (playerStore.hasSkill('BlockExpert')) {
-            return shellDefend ? (shellDefend * 1.5) + 10 : 0
+        if (!shellDefend) return 0;
+        if (playerStore.hasSkill('BlockAdv')) {
+            return Math.round(shellDefend * 2.0) + 10;
         }
-        return shellDefend ? (shellDefend) + 5 : 0
+        if (playerStore.hasSkill('BlockPro')) {
+            return Math.round(shellDefend * 1.5) + 10;
+        }
+        if (playerStore.hasSkill('BlockBase')) {
+            return shellDefend + 5;
+        }
+        return shellDefend;
     }
 
     description(playerStore: PlayerStoreType): string {

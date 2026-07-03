@@ -124,7 +124,11 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         // 額外效果-格檔檢查
         if (outcome.isCrit && !!defender.hasStatus(ItemStatus.Block.name)) {
             let blockMultiplier = 0.50;
-            if (defender.checkSkillPath('block_boost')) {
+            if (defender.hasSkill('BlockAdv')) {
+                blockMultiplier = 0.10;
+            } else if (defender.hasSkill('BlockPro')) {
+                blockMultiplier = 0.25;
+            } else if (defender.hasSkill('BlockBase')) {
                 blockMultiplier = 0.25;
             }
             damageTaken = Math.round(damageTaken * blockMultiplier);

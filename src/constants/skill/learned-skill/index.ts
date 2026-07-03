@@ -29,7 +29,7 @@ import {
     KnifeBase, KnifePro, KnifeAdv,
     KnifeSkillTree, SwiftStrike
 } from "./knife_skill";
-import {BlockBoost, BlockExpert, ShieldSkillTree} from "./shield_skill";
+import {BlockBase, BlockPro, BlockAdv, ShieldSkillTree} from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
 import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
@@ -70,7 +70,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     KnifeBase: KnifeBase,
     RedSkin: RedSkin,
     BlueSkin: BlueSkin,
-    BlockBoost: BlockBoost,
+    BlockBase: BlockBase,
     // Level 2
 
     Flurry: Flurry,
@@ -81,7 +81,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
 
     SwordPro: SwordPro,
     SwordAdv: SwordAdv,
-    BlockExpert: BlockExpert,
+    BlockPro: BlockPro,
+    BlockAdv: BlockAdv,
     ContinuousSwordVertical: ContinuousSwordVertical,
     ContinuousSwordHorizontal: ContinuousSwordHorizontal,
     ContinuousSwordPoint: ContinuousSwordPoint,
