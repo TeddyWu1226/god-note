@@ -1,5 +1,3 @@
-import {CrimsonSalamander, GlacierLizard} from "@/constants/monsters/monster-info/2-red-mountain-monster";
-
 /**
  * 第一階段：迷霧森林 (Misty Forest)
  */
@@ -88,17 +86,19 @@ export const GiantsWastelandWeights2: Record<string, number> = {
     RockBull: 30,
     UnstableExplosiveBee: 10,
     MutatedBloodworm: 5,
+    PoisonFlower: 5
 };
 
 export const GiantsWastelandWeights3: Record<string, number> = {
-    RockBull: 25,
-    WastelandScavenger: 25,
-    UnstableExplosiveBee: 25,
-    MutatedBloodworm: 25
+    RockBull: 5,
+    WastelandScavenger: 5,
+    UnstableExplosiveBee: 5,
+    MutatedBloodworm: 5,
+    PoisonFlower: 5
 };
 
 export const GiantsWastelandWeights4: Record<string, number> = {
-
+    PoisonFlower: 15,
     WastelandScavenger: 30,
     MutatedBloodworm: 50
 };

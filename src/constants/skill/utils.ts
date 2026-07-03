@@ -4,6 +4,9 @@ import {EquipmentPosition} from "@/enums/enums";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 export const isEquip = (weaponKey: WeaponMatchType, equipPosition: EquipmentPosition, player?: Omit<UserType, 'skills'>,) => {
+    if (!player?.equips) {
+        return false;
+    }
     const equipName = player?.equips[equipPosition]?.name;
     if (!equipName) {
         return false;

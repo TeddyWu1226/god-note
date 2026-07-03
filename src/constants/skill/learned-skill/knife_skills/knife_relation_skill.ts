@@ -152,9 +152,23 @@ export class SneakAttack extends SkillModel {
         });
     }
 
-    description(): string {
-        return `裝備「匕首」類武器時，額外增加等同於 25% 基礎迴避值的物理攻擊力 (AD)。`;
+    getDodgeIncrease(player: Omit<UserType, 'skills'>): number {
+        const baseDodge = player?.dodge ?? 0;
+        let equipDodge = 0;
+        if (player?.equips) {
+            Object.values(player.equips).forEach((item: any) => {
+                if (item && typeof item.dodge === 'number') {
+                    equipDodge += item.dodge;
+                }
+            });
+        }
+        return Math.floor((baseDodge + equipDodge) / 4);
     }
+
+    description(playerStore: PlayerStoreType): string {
+        return `裝備「匕首」類武器時，額外增加等同於 ${this.getDodgeIncrease(playerStore.info)}(25%基礎與裝備提供的迴避值)物理攻擊力。`;
+    }
+
 
     protected execute(): boolean {
         return true;
@@ -162,18 +176,9 @@ export class SneakAttack extends SkillModel {
 
     override getPassiveBonus(player?: UserType): Record<string, number> {
         if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
-            const baseDodge = player?.dodge ?? 0;
-            let equipDodge = 0;
-            if (player?.equips) {
-                Object.values(player.equips).forEach((item: any) => {
-                    if (item && typeof item.dodge === 'number') {
-                        equipDodge += item.dodge;
-                    }
-                });
-            }
-            const totalDodge = baseDodge + equipDodge;
+
             return {
-                ad: Math.round(totalDodge * 0.25)
+                ad: this.getDodgeIncrease(player)
             }
         }
         return {};
@@ -192,8 +197,21 @@ export class SurpriseAttack extends SkillModel {
         });
     }
 
-    description(): string {
-        return `裝備「匕首」類武器時，額外增加等同於 50% 基礎迴避值的物理攻擊力 (AD)。`;
+    getDodgeIncrease(player: Omit<UserType, 'skills'>): number {
+        const baseDodge = player?.dodge ?? 0;
+        let equipDodge = 0;
+        if (player?.equips) {
+            Object.values(player.equips).forEach((item: any) => {
+                if (item && typeof item.dodge === 'number') {
+                    equipDodge += item.dodge;
+                }
+            });
+        }
+        return Math.floor((baseDodge + equipDodge) / 2);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `裝備「匕首」類武器時，額外增加等同於 ${this.getDodgeIncrease(playerStore.info)}(50%基礎與裝備提供的迴避值)物理攻擊力。`;
     }
 
     protected execute(): boolean {
@@ -202,18 +220,9 @@ export class SurpriseAttack extends SkillModel {
 
     override getPassiveBonus(player?: UserType): Record<string, number> {
         if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
-            const baseDodge = player?.dodge ?? 0;
-            let equipDodge = 0;
-            if (player?.equips) {
-                Object.values(player.equips).forEach((item: any) => {
-                    if (item && typeof item.dodge === 'number') {
-                        equipDodge += item.dodge;
-                    }
-                });
-            }
-            const totalDodge = baseDodge + equipDodge;
+
             return {
-                ad: Math.round(totalDodge * 0.5)
+                ad: this.getDodgeIncrease(player)
             }
         }
         return {};

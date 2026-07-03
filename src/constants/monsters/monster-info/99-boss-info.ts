@@ -170,11 +170,11 @@ export class FrostGiant extends MonsterModel {
             description: '被永久冰封在山脈深處的遠古巨人，揮舞著巨大的寒冰錘。',
             class: 'boss big icon-blue',
             ad: 0,
-            critIncrease: 200,
+            critIncrease: 100,
             critRate: 0,
             adDefend: 10,
             dodge: 0,
-            hit: 25,
+            hit: 15,
             hp: 1250,
             hpLimit: 2500,
             level: 15,
@@ -198,7 +198,7 @@ export class FrostGiant extends MonsterModel {
     isFinal = false
 
     override onRoundBehaviorHook({playerStore, gameStateStore, battleRound}: MonsterRoundBehaviorParams) {
-        const limit = 600
+        const limit = 650
         if (!this.isFinal && this.hp <= limit) {
             this.isFinal = true
             this.adDefend = 10

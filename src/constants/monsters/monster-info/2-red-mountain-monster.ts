@@ -212,7 +212,7 @@ export class ObsidianGolem extends MonsterModel {
             name: '黑曜石魔像',
             class: 'elite icon-purple',
             description: '高溫熔岩急冷形成的黑曜石守衛。擁有無可摧毀的堅硬外殼，能將所承受物理傷害的 20% 反彈回攻擊者。',
-            ad: 24,
+            ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 20,

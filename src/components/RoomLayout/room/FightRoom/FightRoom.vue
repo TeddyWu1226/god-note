@@ -309,7 +309,7 @@ const onEndTurn = () => {
 
 const checkWeaponProficiency = () => {
   Object.keys(WeaponCnNameMapping).forEach((key) => {
-    const weaponProficiency = playerStore.info.skills?.find((s: SkillModel) => s.uniqueFields.includes(key));
+    const weaponProficiency = playerStore.info.skills?.find((s: SkillModel) => s.uniqueFields.includes(`${key}Base`));
 
     const weaponName = playerStore.info.equips?.weapon?.name || '';
     if (weaponProficiency && isMatchedWeapon(key, weaponName)) {

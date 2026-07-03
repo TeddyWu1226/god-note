@@ -169,7 +169,7 @@ export const KnifeBaseSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'knifeplay',
         tier: 0,
         checkEligible: (playerStore, trackerStore) => {
-            return trackerStore.getKillCount('USE_KNIFE') >= 3;
+            return trackerStore.getKillCount('Knife') >= 3;
         }
     },
     KnifePro: {

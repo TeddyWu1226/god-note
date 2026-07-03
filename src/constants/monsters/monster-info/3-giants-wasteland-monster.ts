@@ -4,9 +4,8 @@ import {Material} from "@/constants/items/material/material-info";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
-import {MonsterOnAttackHitParams} from "@/types";
+import {MonsterOnAttackedParams, MonsterOnAttackHitParams} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
-import {getMonsterElement} from "@/utils/create";
 
 export class SandSlime extends MonsterModel {
     constructor() {
@@ -71,7 +70,7 @@ export class WastelandVulture extends MonsterModel {
 }
 
 export class UnstableExplosiveBee extends MonsterModel {
-    private roundsCount = 5;
+    private roundsCount = 4;
     private damage = 50;
 
     constructor() {
@@ -90,7 +89,7 @@ export class UnstableExplosiveBee extends MonsterModel {
             hp: 150,
             hpLimit: 150,
             level: 26,
-            dropGold: 15,
+            dropGold: 31,
             drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
@@ -122,7 +121,7 @@ export class RockBull extends MonsterModel {
             icon: '🐂',
             code: 'RockBull',
             name: '岩牛',
-            description: '全身覆蓋著堅硬岩石的牛型魔物，在血量較低時會憤怒。在憤怒時命中目標時，會使敵方繳械',
+            description: '全身覆蓋著堅硬岩石的牛型魔物，在血量低於一半時會憤怒。在憤怒時命中目標時，會使敵方繳械',
             ad: 32,
             critIncrease: WorldDefault.critIncrease,
             critRate: 0,
@@ -132,13 +131,13 @@ export class RockBull extends MonsterModel {
             hp: 280,
             hpLimit: 280,
             level: 28,
-            dropGold: 40,
+            dropGold: 43,
             drop: [{item: Material.MediumNormal, chance: 0.5}]
         });
     }
 
     override onRoundBehaviorHook() {
-        if (this.hp <= (this.hpLimit / 2.5)) {
+        if (this.hp <= (this.hpLimit / 2)) {
             this.addEffect(UsualStatus.Angry)
         }
     }
@@ -205,11 +204,38 @@ export class WastelandScavenger extends MonsterModel {
     }
 }
 
+export class PoisonFlower extends MonsterModel {
+    constructor() {
+        super({
+            icon: '🌺',
+            code: 'PoisonFlower',
+            name: '毒食人花怪',
+            description: '在荒野生長的花形魔物，觸碰他時會使得敵人中毒',
+            ad: 21,
+            critIncrease: WorldDefault.critIncrease,
+            critRate: WorldDefault.critRate,
+            adDefend: 15,
+            dodge: 0,
+            hit: 20,
+            hp: 200,
+            hpLimit: 200,
+            level: 27,
+            dropGold: 37,
+            drop: [{item: Material.MediumNormal, chance: 0.5}]
+        });
+    }
+
+    override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
+        playerStore.addStatus(UnitStatus.Poison)
+    }
+}
+
 export const GiantsWastelandMonster = {
     SandSlime: new SandSlime(),
     WastelandVulture: new WastelandVulture(),
     RockBull: new RockBull(),
     WastelandScavenger: new WastelandScavenger(),
     UnstableExplosiveBee: new UnstableExplosiveBee(),
-    MutatedBloodworm: new MutatedBloodworm()
+    MutatedBloodworm: new MutatedBloodworm(),
+    PoisonFlower: new PoisonFlower(),
 };

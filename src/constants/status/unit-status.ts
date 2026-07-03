@@ -174,7 +174,7 @@ export const UnitStatus = {
     CountDown: {
         name: '倒數計時',
         icon: '⏳',
-        duration: 5,
+        duration: 4,
         description: '時間到了就會發生可怕的事',
     } as StatusEffect,
 }
