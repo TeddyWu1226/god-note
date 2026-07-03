@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Dagger slanting up-right (Silver and green poison edge) -->
+  <!-- Blade -->
+  <rect x="7" y="5" width="2" height="2" fill="#58d68d" /> <!-- Poison drip -->
+  <rect x="8" y="7" width="2" height="2" fill="#bdc3c7" />
+  <rect x="10" y="9" width="2" height="2" fill="#ffffff" />
+  <rect x="12" y="11" width="1" height="1" fill="#58d68d" /> <!-- Dripping tip -->
+
+  <!-- Guard/Hilt -->
+  <rect x="4" y="3" width="2" height="2" fill="#9b59b6" /> <!-- Violet guard -->
+  <rect x="3" y="2" width="1" height="1" fill="#7e5109" />
+
+  <!-- Poison Droplets (Green/Purple) -->
+  <rect x="13" y="12" width="1" height="2" fill="#2ecc71" />
+  <rect x="8" y="10" width="1" height="1" fill="#27ae60" />
+  <rect x="11" y="8" width="1" height="1" fill="#2ecc71" />
+</svg>

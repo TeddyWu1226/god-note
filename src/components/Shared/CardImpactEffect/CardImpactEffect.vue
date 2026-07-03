@@ -8,6 +8,7 @@ import VerticalSlashImpact from './comps/VerticalSlashImpact.vue';
 import HorizontalSlashImpact from './comps/HorizontalSlashImpact.vue';
 import ThrustImpact from './comps/ThrustImpact.vue';
 import AssassinateImpact from './comps/AssassinateImpact.vue';
+import PoisonImpact from './comps/PoisonImpact.vue';
 
 const props = defineProps({
   type: { type: String, default: 'physical' },
@@ -43,6 +44,8 @@ const impactComponent = computed(() => {
       return ThrustImpact;
     case 'assassinate':
       return AssassinateImpact;
+    case 'poison':
+      return PoisonImpact;
     default:
       return PhysicalImpact;
   }

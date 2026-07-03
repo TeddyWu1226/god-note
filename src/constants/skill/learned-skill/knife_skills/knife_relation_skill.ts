@@ -2,7 +2,14 @@
  * 匕首相關主動與關聯技能
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillOnStartParams, SkillParams, SkillTreeNode, UserType} from "@/types";
+import {
+    PlayerStoreType,
+    SkillOnPlayerAttackHitParams,
+    SkillOnStartParams,
+    SkillParams,
+    SkillTreeNode,
+    UserType
+} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
@@ -12,6 +19,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
 import {EquipmentPosition} from "@/enums/enums";
+import {UnitStatus} from "@/constants/status/unit-status";
 
 
 export class SwiftStrike extends SkillModel {
@@ -212,6 +220,88 @@ export class SurpriseAttack extends SkillModel {
     }
 }
 
+export class MistBase extends SkillModel {
+    constructor() {
+        super({
+            id: 'MistBase',
+            name: "迷霧",
+            icon: "skills/active/mist_base.svg",
+            type: 'active',
+            rarity: 'rare',
+            costSp: 20,
+            costAction: 1,
+            maxCd: 4
+        });
+    }
+
+    description(): string {
+        return `讓戰場陷入迷霧：自身獲得「迷霧(玩家)」（提升 40 點閃避，攻擊或受擊後消失，持續 3 回合），且使全體敵方獲得「迷霧(敵方)」（降低 40 點命中，攻擊或受擊後消失，持續 3 回合）。`;
+    }
+
+    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !gameStateStore) return false;
+
+        // 1. 玩家獲得迷霧
+        playerStore.addStatus(SkillStatus.PlayerMistStatus);
+
+        // 2. 所有敵人獲得迷霧
+        const enemies = gameStateStore.currentEnemy || [];
+        enemies.forEach(enemy => {
+            if (enemy.hp > 0) {
+                enemy.addEffect(SkillStatus.EnemyMistStatus);
+            }
+        });
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#bdc3c7',
+        });
+
+        return true;
+    }
+}
+
+export class MistPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'MistPro',
+            name: "麻醉迷霧",
+            icon: "skills/active/mist_pro.svg",
+            type: 'active',
+            rarity: 'perfect',
+            costSp: 30,
+            costAction: 1,
+            maxCd: 4
+        });
+    }
+
+    description(): string {
+        return `讓戰場陷入麻醉迷霧：自身獲得「麻醉迷霧(玩家)」（提升 60 點閃避值，持續 3 回合），且使全體敵方獲得「麻醉迷霧(敵方)」（降低 60 點命中值，持續 3 回合）。\n(繼承並強化迷霧)`;
+    }
+
+    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !gameStateStore) return false;
+
+        // 1. 玩家獲得麻醉迷霧
+        playerStore.addStatus(SkillStatus.PlayerAnestheticMistStatus);
+
+        // 2. 所有敵人獲得麻醉迷霧
+        const enemies = gameStateStore.currentEnemy || [];
+        enemies.forEach(enemy => {
+            if (enemy.hp > 0) {
+                enemy.addEffect(SkillStatus.EnemyAnestheticMistStatus);
+            }
+        });
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#a569bd',
+        });
+
+        return true;
+    }
+}
+
 export class Flurry extends SkillModel {
     constructor() {
         super({
@@ -296,6 +386,83 @@ export class Flurry extends SkillModel {
     }
 }
 
+export class KnifeWhirlwind extends SkillModel {
+    constructor() {
+        super({
+            id: 'KnifeWhirlwind',
+            name: "匕首旋風",
+            icon: "skills/active/knife_whirlwind.svg",
+            type: 'active',
+            rarity: 'perfect',
+            costSp: 25,
+            costAction: 1,
+            maxCd: 3
+        });
+    }
+
+    getSingleDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.round(ad * 0.4);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getSingleDamage(playerStore),
+            type: 'ad'
+        });
+        return `旋風般飛擲出無數匕首，對全體敵方目標發起 2~3 次隨機打擊，每次造成 ${ColorText.ad(damage)} (0.4 AD) 物理傷害。\n(必需裝備「匕首」類武器)`;
+    }
+
+    protected async execute({playerStore, gameStateStore}: SkillParams): Promise<boolean> {
+        if (!playerStore || !gameStateStore) return false;
+
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Knife')
+            return false;
+        }
+
+        const enemies = gameStateStore.currentEnemy || [];
+        if (enemies.length === 0) return false;
+
+        // 隨機決定 2 或 3 次連擊
+        const hits = Math.random() < 0.5 ? 2 : 3;
+        const dmg = this.getSingleDamage(playerStore);
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#bdc3c7',
+        });
+
+
+        for (let i = 0; i < hits; i++) {
+            // 每次打擊前過濾出尚存活的目標
+            const livingEnemies = enemies.filter(m => m.hp > 0);
+            if (livingEnemies.length === 0) break;
+
+            livingEnemies.forEach(enemy => {
+                enemy.lastDamageResult = applySkillDamage({
+                    speller: playerStore,
+                    target: enemy,
+                    baseValue: dmg,
+                    type: 'ad',
+                    skillName: `${this.name} (${i + 1}擊)`
+                });
+                const el = getMonsterElement(enemy.id);
+                if (el) {
+                    useCardImpactEffect(el, 'physical');
+                }
+            });
+
+            if (i < hits - 1) {
+                await Sleep(200);
+            }
+        }
+
+        return true;
+    }
+}
+
 export class Assassinate extends SkillModel {
     constructor() {
         super({
@@ -348,12 +515,136 @@ export class Assassinate extends SkillModel {
     }
 }
 
+export class Assassination extends SkillModel {
+    constructor() {
+        super({
+            id: 'Assassination',
+            name: "暗殺",
+            icon: "skills/active/assassination.svg",
+            type: 'active',
+            rarity: 'perfect',
+            maxCd: 3,
+            costSp: 30,
+            costAction: 2
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.floor(ad * 2.5);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        });
+        return `對目標進行致命暗殺，造成 ${ColorText.ad(damage)} (3.0 AD) 物理傷害。此技能爆擊傷害額外提升 50%。\n(必需裝備「匕首」類武器)`;
+    }
+
+    protected execute({playerStore, monster}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Knife')
+            return false;
+        }
+
+        const dmg = this.getDamage(playerStore);
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: this.name,
+            canCrit: true,
+            modifiers: {
+                critIncrease: (playerStore.finalStats?.critIncrease ?? 0) + 50
+            }
+        });
+
+        useCardImpactEffect(getMonsterElement(monster.id), 'assassinate');
+        return true;
+    }
+}
+
+export class PoisonApply extends SkillModel {
+    constructor() {
+        super({
+            id: 'PoisonApply',
+            name: "毒藥附加",
+            icon: "skills/passive/poison_apply.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['毒藥流']
+        });
+    }
+
+    description(): string {
+        return `裝備「匕首」類武器時，攻擊命中時有 30% 機率使目標陷入「中毒」狀態（每回合受到 5 點傷害，持續 4 回合）。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            return;
+        }
+        if (Math.random() <= 0.3) {
+            monster.addEffect(UnitStatus.Poison, {value: 5});
+            useCardImpactEffect(getMonsterElement(monster.id), 'poison');
+        }
+    }
+}
+
+export class PoisonStack extends SkillModel {
+    constructor() {
+        super({
+            id: 'PoisonStack',
+            name: "毒藥堆疊附加",
+            icon: "skills/passive/poison_stack.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['毒藥流']
+        });
+    }
+
+    description(): string {
+        return `裝備「匕首」類武器時，攻擊命中時有 30% 機率使目標陷入「中毒」狀態，且此中毒效果可以堆疊（每層每回合造成 5 點傷害，最多堆疊 5 層，持續 4 回合）。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            return;
+        }
+        if (Math.random() <= 0.30) {
+            const existing = monster.hasStatus(UnitStatus.Poison.name);
+            if (existing) {
+                const currentVal = existing.value || 5;
+                const newVal = Math.min(25, currentVal + 10);
+                existing.value = newVal;
+                existing.duration = 4; // 刷新持續時間
+                existing.description = `每回合失去 ${newVal} 點生命值`;
+            } else {
+                monster.addEffect(UnitStatus.Poison);
+            }
+            useCardImpactEffect(getMonsterElement(monster.id), 'poison');
+        }
+    }
+}
 
 export class ConcealBreath extends SkillModel {
     constructor() {
         super({
             id: 'ConcealBreath',
-            name: "隱蔽氣息",
+            name: "迷蹤",
             icon: "skills/active/conceal_breath.svg",
             type: 'active',
             rarity: 'rare',
@@ -384,7 +675,7 @@ export class ConcealBreathInstinct extends SkillModel {
     constructor() {
         super({
             id: 'ConcealBreathInstinct',
-            name: "隱蔽本能",
+            name: "迷蹤本能",
             icon: "skills/active/conceal_breath.svg",
             type: 'active',
             rarity: 'perfect',
@@ -421,87 +712,6 @@ export class ConcealBreathInstinct extends SkillModel {
     }
 }
 
-export class MistBase extends SkillModel {
-    constructor() {
-        super({
-            id: 'MistBase',
-            name: "迷霧",
-            icon: "skills/active/mist_base.svg",
-            type: 'active',
-            rarity: 'rare',
-            costSp: 20,
-            costAction: 1,
-            maxCd: 4
-        });
-    }
-
-    description(): string {
-        return `讓戰場陷入迷霧：自身獲得「迷霧(玩家)」（提升 40 點閃避，攻擊或受擊後消失，持續 3 回合），且使全體敵方獲得「迷霧(敵方)」（降低 40 點命中，攻擊或受擊後消失，持續 3 回合）。`;
-    }
-
-    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
-        if (!playerStore || !gameStateStore) return false;
-
-        // 1. 玩家獲得迷霧
-        playerStore.addStatus(SkillStatus.PlayerMistStatus);
-
-        // 2. 所有敵人獲得迷霧
-        const enemies = gameStateStore.currentEnemy || [];
-        enemies.forEach(enemy => {
-            if (enemy.hp > 0) {
-                enemy.addEffect(SkillStatus.EnemyMistStatus);
-            }
-        });
-
-        useFullScreenEffect({
-            message: this.name,
-            color: '#bdc3c7',
-        });
-
-        return true;
-    }
-}
-
-export class MistPro extends SkillModel {
-    constructor() {
-        super({
-            id: 'MistPro',
-            name: "麻醉迷霧",
-            icon: "skills/active/mist_pro.svg",
-            type: 'active',
-            rarity: 'perfect',
-            costSp: 30,
-            costAction: 1,
-            maxCd: 4
-        });
-    }
-
-    description(): string {
-        return `讓戰場陷入麻醉迷霧：自身獲得「麻醉迷霧(玩家)」（提升 60 點閃避值，持續 3 回合），且使全體敵方獲得「麻醉迷霧(敵方)」（降低 60 點命中值，持續 3 回合）。\n(繼承並強化迷霧)`;
-    }
-
-    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
-        if (!playerStore || !gameStateStore) return false;
-
-        // 1. 玩家獲得麻醉迷霧
-        playerStore.addStatus(SkillStatus.PlayerAnestheticMistStatus);
-
-        // 2. 所有敵人獲得麻醉迷霧
-        const enemies = gameStateStore.currentEnemy || [];
-        enemies.forEach(enemy => {
-            if (enemy.hp > 0) {
-                enemy.addEffect(SkillStatus.EnemyAnestheticMistStatus);
-            }
-        });
-
-        useFullScreenEffect({
-            message: this.name,
-            color: '#a569bd',
-        });
-
-        return true;
-    }
-}
 
 export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
     SwiftStrike: {
@@ -542,23 +752,6 @@ export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
             return !!hasKnifePath && !!hasThrust;
         }
     },
-    ConcealBreath: {
-        id: 'ConcealBreath',
-        pathId: 'conceal_breath',
-        tier: 2,
-        checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('knifeplay');
-        }
-    },
-    ConcealBreathInstinct: {
-        id: 'ConcealBreathInstinct',
-        pathId: 'conceal_breath',
-        tier: 4,
-        evolvesFrom: ['ConcealBreath'],
-        checkEligible: (playerStore) => {
-            return !!playerStore.hasSkill('ConcealBreath');
-        }
-    },
     SneakAttack: {
         id: 'SneakAttack',
         pathId: 'sneak_attack',
@@ -594,5 +787,59 @@ export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
         checkEligible: (playerStore) => {
             return playerStore.hasSkill('MistBase') && playerStore.checkSkillPath('knifeplay');
         }
-    }
+    },
+    KnifeWhirlwind: {
+        id: 'KnifeWhirlwind',
+        pathId: 'flurry',
+        tier: 3,
+        evolvesFrom: ['Flurry'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('Flurry') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    Assassination: {
+        id: 'Assassination',
+        pathId: 'assassinate',
+        tier: 3,
+        evolvesFrom: ['Assassinate'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('Assassinate') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    PoisonApply: {
+        id: 'PoisonApply',
+        pathId: 'poison_apply',
+        tier: 2,
+        evolvesFrom: ['Thrust'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('Thrust') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    PoisonStack: {
+        id: 'PoisonStack',
+        pathId: 'poison_apply',
+        tier: 3,
+        evolvesFrom: ['PoisonApply'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('PoisonApply') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+
+    ConcealBreath: {
+        id: 'ConcealBreath',
+        pathId: 'conceal_breath',
+        tier: 2,
+        checkEligible: (playerStore) => {
+            return playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    ConcealBreathInstinct: {
+        id: 'ConcealBreathInstinct',
+        pathId: 'conceal_breath',
+        tier: 4,
+        evolvesFrom: ['ConcealBreath'],
+        checkEligible: (playerStore) => {
+            return !!playerStore.hasSkill('ConcealBreath');
+        }
+    },
 }

@@ -1,4 +1,4 @@
-import { createVNode, render } from 'vue';
+import {createVNode, render} from 'vue';
 import CardImpactEffect from './CardImpactEffect.vue';
 
 export type ImpactType =
@@ -9,7 +9,8 @@ export type ImpactType =
     | 'vertical-slash'
     | 'horizontal-slash'
     | 'thrust'
-    | 'assassinate';
+    | 'assassinate'
+    | 'poison';
 
 /**
  * 在目標 DOM 元素正上方播放打擊特效覆蓋層
@@ -106,5 +107,5 @@ export function useCardImpactEffect(
     // 3. 自動清理 (1000ms 確保動畫全部播完)
     setTimeout(destroy, 1000);
 
-    return { close: destroy };
+    return {close: destroy};
 }
