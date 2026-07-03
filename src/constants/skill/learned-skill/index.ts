@@ -28,9 +28,9 @@ import {
     ConcealBreath, ConcealBreathInstinct, Flurry, KnifeExpert, KnifeMaster,
     KnifeProficiency,
     KnifeSkillTree, SwiftStrike
-} from "@/constants/skill/learned-skill/basic_skills/knife_skill";
-import {BlockBoost, BlockExpert, ShieldSkillTree} from "@/constants/skill/learned-skill/basic_skills/shield_skill";
-import {StickSkillTree} from "@/constants/skill/learned-skill/basic_skills/stick_skill";
+} from "./knife_skill";
+import {BlockBoost, BlockExpert, ShieldSkillTree} from "./shield_skill";
+import {StickSkillTree} from "./stick_skill";
 import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
     ContinuousSwordHorizontal, ContinuousSwordPoint,
@@ -38,7 +38,7 @@ import {
     SwordExpert, SwordMaster,
     SwordProficiency,
     SwordSkillTree
-} from "@/constants/skill/learned-skill/basic_skills/sword_skill";
+} from "./sword_skill";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {

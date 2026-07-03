@@ -1,16 +1,16 @@
 /**
  * 劍術相關
  */
-import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillTreeNode} from "@/types";
-import {applySkillDamage} from "@/constants/fight-func";
-import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {getMonsterElement} from "@/utils/create";
-import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
-import {checkProbability} from "@/utils/math";
-import {MonsterModel} from "@/models/monster-model";
-import {useLogStore} from "@/store/log-store";
-import {UsualStatus} from "@/constants/status/usual-status";
+import {SkillModel} from "src/models/skill-model";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillTreeNode} from "src/types";
+import {applySkillDamage} from "src/constants/fight-func";
+import {useCardImpactEffect} from "src/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {getMonsterElement} from "src/utils/create";
+import {isMatchedWeapon, WeaponSkillMapping} from "src/constants/default-const";
+import {checkProbability} from "src/utils/math";
+import {MonsterModel} from "src/models/monster-model";
+import {useLogStore} from "src/store/log-store";
+import {UsualStatus} from "src/constants/status/usual-status";
 
 export class SwordProficiency extends SkillModel {
     constructor() {
