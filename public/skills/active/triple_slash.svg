@@ -1,27 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
-  <!-- Dark Background -->
-
   <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
-  <!-- Three parallel red-hot slashes -->
-  <!-- Slash 1 (Left) -->
-  <rect x="2" y="3" width="1" height="1" fill="#f1c40f" />
-  <rect x="3" y="4" width="1" height="2" fill="#e74c3c" />
-  <rect x="4" y="6" width="1" height="3" fill="#e74c3c" />
-  <rect x="5" y="9" width="1" height="2" fill="#c0392b" />
-  <rect x="6" y="11" width="1" height="1" fill="#7f8c8d" />
 
-  <!-- Slash 2 (Center - White/Yellow hot) -->
-  <rect x="6" y="2" width="1" height="1" fill="#ffffff" />
-  <rect x="7" y="3" width="1" height="2" fill="#ffffff" />
-  <rect x="8" y="5" width="1" height="3" fill="#f1c40f" />
-  <rect x="9" y="8" width="1" height="3" fill="#e67e22" />
-  <rect x="10" y="11" width="1" height="2" fill="#c0392b" />
-  <rect x="11" y="13" width="1" height="1" fill="#7f8c8d" />
+  <!-- First Slash (top-left to bottom-right) -->
+  <rect x="2" y="2" width="1" height="1" fill="#ecf0f1" />
+  <rect x="3" y="3" width="2" height="2" fill="#ffffff" />
+  <rect x="5" y="5" width="2" height="2" fill="#ffffff" />
+  <rect x="7" y="7" width="2" height="2" fill="#ffffff" />
+  <rect x="9" y="9" width="2" height="2" fill="#bdc3c7" />
+  <rect x="11" y="11" width="2" height="2" fill="#7f8c8d" />
+  <rect x="13" y="13" width="1" height="1" fill="#7f8c8d" />
 
-  <!-- Slash 3 (Right) -->
-  <rect x="10" y="3" width="1" height="1" fill="#f1c40f" />
-  <rect x="11" y="4" width="1" height="2" fill="#e74c3c" />
-  <rect x="12" y="6" width="1" height="3" fill="#e74c3c" />
-  <rect x="13" y="9" width="1" height="2" fill="#c0392b" />
-  <rect x="14" y="11" width="1" height="1" fill="#7f8c8d" />
+  <!-- middle -->
+  <rect x="7" y="1" width="1" height="1" fill="#ecf0f1" />
+  <rect x="7" y="2" width="2" height="3" fill="#ffffff" />
+  <rect x="7" y="5" width="2" height="2" fill="#ffffff" />
+  <rect x="7" y="7" width="2" height="2" fill="#ffffff" />
+  <rect x="7" y="9" width="2" height="2" fill="#bdc3c7" />
+  <rect x="7" y="11" width="2" height="3" fill="#7f8c8d" />
+  <rect x="8" y="14" width="1" height="1" fill="#7f8c8d" />
+
+  <!-- Second Slash (top-right to bottom-left) -->
+  <rect x="13" y="2" width="1" height="1" fill="#ecf0f1" />
+  <rect x="11" y="3" width="2" height="2" fill="#ffffff" />
+  <rect x="9" y="5" width="2" height="2" fill="#ffffff" />
+  <rect x="7" y="7" width="2" height="2" fill="#ffffff" /> <!-- Cross point -->
+  <rect x="5" y="9" width="2" height="2" fill="#bdc3c7" />
+  <rect x="3" y="11" width="2" height="2" fill="#7f8c8d" />
+  <rect x="2" y="13" width="1" height="1" fill="#7f8c8d" />
+
+  <!-- Glow highlights -->
+  <rect x="6" y="7" width="1" height="1" fill="#f1c40f" />
+  <rect x="6" y="8" width="1" height="1" fill="#f1c40f" />
+  <rect x="9" y="8" width="1" height="1" fill="#f1c40f" />
+  <rect x="9" y="7" width="1" height="1" fill="#f1c40f" />
+  <rect x="8" y="6" width="1" height="1" fill="#f1c40f" />
+  <rect x="7" y="6" width="1" height="1" fill="#f1c40f" />
+  <rect x="8" y="9" width="1" height="1" fill="#f1c40f" />
+  <rect x="7" y="9" width="1" height="1" fill="#f1c40f" />
 </svg>
