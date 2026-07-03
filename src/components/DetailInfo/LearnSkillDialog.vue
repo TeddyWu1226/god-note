@@ -84,8 +84,24 @@ const openLearnSkill = () => {
     // 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
 
-    // 1. 檢查額外可學習條件
     const node = SKILL_TREE_NODES[id];
+
+    // 通用性等級限制判斷 (根據 tier)
+    if (node && node.tier !== undefined) {
+      const playerLevel = playerStore.info.level || 1;
+      let requiredLevel = 0;
+      switch (node.tier) {
+        case 1: requiredLevel = 5; break;
+        case 2: requiredLevel = 10; break;
+        case 3: requiredLevel = 20; break;
+        case 4: requiredLevel = 40; break;
+        case 5: requiredLevel = 60; break;
+        case 6: requiredLevel = 80; break;
+      }
+      if (playerLevel < requiredLevel) return false;
+    }
+
+    // 1. 檢查額外可學習條件
     if (node?.checkEligible) {
       const isEligible = node.checkEligible(playerStore, trackerStore);
       if (!isEligible) return false;

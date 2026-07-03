@@ -81,8 +81,7 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
             }
             const offhand = playerStore.info.equips?.offhand
             const hasShield = offhand && offhand.name.includes('盾')
-            const currentLevel = playerStore.info.level
-            return hasShield && (currentLevel >= 10)
+            return !!hasShield;
         }
     },
 }

@@ -29,7 +29,14 @@ All skills subclass `SkillModel` and override the following core methods:
 Defined in `src/constants/skill/learned-skill/skill-tree/` (e.g. `index.ts`, `sword-skill-tree.ts`):
 - `id`: Skill ID.
 - `pathId`: Unique branch/flow ID.
-- `tier`: Skill tier (1, 2, or 3).
+- `tier`: Skill tier (0 to 6), which automatically enforces a minimum player level to learn:
+  - `0`: No limit
+  - `1`: Level 5+
+  - `2`: Level 10+
+  - `3`: Level 20+
+  - `4`: Level 40+
+  - `5`: Level 60+
+  - `6`: Level 80+
 - `evolvesFrom`: Base skills to replace when this skill is learned (optional).
 - `fusesFrom`: Ingredient skills to consume/remove when this skill is learned (optional).
 - `checkEligible(playerStore, trackerStore)`: Validation logic.

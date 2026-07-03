@@ -440,8 +440,7 @@ export const KnifeSkillTree: Record<string, SkillTreeNode> = {
         checkEligible: (playerStore) => {
             const hasKnifePath = playerStore.checkSkillPath('knifeplay');
             const hasThrust = playerStore.hasSkill('Thrust');
-            const currentLevel = playerStore.info.level
-            return !!hasKnifePath && !!hasThrust && (currentLevel >= 15);
+            return !!hasKnifePath && !!hasThrust;
         }
     },
     ConcealBreath: {
@@ -464,11 +463,7 @@ export const KnifeSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['ConcealBreath'],
         checkEligible: (playerStore) => {
-            if (!playerStore.hasSkill('ConcealBreath')) {
-                return false;
-            }
-            const currentLevel = playerStore.info.level
-            return currentLevel >= 20;
+            return !!playerStore.hasSkill('ConcealBreath');
         }
     },
     // 狂風刺擊 (融合橫擊與刺擊)

@@ -213,7 +213,7 @@ export const BuffSkillTree: Record<string, SkillTreeNode> = {
         tier: 1,
         checkEligible: (playerStore) => {
             const currentDodge = playerStore.finalStats.dodge
-            return currentDodge >= 10 && playerStore.info.level >= 5;
+            return currentDodge >= 10;
         }
     },
 }
