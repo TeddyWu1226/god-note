@@ -45,7 +45,7 @@ export const useTrackerStore = defineStore('tracker', () => {
             if (isMatchedWeapon('SwordProficiency', weaponName)) {
                 currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount;
             }
-            if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+            if (isMatchedWeapon('KnifeBase', weaponName)) {
                 currentKills.value['USE_KNIFE'] = (currentKills.value['USE_KNIFE'] || 0) + amount;
             }
             if (isMatchedWeapon('SpellProficiency', weaponName)) {

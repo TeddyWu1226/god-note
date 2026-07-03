@@ -12,15 +12,15 @@ import {SkillStatus} from "src/constants/status/skill-status";
 import {useFullScreenEffect} from "src/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {showEffect} from "src/components/Shared/FloatingEffect/EffectManager";
 
-export class KnifeProficiency extends SkillModel {
+export class KnifeBase extends SkillModel {
     constructor() {
         super({
-            id: 'KnifeProficiency',
-            name: "基礎刺殺",
-            icon: "skills/passive/knife_proficiency.svg",
+            id: 'KnifeBase',
+            name: "匕首技巧",
+            icon: "skills/passive/knife_base.svg",
             type: 'passive',
             rarity: 'common',
-            uniqueFields: ['KnifeProficiency'],
+            uniqueFields: ['KnifeBase'],
             maxProficiency: 150,
             proficiencyGain: 1
         });
@@ -37,7 +37,7 @@ export class KnifeProficiency extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -47,22 +47,22 @@ export class KnifeProficiency extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+        if (isMatchedWeapon('KnifeBase', weaponName)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-export class KnifeExpert extends SkillModel {
+export class KnifePro extends SkillModel {
     constructor() {
         super({
-            id: 'KnifeExpert',
-            name: "進階刺殺",
-            icon: "skills/passive/knife_expert.svg",
+            id: 'KnifePro',
+            name: "匕首精通",
+            icon: "skills/passive/knife_pro.svg",
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['KnifeProficiency'],
+            uniqueFields: ['KnifeBase'],
             maxProficiency: 150,
             proficiencyGain: 1
         });
@@ -70,17 +70,16 @@ export class KnifeExpert extends SkillModel {
 
     addBonus() {
         return {
-            hit: 25,
-            ad: 1 + (Math.ceil(this.proficiency * 0.06)),
-            dodge: 6 + (Math.ceil(this.proficiency * 0.06)),
+            hit: 12 + (Math.ceil(this.proficiency * 0.04)),
+            dodge: 8 + (Math.ceil(this.proficiency * 0.04)),
+            ad: 3 + (Math.ceil(this.proficiency * 0.02)),
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`
-            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`
-            ;
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
     protected execute(): boolean {
@@ -89,7 +88,48 @@ export class KnifeExpert extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+        if (isMatchedWeapon('KnifeBase', weaponName)) {
+            return this.addBonus();
+        }
+        return {};
+    }
+}
+
+export class KnifeAdv extends SkillModel {
+    constructor() {
+        super({
+            id: 'KnifeAdv',
+            name: "匕首進階精通",
+            icon: "skills/passive/knife_adv.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['KnifeBase'],
+            maxProficiency: 150,
+            proficiencyGain: 1
+        });
+    }
+
+    addBonus() {
+        return {
+            hit: 25 + (Math.ceil(this.proficiency * 0.05)),
+            dodge: 12 + (Math.ceil(this.proficiency * 0.05)),
+            ad: 10 + (Math.ceil(this.proficiency * 0.04)),
+        }
+    }
+
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (isMatchedWeapon('KnifeBase', weaponName)) {
             return this.addBonus();
         }
         return {};
@@ -100,25 +140,25 @@ export class KnifeMaster extends SkillModel {
     constructor() {
         super({
             id: 'KnifeMaster',
-            name: "大師刺殺",
+            name: "匕首大師精通",
             icon: "skills/passive/knife_master.svg",
             type: 'passive',
             rarity: 'perfect',
-            uniqueFields: ['KnifeProficiency'],
+            uniqueFields: ['KnifeBase'],
         });
     }
 
     addBonus() {
         return {
             hit: 50,
-            ad: 20,
+            ad: 25,
             dodge: 20,
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`;
+        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`;
     }
 
     protected execute(): boolean {
@@ -127,7 +167,7 @@ export class KnifeMaster extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeProficiency', weaponName)) {
+        if (isMatchedWeapon('KnifeBase', weaponName)) {
             return this.addBonus();
         }
         return {};
@@ -393,21 +433,31 @@ export class Assassinate extends SkillModel {
 
 
 export const KnifeSkillTree: Record<string, SkillTreeNode> = {
-    KnifeProficiency: {
-        id: 'KnifeProficiency',
+    KnifeBase: {
+        id: 'KnifeBase',
         pathId: 'knifeplay',
-        tier: 1,
+        tier: 0,
         checkEligible: (playerStore, trackerStore) => {
             return trackerStore.getKillCount('USE_KNIFE') >= 3;
         }
     },
-    KnifeExpert: {
-        id: 'KnifeExpert',
+    KnifePro: {
+        id: 'KnifePro',
+        pathId: 'knifeplay',
+        tier: 1,
+        evolvesFrom: ['KnifeBase'],
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('KnifeBase');
+            return !!baseSkill?.isProficiencyMax;
+        }
+    },
+    KnifeAdv: {
+        id: 'KnifeAdv',
         pathId: 'knifeplay',
         tier: 2,
-        evolvesFrom: ['KnifeProficiency'],
+        evolvesFrom: ['KnifePro'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('KnifeProficiency');
+            const baseSkill = playerStore.hasSkill('KnifePro');
             return !!baseSkill?.isProficiencyMax;
         }
     },
@@ -415,9 +465,9 @@ export const KnifeSkillTree: Record<string, SkillTreeNode> = {
         id: 'KnifeMaster',
         pathId: 'knifeplay',
         tier: 3,
-        evolvesFrom: ['KnifeExpert'],
+        evolvesFrom: ['KnifeAdv'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('KnifeExpert');
+            const baseSkill = playerStore.hasSkill('KnifeAdv');
             return !!baseSkill?.isProficiencyMax;
         }
     },

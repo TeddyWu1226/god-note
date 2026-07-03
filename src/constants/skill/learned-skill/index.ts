@@ -25,8 +25,8 @@ import {
 } from "@/constants/skill/learned-skill/basic_skills/demon_body";
 import {
     Assassinate,
-    ConcealBreath, ConcealBreathInstinct, Flurry, KnifeExpert, KnifeMaster,
-    KnifeProficiency,
+    ConcealBreath, ConcealBreathInstinct, Flurry, KnifeMaster,
+    KnifeBase, KnifePro, KnifeAdv,
     KnifeSkillTree, SwiftStrike
 } from "./knife_skill";
 import {BlockBoost, BlockExpert, ShieldSkillTree} from "./shield_skill";
@@ -67,7 +67,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     PhysiqueBoost: PhysiqueBoost,
     BrainPowerBoost: BrainPowerBoost,
     SwordProficiency: SwordProficiency,
-    KnifeProficiency: KnifeProficiency,
+    KnifeBase: KnifeBase,
     RedSkin: RedSkin,
     BlueSkin: BlueSkin,
     BlockBoost: BlockBoost,
@@ -87,7 +87,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     BloodManaLoop: BloodManaLoop,
     PurpleSkin: PurpleSkin,
 
-    KnifeExpert: KnifeExpert,
+    KnifePro: KnifePro,
+    KnifeAdv: KnifeAdv,
 
     // Level 3
     ConcealBreathInstinct: ConcealBreathInstinct,
