@@ -1,63 +1,100 @@
 import {SkillModel} from "@/models/skill-model";
-import * as Lv1SkillActive from "./lv1/active";
-import * as Lv1SkillPassive from "./lv1/passive";
-import * as Lv2SkillActive from "./lv2/active";
-import * as Lv2SkillPassive from "./lv2/passive";
-import * as Lv3SkillActive from "./lv3/active";
-import * as Lv3SkillPassive from "./lv3/passive";
 import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
-import {Breakfall} from "./lv2/active";
 
+import {SkillTreeNode} from "@/types";
+import {
+    AdBasicSkillTree,
+    HorizontalSlash,
+    Thrust,
+    VerticalSlash
+} from "@/constants/skill/learned-skill/basic_skills/ad_skill";
+import {
+    AgilityBuff, Breakfall,
+    BuffSkillTree,
+    FightBuff,
+    FocusBuff,
+    WillBuff
+} from "@/constants/skill/learned-skill/basic_skills/buff_skill";
+import {
+    BloodManaLoop,
+    BlueSkin,
+    BrainPowerBoost, DemonBody,
+    DemonBodySkillTree,
+    PhysiqueBoost, PurpleSkin, RedSkin
+} from "@/constants/skill/learned-skill/basic_skills/demon_body";
+import {
+    Assassinate,
+    ConcealBreath, ConcealBreathInstinct, Flurry, KnifeExpert, KnifeMaster,
+    KnifeProficiency,
+    KnifeSkillTree, SwiftStrike
+} from "@/constants/skill/learned-skill/basic_skills/knife_skill";
+import {BlockBoost, BlockExpert, ShieldSkillTree} from "@/constants/skill/learned-skill/basic_skills/shield_skill";
+import {StickSkillTree} from "@/constants/skill/learned-skill/basic_skills/stick_skill";
+import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
+import {
+    ContinuousSwordHorizontal, ContinuousSwordPoint,
+    ContinuousSwordVertical,
+    SwordExpert, SwordMaster,
+    SwordProficiency,
+    SwordSkillTree
+} from "@/constants/skill/learned-skill/basic_skills/sword_skill";
+import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
 
+export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
+    ...AdBasicSkillTree,
+    ...ApSkillTree,
+    ...BuffSkillTree,
+    ...DemonBodySkillTree,
+    ...KnifeSkillTree,
+    ...ShieldSkillTree,
+    ...StickSkillTree,
+    ...SwordSkillTree,
+};
 // 💡 技能 ID 與 Subclass 類別對照表
-export const SKILL_CLASS_MAP: Record<string, any> = {
+const SKILL_CLASS_MAP: Record<string, any> = {
     // Level 1
-    CommonHeal: Lv1SkillActive.CommonHeal,
-    VerticalSlash: Lv1SkillActive.VerticalSlash,
-    HorizontalSlash: Lv1SkillActive.HorizontalSlash,
-    Thrust: Lv1SkillActive.Thrust,
+    CommonHeal: CommonHeal,
+    VerticalSlash: VerticalSlash,
+    HorizontalSlash: HorizontalSlash,
+    Thrust: Thrust,
 
-    WillBuff: Lv1SkillActive.WillBuff,
-    FocusBuff: Lv1SkillActive.FocusBuff,
-    FightBuff: Lv1SkillActive.FightBuff,
-    AgilityBuff: Lv1SkillActive.AgilityBuff,
+    WillBuff: WillBuff,
+    FocusBuff: FocusBuff,
+    FightBuff: FightBuff,
+    AgilityBuff: AgilityBuff,
 
-    PhysiqueBoost: Lv1SkillPassive.PhysiqueBoost,
-    BrainPowerBoost: Lv1SkillPassive.BrainPowerBoost,
-    SwordProficiency: Lv1SkillPassive.SwordProficiency,
-    KnifeProficiency: Lv1SkillPassive.KnifeProficiency,
-    SpellProficiency: Lv1SkillPassive.SpellProficiency,
-    ReadingProficiency: Lv1SkillPassive.ReadingProficiency,
-    RedSkin: Lv1SkillPassive.RedSkin,
-    BlueSkin: Lv1SkillPassive.BlueSkin,
-    BlockBoost: Lv1SkillPassive.BlockBoost,
+    PhysiqueBoost: PhysiqueBoost,
+    BrainPowerBoost: BrainPowerBoost,
+    SwordProficiency: SwordProficiency,
+    KnifeProficiency: KnifeProficiency,
+    RedSkin: RedSkin,
+    BlueSkin: BlueSkin,
+    BlockBoost: BlockBoost,
     // Level 2
 
-    Flurry: Lv2SkillActive.Flurry,
-    SwiftStrike: Lv2SkillActive.SwiftStrike,
-    Assassinate: Lv2SkillActive.Assassinate,
-    ConcealBreath: Lv2SkillActive.ConcealBreath,
-    Breakfall: Lv2SkillActive.Breakfall,
+    Flurry: Flurry,
+    SwiftStrike: SwiftStrike,
+    Assassinate: Assassinate,
+    ConcealBreath: ConcealBreath,
+    Breakfall: Breakfall,
 
-    SwordExpert: Lv2SkillPassive.SwordExpert,
-    KnightWay: Lv2SkillPassive.KnightWay,
-    BlockExpert: Lv2SkillPassive.BlockExpert,
-    ContinuousSwordVertical: Lv2SkillPassive.ContinuousSwordVertical,
-    ContinuousSwordHorizontal: Lv2SkillPassive.ContinuousSwordHorizontal,
-    ContinuousSwordPoint: Lv2SkillPassive.ContinuousSwordPoint,
-    BloodManaLoop: Lv2SkillPassive.BloodManaLoop,
-    PurpleSkin: Lv2SkillPassive.PurpleSkin,
+    SwordExpert: SwordExpert,
+    BlockExpert: BlockExpert,
+    ContinuousSwordVertical: ContinuousSwordVertical,
+    ContinuousSwordHorizontal: ContinuousSwordHorizontal,
+    ContinuousSwordPoint: ContinuousSwordPoint,
+    BloodManaLoop: BloodManaLoop,
+    PurpleSkin: PurpleSkin,
 
-    KnifeExpert: Lv2SkillPassive.KnifeExpert,
+    KnifeExpert: KnifeExpert,
 
     // Level 3
-    ConcealBreathInstinct: Lv3SkillActive.ConcealBreathInstinct,
+    ConcealBreathInstinct: ConcealBreathInstinct,
 
-    SwordMaster: Lv3SkillPassive.SwordMaster,
-    DemonBody: Lv3SkillPassive.DemonBody,
-    KnifeMaster: Lv3SkillPassive.KnifeMaster,
-    HeartOfRebellion: Lv3SkillPassive.HeartOfRebellion,
+    SwordMaster: SwordMaster,
+    DemonBody: DemonBody,
+    KnifeMaster: KnifeMaster,
 
 
     // 副手技能

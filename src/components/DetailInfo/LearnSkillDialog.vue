@@ -2,8 +2,7 @@
 import {nextTick, ref, watch} from "vue";
 import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
-import {SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
-import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
+import {SKILL_TREE_NODES, SKILL_TEMPLATES, SkillFactory} from "@/constants/skill/learned-skill";
 import {SkillModel, SkillRarity} from "@/models/skill-model";
 import {ElMessage} from "element-plus";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";

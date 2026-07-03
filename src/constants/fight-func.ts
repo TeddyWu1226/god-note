@@ -129,24 +129,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             }
             damageTaken = Math.round(damageTaken * blockMultiplier);
             (attacker as MonsterClass).status.push(UsualStatus.Stuck);
-
-            // 反抗之心效果：完美格擋成功時，獲得下一回合 20% 增傷
-            if (defender.hasSkill('HeartOfRebellion')) {
-                defender.addStatus(
-                    {
-                        name: '反抗之心',
-                        icon: '⚔️',
-                        duration: 2,
-                        isBuff: true,
-                        description: '下一回合提升 20% 物理與法術傷害',
-                        bonus: {
-                            adIncrease: 20,
-                            apIncrease: 20
-                        }
-                    }
-                );
-                logStore.logger.add(`[反抗之心] 完美格擋成功！獲得下一回合 20% 增傷！`);
-            }
         }
     }
     // 檢查「抵抗」狀態效果

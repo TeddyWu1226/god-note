@@ -5,9 +5,9 @@ import {DEFAULT_USER_INFO} from '@/constants/default-const';
 import {create, genCustomStatus} from "@/utils/create";
 import {useLogStore} from "@/store/log-store";
 import {SkillModel} from "@/models/skill-model";
-import {SkillFactory} from "@/constants/skill/learned-skill";
+import {SkillFactory, SKILL_TREE_NODES} from "@/constants/skill/learned-skill";
 import {useGameStateStore} from "@/store/game-state-store";
-import {SKILL_TREE_NODES} from "@/constants/skill/learned-skill/skill-tree";
+
 
 const generateUUID = (): string => {
     if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
