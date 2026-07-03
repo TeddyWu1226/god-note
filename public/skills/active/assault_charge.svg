@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+  <!-- Fire/Speed assault charging to the right -->
+  <!-- Fiery trail (Red/Orange/Yellow) -->
+  <rect x="1" y="6" width="8" height="4" fill="#e67e22" />
+  <rect x="1" y="7" width="7" height="2" fill="#f1c40f" />
+  <rect x="3" y="8" width="6" height="1" fill="#ffffff" />
+  
+  <!-- Charging Sword Blade -->
+  <rect x="7" y="8" width="7" height="1" fill="#bdc3c7" />
+  <rect x="8" y="7" width="6" height="1" fill="#ffffff" />
+  
+  <!-- Explosion Impact on Tip (Fiery Burst) -->
+  <rect x="13" y="6" width="2" height="4" fill="#e74c3c" />
+  <rect x="12" y="7" width="3" height="2" fill="#f39c12" />
+  <rect x="14" y="8" width="1" height="1" fill="#ffffff" />
+  
+  <!-- Hilt / Guard -->
+  <rect x="6" y="6" width="1" height="4" fill="#bdc3c7" />
+  <rect x="5" y="8" width="1" height="1" fill="#3e2723" />
+</svg>

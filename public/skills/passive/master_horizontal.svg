@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Sea Waves Background (Split) -->
+  <!-- Lower Sea (Deep Blue) -->
+  <rect x="0" y="10" width="16" height="6" fill="#1b4f72" />
+  <rect x="0" y="11" width="16" height="5" fill="#154360" />
+
+  <!-- Upper Wave Peaks (Cyan/Blue) -->
+  <rect x="0" y="3" width="4" height="4" fill="#2e86c1" />
+  <rect x="1" y="4" width="2" height="1" fill="#5dade2" />
+  <rect x="11" y="3" width="5" height="4" fill="#2e86c1" />
+  <rect x="12" y="4" width="3" height="1" fill="#5dade2" />
+
+  <!-- Horizontal Slash Trail (Splitting the sea) -->
+  <rect x="0" y="7" width="16" height="2" fill="#3498db" /> <!-- Wave splash core -->
+  <rect x="0" y="7" width="16" height="1" fill="#e0f7fa" /> <!-- Blazing blade trail -->
+  <rect x="2" y="6" width="12" height="1" fill="#80deea" /> <!-- Glow -->
+  <rect x="2" y="9" width="12" height="1" fill="#00acc1" /> <!-- Water undercurrent -->
+
+  <!-- Sword Hilt and Guard on the Left side, slashing right -->
+  <!-- Guard -->
+  <rect x="1" y="6" width="1" height="3" fill="#f1c40f" />
+  <!-- Hilt -->
+  <rect x="0" y="7" width="1" height="1" fill="#5d4037" />
+  <!-- Blade Start -->
+  <rect x="2" y="7" width="2" height="1" fill="#ffffff" />
+</svg>

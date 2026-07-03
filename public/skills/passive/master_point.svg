@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Dark/Violet Mystic Background -->
+
+
+  <!-- Ink Splash Background (點墨 - Black & Violet Splatters) -->
+  <rect x="8" y="2" width="4" height="7" fill="#0c0714" />
+  <rect x="9" y="1" width="2" height="9" fill="#0c0714" />
+  <rect x="7" y="3" width="6" height="5" fill="#0c0714" />
+  
+  <!-- Ink droplets -->
+  <rect x="5" y="1" width="1" height="1" fill="#0c0714" />
+  <rect x="12" y="0" width="1" height="1" fill="#0c0714" />
+  <rect x="13" y="3" width="1" height="1" fill="#0c0714" />
+  <rect x="6" y="9" width="1" height="1" fill="#0c0714" />
+  <rect x="11" y="10" width="2" height="1" fill="#0c0714" />
+
+  <!-- Violet Glow/Ink Aura -->
+  <rect x="8" y="3" width="4" height="5" fill="#8e44ad" opacity="0.5" />
+  <rect x="9" y="4" width="2" height="3" fill="#d2b4de" />
+
+  <!-- Thrusting Sword (Diagonal from bottom-left to top-right center) -->
+  <!-- Hilt -->
+  <rect x="1" y="13" width="1" height="1" fill="#566573" />
+  <rect x="2" y="12" width="1" height="1" fill="#2c3e50" />
+  <!-- Guard -->
+  <rect x="2" y="11" width="2" height="1" fill="#f1c40f" />
+  <rect x="3" y="12" width="1" height="1" fill="#f1c40f" />
+
+  <!-- Blade (Shining silver, piercing the ink) -->
+  <rect x="4" y="10" width="1" height="1" fill="#bdc3c7" />
+  <rect x="5" y="9" width="1" height="1" fill="#bdc3c7" />
+  <rect x="6" y="8" width="1" height="1" fill="#bdc3c7" />
+  <rect x="7" y="7" width="1" height="1" fill="#ecf0f1" />
+  <rect x="8" y="6" width="1" height="1" fill="#ffffff" />
+  <rect x="9" y="5" width="1" height="1" fill="#ffffff" /> <!-- Piercing Point -->
+
+  <!-- Ink Explosion Center Spark -->
+  <rect x="9" y="4" width="1" height="1" fill="#e74c3c" />
+  <rect x="10" y="5" width="1" height="1" fill="#e74c3c" />
+</svg>

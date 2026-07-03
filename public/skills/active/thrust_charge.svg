@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+  <!-- Thrust Charge (Straight forward pierces to the right) -->
+  <!-- Speed trail / charge lines (Yellow/White) -->
+  <rect x="1" y="7" width="10" height="2" fill="#f1c40f" opacity="0.3" />
+  <rect x="2" y="8" width="8" height="1" fill="#ffffff" />
+  
+  <!-- Spear/Sword Charging forward -->
+  <rect x="6" y="8" width="7" height="1" fill="#bdc3c7" />
+  <rect x="8" y="7" width="6" height="1" fill="#ffffff" />
+  
+  <!-- Tip (Shining Sharp Spark) -->
+  <rect x="13" y="7" width="2" height="2" fill="#ffffff" />
+  <rect x="13" y="6" width="1" height="1" fill="#f1c40f" />
+  <rect x="13" y="9" width="1" height="1" fill="#f1c40f" />
+  
+  <!-- Hilt / Guard on the left side of the blade -->
+  <rect x="5" y="6" width="1" height="4" fill="#7f8c8d" />
+  <rect x="4" y="8" width="1" height="1" fill="#3e2723" />
+</svg>

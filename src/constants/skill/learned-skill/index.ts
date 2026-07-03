@@ -37,7 +37,9 @@ import {
     ContinuousSwordVertical,
     SwordMaster,
     SwordBase, SwordPro, SwordAdv,
-    SwordSkillTree
+    SwordSkillTree,
+    MasterSwordVertical, MasterSwordHorizontal, MasterSwordPoint,
+    DoubleSlash, TripleSlash, HorizontalSweep, WhirlwindSlash, ThrustCharge, AssaultCharge
 } from "./sword_skills";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
 
@@ -86,6 +88,9 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     ContinuousSwordVertical: ContinuousSwordVertical,
     ContinuousSwordHorizontal: ContinuousSwordHorizontal,
     ContinuousSwordPoint: ContinuousSwordPoint,
+    DoubleSlash: DoubleSlash,
+    HorizontalSweep: HorizontalSweep,
+    ThrustCharge: ThrustCharge,
     BloodManaLoop: BloodManaLoop,
     PurpleSkin: PurpleSkin,
 
@@ -98,6 +103,12 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     SwordMaster: SwordMaster,
     DemonBody: DemonBody,
     KnifeMaster: KnifeMaster,
+    MasterSwordVertical: MasterSwordVertical,
+    MasterSwordHorizontal: MasterSwordHorizontal,
+    MasterSwordPoint: MasterSwordPoint,
+    TripleSlash: TripleSlash,
+    WhirlwindSlash: WhirlwindSlash,
+    AssaultCharge: AssaultCharge,
 
 
     // 副手技能
