@@ -2,7 +2,7 @@
  * 匕首相關主動與關聯技能
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillOnStartParams, SkillParams, SkillTreeNode} from "@/types";
+import {PlayerStoreType, SkillOnStartParams, SkillParams, SkillTreeNode, UserType} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
@@ -10,6 +10,207 @@ import {getMonsterElement, Sleep} from "@/utils/create";
 import {SkillStatus} from "@/constants/status/skill-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
+import {EquipmentPosition} from "@/enums/enums";
+
+
+export class SwiftStrike extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwiftStrike',
+            name: "迅捷一擊",
+            icon: "skills/active/swift_strike.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 2,
+            costSp: 10,
+            costAction: 1
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.floor(ad);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
+    }
+
+    protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Knife')
+            return false
+        }
+        const dmg = this.getDamage(playerStore);
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: this.name
+        });
+
+        // 匕首專屬機率獲得行動點數
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            return false
+        }
+        if (Math.random() <= 0.5) {
+            gameStateStore.playerActionPoints += 1;
+            showEffect(
+                {
+                    text: "獲得額外行動點數!",
+                    type: "buff"
+                }
+            )
+        }
+
+        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        return true;
+    }
+}
+
+export class SpeedStrike extends SkillModel {
+    constructor() {
+        super({
+            id: 'SpeedStrike',
+            name: "神速一擊",
+            icon: "skills/active/swift_strike.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 2,
+            costSp: 15,
+            costAction: 1
+        });
+    }
+
+    getDamage(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        return Math.floor(ad * 1.2);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        const {damage} = getSkillFinalDamage({
+            speller: playerStore,
+            baseValue: this.getDamage(playerStore),
+            type: 'ad'
+        })
+        return `極快前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
+    }
+
+    protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+
+        const dmg = this.getDamage(playerStore);
+        monster.lastDamageResult = applySkillDamage({
+            speller: playerStore,
+            target: monster,
+            baseValue: dmg,
+            type: 'ad',
+            skillName: this.name
+        });
+        // 匕首專屬機率獲得行動點數
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            return false
+        }
+        gameStateStore.playerActionPoints += 1;
+        showEffect(
+            {
+                text: "獲得額外行動點數!",
+                type: "buff"
+            }
+        )
+
+        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        return true;
+    }
+}
+
+export class SneakAttack extends SkillModel {
+    constructor() {
+        super({
+            id: 'SneakAttack',
+            name: "偷襲",
+            icon: "skills/passive/sneak_attack.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['偷襲系']
+        });
+    }
+
+    description(): string {
+        return `裝備「匕首」類武器時，額外增加等同於 25% 基礎迴避值的物理攻擊力 (AD)。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: UserType): Record<string, number> {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
+            const baseDodge = player?.dodge ?? 0;
+            let equipDodge = 0;
+            if (player?.equips) {
+                Object.values(player.equips).forEach((item: any) => {
+                    if (item && typeof item.dodge === 'number') {
+                        equipDodge += item.dodge;
+                    }
+                });
+            }
+            const totalDodge = baseDodge + equipDodge;
+            return {
+                ad: Math.round(totalDodge * 0.25)
+            }
+        }
+        return {};
+    }
+}
+
+export class SurpriseAttack extends SkillModel {
+    constructor() {
+        super({
+            id: 'SurpriseAttack',
+            name: "奇襲",
+            icon: "skills/passive/surprise_attack.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['偷襲系']
+        });
+    }
+
+    description(): string {
+        return `裝備「匕首」類武器時，額外增加等同於 50% 基礎迴避值的物理攻擊力 (AD)。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: UserType): Record<string, number> {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
+            const baseDodge = player?.dodge ?? 0;
+            let equipDodge = 0;
+            if (player?.equips) {
+                Object.values(player.equips).forEach((item: any) => {
+                    if (item && typeof item.dodge === 'number') {
+                        equipDodge += item.dodge;
+                    }
+                });
+            }
+            const totalDodge = baseDodge + equipDodge;
+            return {
+                ad: Math.round(totalDodge * 0.5)
+            }
+        }
+        return {};
+    }
+}
 
 export class Flurry extends SkillModel {
     constructor() {
@@ -19,19 +220,22 @@ export class Flurry extends SkillModel {
             icon: "skills/active/flurry.svg",
             type: 'active',
             rarity: 'rare',
-            maxCd: 0,
+            maxCd: 4,
             costSp: 15,
-            costAction: 1
+            costAction: 2
         });
     }
 
     getSingleDamage(playerStore: PlayerStoreType): number {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.4);
+        return playerStore?.finalStats?.ad ?? 0
     }
 
     getMaxHitNum() {
-        return 1 + (Math.ceil(this.proficiency * 0.1))
+        let extra = 0
+        if (Math.random() <= 0.2) {
+            extra = 1
+        }
+        return 2 + extra
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -40,11 +244,15 @@ export class Flurry extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         })
-        return `狂亂地連續揮打，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
+        return `狂亂地連續刺擊，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
     }
 
     protected async execute(params: SkillParams): Promise<boolean> {
         const playerStore = params.playerStore;
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Knife')
+            return false
+        }
         const gameStateStore = params.gameStateStore;
         if (!playerStore || !gameStateStore) return false;
 
@@ -88,23 +296,23 @@ export class Flurry extends SkillModel {
     }
 }
 
-export class SwiftStrike extends SkillModel {
+export class Assassinate extends SkillModel {
     constructor() {
         super({
-            id: 'SwiftStrike',
-            name: "迅捷一擊",
-            icon: "skills/active/swift_strike.svg",
+            id: 'Assassinate',
+            name: "刺殺",
+            icon: "skills/active/assassinate.svg",
             type: 'active',
             rarity: 'rare',
-            maxCd: 2,
-            costSp: 10,
-            costAction: 1
+            maxCd: 3,
+            costSp: 20,
+            costAction: 2
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.floor(ad);
+        return Math.floor(ad * 2);
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -113,35 +321,29 @@ export class SwiftStrike extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         })
-        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
+        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(damage)} 物理傷害。此技能爆擊傷害提升25%。`;
     }
 
-    protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
+    protected execute({playerStore, monster}: SkillParams): boolean {
         if (!playerStore || !monster) return false;
-
+        if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Knife')
+            return false
+        }
         const dmg = this.getDamage(playerStore);
         monster.lastDamageResult = applySkillDamage({
             speller: playerStore,
             target: monster,
             baseValue: dmg,
             type: 'ad',
-            skillName: '迅捷一擊'
+            skillName: this.name,
+            canCrit: true,
+            modifiers: {
+                critIncrease: (playerStore.finalStats?.critIncrease ?? 0) + 25
+            }
         });
 
-        // 匕首專屬機率獲得行動點數
-        const weaponName = playerStore.info?.equips?.weapon?.name || "";
-        const isKnife = weaponName.includes("匕首") || weaponName.includes("小刀");
-        if (isKnife && Math.random() <= 0.5) {
-            gameStateStore.playerActionPoints += 1;
-            showEffect(
-                {
-                    text: "獲得額外行動點數!",
-                    type: "buff"
-                }
-            )
-        }
-
-        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        useCardImpactEffect(getMonsterElement(monster.id), 'assassinate');
         return true;
     }
 }
@@ -219,51 +421,84 @@ export class ConcealBreathInstinct extends SkillModel {
     }
 }
 
-export class Assassinate extends SkillModel {
+export class MistBase extends SkillModel {
     constructor() {
         super({
-            id: 'Assassinate',
-            name: "精準刺殺",
-            icon: "skills/active/assassinate.svg",
+            id: 'MistBase',
+            name: "迷霧",
+            icon: "skills/active/mist_base.svg",
             type: 'active',
             rarity: 'rare',
-            maxCd: 3,
             costSp: 20,
-            costAction: 2
+            costAction: 1,
+            maxCd: 4
         });
     }
 
-    getDamage(playerStore: PlayerStoreType): number {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.floor(ad * 2);
+    description(): string {
+        return `讓戰場陷入迷霧：自身獲得「迷霧(玩家)」（提升 40 點閃避，攻擊或受擊後消失，持續 3 回合），且使全體敵方獲得「迷霧(敵方)」（降低 40 點命中，攻擊或受擊後消失，持續 3 回合）。`;
     }
 
-    description(playerStore: PlayerStoreType): string {
-        const {damage} = getSkillFinalDamage({
-            speller: playerStore,
-            baseValue: this.getDamage(playerStore),
-            type: 'ad'
-        })
-        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(damage)} 物理傷害。此技能爆擊傷害提升25%。`;
-    }
+    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !gameStateStore) return false;
 
-    protected execute({playerStore, monster}: SkillParams): boolean {
-        if (!playerStore || !monster) return false;
+        // 1. 玩家獲得迷霧
+        playerStore.addStatus(SkillStatus.PlayerMistStatus);
 
-        const dmg = this.getDamage(playerStore);
-        monster.lastDamageResult = applySkillDamage({
-            speller: playerStore,
-            target: monster,
-            baseValue: dmg,
-            type: 'ad',
-            skillName: this.name,
-            canCrit: true,
-            modifiers: {
-                critIncrease: (playerStore.finalStats?.critIncrease ?? 0) + 25
+        // 2. 所有敵人獲得迷霧
+        const enemies = gameStateStore.currentEnemy || [];
+        enemies.forEach(enemy => {
+            if (enemy.hp > 0) {
+                enemy.addEffect(SkillStatus.EnemyMistStatus);
             }
         });
 
-        useCardImpactEffect(getMonsterElement(monster.id), 'assassinate');
+        useFullScreenEffect({
+            message: this.name,
+            color: '#bdc3c7',
+        });
+
+        return true;
+    }
+}
+
+export class MistPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'MistPro',
+            name: "麻醉迷霧",
+            icon: "skills/active/mist_pro.svg",
+            type: 'active',
+            rarity: 'perfect',
+            costSp: 30,
+            costAction: 1,
+            maxCd: 4
+        });
+    }
+
+    description(): string {
+        return `讓戰場陷入麻醉迷霧：自身獲得「麻醉迷霧(玩家)」（提升 60 點閃避值，持續 3 回合），且使全體敵方獲得「麻醉迷霧(敵方)」（降低 60 點命中值，持續 3 回合）。\n(繼承並強化迷霧)`;
+    }
+
+    protected execute({playerStore, gameStateStore}: SkillParams): boolean {
+        if (!playerStore || !gameStateStore) return false;
+
+        // 1. 玩家獲得麻醉迷霧
+        playerStore.addStatus(SkillStatus.PlayerAnestheticMistStatus);
+
+        // 2. 所有敵人獲得麻醉迷霧
+        const enemies = gameStateStore.currentEnemy || [];
+        enemies.forEach(enemy => {
+            if (enemy.hp > 0) {
+                enemy.addEffect(SkillStatus.EnemyAnestheticMistStatus);
+            }
+        });
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#a569bd',
+        });
+
         return true;
     }
 }
@@ -275,9 +510,25 @@ export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['VerticalSlash'],
         checkEligible: (playerStore) => {
-            const hasKnifePath = playerStore.checkSkillPath('knifeplay');
-            const hasVertical = playerStore.hasSkill('VerticalSlash');
-            return !!hasKnifePath && !!hasVertical;
+            return !!playerStore.checkSkillPath('knifeplay') && !!playerStore.hasSkill('VerticalSlash');
+        }
+    },
+    SpeedStrike: {
+        id: 'SpeedStrike',
+        pathId: 'speed_strike',
+        tier: 3,
+        evolvesFrom: ['VerticalSlash'],
+        checkEligible: (playerStore) => {
+            return !!playerStore.checkSkillPath('knifeplay') && !!playerStore.hasSkill('SwiftStrike');
+        }
+    },
+    Flurry: {
+        id: 'Flurry',
+        pathId: 'flurry',
+        tier: 2,
+        evolvesFrom: ['HorizontalSlash'],
+        checkEligible: (playerStore) => {
+            return !!playerStore.checkSkillPath('knifeplay') && !!playerStore.hasSkill('HorizontalSlash');
         }
     },
     Assassinate: {
@@ -295,36 +546,53 @@ export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'ConcealBreath',
         pathId: 'conceal_breath',
         tier: 2,
-        evolvesFrom: ['AgilityBuff'],
         checkEligible: (playerStore) => {
-            const hasBase = playerStore.hasSkill('AgilityBuff');
-            if (!hasBase) {
-                return false;
-            }
-            const currentDodge = playerStore.finalStats.dodge
-            return currentDodge >= 20;
+            return playerStore.checkSkillPath('knifeplay');
         }
     },
     ConcealBreathInstinct: {
         id: 'ConcealBreathInstinct',
         pathId: 'conceal_breath',
-        tier: 3,
+        tier: 4,
         evolvesFrom: ['ConcealBreath'],
         checkEligible: (playerStore) => {
             return !!playerStore.hasSkill('ConcealBreath');
         }
     },
-    // 狂風刺擊 (融合橫擊與刺擊)
-    Flurry: {
-        id: 'Flurry',
-        pathId: 'flurry',
+    SneakAttack: {
+        id: 'SneakAttack',
+        pathId: 'sneak_attack',
         tier: 2,
-        fusesFrom: ['HorizontalSlash', 'Thrust', 'VerticalSlash'],
+        evolvesFrom: ['VerticalSlash'],
         checkEligible: (playerStore) => {
-            const hasVertical = playerStore.hasSkill('VerticalSlash');
-            const hasHorizontal = playerStore.hasSkill('HorizontalSlash');
-            const hasThrust = playerStore.hasSkill('Thrust');
-            return !!hasVertical && !!hasHorizontal && !!hasThrust;
+            return playerStore.hasSkill('VerticalSlash') && playerStore.checkSkillPath('knifeplay');
         }
     },
+    SurpriseAttack: {
+        id: 'SurpriseAttack',
+        pathId: 'sneak_attack',
+        tier: 3,
+        evolvesFrom: ['SneakAttack'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('SneakAttack') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    MistBase: {
+        id: 'MistBase',
+        pathId: 'mist_cloud',
+        tier: 2,
+        evolvesFrom: ['HorizontalSlash'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('HorizontalSlash') && playerStore.checkSkillPath('knifeplay');
+        }
+    },
+    MistPro: {
+        id: 'MistPro',
+        pathId: 'mist_cloud',
+        tier: 3,
+        evolvesFrom: ['MistBase'],
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('MistBase') && playerStore.checkSkillPath('knifeplay');
+        }
+    }
 }

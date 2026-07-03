@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Void Portal (Circular purple glow) -->
+  <rect x="2" y="4" width="12" height="8" fill="#150020" />
+  <rect x="3" y="3" width="10" height="10" fill="#31004a" opacity="0.8" />
+  <rect x="4" y="2" width="8" height="12" fill="#4d0075" opacity="0.6" />
+  
+  <!-- Surprise slash breaking out (Golden Sword blade slicing through portal) -->
+  <rect x="7" y="1" width="2" height="7" fill="#f1c40f" />
+  <rect x="8" y="0" width="1" height="8" fill="#ffffff" />
+  
+  <!-- Splitting portal sparks -->
+  <rect x="5" y="8" width="1" height="1" fill="#e74c3c" />
+  <rect x="10" y="8" width="1" height="1" fill="#e74c3c" />
+  <rect x="4" y="5" width="2" height="2" fill="#ffffff" />
+  <rect x="10" y="5" width="2" height="2" fill="#ffffff" />
+  
+  <!-- Guard/Hilt of the sword emerging -->
+  <rect x="6" y="9" width="4" height="1" fill="#7f8c8d" />
+  <rect x="8" y="10" width="1" height="3" fill="#3e2723" />
+</svg>

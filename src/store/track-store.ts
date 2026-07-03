@@ -42,14 +42,14 @@ export const useTrackerStore = defineStore('tracker', () => {
         const playerStore = usePlayerStore();
         if (playerStore.info.equips?.weapon) {
             const weaponName = playerStore.info.equips.weapon.name || '';
-            if (isMatchedWeapon('SwordBase', weaponName)) {
-                currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount;
+            if (isMatchedWeapon('Sword', weaponName)) {
+                currentKills.value['Sword'] = (currentKills.value['Sword'] || 0) + amount;
             }
-            if (isMatchedWeapon('KnifeBase', weaponName)) {
-                currentKills.value['USE_KNIFE'] = (currentKills.value['USE_KNIFE'] || 0) + amount;
+            if (isMatchedWeapon('Knife', weaponName)) {
+                currentKills.value['Knife'] = (currentKills.value['Knife'] || 0) + amount;
             }
-            if (isMatchedWeapon('SpellProficiency', weaponName)) {
-                currentKills.value['USE_SPELL'] = (currentKills.value['USE_SPELL'] || 0) + amount;
+            if (isMatchedWeapon('Stick', weaponName)) {
+                currentKills.value['Stick'] = (currentKills.value['Stick'] || 0) + amount;
             }
         }
     }

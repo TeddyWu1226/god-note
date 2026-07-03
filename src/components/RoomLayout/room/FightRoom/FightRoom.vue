@@ -33,7 +33,7 @@ import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperatio
 import {Sleep} from "@/utils/create";
 import {useDebounceFn} from "@vueuse/core";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
-import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {isMatchedWeapon, WeaponCnNameMapping} from "@/constants/default-const";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 
 const gameStateStore = useGameStateStore()
@@ -308,7 +308,7 @@ const onEndTurn = () => {
 }
 
 const checkWeaponProficiency = () => {
-  Object.keys(WeaponSkillMapping).forEach((key) => {
+  Object.keys(WeaponCnNameMapping).forEach((key) => {
     const weaponProficiency = playerStore.info.skills?.find((s: SkillModel) => s.uniqueFields.includes(key));
 
     const weaponName = playerStore.info.equips?.weapon?.name || '';

@@ -27,7 +27,9 @@ import {
     Assassinate,
     ConcealBreath, ConcealBreathInstinct, Flurry, KnifeMaster,
     KnifeBase, KnifePro, KnifeAdv,
-    KnifeSkillTree, SwiftStrike
+    KnifeSkillTree, SwiftStrike, SpeedStrike,
+    SneakAttack, SurpriseAttack,
+    MistBase, MistPro
 } from "./knife_skills";
 import {BlockBase, BlockPro, BlockAdv, ShieldSkillTree} from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
@@ -78,6 +80,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
 
     Flurry: Flurry,
     SwiftStrike: SwiftStrike,
+    SpeedStrike: SpeedStrike,
     Assassinate: Assassinate,
     ConcealBreath: ConcealBreath,
     Breakfall: Breakfall,
@@ -98,6 +101,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
 
     KnifePro: KnifePro,
     KnifeAdv: KnifeAdv,
+    SneakAttack: SneakAttack,
+    MistBase: MistBase,
 
     // Level 3
     ConcealBreathInstinct: ConcealBreathInstinct,
@@ -112,6 +117,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     WhirlwindSlash: WhirlwindSlash,
     AssaultCharge: AssaultCharge,
     SwordDance: SwordDance,
+    SurpriseAttack: SurpriseAttack,
+    MistPro: MistPro,
 
 
     // 副手技能

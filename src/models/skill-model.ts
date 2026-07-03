@@ -3,7 +3,7 @@ import {
     SkillOnPlayerAttackedHitParams,
     SkillOnPlayerAttackHitParams,
     SkillOnStartParams,
-    SkillParams
+    SkillParams, UserType
 } from "@/types";
 
 export type SkillRarity = 'common' | 'rare' | 'perfect' | 'legendary' | 'unique';
@@ -92,7 +92,7 @@ export abstract class SkillModel {
     protected abstract execute(params: SkillParams): Promise<boolean> | boolean;
 
     // 💡 獲取被動加成數據 (預設為空，可由被動技能類別覆寫)
-    getPassiveBonus(player?: any): Record<string, number> {
+    getPassiveBonus(player?: Omit<UserType, 'skills'>): Record<string, number> {
         return {};
     }
 

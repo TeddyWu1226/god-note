@@ -63,15 +63,15 @@ export const EAST_ROOM_WEIGHTS: RoomWeights = {
 };
 
 
-export const WeaponSkillMapping = {
-    'SwordBase': ['劍'],
-    'KnifeBase': ['小刀', '匕首'],
-    'SpellProficiency': ['杖'],
-    'ReadingProficiency': ['書', '捲']
+export const WeaponCnNameMapping = {
+    'Sword': ['劍'],
+    'Knife': ['小刀', '匕首'],
+    'Stick': ['杖'],
+    'Book': ['書', '捲']
 }
-
-export const isMatchedWeapon = (key: string, weaponName: string): boolean => {
-    return WeaponSkillMapping[key]?.some((keyword: string) =>
+export type WeaponMatchType = keyof typeof WeaponCnNameMapping
+export const isMatchedWeapon = (key: WeaponMatchType, weaponName: string): boolean => {
+    return WeaponCnNameMapping[key]?.some((keyword: string) =>
         weaponName.includes(keyword)
     ) || false;
 }

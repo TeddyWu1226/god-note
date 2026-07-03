@@ -2,8 +2,10 @@
  * 匕首熟練度與被動技巧
  */
 import {SkillModel} from "@/models/skill-model";
-import {SkillTreeNode} from "@/types";
-import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {SkillTreeNode, UserType} from "@/types";
+import {WeaponCnNameMapping} from "@/constants/default-const";
+import {isEquip} from "@/constants/skill/utils";
+import {EquipmentPosition} from "@/enums/enums";
 
 export class KnifeBase extends SkillModel {
     constructor() {
@@ -28,7 +30,7 @@ export class KnifeBase extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Knife.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -36,9 +38,8 @@ export class KnifeBase extends SkillModel {
         return true;
     }
 
-    override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeBase', weaponName)) {
+    override getPassiveBonus(player?: UserType): Record<string, number> {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -69,7 +70,7 @@ export class KnifePro extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Knife.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -78,8 +79,7 @@ export class KnifePro extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeBase', weaponName)) {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -110,7 +110,7 @@ export class KnifeAdv extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Knife.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避值。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -119,8 +119,7 @@ export class KnifeAdv extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeBase', weaponName)) {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -149,7 +148,7 @@ export class KnifeMaster extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.KnifeBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`;
+        return `裝備名稱含有「${WeaponCnNameMapping.Knife.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.dodge} 點閃避。`;
     }
 
     protected execute(): boolean {
@@ -157,8 +156,7 @@ export class KnifeMaster extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('KnifeBase', weaponName)) {
+        if (isEquip('Knife', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};

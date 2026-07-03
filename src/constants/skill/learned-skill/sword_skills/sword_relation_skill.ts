@@ -2,7 +2,7 @@
  * 劍術相關
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams, SkillTreeNode} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams, SkillTreeNode, UserType} from "@/types";
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement, Sleep} from "@/utils/create";
@@ -12,6 +12,9 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {ColorText} from "@/utils/color";
 import {SkillStatus} from "@/constants/status/skill-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
+import {EquipmentPosition} from "@/enums/enums";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 export class ContinuousSwordVertical extends SkillModel {
     constructor() {
@@ -39,7 +42,10 @@ export class ContinuousSwordVertical extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        return this.bonus
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+            return this.bonus
+        }
+        return {}
     }
 }
 
@@ -67,6 +73,10 @@ export class ContinuousSwordHorizontal extends SkillModel {
     }
 
     override onPlayerAttackHit({monster, attackOutcome, playerStore, gameStateStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            showEffect()
+            return
+        }
         if (checkProbability((this.happenRate / 100))) {
             const rate = (this.diffusionRate / 100)
             if (attackOutcome.baseDamage * rate > 0) {
@@ -118,6 +128,9 @@ export class ContinuousSwordPoint extends SkillModel {
     }
 
     override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            return
+        }
         if (checkProbability((this.chance / 100))) {
             monster.addEffect(UsualStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
             useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
@@ -150,8 +163,11 @@ export class MasterSwordVertical extends SkillModel {
         return true;
     }
 
-    override getPassiveBonus(player?: any): Record<string, number> {
-        return this.bonus;
+    override getPassiveBonus(player: UserType): Record<string, number> {
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+            return this.bonus
+        }
+        return {}
     }
 }
 
@@ -178,6 +194,9 @@ export class MasterSwordHorizontal extends SkillModel {
     }
 
     override onPlayerAttackHit({monster, attackOutcome, playerStore, gameStateStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            return
+        }
         const rate = (this.diffusionRate / 100);
         if (attackOutcome.baseDamage * rate > 0) {
             const enemies = gameStateStore.currentEnemy || [];
@@ -227,6 +246,9 @@ export class MasterSwordPoint extends SkillModel {
     }
 
     override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            return
+        }
         if (checkProbability((this.chance / 100))) {
             monster.addEffect(UsualStatus.ArmorBreak, {
                 bonus: {
@@ -270,6 +292,10 @@ export class DoubleSlash extends SkillModel {
 
     protected async execute({playerStore, monster}: SkillParams): Promise<boolean> {
         if (!playerStore || !monster) return false;
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
 
         const dmg = this.getSingleDamage(playerStore);
 
@@ -321,7 +347,10 @@ export class TripleSlash extends SkillModel {
 
     protected async execute({playerStore, monster}: SkillParams): Promise<boolean> {
         if (!playerStore || !monster) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const dmg = this.getSingleDamage(playerStore);
 
         for (let i = 0; i < 3; i++) {
@@ -372,7 +401,10 @@ export class HorizontalSweep extends SkillModel {
 
     protected execute({playerStore, gameStateStore}: SkillParams): boolean {
         if (!playerStore || !gameStateStore) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const dmg = this.getDamage(playerStore);
         const enemies = gameStateStore.currentEnemy || [];
 
@@ -424,7 +456,10 @@ export class WhirlwindSlash extends SkillModel {
 
     protected execute({playerStore, gameStateStore}: SkillParams): boolean {
         if (!playerStore || !gameStateStore) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const dmg = this.getDamage(playerStore);
         const enemies = gameStateStore.currentEnemy || [];
 
@@ -476,7 +511,10 @@ export class ThrustCharge extends SkillModel {
 
     protected execute({playerStore, monster}: SkillParams): boolean {
         if (!playerStore || !monster) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const dmg = this.getDamage(playerStore);
         monster.lastDamageResult = applySkillDamage({
             speller: playerStore,
@@ -524,7 +562,10 @@ export class AssaultCharge extends SkillModel {
 
     protected execute({playerStore, monster}: SkillParams): boolean {
         if (!playerStore || !monster) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const dmg = this.getDamage(playerStore);
         monster.lastDamageResult = applySkillDamage({
             speller: playerStore,
@@ -565,7 +606,10 @@ export class SwordPolish extends SkillModel {
 
     protected execute({playerStore}: SkillParams): boolean {
         if (!playerStore) return false;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const adBuff = this.getValue(playerStore);
         playerStore.addStatus(SkillStatus.SwordPolishStatus, {
             bonus: {
@@ -602,7 +646,10 @@ export class SwordDance extends SkillModel {
 
     override onPlayerAttackHit({playerStore}: SkillOnPlayerAttackHitParams) {
         if (!playerStore) return;
-
+        if (!isEquip('Sword', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Sword')
+            return false
+        }
         const existing = playerStore.hasStatus(SkillStatus.SwordDanceStatus.name);
         let stacks = 1;
         if (existing && existing.value !== undefined) {

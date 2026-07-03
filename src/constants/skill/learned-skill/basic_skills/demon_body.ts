@@ -1,6 +1,5 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams, SkillTreeNode} from "@/types";
-import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 export class PhysiqueBoost extends SkillModel {
     constructor() {

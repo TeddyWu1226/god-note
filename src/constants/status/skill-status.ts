@@ -97,5 +97,47 @@ export const SkillStatus = {
         bonus: {
             adIncrease: 10
         }
+    } as StatusEffect,
+    PlayerMistStatus: {
+        name: '迷霧',
+        icon: '🌫️',
+        duration: 3,
+        isBuff: true,
+        untilAttack: true,
+        description: '提升 %dodge% 點閃避，攻擊後消失',
+        bonus: {
+            dodge: 40
+        }
+    } as StatusEffect,
+    EnemyMistStatus: {
+        name: '迷霧',
+        icon: '🌫️',
+        duration: 3,
+        isBuff: false,
+        untilAttacked: true,
+        description: '降低 %hit% 點命中，受擊後消失',
+        bonus: {
+            hit: -40
+        }
+    } as StatusEffect,
+    PlayerAnestheticMistStatus: {
+        name: '麻醉迷霧',
+        icon: '🌁',
+        duration: 3,
+        isBuff: true,
+        description: '提升 %dodge% 點閃避值',
+        bonus: {
+            dodge: 60
+        }
+    } as StatusEffect,
+    EnemyAnestheticMistStatus: {
+        name: '麻醉迷霧',
+        icon: '🌁',
+        duration: 3,
+        isBuff: false,
+        description: '降低 %hit% 點命中值',
+        bonus: {
+            hit: -60
+        }
     } as StatusEffect
 }

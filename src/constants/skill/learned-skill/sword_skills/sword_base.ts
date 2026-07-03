@@ -3,7 +3,9 @@
  */
 import {SkillModel} from "@/models/skill-model";
 import {SkillTreeNode} from "@/types";
-import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
+import {WeaponCnNameMapping} from "@/constants/default-const";
+import {isEquip} from "@/constants/skill/utils";
+import {EquipmentPosition} from "@/enums/enums";
 
 export class SwordBase extends SkillModel {
     constructor() {
@@ -29,7 +31,7 @@ export class SwordBase extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -38,8 +40,7 @@ export class SwordBase extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordBase', weaponName)) {
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -70,7 +71,7 @@ export class SwordPro extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -79,8 +80,7 @@ export class SwordPro extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordBase', weaponName)) {
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -111,7 +111,7 @@ export class SwordAdv extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -120,8 +120,7 @@ export class SwordAdv extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordBase', weaponName)) {
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -151,7 +150,7 @@ export class SwordMaster extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`;
+        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`;
     }
 
     protected execute(): boolean {
@@ -159,8 +158,7 @@ export class SwordMaster extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordBase', weaponName)) {
+        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
@@ -174,7 +172,7 @@ export const SwordBaseSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'swordplay',
         tier: 0,
         checkEligible: (playerStore, trackerStore) => {
-            return trackerStore.getKillCount('USE_SWORD') >= 3;
+            return trackerStore.getKillCount('Sword') >= 3;
         }
     },
     SwordPro: {
