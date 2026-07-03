@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Shield body (Premium Gold and Dark Purple border) -->
+  <rect x="2" y="2" width="6" height="1" fill="#311b92" />
+  <rect x="1" y="3" width="7" height="1" fill="#311b92" />
+  <rect x="1" y="4" width="7" height="1" fill="#311b92" />
+  
+  <!-- Shield main body plate (Gold) -->
+  <rect x="2" y="3" width="5" height="1" fill="#ffd54f" />
+  <rect x="2" y="4" width="6" height="5" fill="#ffd54f" />
+  <rect x="2" y="9" width="5" height="1" fill="#ffb300" />
+  <rect x="3" y="10" width="4" height="1" fill="#ffb300" />
+  <rect x="4" y="11" width="2" height="1" fill="#ff6f00" />
+  
+  <!-- Left purple trim -->
+  <rect x="1" y="4" width="1" height="7" fill="#4a148c" />
+  <rect x="2" y="11" width="2" height="1" fill="#4a148c" />
+  <rect x="3" y="12" width="1" height="1" fill="#4a148c" />
+
+  <!-- Purple/Cyan center energy flash -->
+  <rect x="4" y="5" width="2" height="3" fill="#ea80fc" />
+  <rect x="3" y="6" width="4" height="1" fill="#00e5ff" />
+  <rect x="5" y="6" width="1" height="1" fill="#ffffff" /> <!-- center spark -->
+  
+  <!-- White bouncing arrow (with black/purple outline) -->
+  <!-- Outline -->
+  <rect x="9" y="3" width="2" height="2" fill="#1a237e" />
+  <rect x="8" y="4" width="2" height="2" fill="#1a237e" />
+  <rect x="7" y="5" width="2" height="2" fill="#1a237e" />
+  
+  <!-- Bounce corner outline -->
+  <rect x="6" y="6" width="3" height="3" fill="#1a237e" />
+  
+  <!-- Outgoing path outline -->
+  <rect x="8" y="8" width="2" height="2" fill="#1a237e" />
+  <rect x="9" y="9" width="2" height="2" fill="#1a237e" />
+  
+  <!-- Arrow Head outline -->
+  <rect x="10" y="10" width="4" height="4" fill="#1a237e" />
+
+  <!-- White inner arrow fill -->
+  <rect x="10" y="3" width="1" height="1" fill="#ffffff" />
+  <rect x="9" y="4" width="1" height="1" fill="#ffffff" />
+  <rect x="8" y="5" width="1" height="1" fill="#ffffff" />
+  <rect x="7" y="6" width="2" height="1" fill="#ffffff" />
+  <rect x="7" y="7" width="1" height="1" fill="#ffffff" />
+  
+  <rect x="8" y="8" width="1" height="1" fill="#ffffff" />
+  <rect x="9" y="9" width="1" height="1" fill="#ffffff" />
+  
+  <!-- Arrow Head white fill -->
+  <rect x="11" y="10" width="2" height="2" fill="#ffffff" />
+  <rect x="10" y="11" width="3" height="1" fill="#ffffff" />
+  <rect x="12" y="12" width="1" height="1" fill="#ffffff" />
+
+  <!-- Cyan lightning counter sparks wrapping the arrow -->
+  <rect x="11" y="2" width="1" height="1" fill="#00e5ff" />
+  <rect x="6" y="4" width="1" height="1" fill="#00e5ff" />
+  <rect x="13" y="8" width="1" height="1" fill="#00e5ff" />
+  <rect x="10" y="13" width="1" height="1" fill="#00e5ff" />
+</svg>

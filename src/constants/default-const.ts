@@ -64,10 +64,13 @@ export const EAST_ROOM_WEIGHTS: RoomWeights = {
 
 
 export const WeaponCnNameMapping = {
+    // 武器
     'Sword': ['劍'],
     'Knife': ['小刀', '匕首'],
     'Stick': ['杖'],
-    'Book': ['書', '捲']
+    // 副手
+    'Book': ['書', '捲'],
+    'Shield': ['盾']
 }
 export type WeaponMatchType = keyof typeof WeaponCnNameMapping
 export const isMatchedWeapon = (key: WeaponMatchType, weaponName: string): boolean => {

@@ -32,7 +32,10 @@ import {
     MistBase, MistPro, KnifeWhirlwind,
     Assassination, PoisonApply, PoisonStack
 } from "./knife_skills";
-import {BlockBase, BlockPro, BlockAdv, ShieldSkillTree} from "./shield_skill";
+import {
+    BlockBase, BlockPro, BlockAdv, ShieldSkillTree,
+    ShieldBash, CounterShield, CounterShieldAdv
+} from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
 import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
@@ -77,6 +80,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     RedSkin: RedSkin,
     BlueSkin: BlueSkin,
     BlockBase: BlockBase,
+    ShieldBash: ShieldBash,
     // Level 2
 
     Flurry: Flurry,
@@ -90,6 +94,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     SwordAdv: SwordAdv,
     BlockPro: BlockPro,
     BlockAdv: BlockAdv,
+    CounterShield: CounterShield,
+    CounterShieldAdv: CounterShieldAdv,
     ContinuousSwordVertical: ContinuousSwordVertical,
     ContinuousSwordHorizontal: ContinuousSwordHorizontal,
     ContinuousSwordPoint: ContinuousSwordPoint,

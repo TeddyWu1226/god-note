@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Active Skill Border -->
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+
+  <!-- Shield bashing forward with heavy impact waves -->
+  <rect x="5" y="3" width="6" height="1" fill="#7f8c8d" />
+  <rect x="4" y="4" width="8" height="6" fill="#bdc3c7" />
+  <!-- Steel shield frame -->
+  <rect x="4" y="4" width="1" height="6" fill="#7f8c8d" />
+  <rect x="11" y="4" width="1" height="6" fill="#7f8c8d" />
+  <rect x="5" y="10" width="6" height="1" fill="#7f8c8d" />
+  <rect x="6" y="11" width="4" height="1" fill="#7f8c8d" />
+  <rect x="7" y="12" width="2" height="1" fill="#7f8c8d" />
+
+  <!-- Central gold emblem -->
+  <rect x="7" y="6" width="2" height="2" fill="#d4ac0d" />
+
+  <!-- Heavy impact waves (White/Cyan) -->
+  <rect x="1" y="5" width="2" height="1" fill="#ffffff" />
+  <rect x="2" y="7" width="1" height="2" fill="#ffffff" />
+  <rect x="13" y="5" width="2" height="1" fill="#ffffff" />
+  <rect x="13" y="7" width="1" height="2" fill="#ffffff" />
+  <rect x="14" y="6" width="1" height="1" fill="#5dade2" opacity="0.6" />
+  <rect x="1" y="6" width="1" height="1" fill="#5dade2" opacity="0.6" />
+</svg>
