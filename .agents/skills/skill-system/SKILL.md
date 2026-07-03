@@ -64,3 +64,8 @@ To ensure UI consistency, all SVG skill icons must adhere to:
    <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
    ```
 3. **Passive Skills (`type: 'passive'`)**: Do not include any border; draw the icon graphics directly.
+
+---
+
+## 📦 Code Style & Import Rules
+- **Import Paths**: Always use path alias `@/*` (e.g., `@/models/skill-model`, `@/types`) instead of relative paths or `src/*` prefix. Do NOT use `import ... from "src/..."` when reference importing from the source root.

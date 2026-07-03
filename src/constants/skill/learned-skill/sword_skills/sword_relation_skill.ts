@@ -1,16 +1,16 @@
 /**
  * 劍術相關
  */
-import {SkillModel} from "src/models/skill-model";
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillTreeNode, SkillParams} from "src/types";
-import {applySkillDamage, getSkillFinalDamage} from "src/constants/fight-func";
-import {useCardImpactEffect} from "src/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {getMonsterElement, Sleep} from "src/utils/create";
-import {checkProbability} from "src/utils/math";
-import {MonsterModel} from "src/models/monster-model";
-import {UsualStatus} from "src/constants/status/usual-status";
-import {ColorText} from "src/utils/color";
-import {showEffect} from "src/components/Shared/FloatingEffect/EffectManager";
+import {SkillModel} from "@/models/skill-model";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillTreeNode, SkillParams} from "@/types";
+import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {getMonsterElement, Sleep} from "@/utils/create";
+import {checkProbability} from "@/utils/math";
+import {MonsterModel} from "@/models/monster-model";
+import {UsualStatus} from "@/constants/status/usual-status";
+import {ColorText} from "@/utils/color";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 export class ContinuousSwordVertical extends SkillModel {
     constructor() {

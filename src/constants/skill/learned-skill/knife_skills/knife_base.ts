@@ -1,9 +1,9 @@
 /**
  * 匕首熟練度與被動技巧
  */
-import {SkillModel} from "src/models/skill-model";
-import {SkillTreeNode} from "src/types";
-import {isMatchedWeapon, WeaponSkillMapping} from "src/constants/default-const";
+import {SkillModel} from "@/models/skill-model";
+import {SkillTreeNode} from "@/types";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 export class KnifeBase extends SkillModel {
     constructor() {

@@ -1,7 +1,7 @@
 /**
  * 匕首相關
  */
-import {SkillTreeNode} from "src/types";
+import {SkillTreeNode} from "@/types";
 import {KnifeBaseSkillTree} from "@/constants/skill/learned-skill/knife_skills/knife_base";
 import {KnifeRelationSkillTree} from "@/constants/skill/learned-skill/knife_skills/knife_relation_skill";
 

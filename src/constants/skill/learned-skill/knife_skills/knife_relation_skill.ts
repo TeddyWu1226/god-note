@@ -1,15 +1,15 @@
 /**
  * 匕首相關主動與關聯技能
  */
-import {SkillModel} from "src/models/skill-model";
-import {PlayerStoreType, SkillOnStartParams, SkillParams, SkillTreeNode} from "src/types";
-import {ColorText} from "src/utils/color";
-import {applySkillDamage, getSkillFinalDamage} from "src/constants/fight-func";
-import {useCardImpactEffect} from "src/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {getMonsterElement, Sleep} from "src/utils/create";
-import {SkillStatus} from "src/constants/status/skill-status";
-import {useFullScreenEffect} from "src/components/Shared/FullScreenEffect/useFullScreenEffect";
-import {showEffect} from "src/components/Shared/FloatingEffect/EffectManager";
+import {SkillModel} from "@/models/skill-model";
+import {PlayerStoreType, SkillOnStartParams, SkillParams, SkillTreeNode} from "@/types";
+import {ColorText} from "@/utils/color";
+import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {getMonsterElement, Sleep} from "@/utils/create";
+import {SkillStatus} from "@/constants/status/skill-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 export class Flurry extends SkillModel {
     constructor() {

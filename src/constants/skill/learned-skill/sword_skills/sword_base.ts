@@ -1,9 +1,9 @@
 /**
  * 劍術熟練度
  */
-import {SkillModel} from "src/models/skill-model";
-import {SkillTreeNode} from "src/types";
-import {isMatchedWeapon, WeaponSkillMapping} from "src/constants/default-const";
+import {SkillModel} from "@/models/skill-model";
+import {SkillTreeNode} from "@/types";
+import {isMatchedWeapon, WeaponSkillMapping} from "@/constants/default-const";
 
 export class SwordBase extends SkillModel {
     constructor() {
