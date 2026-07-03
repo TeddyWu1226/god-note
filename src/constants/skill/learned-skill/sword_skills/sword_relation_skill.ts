@@ -8,7 +8,6 @@ import {useCardImpactEffect} from "src/components/Shared/CardImpactEffect/useCar
 import {getMonsterElement, Sleep} from "src/utils/create";
 import {checkProbability} from "src/utils/math";
 import {MonsterModel} from "src/models/monster-model";
-import {useLogStore} from "src/store/log-store";
 import {UsualStatus} from "src/constants/status/usual-status";
 import {ColorText} from "src/utils/color";
 import {showEffect} from "src/components/Shared/FloatingEffect/EffectManager";
@@ -119,9 +118,7 @@ export class ContinuousSwordPoint extends SkillModel {
 
     override onPlayerAttackHit({monster, playerStore}: SkillOnPlayerAttackHitParams) {
         if (checkProbability((this.chance / 100))) {
-            const logStore = useLogStore();
             monster.addEffect(UsualStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
-            logStore.logger.add(` ${monster.name} 陷入破甲狀態！`);
             useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         }
     }
@@ -252,7 +249,7 @@ export class DoubleSlash extends SkillModel {
             rarity: 'rare',
             costSp: 15,
             costAction: 1,
-            maxCd: 2
+            maxCd: 3
         });
     }
 
@@ -281,6 +278,7 @@ export class DoubleSlash extends SkillModel {
                 speller: playerStore,
                 target: monster,
                 baseValue: dmg,
+                canCrit: true,
                 type: 'ad',
                 skillName: `${this.name} (${i + 1}擊)`
             });
@@ -302,7 +300,7 @@ export class TripleSlash extends SkillModel {
             rarity: 'perfect',
             costSp: 25,
             costAction: 1,
-            maxCd: 2
+            maxCd: 3
         });
     }
 
@@ -332,6 +330,7 @@ export class TripleSlash extends SkillModel {
                 target: monster,
                 baseValue: dmg,
                 type: 'ad',
+                canCrit: true,
                 skillName: `${this.name} (${i + 1}擊)`
             });
             useCardImpactEffect(getMonsterElement(monster.id), 'physical');
@@ -383,6 +382,7 @@ export class HorizontalSweep extends SkillModel {
                     target: enemy,
                     baseValue: dmg,
                     type: 'ad',
+                    canCrit: true,
                     skillName: this.name
                 });
                 useCardImpactEffect(getMonsterElement(enemy.id), 'horizontal-slash');
@@ -409,7 +409,7 @@ export class WhirlwindSlash extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 1.0);
+        return Math.round(ad);
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -434,6 +434,7 @@ export class WhirlwindSlash extends SkillModel {
                     target: enemy,
                     baseValue: dmg,
                     type: 'ad',
+                    canCrit: true,
                     skillName: this.name
                 });
                 useCardImpactEffect(getMonsterElement(enemy.id), 'horizontal-slash');
@@ -460,23 +461,16 @@ export class ThrustCharge extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        const hit = playerStore?.finalStats?.hit ?? 0;
-        const extraDamage = Math.min(200, Math.round(hit * 0.2));
-        return Math.round(10 + ad * 1.2 + extraDamage);
+        return Math.round(ad * 1.2);
     }
 
     description(playerStore: PlayerStoreType): string {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        const hit = playerStore?.finalStats?.hit ?? 0;
-        const extraDamage = Math.min(200, Math.round(hit * 0.2));
-        const finalBase = Math.round(10 + ad * 1.2 + extraDamage);
-
         const {damage} = getSkillFinalDamage({
             speller: playerStore,
-            baseValue: finalBase,
+            baseValue: this.getDamage(playerStore),
             type: 'ad'
         });
-        return `向前突進刺擊，造成 ${ColorText.ad(damage)} 物理傷害。\n(基礎 10 + 1.2 AD，並依據命中值 ${hit} 額外增加 ${extraDamage} 點傷害，最高增加 200)`;
+        return `向前突進刺擊，造成 ${ColorText.ad(damage)} (1.2 AD) 物理傷害，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -488,8 +482,11 @@ export class ThrustCharge extends SkillModel {
             target: monster,
             baseValue: dmg,
             type: 'ad',
+            canCrit: true,
             skillName: this.name
         });
+
+        monster.addEffect(UsualStatus.Cripple);
 
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
@@ -512,23 +509,16 @@ export class AssaultCharge extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        const hit = playerStore?.finalStats?.hit ?? 0;
-        const extraDamage = Math.min(400, Math.round(hit * 0.3));
-        return Math.round(20 + ad * 1.4 + extraDamage);
+        return Math.round(ad * 1.4);
     }
 
     description(playerStore: PlayerStoreType): string {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        const hit = playerStore?.finalStats?.hit ?? 0;
-        const extraDamage = Math.min(400, Math.round(hit * 0.3));
-        const finalBase = Math.round(20 + ad * 1.4 + extraDamage);
-
         const {damage} = getSkillFinalDamage({
             speller: playerStore,
-            baseValue: finalBase,
+            baseValue: this.getDamage(playerStore),
             type: 'ad'
         });
-        return `帶起衝鋒裂焰突刺，造成 ${ColorText.ad(damage)} 物理傷害。\n(基礎 20 + 1.4 AD，並依據命中值 ${hit} 額外增加 ${extraDamage} 點傷害，最高增加 400)`;
+        return `帶起衝鋒向前突刺，造成 ${ColorText.ad(damage)} (1.4 AD) 物理傷害，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -540,9 +530,11 @@ export class AssaultCharge extends SkillModel {
             target: monster,
             baseValue: dmg,
             type: 'ad',
+            canCrit: true,
             skillName: this.name
         });
 
+        monster.addEffect(UsualStatus.Cripple);
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
     }

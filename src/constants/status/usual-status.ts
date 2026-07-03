@@ -53,4 +53,13 @@ export const UsualStatus = {
         description: '掘地巨獸鑽入了地洞，使得前 %value% 次受到的傷害歸 0，4回合後若仍有抵抗效果，將會造成超大量傷害！',
         value: 6
     } as StatusEffect,
+    Cripple: {
+        name: '殘廢',
+        icon: '♿',
+        duration: 2,
+        description: '降低 %adIncrease%% 輸出',
+        bonus: {
+            adIncrease: -20
+        }
+    } as StatusEffect,
 }
