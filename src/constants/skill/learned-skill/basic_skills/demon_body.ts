@@ -235,8 +235,8 @@ export class DemonBody extends SkillModel {
  * 魔人強化
  * */
 export const DemonBodySkillTree: Record<string, SkillTreeNode> = {
-    BlueSkin: {id: 'BlueSkin', pathId: 'blue_skin', tier: 1},
-    RedSkin: {id: 'RedSkin', pathId: 'red_skin', tier: 1},
+    BlueSkin: {id: 'BlueSkin', pathId: 'blue_skin', tier: 0},
+    RedSkin: {id: 'RedSkin', pathId: 'red_skin', tier: 0},
     PurpleSkin: {
         id: 'PurpleSkin',
         pathId: 'purple_skin',
@@ -248,8 +248,8 @@ export const DemonBodySkillTree: Record<string, SkillTreeNode> = {
             return !!hasBlue && !!hasRed;
         }
     },
-    PhysiqueBoost: {id: 'PhysiqueBoost', pathId: 'PhysiqueBoost', tier: 1},
-    BrainPowerBoost: {id: 'BrainPowerBoost', pathId: 'BrainPowerBoost', tier: 1},
+    PhysiqueBoost: {id: 'PhysiqueBoost', pathId: 'PhysiqueBoost', tier: 0},
+    BrainPowerBoost: {id: 'BrainPowerBoost', pathId: 'BrainPowerBoost', tier: 0},
     BloodManaLoop: {
         id: 'BloodManaLoop',
         pathId: 'bloodManaLoop',

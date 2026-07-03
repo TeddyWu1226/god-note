@@ -15,17 +15,17 @@ export const SkillStatus = {
     Focus: {
         name: '專注意志',
         icon: '🎯',
-        duration: 5,
+        duration: 3,
         isBuff: true,
         description: `提升自身 %hit% 點命中，持續 %duration% 回合`,
         bonus: {
-            hit: 5
+            hit: 10
         }
     } as StatusEffect,
     Will: {
         name: '堅定意志',
         icon: '🛡️',
-        duration: 5,
+        duration: 3,
         isBuff: true,
         description: `提升自身 %defendIncrease% 點抗性，持續 %duration% 回合`,
         bonus: {
@@ -35,18 +35,18 @@ export const SkillStatus = {
     Fight: {
         name: '戰鬥意志',
         icon: '✊',
-        duration: 5,
+        duration: 3,
         isBuff: true,
         description: `提升自身 %adIncrease%% 總輸出，持續 %duration% 回合`,
         bonus: {
-            adIncrease: 20,
-            apIncrease: 20
+            adIncrease: 10,
+            apIncrease: 10
         }
     } as StatusEffect,
     Agility: {
         name: '敏捷意志',
         icon: '💨',
-        duration: 5,
+        duration: 3,
         isBuff: true,
         description: `提升自身 %dodge% 點閃避，持續 %duration% 回合`,
         bonus: {

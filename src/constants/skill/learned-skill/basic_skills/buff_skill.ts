@@ -25,7 +25,7 @@ export class FocusBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10 點命中，持續 5 回合。`;
+        return `提升自身 10 點命中，持續 3 回合。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -58,7 +58,7 @@ export class WillBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10% 抗性，持續 5 回合。`;
+        return `提升自身 10% 抗性，持續 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
@@ -90,7 +90,7 @@ export class FightBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 20% 增傷，持續 5 回合。`;
+        return `提升自身 10% 增傷，持續 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
@@ -122,7 +122,7 @@ export class AgilityBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10 點閃避，持續 5 回合。`;
+        return `提升自身 10 點閃避，持續 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
@@ -201,16 +201,31 @@ export class Breakfall extends SkillModel {
  * Buff系列
  * */
 export const BuffSkillTree: Record<string, SkillTreeNode> = {
-    CommonHeal: {id: 'CommonHeal', pathId: 'heal', tier: 1},
     WillBuff: {id: 'WillBuff', pathId: 'will', tier: 1},
-    FocusBuff: {id: 'FocusBuff', pathId: 'focus', tier: 1},
+    FocusBuff: {
+        id: 'FocusBuff',
+        pathId: 'focus',
+        tier: 0,
+        checkEligible: (playerStore) => {
+            const currentHit = playerStore.info.hit
+            return currentHit >= 5;
+        }
+    },
     FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 1},
-    AgilityBuff: {id: 'AgilityBuff', pathId: 'agility', tier: 1},
+    AgilityBuff: {
+        id: 'AgilityBuff',
+        pathId: 'agility',
+        tier: 0,
+        checkEligible: (playerStore) => {
+            const currentDodge = playerStore.finalStats.dodge
+            return currentDodge >= 5;
+        }
+    },
     // 受身
     Breakfall: {
         id: 'Breakfall',
         pathId: 'break_fall',
-        tier: 1,
+        tier: 2,
         checkEligible: (playerStore) => {
             const currentDodge = playerStore.finalStats.dodge
             return currentDodge >= 10;
