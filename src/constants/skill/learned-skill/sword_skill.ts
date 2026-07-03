@@ -12,15 +12,15 @@ import {MonsterModel} from "src/models/monster-model";
 import {useLogStore} from "src/store/log-store";
 import {UsualStatus} from "src/constants/status/usual-status";
 
-export class SwordProficiency extends SkillModel {
+export class SwordBase extends SkillModel {
     constructor() {
         super({
-            id: 'SwordProficiency',
-            name: "基礎劍術",
-            icon: "skills/passive/sword_proficiency.svg",
+            id: 'SwordBase',
+            name: "劍術技巧",
+            icon: "skills/passive/sword_base.svg",
             type: 'passive',
             rarity: 'common',
-            uniqueFields: ['SwordProficiency'],
+            uniqueFields: ['SwordBase'],
             maxProficiency: 100,
             proficiencyGain: 1
         });
@@ -36,7 +36,7 @@ export class SwordProficiency extends SkillModel {
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -46,22 +46,22 @@ export class SwordProficiency extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+        if (isMatchedWeapon('SwordBase', weaponName)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-export class SwordExpert extends SkillModel {
+export class SwordPro extends SkillModel {
     constructor() {
         super({
-            id: 'SwordExpert',
-            name: "進階劍術",
-            icon: "skills/passive/sword_expert.svg",
+            id: 'SwordPro',
+            name: "劍術精通",
+            icon: "skills/passive/sword_pro.svg",
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['SwordProficiency'],
+            uniqueFields: ['SwordBase'],
             maxProficiency: 100,
             proficiencyGain: 1
         });
@@ -69,17 +69,16 @@ export class SwordExpert extends SkillModel {
 
     addBonus() {
         return {
-            hit: 25,
-            ad: 1 + (Math.ceil(this.proficiency * 0.04)),
-            adDefend: 5,
+            hit: 15 + (Math.ceil(this.proficiency * 0.05)),
+            adDefend: 4 + (Math.ceil(this.proficiency * 0.04)),
+            ad: 3 + (Math.ceil(this.proficiency * 0.02)),
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
-            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`
-            ;
+        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
     protected execute(): boolean {
@@ -88,7 +87,48 @@ export class SwordExpert extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+        if (isMatchedWeapon('SwordBase', weaponName)) {
+            return this.addBonus();
+        }
+        return {};
+    }
+}
+
+export class SwordAdv extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordAdv',
+            name: "劍術進階精通",
+            icon: "skills/passive/sword_adv.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['SwordBase'],
+            maxProficiency: 100,
+            proficiencyGain: 1
+        });
+    }
+
+    addBonus() {
+        return {
+            hit: 25 + (Math.ceil(this.proficiency * 0.06)),
+            adDefend: 8 + (Math.ceil(this.proficiency * 0.06)),
+            ad: 8 + (Math.ceil(this.proficiency * 0.04)),
+        }
+    }
+
+    description(): string {
+        const bonus = this.addBonus()
+        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+            + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(player?: any): Record<string, number> {
+        const weaponName = player?.equips?.weapon?.name || '';
+        if (isMatchedWeapon('SwordBase', weaponName)) {
             return this.addBonus();
         }
         return {};
@@ -99,11 +139,11 @@ export class SwordMaster extends SkillModel {
     constructor() {
         super({
             id: 'SwordMaster',
-            name: "大師劍術",
+            name: "劍術大師精通",
             icon: "skills/passive/sword_master.svg",
             type: 'passive',
             rarity: 'perfect',
-            uniqueFields: ['SwordProficiency'],
+            uniqueFields: ['SwordBase'],
         });
     }
 
@@ -111,15 +151,14 @@ export class SwordMaster extends SkillModel {
     addBonus() {
         return {
             hit: 50,
-            ad: 20,
-            adDefend: 10,
+            ad: 25,
+            adDefend: 12,
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponSkillMapping.SwordProficiency.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
-            ;
+        return `裝備名稱含有「${WeaponSkillMapping.SwordBase.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`;
     }
 
     protected execute(): boolean {
@@ -128,7 +167,7 @@ export class SwordMaster extends SkillModel {
 
     override getPassiveBonus(player?: any): Record<string, number> {
         const weaponName = player?.equips?.weapon?.name || '';
-        if (isMatchedWeapon('SwordProficiency', weaponName)) {
+        if (isMatchedWeapon('SwordBase', weaponName)) {
             return this.addBonus();
         }
         return {};
@@ -251,21 +290,31 @@ export class ContinuousSwordPoint extends SkillModel {
 
 export const SwordSkillTree: Record<string, SkillTreeNode> = {
     // 1. 劍術精通
-    SwordProficiency: {
-        id: 'SwordProficiency',
+    SwordBase: {
+        id: 'SwordBase',
         pathId: 'swordplay',
-        tier: 1,
+        tier: 0,
         checkEligible: (playerStore, trackerStore) => {
             return trackerStore.getKillCount('USE_SWORD') >= 3;
         }
     },
-    SwordExpert: {
-        id: 'SwordExpert',
+    SwordPro: {
+        id: 'SwordPro',
+        pathId: 'swordplay',
+        tier: 1,
+        evolvesFrom: ['SwordBase'],
+        checkEligible: (playerStore) => {
+            const baseSkill = playerStore.hasSkill('SwordBase');
+            return !!baseSkill?.isProficiencyMax;
+        }
+    },
+    SwordAdv: {
+        id: 'SwordAdv',
         pathId: 'swordplay',
         tier: 2,
-        evolvesFrom: ['SwordProficiency'],
+        evolvesFrom: ['SwordPro'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('SwordProficiency');
+            const baseSkill = playerStore.hasSkill('SwordPro');
             return !!baseSkill?.isProficiencyMax;
         }
     },
@@ -273,9 +322,9 @@ export const SwordSkillTree: Record<string, SkillTreeNode> = {
         id: 'SwordMaster',
         pathId: 'swordplay',
         tier: 3,
-        evolvesFrom: ['SwordExpert'],
+        evolvesFrom: ['SwordAdv'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('SwordExpert');
+            const baseSkill = playerStore.hasSkill('SwordAdv');
             return !!baseSkill?.isProficiencyMax;
         }
     },

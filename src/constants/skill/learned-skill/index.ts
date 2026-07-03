@@ -35,8 +35,8 @@ import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill
 import {
     ContinuousSwordHorizontal, ContinuousSwordPoint,
     ContinuousSwordVertical,
-    SwordExpert, SwordMaster,
-    SwordProficiency,
+    SwordMaster,
+    SwordBase, SwordPro, SwordAdv,
     SwordSkillTree
 } from "./sword_skill";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
@@ -66,7 +66,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
 
     PhysiqueBoost: PhysiqueBoost,
     BrainPowerBoost: BrainPowerBoost,
-    SwordProficiency: SwordProficiency,
+    SwordBase: SwordBase,
     KnifeBase: KnifeBase,
     RedSkin: RedSkin,
     BlueSkin: BlueSkin,
@@ -79,7 +79,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     ConcealBreath: ConcealBreath,
     Breakfall: Breakfall,
 
-    SwordExpert: SwordExpert,
+    SwordPro: SwordPro,
+    SwordAdv: SwordAdv,
     BlockExpert: BlockExpert,
     ContinuousSwordVertical: ContinuousSwordVertical,
     ContinuousSwordHorizontal: ContinuousSwordHorizontal,

@@ -42,7 +42,7 @@ export const useTrackerStore = defineStore('tracker', () => {
         const playerStore = usePlayerStore();
         if (playerStore.info.equips?.weapon) {
             const weaponName = playerStore.info.equips.weapon.name || '';
-            if (isMatchedWeapon('SwordProficiency', weaponName)) {
+            if (isMatchedWeapon('SwordBase', weaponName)) {
                 currentKills.value['USE_SWORD'] = (currentKills.value['USE_SWORD'] || 0) + amount;
             }
             if (isMatchedWeapon('KnifeBase', weaponName)) {
