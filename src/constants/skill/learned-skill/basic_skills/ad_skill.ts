@@ -45,6 +45,7 @@ export class VerticalSlash extends SkillModel {
             speller: playerStore,
             target: monster,
             baseValue: totalDmg,
+            canCrit: true,
             type: 'ad',
             skillName: '豎擊'
         });
@@ -95,6 +96,7 @@ export class HorizontalSlash extends SkillModel {
                 target: enemy,
                 baseValue: dmg,
                 type: 'ad',
+                canCrit: true,
                 skillName: '橫擊'
             });
             const el = getMonsterElement(enemy.id)
@@ -145,6 +147,7 @@ export class Thrust extends SkillModel {
             baseValue: dmg,
             type: 'ad',
             skillName: '刺擊',
+            canCrit: true,
             modifiers: {hit: -20}
         });
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');

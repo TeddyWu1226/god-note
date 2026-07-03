@@ -61,6 +61,7 @@ export class SwiftStrike extends SkillModel {
             speller: playerStore,
             target: monster,
             baseValue: dmg,
+            canCrit: true,
             type: 'ad',
             skillName: this.name
         });
@@ -121,6 +122,7 @@ export class SpeedStrike extends SkillModel {
             target: monster,
             baseValue: dmg,
             type: 'ad',
+            canCrit: true,
             skillName: this.name
         });
         // 匕首專屬機率獲得行動點數
@@ -358,7 +360,6 @@ export class Flurry extends SkillModel {
         const enemies = gameStateStore.currentEnemy || [];
         if (enemies.length === 0) return false;
 
-        // 隨機決定 3 或 4 次連擊
         const hits = this.getMaxHitNum();
         const dmg = this.getSingleDamage(playerStore);
 
@@ -377,6 +378,7 @@ export class Flurry extends SkillModel {
                 speller: playerStore,
                 target: target,
                 baseValue: dmg,
+                canCrit: true,
                 type: 'ad',
                 skillName: `${this.name} (${i + 1}擊)`
             });
@@ -455,6 +457,7 @@ export class KnifeWhirlwind extends SkillModel {
                     target: enemy,
                     baseValue: dmg,
                     type: 'ad',
+                    canCrit: true,
                     skillName: `${this.name} (${i + 1}擊)`
                 });
                 const el = getMonsterElement(enemy.id);

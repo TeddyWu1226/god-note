@@ -28,7 +28,7 @@ export class SandSlime extends MonsterModel {
         });
     }
 
-    count = 4
+    count = 1
 
     override onStartHook() {
         this.addEffect(UsualStatus.Resistance);
@@ -36,8 +36,8 @@ export class SandSlime extends MonsterModel {
 
     override onAttackedHook() {
         if (this.count > 0) {
-            this.adDefend += 5
-            this.ad += 5
+            this.adDefend += 10
+            this.ad += 10
             this.count--
         }
     }

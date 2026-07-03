@@ -60,8 +60,8 @@ const onLeve3Test = () => {
   playerStore.equipItem(Offhand.Shield1)
 }
 const onTest = () => {
-  onLeve2Test()
-  // onLeve3Test()
+  // onLeve2Test()
+  onLeve3Test()
   // playerStore.gainExp({amount: 1000})
 }
 
