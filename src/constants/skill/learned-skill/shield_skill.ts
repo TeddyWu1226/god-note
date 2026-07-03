@@ -7,7 +7,8 @@ import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
 import {EquipmentPosition} from "@/enums/enums";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
-import {getMonsterElement} from "@/utils/create";
+import {getMonsterElement, getPlayerElement} from "@/utils/create";
+import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 
 export class BlockBase extends SkillModel {
     constructor() {
@@ -102,7 +103,7 @@ export class ShieldBash extends SkillModel {
 
     description(): string {
         const hitChance = Math.round(10 + (this.proficiency / 100) * 25);
-        return `用盾牌猛擊敵方，有 ${hitChance}% 機率使目標陷入「暈眩」狀態，無法行動，持續 2 回合。\n(熟練度最高 100%，越熟練命中越高，最高 35%)\n(必需裝備「盾牌」)`;
+        return `用盾牌猛擊敵方，有 ${hitChance}% 機率使目標陷入「暈眩」狀態，無法行動，持續 2 回合。\n(熟練度影響命中率)`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -117,7 +118,16 @@ export class ShieldBash extends SkillModel {
         const hitChance = (10 + (this.proficiency / 100) * 25) / 100;
         if (Math.random() <= hitChance) {
             monster.addEffect(UsualStatus.Stuck);
-            useCardImpactEffect(getMonsterElement(monster.id), 'physical');
+            useCardImpactEffect(getMonsterElement(monster.id), 'stun');
+        } else {
+            useFloatingMessage(
+                'MISS',
+                getMonsterElement(monster.id),
+                {
+                    duration: 800, // 動畫時間保持不變
+                    color: 'white',
+                }
+            );
         }
 
         return true;
@@ -152,7 +162,7 @@ export class CounterShield extends SkillModel {
         if (!isPerfectBlock) {
             if (Math.random() <= 0.10) {
                 monster.addEffect(UsualStatus.Stuck);
-                useCardImpactEffect(getMonsterElement(monster.id), 'physical');
+                useCardImpactEffect(getMonsterElement(monster.id), 'stun');
             }
         }
     }
@@ -186,7 +196,7 @@ export class CounterShieldAdv extends SkillModel {
         if (!isPerfectBlock) {
             if (Math.random() <= 0.25) {
                 monster.addEffect(UsualStatus.Stuck);
-                useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+                useCardImpactEffect(getMonsterElement(monster.id), 'stun');
             }
         }
     }

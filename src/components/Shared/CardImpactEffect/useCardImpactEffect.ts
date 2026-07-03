@@ -10,7 +10,8 @@ export type ImpactType =
     | 'horizontal-slash'
     | 'thrust'
     | 'assassinate'
-    | 'poison';
+    | 'poison'
+    | 'stun';
 
 /**
  * 在目標 DOM 元素正上方播放打擊特效覆蓋層

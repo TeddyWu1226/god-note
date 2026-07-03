@@ -636,17 +636,16 @@ export const usePlayerStore = defineStore('player-info', () => {
         statusEffects.value = remainingEffects;
 
         // 處理自動回復 (被動技能或裝備帶來的生命與法力自動回復)
-        const hpRegenVal = finalStats.value.hpRegen || 0;
-        const spRegenVal = finalStats.value.spRegen || 0;
-
-        if (hpRegenVal > 0 && info.value.hp < finalStats.value.hpLimit) {
-            info.value.hp = Math.min(finalStats.value.hpLimit, info.value.hp + hpRegenVal);
+        if (info.value.hp > 0) {
+            const hpRegenVal = finalStats.value.hpRegen || 0;
+            const spRegenVal = finalStats.value.spRegen || 0;
+            if (hpRegenVal > 0 && info.value.hp < finalStats.value.hpLimit) {
+                info.value.hp = Math.min(finalStats.value.hpLimit, info.value.hp + hpRegenVal);
+            }
+            if (spRegenVal > 0 && info.value.sp < finalStats.value.spLimit) {
+                info.value.sp = Math.min(finalStats.value.spLimit, info.value.sp + spRegenVal);
+            }
         }
-
-        if (spRegenVal > 0 && info.value.sp < finalStats.value.spLimit) {
-            info.value.sp = Math.min(finalStats.value.spLimit, info.value.sp + spRegenVal);
-        }
-
         // 💡 減少技能冷卻 CD
         if (info.value.skills) {
             info.value.skills.forEach(skill => {

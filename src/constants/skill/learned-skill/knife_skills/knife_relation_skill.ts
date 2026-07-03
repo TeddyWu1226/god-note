@@ -38,16 +38,16 @@ export class SwiftStrike extends SkillModel {
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.floor(ad);
+        return Math.floor(ad * 0.6);
     }
 
     description(playerStore: PlayerStoreType): string {
         const {damage} = getSkillFinalDamage({
             speller: playerStore,
             baseValue: this.getDamage(playerStore),
-            type: 'ad'
+            type: 'true'
         })
-        return `快速前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
+        return `快速前刺突襲，造成 ${ColorText.true(damage)}(0.6AD)。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
     }
 
     protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
@@ -61,14 +61,13 @@ export class SwiftStrike extends SkillModel {
             speller: playerStore,
             target: monster,
             baseValue: dmg,
-            canCrit: true,
-            type: 'ad',
+            type: 'true',
             skillName: this.name
         });
-
+        useCardImpactEffect(getMonsterElement(monster.id), 'physical');
         // 匕首專屬機率獲得行動點數
         if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
-            return false
+            return true
         }
         if (Math.random() <= 0.5) {
             gameStateStore.playerActionPoints += 1;
@@ -79,8 +78,6 @@ export class SwiftStrike extends SkillModel {
                 }
             )
         }
-
-        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
     }
 }
@@ -90,27 +87,27 @@ export class SpeedStrike extends SkillModel {
         super({
             id: 'SpeedStrike',
             name: "神速一擊",
-            icon: "skills/active/swift_strike.svg",
+            icon: "skills/active/speed_strike.svg",
             type: 'active',
-            rarity: 'rare',
-            maxCd: 2,
-            costSp: 15,
+            rarity: 'perfect',
+            maxCd: 1,
+            costSp: 5,
             costAction: 1
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.floor(ad * 1.2);
+        return Math.floor(ad);
     }
 
     description(playerStore: PlayerStoreType): string {
         const {damage} = getSkillFinalDamage({
             speller: playerStore,
             baseValue: this.getDamage(playerStore),
-            type: 'ad'
+            type: 'true'
         })
-        return `極快前刺攻擊，造成 ${ColorText.ad(damage)} 物理傷害。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
+        return `極快前刺攻擊，造成 ${ColorText.true(damage)}(1AD)。若裝備「匕首」類武器，有 50% 機率獲得 1 點行動點。`;
     }
 
     protected execute({playerStore, monster, gameStateStore}: SkillParams): boolean {
@@ -121,23 +118,23 @@ export class SpeedStrike extends SkillModel {
             speller: playerStore,
             target: monster,
             baseValue: dmg,
-            type: 'ad',
-            canCrit: true,
+            type: 'true',
             skillName: this.name
         });
+        useCardImpactEffect(getMonsterElement(monster.id), 'physical');
         // 匕首專屬機率獲得行動點數
         if (!isEquip('Knife', EquipmentPosition.WEAPON, playerStore.info)) {
-            return false
+            return true
         }
-        gameStateStore.playerActionPoints += 1;
-        showEffect(
-            {
-                text: "獲得額外行動點數!",
-                type: "buff"
-            }
-        )
-
-        useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
+        if (Math.random() <= 0.5) {
+            gameStateStore.playerActionPoints += 1;
+            showEffect(
+                {
+                    text: "獲得額外行動點數!",
+                    type: "buff"
+                }
+            )
+        }
         return true;
     }
 }
@@ -321,23 +318,22 @@ export class Flurry extends SkillModel {
             icon: "skills/active/flurry.svg",
             type: 'active',
             rarity: 'rare',
-            maxCd: 4,
+            maxCd: 2,
             costSp: 15,
             costAction: 2
         });
+    }
+
+    getMaxHitNum = 4
+
+    randomInt(): number {
+        return Math.floor(Math.random() * (this.getMaxHitNum - 2 + 1)) + 2;
     }
 
     getSingleDamage(playerStore: PlayerStoreType): number {
         return playerStore?.finalStats?.ad ?? 0
     }
 
-    getMaxHitNum() {
-        let extra = 0
-        if (Math.random() <= 0.2) {
-            extra = 1
-        }
-        return 2 + extra
-    }
 
     description(playerStore: PlayerStoreType): string {
         const {damage} = getSkillFinalDamage({
@@ -345,8 +341,9 @@ export class Flurry extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         })
-        return `狂亂地連續刺擊，對隨機敵方目標發起 2~${this.getMaxHitNum()} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
+        return `狂亂地連續刺擊，對隨機敵方目標發起 2~${this.getMaxHitNum} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
     }
+
 
     protected async execute(params: SkillParams): Promise<boolean> {
         const playerStore = params.playerStore;
@@ -360,7 +357,7 @@ export class Flurry extends SkillModel {
         const enemies = gameStateStore.currentEnemy || [];
         if (enemies.length === 0) return false;
 
-        const hits = this.getMaxHitNum();
+        const hits = this.randomInt();
         const dmg = this.getSingleDamage(playerStore);
 
         useFullScreenEffect({
@@ -407,14 +404,20 @@ export class KnifeWhirlwind extends SkillModel {
             rarity: 'perfect',
             costSp: 25,
             costAction: 1,
-            maxCd: 3
+            maxCd: 2
         });
     }
 
-    getSingleDamage(playerStore: PlayerStoreType): number {
-        const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.4);
+    getMaxHitNum = 4
+
+    randomInt(): number {
+        return Math.floor(Math.random() * (this.getMaxHitNum - 2 + 1)) + 2;
     }
+
+    getSingleDamage(playerStore: PlayerStoreType): number {
+        return playerStore?.finalStats?.ad ?? 0
+    }
+
 
     description(playerStore: PlayerStoreType): string {
         const {damage} = getSkillFinalDamage({
@@ -422,7 +425,7 @@ export class KnifeWhirlwind extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         });
-        return `旋風般飛擲出無數匕首，對全體敵方目標發起 2~3 次隨機打擊，每次造成 ${ColorText.ad(damage)} (0.4 AD) 物理傷害。\n(必需裝備「匕首」類武器)`;
+        return `旋風般飛擲出無數匕首，對全體敵方目標發起 2~${this.getMaxHitNum} 次隨機打擊，每次造成 ${ColorText.ad(damage)} (0.4 AD) 物理傷害。\n(必需裝備「匕首」類武器)`;
     }
 
     protected async execute({playerStore, gameStateStore}: SkillParams): Promise<boolean> {
@@ -436,8 +439,7 @@ export class KnifeWhirlwind extends SkillModel {
         const enemies = gameStateStore.currentEnemy || [];
         if (enemies.length === 0) return false;
 
-        // 隨機決定 2 或 3 次連擊
-        const hits = Math.random() < 0.5 ? 2 : 3;
+        const hits = this.randomInt();
         const dmg = this.getSingleDamage(playerStore);
 
         useFullScreenEffect({
@@ -739,7 +741,7 @@ export const KnifeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'SpeedStrike',
         pathId: 'speed_strike',
         tier: 3,
-        evolvesFrom: ['VerticalSlash'],
+        evolvesFrom: ['SwiftStrike'],
         checkEligible: (playerStore) => {
             return !!playerStore.checkSkillPath('knifeplay') && !!playerStore.hasSkill('SwiftStrike');
         }

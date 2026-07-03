@@ -14,7 +14,7 @@ export class SandSlime extends MonsterModel {
             code: 'SandSlime',
             name: '荒漠史萊姆',
             description: '融合了荒野黃沙的史萊姆，自帶抵抗效果，受到攻擊後會提升戰力',
-            ad: 25,
+            ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 15,

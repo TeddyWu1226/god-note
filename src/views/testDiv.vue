@@ -56,7 +56,8 @@ const onLeve3Test = () => {
   // 第一大關破完大概 裝備
   playerStore.equipItem(Head.HpHead1)
   playerStore.equipItem(Armor.DefendArmor1)
-  playerStore.equipItem(Weapon.Sword1)
+  // playerStore.equipItem(Weapon.Sword1)
+  playerStore.equipItem(Weapon.Dagger1)
   playerStore.equipItem(Offhand.Shield1)
 }
 const onTest = () => {
