@@ -2,7 +2,7 @@
  * 劍術相關
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillTreeNode, SkillParams} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackHitParams, SkillParams, SkillTreeNode} from "@/types";
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement, Sleep} from "@/utils/create";
@@ -10,7 +10,8 @@ import {checkProbability} from "@/utils/math";
 import {MonsterModel} from "@/models/monster-model";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {ColorText} from "@/utils/color";
-import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {SkillStatus} from "@/constants/status/skill-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 export class ContinuousSwordVertical extends SkillModel {
     constructor() {
@@ -540,6 +541,86 @@ export class AssaultCharge extends SkillModel {
     }
 }
 
+export class SwordPolish extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordPolish',
+            name: "打磨",
+            icon: "skills/active/sword_polish.svg",
+            type: 'active',
+            rarity: 'rare',
+            costSp: 15,
+            costAction: 1,
+            maxCd: 4
+        });
+    }
+
+    getValue(playerStore: PlayerStoreType): number {
+        return Math.floor(playerStore.info.level / 2);
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `在 3 回合內，使自身物理攻擊力 (AD) 提升 ${this.getValue(playerStore)} 點。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+
+        const adBuff = this.getValue(playerStore);
+        playerStore.addStatus(SkillStatus.SwordPolishStatus, {
+            bonus: {
+                ad: adBuff
+            }
+        });
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#f1c40f',
+        });
+        return true;
+    }
+}
+
+export class SwordDance extends SkillModel {
+    constructor() {
+        super({
+            id: 'SwordDance',
+            name: "劍舞",
+            icon: "skills/passive/sword_dance.svg",
+            type: 'passive',
+            rarity: 'perfect',
+        });
+    }
+
+    description(): string {
+        return `攻擊時獲得 2 回合「劍舞」效果：提升 5% 物理傷害增幅 (adIncrease)，最多可疊加 3 層 (最高 +15%)。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override onPlayerAttackHit({playerStore}: SkillOnPlayerAttackHitParams) {
+        if (!playerStore) return;
+
+        const existing = playerStore.hasStatus(SkillStatus.SwordDanceStatus.name);
+        let stacks = 1;
+        if (existing && existing.value !== undefined) {
+            stacks = Math.min(3, existing.value + 1);
+        }
+
+        const adIncreaseVal = stacks * 10;
+        playerStore.addStatus(SkillStatus.SwordDanceStatus, {
+            value: stacks,
+            duration: 2,
+            bonus: {
+                adIncrease: adIncreaseVal
+            }
+        });
+
+    }
+}
+
 export const SwordRelationSkillTree: Record<string, SkillTreeNode> = {
     ContinuousSwordVertical: {
         id: 'ContinuousSwordVertical',
@@ -653,6 +734,22 @@ export const SwordRelationSkillTree: Record<string, SkillTreeNode> = {
         evolvesFrom: ['ThrustCharge'],
         checkEligible: (playerStore) => {
             return playerStore.hasSkill('ThrustCharge') && playerStore.checkSkillPath('swordplay');
+        }
+    },
+    SwordPolish: {
+        id: 'SwordPolish',
+        pathId: 'sword_polish',
+        tier: 2,
+        checkEligible: (playerStore) => {
+            return playerStore.checkSkillPath('swordplay');
+        }
+    },
+    SwordDance: {
+        id: 'SwordDance',
+        pathId: 'sword_dance',
+        tier: 4,
+        checkEligible: (playerStore) => {
+            return playerStore.hasSkill('SwordPolish') && playerStore.checkSkillPath('swordplay');
         }
     }
 }

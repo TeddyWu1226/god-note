@@ -76,5 +76,26 @@ export const SkillStatus = {
             dodge: 0,
             adDefend: 0,
         }
+    } as StatusEffect,
+    SwordPolishStatus: {
+        name: '打磨',
+        icon: '✨',
+        duration: 3,
+        isBuff: true,
+        description: '提升 %ad% 點物理攻擊力',
+        bonus: {
+            ad: 0
+        }
+    } as StatusEffect,
+    SwordDanceStatus: {
+        name: '劍舞',
+        icon: '%value%💃',
+        duration: 2,
+        isBuff: true,
+        description: '提升 %adIncrease%% 輸出',
+        value: 1,
+        bonus: {
+            adIncrease: 10
+        }
     } as StatusEffect
 }
