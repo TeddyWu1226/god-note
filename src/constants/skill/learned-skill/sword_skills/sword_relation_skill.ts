@@ -278,7 +278,7 @@ export class DoubleSlash extends SkillModel {
 
     getSingleDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.7);
+        return Math.round(15 + ad * 0.7);
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -333,7 +333,7 @@ export class TripleSlash extends SkillModel {
 
     getSingleDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore?.finalStats?.ad ?? 0;
-        return Math.round(ad * 0.8);
+        return Math.round(25 + ad * 0.8);
     }
 
     description(playerStore: PlayerStoreType): string {

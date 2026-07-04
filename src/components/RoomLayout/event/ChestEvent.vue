@@ -41,9 +41,9 @@ const openChest = () => {
     const rnd = Math.random() * 100;
     const stage = gameStateStore.currentStage;
 
-    // 金幣計算公式：基礎 30 + (層數*25)，範圍 80%~120%
-    const baseGold = 30 + (stage * 25);
-    const goldFound = Math.floor(baseGold * (Math.random() * (1.2 - 0.8) + 0.8));
+    // 金幣計算公式：範圍 80%~120%
+    const baseGold = stage * 50;
+    const goldFound = Math.floor(baseGold * (Math.random() * 0.4 + 0.8));
 
     if (rnd < 40) {
       // 40% 機率：獲得裝備 (Equip)
@@ -62,7 +62,7 @@ const openChest = () => {
     } else if (rnd < 60) {
       // 20% 機率：陷阱 (Trap)
       resultType.value = 'trap';
-      const dmg = (stage * 10);
+      const dmg = (stage * 15);
       playerStore.takeDamage(dmg);
       resultMsg.value = `咔噠！觸發了陷阱！受到 <span style="color: #f56c6c; font-weight: bold;">${dmg}</span> 點傷害`;
     } else {

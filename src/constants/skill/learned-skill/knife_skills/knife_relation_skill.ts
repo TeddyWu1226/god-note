@@ -161,7 +161,8 @@ export class SneakAttack extends SkillModel {
                 }
             });
         }
-        return Math.floor((baseDodge + equipDodge) / 4);
+        const ad = Math.floor((baseDodge + equipDodge) / 4)
+        return ad > 0 ? ad : 0;
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -331,7 +332,7 @@ export class Flurry extends SkillModel {
     }
 
     getSingleDamage(playerStore: PlayerStoreType): number {
-        return playerStore?.finalStats?.ad ?? 0
+        return 10 + (playerStore?.finalStats?.ad ?? 0)
     }
 
 
@@ -415,7 +416,7 @@ export class KnifeWhirlwind extends SkillModel {
     }
 
     getSingleDamage(playerStore: PlayerStoreType): number {
-        return playerStore?.finalStats?.ad ?? 0
+        return 10 + (playerStore?.finalStats?.ad ?? 0)
     }
 
 

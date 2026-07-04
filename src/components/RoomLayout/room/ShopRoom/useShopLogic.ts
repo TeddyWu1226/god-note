@@ -30,30 +30,30 @@ export function useShopLogic(currentStage: number, days: number) {
         const roll = Math.random() * 100;
 
         if (currentStage === 1) {
-            if (roll < 5) return QualityEnum.Common.value;    // 5% 普通
+            if (roll <= 3) return QualityEnum.Common.value;    // 5% 普通
             return QualityEnum.Tattered.value;                 // 95% 破爛
         }
 
         if (currentStage === 2) {
-            if (roll < 5) return QualityEnum.Fine.value;    // 5% 精良
+            if (roll <= 3) return QualityEnum.Fine.value;    // 5% 精良
             if (roll < 15) return QualityEnum.Tattered.value;  // 10% 破爛
             return QualityEnum.Common.value;               // 85% 普通
         }
 
         if (currentStage === 3) {
-            if (roll < 5) return QualityEnum.Rare.value;    // 5% 精良
+            if (roll <= 3) return QualityEnum.Rare.value;    // 5% 精良
             if (roll < 15) return QualityEnum.Common.value;  // 10% 普通
             return QualityEnum.Fine.value;               // 85% 精良
         }
 
         if (currentStage === 4) {
-            if (roll < 5) return QualityEnum.Perfect.value;    // 5% 完美
+            if (roll <= 3) return QualityEnum.Perfect.value;    // 5% 完美
             if (roll < 15) return QualityEnum.Fine.value;  // 10% 普通
             return QualityEnum.Rare.value;               // 85% 精良
         }
 
         if (currentStage === 5) {
-            if (roll < 5) return QualityEnum.Unique.value;    // 5% 獨特
+            if (roll <= 3) return QualityEnum.Unique.value;    // 5% 獨特
             if (roll < 15) return QualityEnum.Rare.value;  // 10% 稀有
             return QualityEnum.Perfect.value;               // 85% 完美
         }
