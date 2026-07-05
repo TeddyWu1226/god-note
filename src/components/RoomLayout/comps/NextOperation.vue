@@ -186,6 +186,10 @@ const updateEnvironmentStatus = () => {
   }
 
 };
+
+defineExpose({
+  createNextRooms
+})
 </script>
 
 <template>

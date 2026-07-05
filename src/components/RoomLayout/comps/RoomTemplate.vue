@@ -3,7 +3,7 @@ import '../room.css'
 import {GameState} from "@/enums/enums";
 import NextOperation from "@/components/RoomLayout/comps/NextOperation.vue";
 import {useGameStateStore} from "@/store/game-state-store";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 
 const props = defineProps({
   title: {type: String, required: false},
@@ -18,6 +18,15 @@ const environmentClass = computed(() => {
   }
   return '';
 });
+
+const NextOperationRef = ref()
+const createNextRooms = () => {
+  NextOperationRef.value?.createNextRooms()
+}
+
+defineExpose({
+  createNextRooms
+})
 </script>
 
 <template>
@@ -34,7 +43,7 @@ const environmentClass = computed(() => {
 
   </el-card>
   <div class="operation-layout">
-    <NextOperation v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
+    <NextOperation ref="NextOperationRef" v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
     <slot v-else-if="$slots.button" name="button"></slot>
   </div>
 
@@ -58,15 +67,15 @@ const environmentClass = computed(() => {
 }
 
 .env-day {
-  box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.35), 
-              inset 0 0 80px rgba(255, 215, 0, 0.15) !important;
+  box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.35),
+  inset 0 0 80px rgba(255, 215, 0, 0.15) !important;
   border-color: rgba(255, 215, 0, 0.3) !important;
   transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
 }
 
 .env-night {
-  box-shadow: inset 0 0 40px rgba(138, 43, 226, 0.3), 
-              inset 0 0 80px rgba(138, 43, 226, 0.12) !important;
+  box-shadow: inset 0 0 40px rgba(138, 43, 226, 0.3),
+  inset 0 0 80px rgba(138, 43, 226, 0.12) !important;
   border-color: rgba(138, 43, 226, 0.25) !important;
   transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
 }

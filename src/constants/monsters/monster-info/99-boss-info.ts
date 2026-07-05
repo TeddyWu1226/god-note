@@ -414,6 +414,14 @@ export class BurrowingBehemoth extends MonsterModel {
         }
 
         if (this.inHole && !this.hasStatus(UsualStatus.DigHoleResistance.name)) {
+            useFloatingMessage(
+                '重新現身...',
+                getMonsterElement(this.id),
+                {
+                    duration: 2000,
+                    color: 'red'
+                }
+            );
             this.emerge();
         }
 

@@ -19,7 +19,11 @@ const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
 const saveStore = useSaveStore()
 const isClose = ref(true);
-
+// 天數
+const selectDay = ref(1);
+const onSelectDay = () => {
+  gameStateStore.stageDays = Number(selectDay.value);
+};
 // 跳關
 const selectStage = (stageVal: number) => {
   playerStore.healFull()
@@ -98,13 +102,24 @@ const onSave = () => {
   <el-card class="test">
     <el-button @click="isClose = !isClose" style="width: 100% ">縮放</el-button>
     <div style="padding-top: 5px" v-if="!isClose">
-      <el-button @click="giveMoney">給錢</el-button>
-      <el-button @click="give">給道具</el-button>
-      <el-button @click="heal">回血</el-button>
-      <el-button @click="setRoom">房間</el-button>
-      <el-button @click="onTest">作弊</el-button>
-      <el-button @click="onLevelUp">升等</el-button>
-      <el-button @click="onSave">存檔</el-button>
+      <div>
+        <el-button @click="giveMoney">給錢</el-button>
+        <el-button @click="give">給道具</el-button>
+        <el-button @click="heal">回血</el-button>
+        <el-button @click="setRoom">房間</el-button>
+        <el-button @click="onTest">作弊</el-button>
+        <el-button @click="onLevelUp">升等</el-button>
+        <el-button @click="onSave">存檔</el-button>
+      </div>
+      <div style="width: 200px">
+        <el-input v-model="selectDay">
+          <template #append>
+            <el-button @click="onSelectDay">
+              跳天
+            </el-button>
+          </template>
+        </el-input>
+      </div>
       <el-collapse>
         <el-collapse-item title="回合環境參數">
           <el-scrollbar max-height="200px">
