@@ -18,13 +18,13 @@ export class CommonHeal extends SkillModel {
             maxCd: 2,
             costSp: 25,
             costMaxAction: true,
-            maxProficiency: 50,
-            proficiencyGain: 2
+            maxProficiency: 25,
+            proficiencyGain: 1
         });
     }
 
     get healVal(): number {
-        return Math.round(30 + this.level * 15 + this.proficiency * 0.7);
+        return Math.round(20 + this.proficiency);
     }
 
     description(playerStore: PlayerStoreType): string {

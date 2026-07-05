@@ -89,6 +89,5 @@ const EvnStatus = {
         duration: -1,
         description: '開局自帶黑夜守護。受到「妄想」狀態下的敵人攻擊時，降低 50% 傷害；攻擊「亢奮」狀態下的敵人時，增加 50% 傷害。'
     } as StatusEffect,
-
 }
 export default EvnStatus
