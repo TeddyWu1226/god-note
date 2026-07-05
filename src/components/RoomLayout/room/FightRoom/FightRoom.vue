@@ -81,7 +81,10 @@ const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
-  const strengthening = Math.ceil(Math.max(0, gameStateStore.stageDays - 50) / 25)
+  let strengthening = 0
+  if(gameStateStore.isInClearedStage){
+    strengthening = Math.ceil(Math.max(0, gameStateStore.days / 50))
+  }
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);

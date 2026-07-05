@@ -159,6 +159,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
         return currentRoomValue.value === roomValue;
     });
+    /** 是否在已通關關卡 **/
+    const isInClearedStage = computed(() => currentStage.value < maxClearedStage.value)
 
     // --- Actions ---
     function init(stageNum = 1, restart = false): void {
@@ -353,7 +355,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     // --- 記得導出所有要在組件中使用的東西 ---
     return {
         currentRoomValue, difficulty, isDead,
-        days, stageDays, maxClearedStage, isVictory, nextRooms,
+        days, stageDays, maxClearedStage, isVictory, nextRooms, isInClearedStage,
         currentStage,
         currentState,
         isBattleWon,

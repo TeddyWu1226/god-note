@@ -23,10 +23,6 @@ const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
 const relicStore = useRelicStore();
 
-const isClearedStage = computed(() => {
-  return gameStateStore.currentStage < gameStateStore.maxClearedStage
-})
-
 const createNextRooms = () => {
   gameStateStore.nextRooms = []
 
@@ -47,7 +43,7 @@ const createNextRooms = () => {
   }
 
   // 當前是已通關過的大關時，套用特判邏輯
-  if (isClearedStage.value) {
+  if (gameStateStore.isInClearedStage) {
     // 第 50 天 (stageDays === 49) 與第 100 天 (stageDays === 99) 強制進入驛站
     if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
       gameStateStore.nextRooms = [RoomEnum.Station.value]
