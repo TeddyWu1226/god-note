@@ -56,7 +56,12 @@ Defined in `src/constants/skill/learned-skill/skill-tree/` (e.g. `index.ts`, `sw
 
 ---
 
-## 🎨 Skill SVG Icon Styling Standards
+## 🎨 Skill SVG Icon Styling Standards & Directories
+All SVG skill icons must be stored in the correct subfolders under `public/skills/` based on their mechanism/attribute category:
+- **Magic/Spell Skills**: Place icons in `public/skills/magic/` (e.g. `magic_ball_icon.svg`, `shockwave.svg`, `heal_icon.svg`).
+- **Physical/Weapon Skills**: Place icons in `public/skills/physical/` (e.g. `vertical_slash_icon.svg`, `knife_base.svg`, `will_buff.svg`).
+- **Deprecated Directories**: Do NOT place icons in `public/skills/active/` or `public/skills/passive/` (these directories have been removed).
+
 To ensure UI consistency, all SVG skill icons must adhere to:
 1. **Transparent Background**: Keep background transparent. Do not use solid background rectangles (e.g. remove `fill="#1b1c20"` or `fill="#121216"`).
 2. **Active Skills (`type: 'active'`)**: Must include a 1px border colored `#3d3d4e` defined exactly as:
