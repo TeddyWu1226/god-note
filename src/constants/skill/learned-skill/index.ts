@@ -37,7 +37,13 @@ import {
     ShieldBash, CounterShield, CounterShieldAdv
 } from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
-import {ApSkillTree} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
+import {
+    ApSkillTree,
+    MagicBall,
+    Shockwave,
+    ManaWeapon,
+    ManaAdaptability
+} from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
     ContinuousSwordHorizontal, ContinuousSwordPoint,
     ContinuousSwordVertical,
@@ -67,6 +73,11 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     VerticalSlash: VerticalSlash,
     HorizontalSlash: HorizontalSlash,
     Thrust: Thrust,
+
+    MagicBall: MagicBall,
+    Shockwave: Shockwave,
+    ManaWeapon: ManaWeapon,
+    ManaAdaptability: ManaAdaptability,
 
     WillBuff: WillBuff,
     FocusBuff: FocusBuff,

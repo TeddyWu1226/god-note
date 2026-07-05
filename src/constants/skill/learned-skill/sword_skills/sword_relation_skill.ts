@@ -287,7 +287,7 @@ export class DoubleSlash extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         });
-        return `連續劈砍目標兩次，每次造成 ${ColorText.ad(damage)} (0.7 AD) 物理傷害。`;
+        return `連續劈砍目標兩次，每次造成 ${ColorText.ad(damage)} (0.7 AD)。`;
     }
 
     protected async execute({playerStore, monster}: SkillParams): Promise<boolean> {
@@ -342,7 +342,7 @@ export class TripleSlash extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         });
-        return `連續揮斬目標三次，每次造成 ${ColorText.ad(damage)} (0.8 AD) 物理傷害。`;
+        return `連續揮斬目標三次，每次造成 ${ColorText.ad(damage)} (0.8 AD)。`;
     }
 
     protected async execute({playerStore, monster}: SkillParams): Promise<boolean> {
@@ -506,7 +506,7 @@ export class ThrustCharge extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         });
-        return `向前突進刺擊，造成 ${ColorText.ad(damage)} (1.2 AD) 物理傷害，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
+        return `向前突進刺擊，造成 ${ColorText.ad(damage)} (1.2 AD)，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -557,7 +557,7 @@ export class AssaultCharge extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         });
-        return `帶起衝鋒向前突刺，造成 ${ColorText.ad(damage)} (1.4 AD) 物理傷害，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
+        return `帶起衝鋒向前突刺，造成 ${ColorText.ad(damage)} (1.4 AD)，並使目標陷入「殘廢」狀態（降低 20% 輸出，持續 2 回合）。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -637,7 +637,7 @@ export class SwordDance extends SkillModel {
     }
 
     description(): string {
-        return `攻擊時獲得 2 回合「劍舞」效果：提升 5% 物理傷害增幅 (adIncrease)，最多可疊加 3 層 (最高 +15%)。`;
+        return `攻擊時獲得 2 回合「劍舞」效果：提升 5% 物理傷害增幅，最多可疊加 3 層 (最高 +15%)。`;
     }
 
     protected execute(): boolean {

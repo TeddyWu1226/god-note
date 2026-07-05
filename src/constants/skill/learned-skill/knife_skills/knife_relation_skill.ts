@@ -342,7 +342,7 @@ export class Flurry extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         })
-        return `狂亂地連續刺擊，對隨機敵方目標發起 2~${this.getMaxHitNum} 次攻擊，每次造成 ${ColorText.ad(damage)} 物理傷害。`;
+        return `狂亂地連續刺擊，對隨機敵方目標發起 2~${this.getMaxHitNum} 次攻擊，每次造成 ${ColorText.ad(damage)}。`;
     }
 
 
@@ -426,7 +426,7 @@ export class KnifeWhirlwind extends SkillModel {
             baseValue: this.getSingleDamage(playerStore),
             type: 'ad'
         });
-        return `旋風般飛擲出無數匕首，對全體敵方目標發起 2~${this.getMaxHitNum} 次隨機打擊，每次造成 ${ColorText.ad(damage)} (0.4 AD) 物理傷害。\n(必需裝備「匕首」類武器)`;
+        return `旋風般飛擲出無數匕首，對全體敵方目標發起 2~${this.getMaxHitNum} 次隨機打擊，每次造成 ${ColorText.ad(damage)} (0.4 AD)。\n(必需裝備「匕首」類武器)`;
     }
 
     protected async execute({playerStore, gameStateStore}: SkillParams): Promise<boolean> {
@@ -503,7 +503,7 @@ export class Assassinate extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         })
-        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(damage)} 物理傷害。此技能爆擊傷害提升25%。`;
+        return `對目標要害進行致命刺殺，造成 ${ColorText.ad(damage)}。此技能爆擊傷害提升25%。`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -555,7 +555,7 @@ export class Assassination extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ad'
         });
-        return `對目標進行致命暗殺，造成 ${ColorText.ad(damage)} (3.0 AD) 物理傷害。此技能爆擊傷害額外提升 50%。\n(必需裝備「匕首」類武器)`;
+        return `對目標進行致命暗殺，造成 ${ColorText.ad(damage)} (3.0 AD)。此技能爆擊傷害額外提升 50%。\n(必需裝備「匕首」類武器)`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {

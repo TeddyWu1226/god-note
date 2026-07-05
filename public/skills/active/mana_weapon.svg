@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Retro Item Frame (Border Only, Transparent Background) -->
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+
+  <!-- Sword Blade (Diagonal from bottom-left to top-right) -->
+  <rect x="11" y="4" width="1" height="1" fill="#bdc3c7" />
+  <rect x="10" y="5" width="1" height="1" fill="#bdc3c7" />
+  <rect x="9" y="6" width="1" height="1" fill="#bdc3c7" />
+  <rect x="8" y="7" width="1" height="1" fill="#bdc3c7" />
+  <rect x="7" y="8" width="1" height="1" fill="#bdc3c7" />
+  <rect x="6" y="9" width="1" height="1" fill="#7f8c8d" />
+
+  <!-- Sword Guard / Hilt -->
+  <rect x="5" y="10" width="2" height="1" fill="#f1c40f" />
+  <rect x="5" y="9" width="1" height="2" fill="#f1c40f" />
+  <rect x="4" y="11" width="1" height="1" fill="#e67e22" />
+
+  <!-- Magic Enchanment Glow (Blue/Cyan particles around blade) -->
+  <rect x="12" y="3" width="1" height="1" fill="#3498db" />
+  <rect x="10" y="3" width="1" height="1" fill="#5dade2" />
+  <rect x="12" y="5" width="1" height="1" fill="#5dade2" />
+  <rect x="8" y="5" width="1" height="1" fill="#3498db" />
+  <rect x="10" y="7" width="1" height="1" fill="#3498db" />
+  <rect x="7" y="7" width="1" height="1" fill="#5dade2" />
+  <rect x="8" y="9" width="1" height="1" fill="#5dade2" />
+</svg>

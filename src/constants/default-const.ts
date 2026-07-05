@@ -7,7 +7,7 @@ export const DEFAULT_USER_INFO: UserType = {
     name: '玩家',
     icon: '🌟',
     ad: 10,
-    ap: 10,
+    ap: 0,
     adDefend: 0,
     critIncrease: WorldDefault.critIncrease,
     critRate: WorldDefault.critRate,

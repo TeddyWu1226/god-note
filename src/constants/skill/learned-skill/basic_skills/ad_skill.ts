@@ -156,7 +156,28 @@ export class Thrust extends SkillModel {
 }
 
 export const AdBasicSkillTree: Record<string, SkillTreeNode> = {
-    VerticalSlash: {id: 'VerticalSlash', pathId: 'vertical_slash', tier: 0},
-    HorizontalSlash: {id: 'HorizontalSlash', pathId: 'horizontal_slash', tier: 0},
-    Thrust: {id: 'Thrust', pathId: 'thrust', tier: 0},
+    VerticalSlash: {
+        id: 'VerticalSlash',
+        pathId: 'vertical_slash',
+        tier: 0,
+        checkEligible: (playerStore) => {
+            return (playerStore.info?.ad ?? 0) >= 10;
+        }
+    },
+    HorizontalSlash: {
+        id: 'HorizontalSlash',
+        pathId: 'horizontal_slash',
+        tier: 0,
+        checkEligible: (playerStore) => {
+            return (playerStore.info?.ad ?? 0) >= 10;
+        }
+    },
+    Thrust: {
+        id: 'Thrust',
+        pathId: 'thrust',
+        tier: 0,
+        checkEligible: (playerStore) => {
+            return (playerStore.info?.ad ?? 0) >= 10;
+        }
+    },
 }
