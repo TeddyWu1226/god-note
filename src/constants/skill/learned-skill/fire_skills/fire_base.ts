@@ -66,7 +66,7 @@ export class FireAdvancement extends SkillModel {
 
     description(): string {
         return `提升自身法力回復值 ${this.spRegen} 點，提升命中值 ${this.hit} 點。
-        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%。`;
+        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%(減傷效果不低於 5 點)。`;
     }
 
     getPassiveBonus(): Record<string, number> {
@@ -78,7 +78,8 @@ export class FireAdvancement extends SkillModel {
 
     override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (monster.hasStatus(EvnStatus.OnBurn.name)) {
-            attackedOutcome.totalDamage = Math.floor(attackedOutcome.totalDamage * (1 - this.damageReduction));
+            const dmg = Math.floor(attackedOutcome.totalDamage - Math.max(attackedOutcome.totalDamage * this.damageReduction, 5));
+            attackedOutcome.totalDamage = Math.max(dmg, 0)
         }
     }
 
@@ -115,7 +116,7 @@ export class FireMaster extends SkillModel {
 
     description(): string {
         return `提升自身法力回復值 ${this.spRegen} 點，提升命中值 ${this.hit} 點。
-        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%。`;
+        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%(減傷效果不低於 10 點)。`;
     }
 
     getPassiveBonus(): Record<string, number> {
@@ -127,7 +128,8 @@ export class FireMaster extends SkillModel {
 
     override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (monster.hasStatus(EvnStatus.OnBurn.name)) {
-            attackedOutcome.totalDamage = Math.floor(attackedOutcome.totalDamage * (1 - this.damageReduction));
+            const dmg = Math.floor(attackedOutcome.totalDamage - Math.max(attackedOutcome.totalDamage * this.damageReduction, 10));
+            attackedOutcome.totalDamage = Math.max(dmg, 0)
         }
     }
 

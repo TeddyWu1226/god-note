@@ -895,7 +895,6 @@ export const usePlayerStore = defineStore('player-info', () => {
                         return s;
                     });
                 }
-                console.log('觸發了', state.info.skills)
                 // 2. 確保背包中所有載入的裝備都有唯一 ID
                 if (state.info && state.info.equipments) {
                     state.info.equipments.forEach((eq: any) => {

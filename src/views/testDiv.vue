@@ -80,7 +80,7 @@ const give = () => {
   // playerStore.gainItem(Weapon.Sword0)
   playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
-  playerStore.gainItem(Usable.TeleportCrystal, 3)
+  playerStore.gainItem(Usable.BurningPotion, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }

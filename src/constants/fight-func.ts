@@ -12,6 +12,7 @@ import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils"
 import {WorldDefault} from "@/assets/const";
 import EvnStatus from "@/constants/status/evn-status";
 import {useGameStateStore} from "@/store/game-state-store";
+
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
 export function calculateDamage(attacker: UnitType, defender: UnitType): DamageResult {
@@ -153,6 +154,9 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             damageTaken = Math.floor(damageTaken * 1.5);
         }
     }
+
+    // 最終計算輸出
+    outcome.totalDamage = damageTaken;
     // 當玩家受到傷害前最後根據技能檢查
     if (outcome.isHit) {
         if (!(defender instanceof MonsterClass)) {
@@ -170,16 +174,15 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             });
         }
     }
+    console.log('outcome', outcome)
 
     // 更新生命值
-    outcome.totalDamage = damageTaken;
     if (defender instanceof MonsterClass) {
         // 普通怪物的邏輯
         // 因為有生命回復/吸血等情況 所以 要給他負數讓後續好計算
-        defender.hp = defender.hp - damageTaken;
+        defender.hp = defender.hp - outcome.totalDamage;
     } else {
-        defender.takeDamage(damageTaken)
-
+        defender.takeDamage(outcome.totalDamage)
     }
 
     // 生命竊取
@@ -202,7 +205,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     const logMessage = [
         `${attackerFinalStats.name || '攻擊者'} 攻擊 ${defenderFinalStats.name || '防禦者'}，`,
         outcome.isCrit ? `💥 暴擊` : `命中`,
-        `造成 ${damageTaken} 點傷害。`
+        `造成 ${outcome.totalDamage} 點傷害。`
     ].join('');
 
     logStore.logger.add(logMessage);
@@ -360,7 +363,7 @@ export function applySkillDamage({
         }
     }
 
-    // 當玩家受到傷害前最後根據技能檢查
+    // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能 Hook (onPlayerAttacked)
     if (outcome.isHit) {
         if (!(target instanceof MonsterClass)) {
             const gameStateStore = useGameStateStore();
@@ -421,24 +424,9 @@ export function applySkillDamage({
     // 觸發施放者攻擊時消失狀態 (untilAttack)
     speller.handleUntilAttack();
 
-    // 觸發目標受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
+    // 觸發目標受擊時消失狀態 (untilAttacked)
     if (outcome.isHit) {
         target.handleUntilAttacked();
-
-        if (!(target instanceof MonsterClass)) {
-            const gameStateStore = useGameStateStore();
-            target.info.skills.forEach((s: any) => {
-                if (s && typeof s.onPlayerAttacked === 'function') {
-                    s.onPlayerAttacked({
-                        monster: speller,
-                        playerStore: target,
-                        gameStateStore,
-                        logStore,
-                        attackedOutcome: outcome
-                    });
-                }
-            });
-        }
     }
 
     return outcome;
