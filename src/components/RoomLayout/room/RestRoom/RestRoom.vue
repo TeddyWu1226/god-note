@@ -17,6 +17,7 @@ const onRest = () => {
   if (playerStore.statusEffects?.some((eff) => !eff?.isBuff)) {
     // 身上不舒服所以只能回復一半
     playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + Math.round(playerStore.finalStats.hpLimit / 2))
+    playerStore.info.sp = Math.min(playerStore.finalStats.spLimit, playerStore.info.sp + Math.round(playerStore.finalStats.spLimit / 2))
     playerStore.statusEffects = playerStore.statusEffects.filter(effect => effect.isBuff || effect.duration === -1)
     isUnFeelWell.value = true
   } else {
@@ -50,7 +51,7 @@ defineExpose({
           <template v-if="isRested">
             <div class="event-icon">💤</div>
             <div v-if="isUnFeelWell" style="color: var(--el-color-success);text-align: center" class="dialog-box">
-              你輾轉難眠。<br/>雖然身上的不適消除了，但只回復了一半的生命!
+              你輾轉難眠。<br/>雖然身上的不適消除了，但只回復了一半的HP與SP!
             </div>
             <div v-else style="color: var(--el-color-success);text-align: center" class="dialog-box">
               休息了一會。<br/>你的HP跟SP完全恢復!

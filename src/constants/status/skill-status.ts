@@ -139,5 +139,15 @@ export const SkillStatus = {
         bonus: {
             hit: -60
         }
+    } as StatusEffect,
+    ManaWeaponStatus: {
+        name: '魔力武器',
+        icon: '🪄',
+        duration: 3,
+        isBuff: true,
+        description: '武器附魔了魔力，增加了 %ad% 點物理攻擊力。',
+        bonus: {
+            ad: 0
+        }
     } as StatusEffect
 }

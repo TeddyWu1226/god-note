@@ -9,9 +9,10 @@ import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardI
 import {getMonsterElement} from "@/utils/create";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 /**
- * 魔法彈 (原法力彈)
+ * 魔法彈
  */
 export class MagicBall extends SkillModel {
     constructor() {
@@ -22,7 +23,7 @@ export class MagicBall extends SkillModel {
             type: 'active',
             rarity: 'common',
             maxCd: 0,
-            costSp: 5,
+            costSp: 15,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -30,10 +31,7 @@ export class MagicBall extends SkillModel {
     }
 
     getDamage(playerStore: PlayerStoreType): number {
-        const ap = playerStore?.finalStats?.ap ?? 0;
-        return Math.round(
-            (ap + 5 + this.proficiency * 0.2)
-        );
+        return 5 + (playerStore?.finalStats?.ap ?? 0);
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -42,14 +40,16 @@ export class MagicBall extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ap'
         })
-        return `對目標丟出一法力凝聚的光彈,造成 ${ColorText.ap(damage)}。`;
+        return `對目標丟出一法力凝聚的光彈,造成 ${ColorText.ap(damage)}。\n(熟練度影響消耗SP)`;
     }
 
     protected execute(params: SkillParams): boolean {
         const playerStore = params.playerStore;
         const monster = params.monster;
         if (!playerStore || !monster) return false;
-
+        if (playerStore.skillProficiency) {
+            this.costSp = 10 - Math.floor((playerStore.getSkillProficiency(this.id)) * 0.1)
+        }
         const dmg = this.getDamage(playerStore);
         monster.lastDamageResult = applySkillDamage({
             speller: playerStore,
@@ -73,7 +73,7 @@ export class Shockwave extends SkillModel {
             name: "震盪波",
             icon: "skills/magic/shockwave.svg",
             type: 'active',
-            rarity: 'rare',
+            rarity: 'common',
             maxCd: 3,
             costSp: 15,
             costMaxAction: true,
@@ -133,19 +133,6 @@ export class Shockwave extends SkillModel {
     }
 }
 
-/**
- * 魔力武器狀態模板
- */
-const ManaWeaponStatus: StatusEffect = {
-    name: '魔力武器',
-    icon: '🪄',
-    duration: 3,
-    isBuff: true,
-    description: '武器附魔了魔力，增加了 %ad% 點物理攻擊力。',
-    bonus: {
-        ad: 0
-    }
-};
 
 /**
  * 魔力武器
@@ -157,12 +144,12 @@ export class ManaWeapon extends SkillModel {
             name: "魔力武器",
             icon: "skills/magic/mana_weapon.svg",
             type: 'active',
-            rarity: 'rare',
+            rarity: 'common',
             maxCd: 3,
-            costSp: 10,
+            costSp: 15,
             costAction: 1,
             maxProficiency: 50,
-            proficiencyGain: 2
+            proficiencyGain: 5
         });
     }
 
@@ -179,7 +166,7 @@ export class ManaWeapon extends SkillModel {
     protected execute({playerStore}: SkillParams): boolean {
         if (!playerStore) return false;
 
-        playerStore.addStatus(ManaWeaponStatus, {
+        playerStore.addStatus(SkillStatus.ManaWeaponStatus, {
             bonus: {
                 ad: this.addAdValue(playerStore)
             },
