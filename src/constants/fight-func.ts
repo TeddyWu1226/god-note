@@ -4,7 +4,7 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {useLogStore} from "@/store/log-store";
 import {getRandomItemByWeight, notHitPlayer} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
-import {MonsterModel as MonsterClass} from "@/models/monster-model";
+import {type MonsterModel, MonsterModel as MonsterClass} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -12,7 +12,6 @@ import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils"
 import {WorldDefault} from "@/assets/const";
 import EvnStatus from "@/constants/status/evn-status";
 import {useGameStateStore} from "@/store/game-state-store";
-
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
 export function calculateDamage(attacker: UnitType, defender: UnitType): DamageResult {
@@ -140,7 +139,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         damageTaken = 0;
         outcome.totalDamage = 0;
     }
-
+    // todo: 待移除
     if (defender instanceof MonsterClass) {
         if (attacker.hasStatus(EvnStatus.HighSanity.name) && defender.hasStatus(EvnStatus.DaytimeEffect.name)) {
             damageTaken = Math.floor(damageTaken * 0.5);
@@ -152,6 +151,23 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             damageTaken = Math.floor(damageTaken * 1.5);
         } else if (defender.hasStatus(EvnStatus.LowSanity.name) && attacker.hasStatus(EvnStatus.DaytimeEffect.name)) {
             damageTaken = Math.floor(damageTaken * 1.5);
+        }
+    }
+    // 當玩家受到傷害前最後根據技能檢查
+    if (outcome.isHit) {
+        if (!(defender instanceof MonsterClass)) {
+            const gameStateStore = useGameStateStore();
+            defender.info.skills.forEach((s: any) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        playerStore: defender,
+                        gameStateStore,
+                        logStore,
+                        monster: attacker as MonsterModel,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
         }
     }
 
@@ -194,21 +210,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     // 觸發受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
     if (outcome.isHit) {
         defender.handleUntilAttacked();
-
-        if (!(defender instanceof MonsterClass)) {
-            const gameStateStore = useGameStateStore();
-            defender.info.skills.forEach((s: any) => {
-                if (s && typeof s.onPlayerAttacked === 'function') {
-                    s.onPlayerAttacked({
-                        playerStore: defender,
-                        gameStateStore,
-                        logStore,
-                        monster: attacker as any,
-                        attackedOutcome: outcome
-                    });
-                }
-            });
-        }
     }
 
     return outcome;
@@ -344,7 +345,7 @@ export function applySkillDamage({
     if (checkAndApplyResistance(target)) {
         outcome.totalDamage = 0;
     }
-
+    // todo: 待移除
     if (target instanceof MonsterClass) {
         if (speller.hasStatus(EvnStatus.HighSanity.name) && target.hasStatus(EvnStatus.DaytimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
@@ -356,6 +357,24 @@ export function applySkillDamage({
             outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
         } else if (target.hasStatus(EvnStatus.LowSanity.name) && speller.hasStatus(EvnStatus.DaytimeEffect.name)) {
             outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
+        }
+    }
+
+    // 當玩家受到傷害前最後根據技能檢查
+    if (outcome.isHit) {
+        if (!(target instanceof MonsterClass)) {
+            const gameStateStore = useGameStateStore();
+            target.info.skills.forEach((s: any) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        monster: speller,
+                        playerStore: target,
+                        gameStateStore,
+                        logStore,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
         }
     }
 

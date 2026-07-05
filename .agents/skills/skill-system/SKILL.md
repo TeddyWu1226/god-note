@@ -72,5 +72,39 @@ To ensure UI consistency, all SVG skill icons must adhere to:
 
 ---
 
+## 💎 Global Skill Design Standards (Applies to ALL Skills)
+
+To ensure consistency, readability, and ease of maintenance across all active and passive skills, follow these rules:
+
+1. **Plain Text Tooltip Descriptions**:
+   - The `description()` method of all skills **must return a clean, plain text string without HTML `<span>` or other tags**.
+   - Raw HTML tags clutter the tooltips and break UI rendering. Keep them clean and plain text.
+
+2. **Decoupled Local Methods Pattern (Critical)**:
+   - **Do NOT** use global shared configuration variables, constants, or objects to store skill properties or attributes.
+   - **Do** define all skill properties, stats, and scale rates (e.g. SP regen, hit rating, damage reduction percentages) inside **self-contained custom class methods** directly on the skill class (e.g. `getSpRegen()`, `getHit()`, `getDamageReduction()`).
+   - Retrieve these values inside `description()`, `getPassiveBonus()`, and the battle formulas in [fight-func.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/constants/fight-func.ts) by invoking these methods on the skill instance (utilizing `this` context or casting in the helper).
+
+---
+
 ## 📦 Code Style & Import Rules
 - **Import Paths**: Always use path alias `@/*` (e.g., `@/models/skill-model`, `@/types`) instead of relative paths or `src/*` prefix. Do NOT use `import ... from "src/..."` when reference importing from the source root.
+
+---
+
+## 📝 Recent Skill Implementations & Design Patterns
+
+### 1. Magic Skill: Mana Armor (魔力裝甲)
+- **Classification**: Active Magic Skill (Tier 0). Requires `AP >= 10`.
+- **Icon**: [mana_armor.svg](file:///c:/Users/Ted/WebstormProjects/tower/public/skills/magic/mana_armor.svg) (placed in `skills/magic/` with standard active skill border).
+- **Effect**: Grants defense increase based on player Magic Attack (`AP * 0.2`).
+
+### 2. Fire Passive Skills: Fire Adaptability/Advancement/Master (元素適性/進階/大師: 火)
+- **Classification**: Passive Magic Skills (Tier 1-3).
+- **Code Location**: Defined inside [fire_skills/fire_base.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/constants/skill/learned-skill/fire_skills/fire_base.ts).
+- **Icons**:
+  - `fire_adaptability.svg` (small delicate fire spark / seed).
+  - `fire_master.svg` (multi-layered flame with bright white and orange **cross-shaped sparkles** representing mastery).
+- **Design Pattern Applied**: Follows the **Global Skill Design Standards** by utilizing clean plain-text descriptions and implementing the **Decoupled Local Methods Pattern** to declare SP regeneration, hit, and damage reduction values as local methods in each class.
+
+

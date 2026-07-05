@@ -237,7 +237,7 @@ export const ApSkillTree: Record<string, SkillTreeNode> = {
     ManaArmor: {
         id: 'ManaArmor',
         pathId: 'mana_armor',
-        tier: 0,
+        tier: 1,
         checkEligible: (playerStore) => {
             return (playerStore.info?.ap ?? 0) >= 10;
         }

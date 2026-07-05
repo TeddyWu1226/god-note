@@ -106,7 +106,7 @@ export abstract class SkillModel {
         // 預設無效果
     }
 
-    // 💡 玩家受到攻擊命中時觸發的 Hook
+    // 💡 玩家受到攻擊命中時,且受到傷害前觸發的 Hook
     onPlayerAttacked(params: SkillOnPlayerAttackedHitParams): void {
         // 預設無效果
     }

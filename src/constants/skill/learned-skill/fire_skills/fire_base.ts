@@ -2,7 +2,8 @@
  * 法術輸出與輔助相關技能
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillParams, SkillTreeNode} from "@/types";
+import {PlayerStoreType, SkillOnPlayerAttackedHitParams, SkillParams, SkillTreeNode} from "@/types";
+import EvnStatus from "@/constants/status/evn-status";
 
 /**
  * 元素適性: 火
@@ -18,17 +19,17 @@ export class FireAdaptability extends SkillModel {
         });
     }
 
-    getSpRegen(): number {
-        return 2;
+    get spRegen(): number {
+        return 3;
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `提升自身法力回復（回魔）值 ${this.getSpRegen()} 點，並可以開始學習火魔法。`;
+        return `提升自身法力回復值 ${this.spRegen} 點，並可以開始學習火魔法。`;
     }
 
     getPassiveBonus(): Record<string, number> {
         return {
-            spRegen: this.getSpRegen()
+            spRegen: this.spRegen
         };
     }
 
@@ -51,27 +52,34 @@ export class FireAdvancement extends SkillModel {
         });
     }
 
-    getSpRegen(): number {
+    get spRegen(): number {
         return 3;
     }
 
-    getHit(): number {
-        return 10;
+    get hit(): number {
+        return 25;
     }
 
-    getDamageReduction(): number {
+    get damageReduction(): number {
         return 0.10;
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return `提升自身法力回復（回魔）值 ${this.getSpRegen()} 點，提升命中值 ${this.getHit()} 點。此外，當身上帶有「燃燒」效果的敵方目標攻擊自身時，受到的傷害降低 ${this.getDamageReduction() * 100}%。`;
+    description(): string {
+        return `提升自身法力回復值 ${this.spRegen} 點，提升命中值 ${this.hit} 點。
+        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%。`;
     }
 
     getPassiveBonus(): Record<string, number> {
         return {
-            spRegen: this.getSpRegen(),
-            hit: this.getHit()
+            spRegen: this.spRegen,
+            hit: this.hit
         };
+    }
+
+    override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (monster.hasStatus(EvnStatus.OnBurn.name)) {
+            attackedOutcome.totalDamage = Math.floor(attackedOutcome.totalDamage * (1 - this.damageReduction));
+        }
     }
 
     protected execute(params: SkillParams): boolean {
@@ -93,27 +101,34 @@ export class FireMaster extends SkillModel {
         });
     }
 
-    getSpRegen(): number {
+    get spRegen(): number {
         return 5;
     }
 
-    getHit(): number {
-        return 20;
+    get hit(): number {
+        return 40;
     }
 
-    getDamageReduction(): number {
+    get damageReduction(): number {
         return 0.25;
     }
 
-    description(playerStore: PlayerStoreType): string {
-        return `提升自身法力回復（回魔）值 ${this.getSpRegen()} 點，提升命中值 ${this.getHit()} 點。此外，當身上帶有「燃燒」效果的敵方目標攻擊自身時，受到的傷害降低 ${this.getDamageReduction() * 100}%。`;
+    description(): string {
+        return `提升自身法力回復值 ${this.spRegen} 點，提升命中值 ${this.hit} 點。
+        \n當身上帶有「燃燒」效果的敵方攻擊自身時，受到的傷害降低 ${this.damageReduction * 100}%。`;
     }
 
     getPassiveBonus(): Record<string, number> {
         return {
-            spRegen: this.getSpRegen(),
-            hit: this.getHit()
+            spRegen: this.spRegen,
+            hit: this.hit
         };
+    }
+
+    override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (monster.hasStatus(EvnStatus.OnBurn.name)) {
+            attackedOutcome.totalDamage = Math.floor(attackedOutcome.totalDamage * (1 - this.damageReduction));
+        }
     }
 
     protected execute(params: SkillParams): boolean {
@@ -127,7 +142,7 @@ export class FireMaster extends SkillModel {
 export const FireSkillTree: Record<string, SkillTreeNode> = {
     FireAdaptability: {
         id: 'FireAdaptability',
-        pathId: 'fire_element',
+        pathId: 'mana_adaptability',
         tier: 1,
         evolvesFrom: ['ManaAdaptability'],
         checkEligible: (playerStore) => {
@@ -136,7 +151,7 @@ export const FireSkillTree: Record<string, SkillTreeNode> = {
     },
     FireAdvancement: {
         id: 'FireAdvancement',
-        pathId: 'fire_element',
+        pathId: 'mana_adaptability',
         tier: 2,
         evolvesFrom: ['FireAdaptability'],
         checkEligible: (playerStore) => {
@@ -145,7 +160,7 @@ export const FireSkillTree: Record<string, SkillTreeNode> = {
     },
     FireMaster: {
         id: 'FireMaster',
-        pathId: 'fire_element',
+        pathId: 'mana_adaptability',
         tier: 3,
         evolvesFrom: ['FireAdvancement'],
         checkEligible: (playerStore) => {

@@ -55,7 +55,12 @@ import {
     SwordPolish, SwordDance
 } from "./sword_skills";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
-import {FireAdaptability, FireAdvancement, FireMaster} from "@/constants/skill/learned-skill/fire_skills/fire_base";
+import {
+    FireAdaptability,
+    FireAdvancement,
+    FireMaster,
+    FireSkillTree
+} from "@/constants/skill/learned-skill/fire_skills/fire_base";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -66,6 +71,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...ShieldSkillTree,
     ...StickSkillTree,
     ...SwordSkillTree,
+    ...FireSkillTree,
 };
 // 💡 技能 ID 與 Subclass 類別對照表
 const SKILL_CLASS_MAP: Record<string, any> = {

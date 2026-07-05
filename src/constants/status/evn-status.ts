@@ -89,5 +89,13 @@ const EvnStatus = {
         duration: -1,
         description: '開局自帶黑夜守護。受到「妄想」狀態下的敵人攻擊時，降低 50% 傷害；攻擊「亢奮」狀態下的敵人時，增加 50% 傷害。'
     } as StatusEffect,
+    OnBurn: {
+        name: '燃燒',
+        icon: '🔥',
+        duration: 3,
+        description: '這個單位正在燃燒, 每回合失去 %value% 點生命值',
+        type: 'damage',
+        value: 5
+    } as StatusEffect,
 }
 export default EvnStatus
