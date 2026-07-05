@@ -12,7 +12,6 @@ import BlessRoom from "@/components/RoomLayout/room/BlessRoom/BlessRoom.vue";
 import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {GodThings, Usable} from "@/constants/items/usalbe-item/usable-info";
-import FusionRoom from "@/components/RoomLayout/room/FusionRoom/FusionRoom.vue";
 import StationRoom from "@/components/RoomLayout/room/StationRoom/StationRoom.vue";
 
 const emit = defineEmits(['runFailed'])
@@ -94,11 +93,6 @@ watch(() => gameStateStore.roomId,
   />
   <ShopRoom
       v-else-if="currentRoomValue === RoomEnum.Shop.value"
-      :key="gameStateStore.roomId"
-      @cancel="onCancel"
-  />
-  <FusionRoom
-      v-else-if="currentRoomValue === RoomEnum.Fusion.value"
       :key="gameStateStore.roomId"
       @cancel="onCancel"
   />

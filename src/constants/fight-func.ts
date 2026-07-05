@@ -632,7 +632,6 @@ export const getLootFromTable = (dropTable: { item: any, chance: number }[]): an
         // 如果隨機數小於等於機率，代表獲得該道具
         if (roll <= entry.chance) {
             // 使用深拷貝 (Deep Copy) 確保獲得的是獨立的實例
-            // 避免修改到原始的靜態資料 (如 MATERIAL 內的定義)
             const newItem = JSON.parse(JSON.stringify(entry.item));
             loot.push(newItem);
         }

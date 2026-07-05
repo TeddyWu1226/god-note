@@ -44,8 +44,6 @@ export enum SpecialEventEnum {
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘
 
-    // 額外功能事件
-    Fusion = 'Fusion', // 合成功能
 }
 
 /**

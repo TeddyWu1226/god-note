@@ -41,12 +41,6 @@ export const RoomEnum = {
 		icon: '⛲',
 		color: '#dda900',
 	},
-	Fusion: {
-		value: 8,
-		label: '合成',
-		icon: '🛠️',
-		color: '#177edf',
-	},
 	Station: {
 		value: 9,
 		label: '驛站',
