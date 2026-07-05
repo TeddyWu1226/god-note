@@ -2,7 +2,6 @@ import {FusionListType} from "@/types";
 import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {Material} from "@/constants/items/material/material-info";
 import {Usable} from "@/constants/items/usalbe-item/usable-info";
-import {SpecialItem} from "@/constants/items/special-item-info";
 
 
 export const FusionUsableList = [
@@ -25,13 +24,3 @@ export const FusionUsableList = [
         ]
     } as FusionListType,
 ]
-
-export const ExtraFusionUsableItem = {
-    DuneBeastBomb:
-        {
-            target: Usable.CamouflageGrass,
-            requirements: [
-                {item: SpecialItem.DuneBeastBombCenter, count: 1},
-            ]
-        } as FusionListType,
-}

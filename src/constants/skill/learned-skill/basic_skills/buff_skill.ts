@@ -150,7 +150,7 @@ export class Breakfall extends SkillModel {
             proficiencyGain: 1,
             costMaxAction: true,
             costSp: 20,
-            maxCd: 6
+            maxCd: 5
         });
     }
 

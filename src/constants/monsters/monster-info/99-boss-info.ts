@@ -321,7 +321,7 @@ export class BurrowingBehemoth extends MonsterModel {
             code: 'BurrowingBehemoth',
             icon: '/monsters/burrowing_behemoth.png',
             name: '掘地巨獸',
-            description: '第三階段中間BOSS，是一隻兇猛的土色巨獸，擁有巨大的雙手與巨嘴，擅長鑽地伏擊。',
+            description: '是一隻兇猛的土色巨獸，擁有巨大的雙手與巨嘴，擅長鑽地伏擊。',
             class: 'boss giant icon-brown',
             ad: 50,
             critIncrease: 200,
@@ -335,6 +335,18 @@ export class BurrowingBehemoth extends MonsterModel {
             dropGold: 600
         });
     }
+    override onStartHook({gameStateStore, logStore}: MonsterActionParams) {
+        useFloatingMessage(
+            '咕吼!!',
+            getMonsterElement(this.id),
+            {
+                duration: 2000,
+                color: 'red'
+            }
+        );
+        this.triggerBurrow(gameStateStore);
+    }
+
 
     override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
         // 鑽地期間不進行普通攻擊
@@ -391,14 +403,14 @@ export class BurrowingBehemoth extends MonsterModel {
         const hpRatio = this.hp / this.hpLimit;
 
         if (hpRatio <= 0.75 && !this.triggered75) {
-            this.triggerBurrow();
+            this.triggerBurrow(gameStateStore);
         } else if (hpRatio <= 0.5 && !this.triggered50) {
             this.triggered75 = true;
-            this.triggerBurrow();
+            this.triggerBurrow(gameStateStore);
         } else if (hpRatio <= 0.25 && !this.triggered25) {
             this.triggered75 = true;
             this.triggered50 = true;
-            this.triggerBurrow();
+            this.triggerBurrow(gameStateStore);
         }
 
         if (this.inHole && !this.hasStatus(UsualStatus.DigHoleResistance.name)) {
@@ -410,7 +422,7 @@ export class BurrowingBehemoth extends MonsterModel {
         }
     }
 
-    private triggerBurrow() {
+    private triggerBurrow(gameStateStore) {
         const hpRatio = this.hp / this.hpLimit;
         if (hpRatio <= 0.25) {
             this.triggered25 = true;
@@ -422,7 +434,7 @@ export class BurrowingBehemoth extends MonsterModel {
         } else if (hpRatio <= 0.75) {
             this.triggered75 = true;
         }
-
+        gameStateStore.triggerScreenShake(2000);
         this.icon = '🕳️';
         this.addEffect(UsualStatus.DigHoleResistance);
         useFloatingMessage(
