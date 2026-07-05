@@ -21,7 +21,7 @@ export class ContinuousSwordVertical extends SkillModel {
         super({
             id: 'ContinuousSwordVertical',
             name: '進階劍技-豎之型',
-            icon: 'skills/passive/continuous_vertical.svg',
+            icon: 'skills/physical/continuous_vertical.svg',
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['進階劍技']
@@ -54,7 +54,7 @@ export class ContinuousSwordHorizontal extends SkillModel {
         super({
             id: 'ContinuousSwordHorizontal',
             name: '進階劍技-橫之型',
-            icon: 'skills/passive/continuous_horizontal.svg',
+            icon: 'skills/physical/continuous_horizontal.svg',
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['進階劍技']
@@ -106,7 +106,7 @@ export class ContinuousSwordPoint extends SkillModel {
         super({
             id: 'ContinuousSwordPoint',
             name: '進階劍技-點之型',
-            icon: 'skills/passive/continuous_point.svg',
+            icon: 'skills/physical/continuous_point.svg',
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['進階劍技']
@@ -143,7 +143,7 @@ export class MasterSwordVertical extends SkillModel {
         super({
             id: 'MasterSwordVertical',
             name: '大師劍技-劈山',
-            icon: 'skills/passive/master_vertical.svg',
+            icon: 'skills/physical/master_vertical.svg',
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['進階劍技']
@@ -176,7 +176,7 @@ export class MasterSwordHorizontal extends SkillModel {
         super({
             id: 'MasterSwordHorizontal',
             name: '大師劍技-砍海',
-            icon: 'skills/passive/master_horizontal.svg',
+            icon: 'skills/physical/master_horizontal.svg',
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['進階劍技']
@@ -224,7 +224,7 @@ export class MasterSwordPoint extends SkillModel {
         super({
             id: 'MasterSwordPoint',
             name: '大師劍技-點墨',
-            icon: 'skills/passive/master_point.svg',
+            icon: 'skills/physical/master_point.svg',
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['進階劍技']
@@ -267,7 +267,7 @@ export class DoubleSlash extends SkillModel {
         super({
             id: 'DoubleSlash',
             name: "二連斬",
-            icon: "skills/active/double_slash.svg",
+            icon: "skills/physical/double_slash.svg",
             type: 'active',
             rarity: 'rare',
             costSp: 15,
@@ -322,7 +322,7 @@ export class TripleSlash extends SkillModel {
         super({
             id: 'TripleSlash',
             name: "三連斬",
-            icon: "skills/active/triple_slash.svg",
+            icon: "skills/physical/triple_slash.svg",
             type: 'active',
             rarity: 'perfect',
             costSp: 25,
@@ -376,7 +376,7 @@ export class HorizontalSweep extends SkillModel {
         super({
             id: 'HorizontalSweep',
             name: "水平斬",
-            icon: "skills/active/horizontal_sweep.svg",
+            icon: "skills/physical/horizontal_sweep.svg",
             type: 'active',
             rarity: 'rare',
             costSp: 20,
@@ -431,7 +431,7 @@ export class WhirlwindSlash extends SkillModel {
         super({
             id: 'WhirlwindSlash',
             name: "旋風斬",
-            icon: "skills/active/whirlwind_slash.svg",
+            icon: "skills/physical/whirlwind_slash.svg",
             type: 'active',
             rarity: 'perfect',
             costSp: 30,
@@ -486,7 +486,7 @@ export class ThrustCharge extends SkillModel {
         super({
             id: 'ThrustCharge',
             name: "突進斬",
-            icon: "skills/active/thrust_charge.svg",
+            icon: "skills/physical/thrust_charge.svg",
             type: 'active',
             rarity: 'rare',
             costSp: 20,
@@ -537,7 +537,7 @@ export class AssaultCharge extends SkillModel {
         super({
             id: 'AssaultCharge',
             name: "衝鋒斬",
-            icon: "skills/active/assault_charge.svg",
+            icon: "skills/physical/assault_charge.svg",
             type: 'active',
             rarity: 'perfect',
             costSp: 30,
@@ -587,7 +587,7 @@ export class SwordPolish extends SkillModel {
         super({
             id: 'SwordPolish',
             name: "打磨",
-            icon: "skills/active/sword_polish.svg",
+            icon: "skills/physical/sword_polish.svg",
             type: 'active',
             rarity: 'rare',
             costSp: 15,
@@ -630,7 +630,7 @@ export class SwordDance extends SkillModel {
         super({
             id: 'SwordDance',
             name: "劍舞",
-            icon: "skills/passive/sword_dance.svg",
+            icon: "skills/physical/sword_dance.svg",
             type: 'passive',
             rarity: 'perfect',
         });

@@ -27,7 +27,7 @@ export class SwiftStrike extends SkillModel {
         super({
             id: 'SwiftStrike',
             name: "迅捷一擊",
-            icon: "skills/active/swift_strike.svg",
+            icon: "skills/physical/swift_strike.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 2,
@@ -87,7 +87,7 @@ export class SpeedStrike extends SkillModel {
         super({
             id: 'SpeedStrike',
             name: "神速一擊",
-            icon: "skills/active/speed_strike.svg",
+            icon: "skills/physical/speed_strike.svg",
             type: 'active',
             rarity: 'perfect',
             maxCd: 1,
@@ -144,7 +144,7 @@ export class SneakAttack extends SkillModel {
         super({
             id: 'SneakAttack',
             name: "偷襲",
-            icon: "skills/passive/sneak_attack.svg",
+            icon: "skills/physical/sneak_attack.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['偷襲系']
@@ -190,7 +190,7 @@ export class SurpriseAttack extends SkillModel {
         super({
             id: 'SurpriseAttack',
             name: "奇襲",
-            icon: "skills/passive/surprise_attack.svg",
+            icon: "skills/physical/surprise_attack.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['偷襲系']
@@ -234,7 +234,7 @@ export class MistBase extends SkillModel {
         super({
             id: 'MistBase',
             name: "迷霧",
-            icon: "skills/active/mist_base.svg",
+            icon: "skills/physical/mist_base.svg",
             type: 'active',
             rarity: 'rare',
             costSp: 20,
@@ -275,7 +275,7 @@ export class MistPro extends SkillModel {
         super({
             id: 'MistPro',
             name: "麻醉迷霧",
-            icon: "skills/active/mist_pro.svg",
+            icon: "skills/physical/mist_pro.svg",
             type: 'active',
             rarity: 'perfect',
             costSp: 30,
@@ -316,7 +316,7 @@ export class Flurry extends SkillModel {
         super({
             id: 'Flurry',
             name: "亂擊",
-            icon: "skills/active/flurry.svg",
+            icon: "skills/physical/flurry.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 2,
@@ -400,7 +400,7 @@ export class KnifeWhirlwind extends SkillModel {
         super({
             id: 'KnifeWhirlwind',
             name: "匕首旋風",
-            icon: "skills/active/knife_whirlwind.svg",
+            icon: "skills/physical/knife_whirlwind.svg",
             type: 'active',
             rarity: 'perfect',
             costSp: 25,
@@ -483,7 +483,7 @@ export class Assassinate extends SkillModel {
         super({
             id: 'Assassinate',
             name: "刺殺",
-            icon: "skills/active/assassinate.svg",
+            icon: "skills/physical/assassinate.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
@@ -535,7 +535,7 @@ export class Assassination extends SkillModel {
         super({
             id: 'Assassination',
             name: "暗殺",
-            icon: "skills/active/assassination.svg",
+            icon: "skills/physical/assassination.svg",
             type: 'active',
             rarity: 'perfect',
             maxCd: 3,
@@ -589,7 +589,7 @@ export class PoisonApply extends SkillModel {
         super({
             id: 'PoisonApply',
             name: "毒藥附加",
-            icon: "skills/passive/poison_apply.svg",
+            icon: "skills/physical/poison_apply.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['毒藥流']
@@ -620,7 +620,7 @@ export class PoisonStack extends SkillModel {
         super({
             id: 'PoisonStack',
             name: "毒藥堆疊附加",
-            icon: "skills/passive/poison_stack.svg",
+            icon: "skills/physical/poison_stack.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['毒藥流']
@@ -660,7 +660,7 @@ export class ConcealBreath extends SkillModel {
         super({
             id: 'ConcealBreath',
             name: "迷蹤",
-            icon: "skills/active/conceal_breath.svg",
+            icon: "skills/physical/conceal_breath.svg",
             type: 'active',
             rarity: 'rare',
             uniqueFields: ['隱蔽氣息'],
@@ -691,7 +691,7 @@ export class ConcealBreathInstinct extends SkillModel {
         super({
             id: 'ConcealBreathInstinct',
             name: "迷蹤本能",
-            icon: "skills/active/conceal_breath.svg",
+            icon: "skills/physical/conceal_breath.svg",
             type: 'active',
             rarity: 'perfect',
             uniqueFields: ['隱蔽氣息'],

@@ -6,7 +6,7 @@ export class PhysiqueBoost extends SkillModel {
         super({
             id: 'PhysiqueBoost',
             name: "血魔轉換",
-            icon: "skills/passive/physique_boost.svg",
+            icon: "skills/physical/physique_boost.svg",
             type: 'passive',
             rarity: 'common',
         });
@@ -37,7 +37,7 @@ export class BrainPowerBoost extends SkillModel {
         super({
             id: 'BrainPowerBoost',
             name: "魔血轉換",
-            icon: "skills/passive/brain_power_boost.svg",
+            icon: "skills/physical/brain_power_boost.svg",
             type: 'passive',
             rarity: 'common',
         });
@@ -68,7 +68,7 @@ export class RedSkin extends SkillModel {
         super({
             id: 'RedSkin',
             name: "紅皮膚",
-            icon: "skills/passive/red_skin.svg",
+            icon: "skills/physical/red_skin.svg",
             type: 'passive',
             rarity: 'common',
             uniqueFields: ['紅皮膚'],
@@ -98,7 +98,7 @@ export class BlueSkin extends SkillModel {
         super({
             id: 'BlueSkin',
             name: "藍皮膚",
-            icon: "skills/passive/blue_skin.svg",
+            icon: "skills/physical/blue_skin.svg",
             type: 'passive',
             rarity: 'common',
             uniqueFields: ['藍皮膚'],
@@ -128,7 +128,7 @@ export class BloodManaLoop extends SkillModel {
         super({
             id: 'BloodManaLoop',
             name: "血魔循環",
-            icon: "skills/passive/blood_mana_loop.svg",
+            icon: "skills/physical/blood_mana_loop.svg",
             type: 'passive',
             rarity: 'rare',
         });
@@ -162,7 +162,7 @@ export class PurpleSkin extends SkillModel {
         super({
             id: 'PurpleSkin',
             name: "紫皮膚",
-            icon: "skills/passive/purple_skin.svg",
+            icon: "skills/physical/purple_skin.svg",
             type: 'passive',
             rarity: 'rare'
         });
@@ -197,7 +197,7 @@ export class DemonBody extends SkillModel {
         super({
             id: 'DemonBody',
             name: "魔人之體",
-            icon: "skills/passive/demon_body.svg",
+            icon: "skills/physical/demon_body.svg",
             type: 'passive',
             rarity: 'perfect',
         });

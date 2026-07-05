@@ -13,7 +13,7 @@ export class VerticalSlash extends SkillModel {
         super({
             id: 'VerticalSlash',
             name: "豎擊",
-            icon: "skills/active/vertical_slash_icon.svg",
+            icon: "skills/physical/vertical_slash_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 2,
@@ -59,7 +59,7 @@ export class HorizontalSlash extends SkillModel {
         super({
             id: 'HorizontalSlash',
             name: "橫擊",
-            icon: "skills/active/horizontal_slash_icon.svg",
+            icon: "skills/physical/horizontal_slash_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 2,
@@ -113,7 +113,7 @@ export class Thrust extends SkillModel {
         super({
             id: 'Thrust',
             name: "刺擊",
-            icon: "skills/active/thrust_icon.svg",
+            icon: "skills/physical/thrust_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 2,

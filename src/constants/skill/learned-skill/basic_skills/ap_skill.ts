@@ -18,7 +18,7 @@ export class MagicBall extends SkillModel {
         super({
             id: 'MagicBall',
             name: "魔法彈",
-            icon: "skills/active/magic_ball_icon.svg",
+            icon: "skills/magic/magic_ball_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 0,
@@ -71,7 +71,7 @@ export class Shockwave extends SkillModel {
         super({
             id: 'Shockwave',
             name: "震盪波",
-            icon: "skills/active/shockwave.svg",
+            icon: "skills/magic/shockwave.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
@@ -155,7 +155,7 @@ export class ManaWeapon extends SkillModel {
         super({
             id: 'ManaWeapon',
             name: "魔力武器",
-            icon: "skills/active/mana_weapon.svg",
+            icon: "skills/magic/mana_weapon.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
@@ -202,7 +202,7 @@ export class ManaAdaptability extends SkillModel {
         super({
             id: 'ManaAdaptability',
             name: "魔力適性",
-            icon: "skills/passive/mana_adaptability.svg",
+            icon: "skills/magic/mana_adaptability.svg",
             type: 'passive',
             rarity: 'common'
         });

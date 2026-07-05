@@ -10,7 +10,7 @@ export class ShieldBlock extends SkillModel {
         super({
             id: 'ShieldBlock',
             name: "格擋",
-            icon: "skills/active/shield_block.svg",
+            icon: "skills/physical/shield_block.svg",
             type: 'active',
             rarity: 'common',
             costSp: 10,
@@ -68,7 +68,7 @@ export class PowerCharge extends SkillModel {
         super({
             id: 'PowerCharge',
             name: "蓄力",
-            icon: "skills/active/power_charge.svg",
+            icon: "skills/physical/power_charge.svg",
             type: 'active',
             rarity: 'common',
             costSp: 5,

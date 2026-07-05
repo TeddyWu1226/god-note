@@ -12,7 +12,7 @@ export class CommonHeal extends SkillModel {
         super({
             id: 'CommonHeal',
             name: "初級治療",
-            icon: "skills/active/heal_icon.svg",
+            icon: "skills/magic/heal_icon.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 2,

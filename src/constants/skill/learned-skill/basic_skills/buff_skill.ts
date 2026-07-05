@@ -13,7 +13,7 @@ export class FocusBuff extends SkillModel {
         super({
             id: 'FocusBuff',
             name: "專注意志",
-            icon: "skills/active/focus_buff.svg",
+            icon: "skills/physical/focus_buff.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 5,
@@ -46,7 +46,7 @@ export class WillBuff extends SkillModel {
         super({
             id: 'WillBuff',
             name: "堅定意志",
-            icon: "skills/active/will_buff.svg",
+            icon: "skills/physical/will_buff.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 5,
@@ -78,7 +78,7 @@ export class FightBuff extends SkillModel {
         super({
             id: 'FightBuff',
             name: "戰鬥意志",
-            icon: "skills/active/fight_buff.svg",
+            icon: "skills/physical/fight_buff.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 5,
@@ -110,7 +110,7 @@ export class AgilityBuff extends SkillModel {
         super({
             id: 'AgilityBuff',
             name: "敏捷意志",
-            icon: "skills/active/agility_buff.svg",
+            icon: "skills/physical/agility_buff.svg",
             type: 'active',
             rarity: 'common',
             maxCd: 5,
@@ -142,7 +142,7 @@ export class Breakfall extends SkillModel {
         super({
             id: 'Breakfall',
             name: "受身技巧",
-            icon: "skills/active/breakfall.svg",
+            icon: "skills/physical/breakfall.svg",
             type: 'active',
             rarity: 'rare',
             uniqueFields: ['受身'],

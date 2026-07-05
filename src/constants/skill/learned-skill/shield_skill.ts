@@ -15,7 +15,7 @@ export class BlockBase extends SkillModel {
         super({
             id: 'BlockBase',
             name: "格擋技巧",
-            icon: "skills/passive/block_base.svg",
+            icon: "skills/physical/block_base.svg",
             type: 'passive',
             rarity: 'common',
             uniqueFields: ['BlockBase'],
@@ -40,7 +40,7 @@ export class BlockPro extends SkillModel {
         super({
             id: 'BlockPro',
             name: "格擋精通",
-            icon: "skills/passive/block_pro.svg",
+            icon: "skills/physical/block_pro.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['BlockBase'],
@@ -65,7 +65,7 @@ export class BlockAdv extends SkillModel {
         super({
             id: 'BlockAdv',
             name: "格擋進階精通",
-            icon: "skills/passive/block_adv.svg",
+            icon: "skills/physical/block_adv.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['BlockBase'],
@@ -90,7 +90,7 @@ export class ShieldBash extends SkillModel {
         super({
             id: 'ShieldBash',
             name: "盾擊",
-            icon: "skills/active/shield_bash.svg",
+            icon: "skills/physical/shield_bash.svg",
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
@@ -139,7 +139,7 @@ export class CounterShield extends SkillModel {
         super({
             id: 'CounterShield',
             name: "反擊盾",
-            icon: "skills/passive/counter_shield.svg",
+            icon: "skills/physical/counter_shield.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['反擊盾系']
@@ -173,7 +173,7 @@ export class CounterShieldAdv extends SkillModel {
         super({
             id: 'CounterShieldAdv',
             name: "反擊盾進階",
-            icon: "skills/passive/counter_shield_adv.svg",
+            icon: "skills/physical/counter_shield_adv.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['反擊盾系']

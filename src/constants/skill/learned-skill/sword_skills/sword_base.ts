@@ -12,7 +12,7 @@ export class SwordBase extends SkillModel {
         super({
             id: 'SwordBase',
             name: "劍術技巧",
-            icon: "skills/passive/sword_base.svg",
+            icon: "skills/physical/sword_base.svg",
             type: 'passive',
             rarity: 'common',
             uniqueFields: ['SwordBase'],
@@ -52,7 +52,7 @@ export class SwordPro extends SkillModel {
         super({
             id: 'SwordPro',
             name: "劍術精通",
-            icon: "skills/passive/sword_pro.svg",
+            icon: "skills/physical/sword_pro.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['SwordBase'],
@@ -92,7 +92,7 @@ export class SwordAdv extends SkillModel {
         super({
             id: 'SwordAdv',
             name: "劍術進階精通",
-            icon: "skills/passive/sword_adv.svg",
+            icon: "skills/physical/sword_adv.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['SwordBase'],
@@ -132,7 +132,7 @@ export class SwordMaster extends SkillModel {
         super({
             id: 'SwordMaster',
             name: "劍術大師精通",
-            icon: "skills/passive/sword_master.svg",
+            icon: "skills/physical/sword_master.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['SwordBase'],

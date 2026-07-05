@@ -12,7 +12,7 @@ export class KnifeBase extends SkillModel {
         super({
             id: 'KnifeBase',
             name: "匕首技巧",
-            icon: "skills/passive/knife_base.svg",
+            icon: "skills/physical/knife_base.svg",
             type: 'passive',
             rarity: 'common',
             uniqueFields: ['KnifeBase'],
@@ -51,7 +51,7 @@ export class KnifePro extends SkillModel {
         super({
             id: 'KnifePro',
             name: "匕首精通",
-            icon: "skills/passive/knife_pro.svg",
+            icon: "skills/physical/knife_pro.svg",
             type: 'passive',
             rarity: 'rare',
             uniqueFields: ['KnifeBase'],
@@ -91,7 +91,7 @@ export class KnifeAdv extends SkillModel {
         super({
             id: 'KnifeAdv',
             name: "匕首進階精通",
-            icon: "skills/passive/knife_adv.svg",
+            icon: "skills/physical/knife_adv.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['KnifeBase'],
@@ -131,7 +131,7 @@ export class KnifeMaster extends SkillModel {
         super({
             id: 'KnifeMaster',
             name: "匕首大師精通",
-            icon: "skills/passive/knife_master.svg",
+            icon: "skills/physical/knife_master.svg",
             type: 'passive',
             rarity: 'perfect',
             uniqueFields: ['KnifeBase'],
