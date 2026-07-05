@@ -4,6 +4,7 @@ import {RoomEnum} from "@/enums/room-enum";
 import {computed, ref, watch} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import RestRoom from "@/components/RoomLayout/room/RestRoom/RestRoom.vue";
+import MainEventRoom from "@/components/RoomLayout/room/MainEventRoom/MainEventRoom.vue";
 import FightRoom from "@/components/RoomLayout/room/FightRoom/FightRoom.vue";
 import EventRoomCard from "@/components/RoomLayout/comps/EventRoomCard.vue";
 import {useLogStore} from "@/store/log-store";
@@ -91,6 +92,10 @@ watch(() => gameStateStore.roomId,
       v-else-if="currentRoomValue === RoomEnum.Rest.value"
       :key="gameStateStore.roomId"
       @cancel="onCancel"
+  />
+  <MainEventRoom
+      v-else-if="currentRoomValue === RoomEnum.MainEvent.value"
+      :key="gameStateStore.roomId"
   />
   <ShopRoom
       v-else-if="currentRoomValue === RoomEnum.Shop.value"

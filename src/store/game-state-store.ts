@@ -11,7 +11,7 @@ import {useTrackerStore} from "@/store/track-store";
 
 export const useGameStateStore = defineStore('game-state', () => {
     /** 當前所處的房間類型數值 (例如：戰鬥房、休息房、商店房、祝福房等) */
-    const currentRoomValue = ref<number>(RoomEnum.Rest.value);
+    const currentRoomValue = ref<number>(RoomEnum.MainEvent.value);
 
     /** 當前遊戲關卡/層數 (第幾大關) */
     const currentStage = ref(1);
@@ -169,7 +169,7 @@ export const useGameStateStore = defineStore('game-state', () => {
             isDead.value = false;
             isVictory.value = false;
             days.value = 0;
-            currentRoomValue.value = RoomEnum.Rest.value;
+            currentRoomValue.value = RoomEnum.MainEvent.value;
             environmentMode.value = undefined;
         }
         stageDays.value = 0;
@@ -199,7 +199,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         days.value = 1001;
         stageDays.value = 0;
         currentStage.value = 6;
-        currentRoomValue.value = RoomEnum.Rest.value;
+        currentRoomValue.value = RoomEnum.MainEvent.value;
         isBattleWon.value = false;
         currentEnemy.value = [];
         currentEventType.value = null;
@@ -341,7 +341,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         currentStage.value = stageVal;
         stageDays.value = 0;
         isBattleWon.value = false;
-        setRoom(RoomEnum.Rest.value);
+        setRoom(RoomEnum.MainEvent.value);
         nextRooms.value = [];
         showStageSelectDialog.value = false;
     }

@@ -33,7 +33,7 @@ const selectStage = (stageVal: number) => {
   gameStateStore.currentStage = stageVal
   gameStateStore.stageDays = 0
   gameStateStore.isBattleWon = false
-  gameStateStore.setRoom(RoomEnum.Rest.value)
+  gameStateStore.setRoom(RoomEnum.MainEvent.value)
   gameStateStore.nextRooms = []
 }
 const onLevelUp = () => {
