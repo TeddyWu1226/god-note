@@ -12,7 +12,7 @@ This guide helps developers maintain room transitions, navigation, event flows, 
 - **Room Enumerations**: [room-enum.ts](file:///c:/Users/Ted/WebstormProjects/tower/src/enums/room-enum.ts)
 - **Room UI Components**:
   - Main Room Router Layout: [RoomLayout.vue](file:///c:/Users/Ted/WebstormProjects/tower/src/components/RoomLayout/RoomLayout.vue)
-  - Room Components: `src/components/RoomLayout/room/` (BlessRoom, FightRoom, FusionRoom, RestRoom, ShopRoom, StationRoom)
+  - Room Components: `src/components/RoomLayout/room/` (BlessRoom, FightRoom, MainEventRoom, RestRoom, ShopRoom, StationRoom)
 - **Primary Views**: `src/views/` (IntroPage, MainPage, DeadPage)
 
 ---
@@ -39,7 +39,7 @@ This guide helps developers maintain room transitions, navigation, event flows, 
   - `ShopRoom`: Gear purchase/sell actions.
   - `RestRoom`: Recovery options for HP/SP.
   - `BlessRoom`: Interactive altars offering stat upgrades.
-  - `FusionRoom`: Evolution and fusion of eligible skills.
+  - `MainEventRoom`: Stage/area introduction on Day 0 of each stage.
   - `StationRoom`: Intermission hub for inventory management and gear sorting.
 
 ---

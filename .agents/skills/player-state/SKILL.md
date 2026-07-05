@@ -34,7 +34,6 @@ The project uses Pinia persisted state. When the page is reloaded (F5) or a save
 - `gainItem(itemId, count)`: Gain items.
 - `useItem(itemIndex)`: Use consumables or equip items.
 - `addExp(exp)`: Add experience, automatically triggers `levelUp()` when full.
-- `checkAndTriggerEvolutions()`: Check and trigger eligible skill evolutions/fusions.
 - `totalBonus`: Computes final player stats including all equipment, active status effects, and passive skills.
 
 ---
