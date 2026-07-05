@@ -92,6 +92,8 @@ const selectRoom = (roomValue: number) => {
         playerAdjustSanity(playerStore, -3);
       }
     }
+    // 💡 經過一天：觸發自身狀態變化（持續回合-1 與觸發效果）、減少技能冷卻
+    playerStore.nextTurnStatus()
   }
   gameStateStore.setRoom(roomValue)
   gameStateStore.nextRooms = []

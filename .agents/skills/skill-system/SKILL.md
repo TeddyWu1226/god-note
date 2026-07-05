@@ -33,7 +33,7 @@ Defined in `src/constants/skill/learned-skill/skill-tree/` (e.g. `index.ts`, `sw
   - `0`: No limit
   - `1`: Level 5+
   - `2`: Level 10+
-  - `3`: Level 20+
+  - `3`: Level 25+
   - `4`: Level 40+
   - `5`: Level 60+
   - `6`: Level 80+

@@ -42,6 +42,12 @@ This guide helps developers maintain room transitions, navigation, event flows, 
   - `MainEventRoom`: Stage/area introduction on Day 0 of each stage.
   - `StationRoom`: Intermission hub for inventory management and gear sorting.
 
+### 4. Day Progress & Daily Cooldown / Status Tick Rules
+- **Daily Cooldown / Status Progression**:
+  - Every time a day passes (which occurs when transitioning to a room other than Special Event `RoomEnum.Event.value` inside `selectRoom` in `NextOperation.vue`), `playerStore.nextTurnStatus()` is triggered.
+  - This automatically decreases player status durations by 1, processes daily healing/damage ticks on the player (e.g. poison damage), applies HP/SP regenerations, and decreases skill CDs and offhand skill CDs by 1.
+  - **Start of Combat Cooldown Retention**: Skill CDs and offhand CDs are NOT reset/cleared when a new combat begins. They persist across combat rooms and cool down day by day or round by round.
+
 ---
 
 ## ⚠️ Important Cautions

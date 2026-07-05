@@ -56,7 +56,7 @@ const confirmClassSelection = async () => {
     case CharEnum.Stargazer.value:
       playerStore.info.ap = 13;
       playerStore.info.ad = 5
-      playerStore.addSkill('ManaAdaptability')
+      playerStore.addSkill('MagicBall')
       playerStore.equipItem(Offhand.Book0);
       break;
 

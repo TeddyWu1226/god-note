@@ -509,18 +509,6 @@ const init = () => {
     return;
   }
 
-  // 💡 新戰鬥開始，重置技能冷卻時間
-  if (playerStore.info.skills) {
-    playerStore.info.skills.forEach((skill: any) => {
-      if (skill instanceof SkillModel) {
-        skill.currentCd = 0;
-      }
-    });
-  }
-  if (playerStore.info.offhandSkillCds) {
-    playerStore.info.offhandSkillCds = {};
-  }
-
   // 新戰鬥開始，回復護盾值到最大值
   playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
 

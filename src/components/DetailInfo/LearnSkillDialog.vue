@@ -93,7 +93,7 @@ const openLearnSkill = () => {
       switch (node.tier) {
         case 1: requiredLevel = 5; break;
         case 2: requiredLevel = 10; break;
-        case 3: requiredLevel = 20; break;
+        case 3: requiredLevel = 25; break;
         case 4: requiredLevel = 40; break;
         case 5: requiredLevel = 60; break;
         case 6: requiredLevel = 80; break;

@@ -7,6 +7,6 @@ export const CharEnum = {
         label: '觀星者',
         icon: '🛐',
         avatar: '/avatars/stargazer.png',
-        desc: '窺見神的痕跡而覺醒魔力適性的學徒，擁有「魔力適性」技能，卻不擅長近戰。'
+        desc: '窺見神的痕跡而覺醒魔力適性的學徒，擁有「魔法彈」技能，卻不擅長近戰。'
     }
 }
