@@ -583,8 +583,6 @@ export const spawnMonsters = (
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
         let monsterInstance = MonsterFactory.createMonster(m.code, m);
-
-        // monsterInstance.name += `${i}`
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
@@ -606,7 +604,10 @@ export const spawnMonsters = (
             monsterInstance.hp = monsterInstance.hpLimit;
             // 多 20% 輸出
             monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengthening));
+            // 多 防禦
             monsterInstance.adDefend += strengtheningLevel
+            // 多掉落金幣
+            monsterInstance.dropGold = monsterInstance.dropGold * (1 + 0.15 * strengthening);
         }
         newMonsters.push(monsterInstance);
     }
