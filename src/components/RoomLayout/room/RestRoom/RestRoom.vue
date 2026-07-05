@@ -11,9 +11,17 @@ const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore()
 
 const isRested = ref<boolean>(false)
+const isUnFeelWell = ref<boolean>(false)
 const onRest = () => {
   isRested.value = true
-  playerStore.healFull()
+  if (playerStore.statusEffects?.some((eff) => !eff?.isBuff)) {
+    // 身上不舒服所以只能回復一半
+    playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + Math.round(playerStore.finalStats.hpLimit / 2))
+    playerStore.statusEffects = playerStore.statusEffects.filter(effect => effect.isBuff || effect.duration === -1)
+    isUnFeelWell.value = true
+  } else {
+    playerStore.healFull()
+  }
   gameStateStore.transitionToNextState()
 }
 const emit = defineEmits(['cancel']);
@@ -41,8 +49,11 @@ defineExpose({
         <template v-else>
           <template v-if="isRested">
             <div class="event-icon">💤</div>
-            <div style="color: var(--el-color-success);text-align: center" class="dialog-box">
-              休息了一會,<br/>你的HP跟SP完全恢復外,身上暫時的負面效果也消除了!
+            <div v-if="isUnFeelWell" style="color: var(--el-color-success);text-align: center" class="dialog-box">
+              你輾轉難眠。<br/>雖然身上的不適消除了，但只回復了一半的生命!
+            </div>
+            <div v-else style="color: var(--el-color-success);text-align: center" class="dialog-box">
+              休息了一會。<br/>你的HP跟SP完全恢復!
             </div>
           </template>
           <div v-else class="dialog-box">
