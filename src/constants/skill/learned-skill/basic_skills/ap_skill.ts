@@ -2,13 +2,12 @@
  * 法術輸出與輔助相關技能
  */
 import {SkillModel} from "@/models/skill-model";
-import {PlayerStoreType, SkillParams, SkillTreeNode, StatusEffect} from "@/types";
+import {PlayerStoreType, SkillParams, SkillTreeNode} from "@/types";
 import {ColorText} from "@/utils/color";
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement} from "@/utils/create";
 import {UsualStatus} from "@/constants/status/usual-status";
-import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {SkillStatus} from "@/constants/status/skill-status";
 
 /**
@@ -208,7 +207,7 @@ export class ManaArmor extends SkillModel {
 }
 
 /**
- * 法術技能樹
+ * 法術基礎技能樹
  */
 export const ApSkillTree: Record<string, SkillTreeNode> = {
     MagicBall: {

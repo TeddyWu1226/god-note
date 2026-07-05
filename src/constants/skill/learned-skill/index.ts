@@ -55,6 +55,7 @@ import {
     SwordPolish, SwordDance
 } from "./sword_skills";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
+import {FireAdaptability, FireAdvancement, FireMaster} from "@/constants/skill/learned-skill/fire_skills/fire_base";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -78,6 +79,9 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     Shockwave: Shockwave,
     ManaAdaptability: ManaAdaptability,
     ManaArmor: ManaArmor,
+    FireAdaptability: FireAdaptability,
+    FireAdvancement: FireAdvancement,
+    FireMaster: FireMaster,
 
     WillBuff: WillBuff,
     FocusBuff: FocusBuff,

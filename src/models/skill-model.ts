@@ -111,10 +111,6 @@ export abstract class SkillModel {
         // 預設無效果
     }
 
-    // 💡 為了相容於原本 UI 讀取 .cd 的地方
-    get cd(): number {
-        return this.maxCd;
-    }
 
     // 💡 獲取熟練度顯示字串
     get proficiencyText(): string {

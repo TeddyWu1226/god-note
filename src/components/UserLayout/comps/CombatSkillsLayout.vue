@@ -99,10 +99,10 @@ const clickSkill = (skill: SkillModel | any) => {
                   <span v-if="skill.costSp">SP 消耗: {{ skill.costSp }}</span>
                   <span v-if="skill.costHp && skill.costSp" style="margin: 0 4px">|</span>
                   <span v-if="skill.costHp">HP 消耗: {{ skill.costHp }}</span>
-                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp) && skill.cd"
+                  <span v-if="skill.type === 'active' && (skill.costSp || skill.costHp) && skill.maxCd"
                         style="margin: 0 4px">|</span>
                   <template v-if="skill.type === 'active'">
-                    <span v-if="skill.cd">冷卻: {{ skill.cd }} 回合</span>
+                    <span v-if="skill.maxCd">冷卻: {{ skill.maxCd }} 回合</span>
                     <span v-if="skill.proficiencyGain" style="margin: 0 4px">|</span>
                     <span v-if="skill.proficiencyGain">{{ skill.proficiencyText }}</span>
                   </template>
