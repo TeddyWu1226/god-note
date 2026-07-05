@@ -49,6 +49,14 @@ export const Usable = {
         icon: '💨',
         usable: true,
         skill: 'useSmokeBomb'
+    } as UsableType,
+    TeleportCrystal: {
+        name: '轉移水晶',
+        quality: 6,
+        description: '神秘的水晶，只能在「選擇路徑階段」使用。使用後將你傳送至深處驛站，並強制選擇接下來要前往的區域。',
+        icon: '🔮',
+        usable: true,
+        skill: 'useTeleportCrystal'
     } as UsableType
 };
 

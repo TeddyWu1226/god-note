@@ -34,7 +34,8 @@ const onItemSkill = ({skillKey, callback, el}) => {
     Usable.Campfire.skill,
     GodThings.GodNotePage.skill,
     Usable.ShabbyTent.skill,
-    Usable.UnPoisonPotion.skill
+    Usable.UnPoisonPotion.skill,
+    Usable.TeleportCrystal.skill
   ]
   if (specifySkill.includes(skillKey)) {
     ItemSkill[skillKey](

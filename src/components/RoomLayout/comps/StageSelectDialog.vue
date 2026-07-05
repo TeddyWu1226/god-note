@@ -3,6 +3,9 @@ import {useGameStateStore} from "@/store/game-state-store";
 import {StageEnum} from "@/enums/stage-enum";
 
 const gameStateStore = useGameStateStore();
+const noShow = (stage: number) => {
+  return stage >= gameStateStore.maxClearedStage
+}
 </script>
 
 <template>
@@ -31,13 +34,13 @@ const gameStateStore = useGameStateStore();
         <template v-if="stage.value <= 5">
           <el-button
               style="width: 100%; height: 3.5rem; text-align: left; display: flex; justify-content: space-between; align-items: center;"
-              :type="stage.value <= gameStateStore.maxClearedStage ? 'primary' : 'info'"
-              :disabled="stage.value > gameStateStore.maxClearedStage"
+              :type="stage.value < gameStateStore.maxClearedStage ? 'primary' : 'info'"
+              :disabled="noShow(stage.value)"
               @click="gameStateStore.selectStage(stage.value)"
               plain
           >
               <span style="font-size: 1rem; font-weight: bold;padding-right: 0.5rem">
-                第 {{ stage.value }} 區: {{ stage.value <= gameStateStore.maxClearedStage ? stage.label : '???' }}
+                第 {{ stage.value }} 區: {{ noShow(stage.value) ? '???' : stage.label }}
               </span>
             <el-tag
                 v-if="stage.value < gameStateStore.maxClearedStage"
@@ -76,12 +79,15 @@ const gameStateStore = useGameStateStore();
   flex-direction: column;
   align-items: center;
 }
+
 .stage-select-container.flex-column {
   flex-direction: column;
 }
+
 .stage-select-container.gap-3 {
   gap: 12px;
 }
+
 .stage-select-container .text-center {
   text-align: center;
 }

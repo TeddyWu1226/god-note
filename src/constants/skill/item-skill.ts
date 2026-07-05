@@ -78,6 +78,26 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
         callback(true);
         return
     },
+    useTeleportCrystal: ({playerStore, gameStateStore, callback}) => {
+        const isSelection = gameStateStore?.stateIs(GameState.SELECTION_PHASE);
+        const isCombat = gameStateStore?.roomIs([RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value]) && gameStateStore?.stateIs(GameState.EVENT_PHASE);
+
+        if (!isSelection && !isCombat) {
+            cantUse();
+            callback(false);
+            return;
+        }
+
+        // 如果在戰鬥中，清空當前怪物與隨機怪物池，防範戰鬥殘留
+        if (isCombat && gameStateStore) {
+            gameStateStore.currentEnemy = [];
+            gameStateStore.switchEnemy = [];
+        }
+
+        gameStateStore.openStageSelectDialog(false);
+        callback(true);
+    },
+
 
     // 戰鬥回合使用
     /**
