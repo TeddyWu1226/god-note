@@ -41,8 +41,8 @@ import {
     ApSkillTree,
     MagicBall,
     Shockwave,
-    ManaWeapon,
-    ManaAdaptability
+    ManaAdaptability,
+    ManaArmor
 } from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
     ContinuousSwordHorizontal, ContinuousSwordPoint,
@@ -76,8 +76,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
 
     MagicBall: MagicBall,
     Shockwave: Shockwave,
-    ManaWeapon: ManaWeapon,
     ManaAdaptability: ManaAdaptability,
+    ManaArmor: ManaArmor,
 
     WillBuff: WillBuff,
     FocusBuff: FocusBuff,

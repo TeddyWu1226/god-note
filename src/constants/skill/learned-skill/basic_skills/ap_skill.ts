@@ -135,53 +135,6 @@ export class Shockwave extends SkillModel {
 
 
 /**
- * 魔力武器
- */
-export class ManaWeapon extends SkillModel {
-    constructor() {
-        super({
-            id: 'ManaWeapon',
-            name: "魔力武器",
-            icon: "skills/magic/mana_weapon.svg",
-            type: 'active',
-            rarity: 'common',
-            maxCd: 3,
-            costSp: 15,
-            costAction: 1,
-            maxProficiency: 50,
-            proficiencyGain: 5
-        });
-    }
-
-    addAdValue(playerStore: PlayerStoreType): number {
-        const ap = playerStore?.finalStats?.ap ?? 0;
-        return Math.round(ap + this.proficiency * 0.1);
-    }
-
-    description(playerStore: PlayerStoreType): string {
-
-        return `將魔力附魔於武器上，使自身的物攻（AD）提升 <span style="color: #FF8C00; font-weight: bold;">${this.addAdValue(playerStore)} 點</span>，持續 3 回合。\n(熟練度影響加成量)`;
-    }
-
-    protected execute({playerStore}: SkillParams): boolean {
-        if (!playerStore) return false;
-
-        playerStore.addStatus(SkillStatus.ManaWeaponStatus, {
-            bonus: {
-                ad: this.addAdValue(playerStore)
-            },
-            duration: 3
-        });
-
-        useFullScreenEffect({
-            message: this.name,
-            color: '#0ff1e9',
-        });
-        return true;
-    }
-}
-
-/**
  * 魔力適性
  */
 export class ManaAdaptability extends SkillModel {
@@ -210,6 +163,50 @@ export class ManaAdaptability extends SkillModel {
     }
 }
 
+
+/**
+ * 魔力裝甲
+ */
+export class ManaArmor extends SkillModel {
+    constructor() {
+        super({
+            id: 'ManaArmor',
+            name: "魔力裝甲",
+            icon: "skills/magic/mana_armor.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 3,
+            costSp: 15,
+            costMaxAction: true,
+            maxProficiency: 8,
+            proficiencyGain: 1
+        });
+    }
+
+    addDefendValue(playerStore: PlayerStoreType): number {
+        const ap = playerStore?.finalStats?.ap ?? 0;
+        return 2 + this.proficiency;
+    }
+
+    description(playerStore: PlayerStoreType): string {
+        return `凝聚魔力環繞自身形成護甲，使自身的物理防禦力提升 ${this.addDefendValue(playerStore)}，持續 2 回合。\n(熟練度影響加成量)`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+
+        playerStore.addStatus(SkillStatus.ManaArmorStatus, {
+            bonus: {
+                adDefend: this.addDefendValue(playerStore)
+            },
+            duration: 2
+        });
+
+        useCardImpactEffect(getMonsterElement(playerStore.info.char), 'buff');
+        return true;
+    }
+}
+
 /**
  * 法術技能樹
  */
@@ -230,17 +227,17 @@ export const ApSkillTree: Record<string, SkillTreeNode> = {
             return (playerStore.info?.ap ?? 0) >= 10;
         }
     },
-    ManaWeapon: {
-        id: 'ManaWeapon',
-        pathId: 'mana_weapon',
+    ManaAdaptability: {
+        id: 'ManaAdaptability',
+        pathId: 'mana_adaptability',
         tier: 0,
         checkEligible: (playerStore) => {
             return (playerStore.info?.ap ?? 0) >= 10;
         }
     },
-    ManaAdaptability: {
-        id: 'ManaAdaptability',
-        pathId: 'mana_adaptability',
+    ManaArmor: {
+        id: 'ManaArmor',
+        pathId: 'mana_armor',
         tier: 0,
         checkEligible: (playerStore) => {
             return (playerStore.info?.ap ?? 0) >= 10;

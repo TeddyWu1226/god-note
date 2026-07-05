@@ -149,5 +149,15 @@ export const SkillStatus = {
         bonus: {
             ad: 0
         }
-    } as StatusEffect
+    } as StatusEffect,
+    ManaArmorStatus: {
+        name: '魔力裝甲',
+        icon: '🛡️',
+        duration: 2,
+        isBuff: true,
+        description: '魔力匯聚成厚實的裝甲，使物理防禦力提升了 %adDefend% 點。',
+        bonus: {
+            adDefend: 0
+        }
+    } as StatusEffect,
 }
