@@ -11,7 +11,6 @@ import {
     StatusEffect
 } from "@/types";
 import {genCustomStatus} from "@/utils/create";
-import {useLogStore} from "@/store/log-store";
 
 
 export class MonsterModel implements MonsterType {
@@ -37,7 +36,7 @@ export class MonsterModel implements MonsterType {
     lifeSteal?: number;
     hpRegen?: number;
     description?: string;
-    class?: string;
+    class?: string[];
     drop?: DropEntry[];
     dropGold?: number;
     status: StatusEffect[];

@@ -77,7 +77,7 @@ export class UnstableExplosiveBee extends MonsterModel {
         super({
             icon: '🐝',
             code: 'UnstableExplosiveBee',
-            class: 'icon-red',
+            class: ['icon-red'],
             name: '不穩定的爆炸蜂',
             description: '體內蘊含著極不穩定能量的變異蜂，會在5回合後自爆並造成巨額傷害',
             ad: 25,

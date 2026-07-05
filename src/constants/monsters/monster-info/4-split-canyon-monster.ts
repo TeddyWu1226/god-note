@@ -23,7 +23,7 @@ export class SplitSlime extends MonsterModel {
             icon: '⚪',
             code: 'SplitSlime',
             name: '幻想史萊姆',
-            class: '',
+            class: [],
             description: '受到龐大能量輻射影響化為幻想體的史萊姆魔物，會因為現在屬於白日/黑夜影響，轉化為對應能量型態。',
             ad: 45,
             critIncrease: WorldDefault.critIncrease,
@@ -51,7 +51,7 @@ export class SplitSlime extends MonsterModel {
         switch (gameStateStore?.environmentMode) {
             case 'day':
                 this.icon = '🟡'
-                this.class = 'icon-yellow'
+                this.class = ['icon-yellow']
                 if (this.hasStatus(EvnStatus.NighttimeEffect.name)) {
                     this.removeStatus(EvnStatus.NighttimeEffect.name);
                 }
@@ -59,7 +59,7 @@ export class SplitSlime extends MonsterModel {
                 break
             case 'night':
                 this.icon = '🟣'
-                this.class = 'icon-purple'
+                this.class = ['icon-purple']
                 if (this.hasStatus(EvnStatus.DaytimeEffect.name)) {
                     this.removeStatus(EvnStatus.DaytimeEffect.name);
                 }
@@ -81,7 +81,7 @@ export class SplitIllusion extends MonsterModel {
             icon: '☪',
             code: 'SplitIllusion',
             name: '幻想魔元素',
-            class: '',
+            class: [],
             description: '受龐大魔能量匯集而成具有反映環境的魔力元素體。',
             ad: 45,
             critIncrease: WorldDefault.critIncrease,
@@ -109,12 +109,12 @@ export class SplitIllusion extends MonsterModel {
         switch (gameStateStore?.environmentMode) {
             case 'day':
                 this.icon = '🌕'
-                this.class = 'icon-yellow'
+                this.class = ['icon-yellow']
                 this.addEffect(EvnStatus.DaytimeEffect);
                 break
             case 'night':
                 this.icon = '🌑'
-                this.class = 'icon-purple'
+                this.class = ['icon-purple']
                 this.addEffect(EvnStatus.NighttimeEffect);
                 break
         }
@@ -139,7 +139,7 @@ export class SplitButterfly extends MonsterModel {
             icon: '🦋',
             code: 'SplitButterfly',
             name: '幻想蝶妖',
-            class: '',
+            class: [],
             description: '受龐大魔能量影響的蝶妖。在對應的環境下擁有高額閃避或是高額輸出。',
             ad: 30,
             critIncrease: WorldDefault.critIncrease,
@@ -161,7 +161,7 @@ export class SplitButterfly extends MonsterModel {
 
     private updateState(gameStateStore: GameStateStoreType) {
         if (gameStateStore?.environmentMode === 'day') {
-            this.class = 'icon-yellow';
+            this.class = ['icon-yellow'];
             this.addEffect(EvnStatus.DaytimeEffect);
             this.addEffect({
                 name: '閃匿',
@@ -172,7 +172,7 @@ export class SplitButterfly extends MonsterModel {
                 bonus: {dodge: 50}
             });
         } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = 'icon-purple';
+            this.class = ['icon-purple'];
             this.addEffect(EvnStatus.NighttimeEffect);
             this.addEffect({
                 name: '夜襲',
@@ -192,7 +192,7 @@ export class SplitHound extends MonsterModel {
             icon: '🐕',
             code: 'SplitHound',
             name: '幻想獵犬',
-            class: '',
+            class: [],
             description: '受環境能量影響的獵犬。狩獵屬於另一方勢力的敵人時必定爆擊。',
             ad: 66,
             critIncrease: WorldDefault.critIncrease,
@@ -214,10 +214,10 @@ export class SplitHound extends MonsterModel {
 
     private updateState(gameStateStore: any) {
         if (gameStateStore?.environmentMode === 'day') {
-            this.class = 'icon-yellow';
+            this.class = ['icon-yellow'];
             this.addEffect(EvnStatus.DaytimeEffect);
         } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = 'icon-purple';
+            this.class = ['icon-purple'];
             this.addEffect(EvnStatus.NighttimeEffect);
         }
     }
@@ -240,7 +240,7 @@ export class SplitStalker extends MonsterModel {
             icon: '👤',
             code: 'SplitStalker',
             name: '幻想行者',
-            class: '',
+            class: [],
             description: '適應極端日夜環境的峽谷行者。',
             ad: 65,
             critIncrease: WorldDefault.critIncrease,
@@ -262,10 +262,10 @@ export class SplitStalker extends MonsterModel {
 
     private updateState(gameStateStore: GameStateStoreType) {
         if (gameStateStore?.environmentMode === 'day') {
-            this.class = 'icon-yellow';
+            this.class = ['icon-yellow'];
             this.addEffect(EvnStatus.DaytimeEffect);
         } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = 'icon-purple';
+            this.class = ['icon-purple'];
             this.addEffect(EvnStatus.NighttimeEffect);
         }
         this.addEffect(UsualStatus.Resistance, {value: 3, duration: -1});

@@ -590,11 +590,10 @@ export const spawnMonsters = (
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
             if (!monsterInstance.class?.includes('elite')) {
                 if (monsterInstance.class) {
-                    monsterInstance.class += ' elite';
+                    monsterInstance.class.push('elite');
                 } else {
-                    monsterInstance.class = ' elite';
+                    monsterInstance.class = ['elite'];
                 }
-
             }
             strengtheningLevel += 2
         }
