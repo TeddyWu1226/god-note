@@ -331,7 +331,6 @@ export const useGameStateStore = defineStore('game-state', () => {
 
 
     function openStageSelectDialog(closable = true): void {
-        maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
         isStageSelectClosable.value = closable;
         showStageSelectDialog.value = true;
     }

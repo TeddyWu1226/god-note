@@ -4,7 +4,7 @@ import {StageEnum} from "@/enums/stage-enum";
 
 const gameStateStore = useGameStateStore();
 const noShow = (stage: number) => {
-  return stage >= gameStateStore.maxClearedStage
+  return stage > gameStateStore.maxClearedStage
 }
 </script>
 
