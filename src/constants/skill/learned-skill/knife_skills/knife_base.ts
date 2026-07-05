@@ -23,8 +23,8 @@ export class KnifeBase extends SkillModel {
 
     addBonus() {
         return {
-            hit: 4 + (Math.ceil(this.proficiency * 0.04)),
-            dodge: 4 + (Math.ceil(this.proficiency * 0.04)),
+            hit: 4 + (Math.ceil(this.proficiency * 0.04)), // 10
+            dodge: 4 + (Math.ceil(this.proficiency * 0.04)), // 10
         }
     }
 
@@ -62,9 +62,9 @@ export class KnifePro extends SkillModel {
 
     addBonus() {
         return {
-            hit: 12 + (Math.ceil(this.proficiency * 0.04)),
-            dodge: 8 + (Math.ceil(this.proficiency * 0.04)),
-            ad: 3 + (Math.ceil(this.proficiency * 0.02)),
+            hit: 11 + (Math.ceil(this.proficiency * 0.06)), // 20
+            dodge: 11 + (Math.ceil(this.proficiency * 0.06)), // 20
+            ad: 3 + (Math.ceil(this.proficiency * 0.02)), // 6
         }
     }
 
@@ -102,9 +102,9 @@ export class KnifeAdv extends SkillModel {
 
     addBonus() {
         return {
-            hit: 25 + (Math.ceil(this.proficiency * 0.05)),
-            dodge: 12 + (Math.ceil(this.proficiency * 0.05)),
-            ad: 10 + (Math.ceil(this.proficiency * 0.04)),
+            hit: 20 + (Math.ceil(this.proficiency * 0.1)), // 35
+            dodge: 20 + (Math.ceil(this.proficiency * 0.1)), // 35
+            ad: 11 + (Math.ceil(this.proficiency * 0.06)), // 20
         }
     }
 
@@ -141,8 +141,8 @@ export class KnifeMaster extends SkillModel {
     addBonus() {
         return {
             hit: 50,
+            dodge: 50,
             ad: 25,
-            dodge: 20,
         }
     }
 

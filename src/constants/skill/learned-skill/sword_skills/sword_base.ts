@@ -63,9 +63,9 @@ export class SwordPro extends SkillModel {
 
     addBonus() {
         return {
-            hit: 15 + (Math.ceil(this.proficiency * 0.05)),
-            adDefend: 4 + (Math.ceil(this.proficiency * 0.04)),
-            ad: 3 + (Math.ceil(this.proficiency * 0.02)),
+            hit: 15 + (Math.ceil(this.proficiency * 0.05)), // 20
+            adDefend: 4 + (Math.ceil(this.proficiency * 0.04)), // 8
+            ad: 3 + (Math.ceil(this.proficiency * 0.02)), // 5
         }
     }
 
@@ -103,9 +103,9 @@ export class SwordAdv extends SkillModel {
 
     addBonus() {
         return {
-            hit: 25 + (Math.ceil(this.proficiency * 0.06)),
-            adDefend: 8 + (Math.ceil(this.proficiency * 0.06)),
-            ad: 8 + (Math.ceil(this.proficiency * 0.04)),
+            hit: 25 + (Math.ceil(this.proficiency * 0.1)), // 35
+            adDefend: 8 + (Math.ceil(this.proficiency * 0.06)), // 14
+            ad: 8 + (Math.ceil(this.proficiency * 0.06)), // 14
         }
     }
 
@@ -143,8 +143,8 @@ export class SwordMaster extends SkillModel {
     addBonus() {
         return {
             hit: 50,
-            ad: 25,
-            adDefend: 12,
+            adDefend: 20,
+            ad: 20,
         }
     }
 

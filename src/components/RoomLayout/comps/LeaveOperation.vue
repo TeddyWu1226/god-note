@@ -1,9 +1,5 @@
 <script setup lang="ts">
 
-
-import {RoomEnum} from "@/enums/room-enum";
-import {GameState} from "@/enums/enums";
-
 const emit = defineEmits(['rest', 'cancel']);
 const props = defineProps({
   disabled: Boolean,
