@@ -174,8 +174,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             });
         }
     }
-    console.log('outcome', outcome)
-
     // 更新生命值
     if (defender instanceof MonsterClass) {
         // 普通怪物的邏輯

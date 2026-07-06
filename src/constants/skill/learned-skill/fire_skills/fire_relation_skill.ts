@@ -34,11 +34,11 @@ export class FireArrow extends SkillModel {
     }
 
     get burnChance(): number {
-        return 0.1 + this.proficiency;
+        return 10 + this.proficiency;
     }
 
     get burnDuration(): number {
-        return Math.max(2, Math.round(this.proficiency))
+        return Math.max(2, Math.round(this.proficiency / 10))
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -47,7 +47,7 @@ export class FireArrow extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ap'
         })
-        return `射出一枚火焰束，對目標造成 ${ColorText.ap(damage)}（魔攻 * 1），且有 ${this.burnChance * 100}% 機率使目標陷入燃燒狀態，持續 ${this.burnDuration} 回合。\n(熟練度影響燃燒成功率以及持續時間)`;
+        return `射出一枚火焰束，對目標造成 ${ColorText.ap(damage)}（魔攻 * 1），且有 ${this.burnChance}% 機率使目標陷入燃燒狀態，持續 ${this.burnDuration} 回合。\n(熟練度影響燃燒成功率以及持續時間)`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -61,7 +61,7 @@ export class FireArrow extends SkillModel {
             skillName: this.name
         });
 
-        if (Math.random() < this.burnChance) {
+        if (Math.random() < (this.burnChance / 100)) {
             monster.addEffect(ItemStatus.OnBurn, {
                 duration: this.burnDuration
             });
@@ -142,7 +142,7 @@ export class FireWard extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
-            costSp: 15,
+            costSp: 20,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -150,7 +150,7 @@ export class FireWard extends SkillModel {
     }
 
     get burnChance(): number {
-        return this.proficiency + 20;
+        return Math.floor(this.proficiency * 0.8) + 40;
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -161,9 +161,9 @@ export class FireWard extends SkillModel {
         if (!playerStore) return false;
 
         gameStateStore.currentEnemy.forEach(enemy => {
+            useCardImpactEffect(getMonsterElement(enemy.id), 'burn');
             if (enemy.hp > 0 && Math.random() <= (this.burnChance / 100)) {
                 enemy.addEffect(EvnStatus.OnBurn);
-                useCardImpactEffect(getMonsterElement(enemy.id), 'burn');
             }
         });
 
@@ -378,7 +378,7 @@ export class IgnitionBlast extends SkillModel {
 
         gameStateStore.currentEnemy.forEach((enemy: MonsterModel) => {
             if (enemy.hp > 0 && enemy.hasStatus(EvnStatus.OnBurn.name)) {
-                enemy.removeStatus('燃燒');
+                enemy.removeStatus(EvnStatus.OnBurn.name);
 
                 enemy.lastDamageResult = applySkillDamage({
                     speller: playerStore,
@@ -403,7 +403,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'fire_spell_active',
         tier: 1,
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability');
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('MagicBall');
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     FireBurst: {
@@ -412,7 +415,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['FireArrow'],
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability') && playerStore.hasSkill('FireArrow') !== undefined;
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('FireArrow');
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     FireWard: {
@@ -420,7 +426,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'fire_ward_active',
         tier: 2,
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability') && playerStore.hasSkill('Shockwave') !== undefined;
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('Shockwave')
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     SearingWard: {
@@ -429,7 +438,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['FireWard'],
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability') && playerStore.hasSkill('FireWard') !== undefined;
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('FireWard')
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     FireArmor: {
@@ -438,7 +450,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['ManaArmor'],
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability') && playerStore.hasSkill('ManaArmor') !== undefined;
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('ManaArmor');
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     FireInfusion: {
@@ -447,7 +462,10 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['FireArmor'],
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability') && playerStore.hasSkill('FireArmor') !== undefined;
+            const hasBasePath = !!playerStore.checkSkillPath('fire_mana_adaptability');
+            if (!hasBasePath) return false;
+            const baseSkill = playerStore.hasSkill('FireArmor');
+            return !!baseSkill?.isProficiencyMax;
         }
     },
     IgnitionBlast: {
@@ -455,7 +473,7 @@ export const FireRelationSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'ignition_blast_active',
         tier: 3,
         checkEligible: (playerStore) => {
-            return playerStore.checkSkillPath('mana_adaptability');
+            return playerStore.checkSkillPath('fire_mana_adaptability');
         }
     }
 }

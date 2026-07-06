@@ -144,7 +144,7 @@ export class FireMaster extends SkillModel {
 export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
     FireAdaptability: {
         id: 'FireAdaptability',
-        pathId: 'mana_adaptability',
+        pathId: 'fire_mana_adaptability',
         tier: 1,
         evolvesFrom: ['ManaAdaptability'],
         checkEligible: (playerStore) => {
@@ -153,7 +153,7 @@ export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
     },
     FireAdvancement: {
         id: 'FireAdvancement',
-        pathId: 'mana_adaptability',
+        pathId: 'fire_mana_adaptability',
         tier: 2,
         evolvesFrom: ['FireAdaptability'],
         checkEligible: (playerStore) => {
@@ -162,7 +162,7 @@ export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
     },
     FireMaster: {
         id: 'FireMaster',
-        pathId: 'mana_adaptability',
+        pathId: 'fire_mana_adaptability',
         tier: 3,
         evolvesFrom: ['FireAdvancement'],
         checkEligible: (playerStore) => {

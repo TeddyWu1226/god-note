@@ -57,7 +57,6 @@ const confirmClassSelection = async () => {
       playerStore.info.ap = 13;
       playerStore.info.ad = 5
       playerStore.addSkill('MagicBall')
-      playerStore.equipItem(Offhand.Book0);
       break;
 
   }
