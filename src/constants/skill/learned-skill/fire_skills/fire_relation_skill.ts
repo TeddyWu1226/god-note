@@ -377,19 +377,19 @@ export class IgnitionBlast extends SkillModel {
         if (!playerStore.hasStatus(SkillStatus.IgnitionBlastStatus.name)) return;
 
         gameStateStore.currentEnemy.forEach((enemy: MonsterModel) => {
-            if (enemy.hp > 0 && enemy.hasStatus(EvnStatus.OnBurn.name)) {
-                enemy.removeStatus(EvnStatus.OnBurn.name);
-
+            if (enemy.hp > 0) {
+                const exist = enemy.hasStatus(EvnStatus.OnBurn.name)
+                if (!exist) return
+                const dmg = this.getSingleExploreDamage(playerStore) * exist.duration
                 enemy.lastDamageResult = applySkillDamage({
                     speller: playerStore,
                     target: enemy,
-                    baseValue: this.getSingleExploreDamage(playerStore),
+                    baseValue: dmg,
                     type: 'ap',
                     skillName: '燃爆',
                     sureHit: true
                 });
-
-                logStore.logger.add(`[燃爆] 成功引爆了 ${enemy.name} 身上的燃燒效果，造成了 ${enemy.lastDamageResult?.totalDamage} 點魔法爆發傷害！`);
+                enemy.removeStatus(EvnStatus.OnBurn.name);
                 useCardImpactEffect(getMonsterElement(enemy.id), 'burn');
             }
         });
