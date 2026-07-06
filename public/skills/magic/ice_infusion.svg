@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+  
+  <!-- Icy Ring on the Ground (Ellipse in perspective) -->
+  <ellipse cx="8" cy="12.5" rx="5" ry="1.5" fill="none" stroke="#0984e3" stroke-width="1" />
+  <ellipse cx="8" cy="12.5" rx="4" ry="1" fill="none" stroke="#74b9ff" stroke-width="1" />
+  <ellipse cx="8" cy="12.5" rx="2" ry="0.5" fill="none" stroke="#ffffff" stroke-width="1" />
+
+  <!-- Frost pillars rising upwards -->
+  <!-- Left pillar -->
+  <rect x="4" y="6" width="1" height="6" fill="#0984e3" />
+  <rect x="4" y="4" width="1" height="2" fill="#74b9ff" />
+  <rect x="5" y="5" width="1" height="7" fill="#74b9ff" />
+  <rect x="5" y="3" width="1" height="2" fill="#00d2d3" />
+  <rect x="6" y="6" width="1" height="6" fill="#ffffff" />
+  
+  <!-- Center pillar -->
+  <rect x="7" y="3" width="2" height="9" fill="#74b9ff" />
+  <rect x="7" y="2" width="2" height="1" fill="#0984e3" />
+  <rect x="7" y="4" width="2" height="6" fill="#00d2d3" />
+  <rect x="8" y="5" width="1" height="4" fill="#ffffff" />
+
+  <!-- Right pillar -->
+  <rect x="11" y="6" width="1" height="6" fill="#0984e3" />
+  <rect x="11" y="4" width="1" height="2" fill="#74b9ff" />
+  <rect x="10" y="5" width="1" height="7" fill="#74b9ff" />
+  <rect x="10" y="3" width="1" height="2" fill="#00d2d3" />
+  <rect x="9" y="6" width="1" height="6" fill="#ffffff" />
+
+  <!-- Sparkles -->
+  <rect x="3" y="3" width="1" height="1" fill="#74b9ff" />
+  <rect x="12" y="3" width="1" height="1" fill="#74b9ff" />
+  <rect x="6" y="2" width="1" height="1" fill="#ffffff" />
+  <rect x="9" y="2" width="1" height="1" fill="#ffffff" />
+</svg>

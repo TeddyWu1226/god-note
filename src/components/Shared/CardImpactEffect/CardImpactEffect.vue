@@ -11,6 +11,7 @@ import AssassinateImpact from './comps/AssassinateImpact.vue';
 import PoisonImpact from './comps/PoisonImpact.vue';
 import StunImpact from './comps/StunImpact.vue';
 import BurnImpact from './comps/BurnImpact.vue';
+import FrozenImpact from './comps/FrozenImpact.vue';
 
 const props = defineProps({
   type: { type: String, default: 'physical' },
@@ -52,6 +53,8 @@ const impactComponent = computed(() => {
       return StunImpact;
     case 'burn':
       return BurnImpact;
+    case 'frozen':
+      return FrozenImpact;
     default:
       return PhysicalImpact;
   }

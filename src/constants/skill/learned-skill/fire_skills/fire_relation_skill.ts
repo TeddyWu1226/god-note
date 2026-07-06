@@ -200,7 +200,7 @@ export class SearingWard extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ap'
         })
-        return `召喚熾熱高溫的結界爆裂，對所有敵方目標造成 ${damage} 點全體魔法傷害（魔攻 * 0.8），並使全體 100% 陷入燃燒狀態，持續 3 回合。`;
+        return `召喚熾熱高溫的結界爆裂，對所有敵方目標造成 ${ColorText.ap(damage)} （魔攻 * 0.8），並使全體 100% 陷入燃燒狀態，持續 3 回合。`;
     }
 
     protected execute({playerStore, gameStateStore}: SkillParams): boolean {

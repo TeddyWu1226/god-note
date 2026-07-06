@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Cross snowflake -->
+  <rect x="7" y="2" width="2" height="12" fill="#74b9ff" />
+  <rect x="2" y="7" width="12" height="2" fill="#74b9ff" />
+  <rect x="5" y="5" width="6" height="6" fill="#0984e3" />
+  <rect x="7" y="3" width="2" height="10" fill="#ffffff" />
+  <rect x="3" y="7" width="10" height="2" fill="#ffffff" />
+  
+  <!-- Diagonal tips -->
+  <rect x="4" y="4" width="2" height="2" fill="#74b9ff" />
+  <rect x="10" y="4" width="2" height="2" fill="#74b9ff" />
+  <rect x="4" y="10" width="2" height="2" fill="#74b9ff" />
+  <rect x="10" y="10" width="2" height="2" fill="#74b9ff" />
+</svg>

@@ -12,7 +12,8 @@ export type ImpactType =
     | 'assassinate'
     | 'poison'
     | 'stun'
-    | 'burn';
+    | 'burn'
+    | 'frozen';
 
 /**
  * 在目標 DOM 元素正上方播放打擊特效覆蓋層

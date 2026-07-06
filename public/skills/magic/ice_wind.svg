@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Frost Wind Swirls -->
+  <rect x="2" y="4" width="8" height="1" fill="#74b9ff" />
+  <rect x="10" y="3" width="2" height="2" fill="#0984e3" />
+  <rect x="9" y="5" width="2" height="1" fill="#ffffff" />
+  
+  <rect x="6" y="8" width="8" height="1" fill="#74b9ff" />
+  <rect x="4" y="9" width="2" height="2" fill="#0984e3" />
+  <rect x="5" y="8" width="2" height="1" fill="#ffffff" />
+
+  <rect x="3" y="12" width="9" height="1" fill="#74b9ff" />
+  
+  <!-- Tiny ice crystals floating -->
+  <rect x="13" y="2" width="1" height="1" fill="#ffffff" />
+  <rect x="2" y="10" width="1" height="1" fill="#ffffff" />
+  <rect x="14" y="12" width="1" height="1" fill="#00d2d3" />
+</svg>

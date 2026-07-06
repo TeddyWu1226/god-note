@@ -57,7 +57,7 @@ export class FireAdvancement extends SkillModel {
     }
 
     get hit(): number {
-        return 25;
+        return 20;
     }
 
     get damageReduction(): number {

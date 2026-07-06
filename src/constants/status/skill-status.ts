@@ -178,4 +178,21 @@ export const SkillStatus = {
         isBuff: true,
         description: '燃爆狀態已啟用。回合開始時會引爆並移除所有帶有燃燒效果敵人的燃燒狀態，造成爆發傷害。'
     } as StatusEffect,
+    IceArmorStatus: {
+        name: '寒冰裝甲',
+        icon: '🛡️',
+        duration: 1,
+        isBuff: true,
+        description: '凝聚堅冰形成的魔法裝甲，使物理防禦力提升了 %adDefend% 點。',
+        bonus: {
+            adDefend: 0
+        }
+    } as StatusEffect,
+    Frozen: {
+        name: '冰凍',
+        icon: '🥶',
+        duration: 2,
+        description: '被凍住了,無法行動',
+        type: 'stuck'
+    } as StatusEffect,
 }

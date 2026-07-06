@@ -100,6 +100,19 @@ import {
     SearingWard,
     FireSkillTree,
 } from "@/constants/skill/learned-skill/fire_skills";
+import {
+    IceAdaptability,
+    IceAdvancement,
+    IceMaster,
+    IceWind,
+    IceArrow,
+    IceBurst,
+    IceWard,
+    GlacialWard,
+    IceArmor,
+    IceInfusion,
+    IceSkillTree,
+} from "./ice_skills";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -111,6 +124,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...StickSkillTree,
     ...SwordSkillTree,
     ...FireSkillTree,
+    ...IceSkillTree,
 };
 // 💡 技能 ID 與 Subclass 類別對照表
 const SKILL_CLASS_MAP: Record<string, any> = {
@@ -127,6 +141,11 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     FireAdaptability: FireAdaptability,
     FireAdvancement: FireAdvancement,
     FireMaster: FireMaster,
+
+    IceAdaptability: IceAdaptability,
+    IceAdvancement: IceAdvancement,
+    IceMaster: IceMaster,
+    IceWind: IceWind,
 
     WillBuff: WillBuff,
     FocusBuff: FocusBuff,
@@ -199,6 +218,14 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     FireArmor: FireArmor,
     FireInfusion: FireInfusion,
     IgnitionBlast: IgnitionBlast,
+
+    // 冰霜系主動技能
+    IceArrow: IceArrow,
+    IceBurst: IceBurst,
+    IceWard: IceWard,
+    GlacialWard: GlacialWard,
+    IceArmor: IceArmor,
+    IceInfusion: IceInfusion,
 
     // 副手技能
     ShieldBlock: ShieldBlock,
