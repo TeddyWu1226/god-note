@@ -53,7 +53,7 @@ watch(
     補給
   </el-button>
   <el-button
-      v-else-if="playerStore.info.skills?.filter((skill)=>skill.type === 'active').length"
+      v-else-if="playerStore.info.skills?.length"
       type="success"
       :disabled="props.disabled"
       @click="gameStateStore.bottomPanelMode = 'skills'"

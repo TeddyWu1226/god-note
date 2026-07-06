@@ -10,9 +10,13 @@ const playerStore = usePlayerStore();
 const gameStateStore = useGameStateStore();
 
 const sortedSkills = computed(() => {
-  // 戰鬥面板僅顯示主動技能，過濾掉被動技能
+  // 顯示所有技能：主動技能（0）排在前面，被動技能（1）排在後面
   const skills = playerStore.info.skills || [];
-  return skills.filter((s: SkillModel) => s.type === 'active');
+  return [...skills].sort((a, b) => {
+    const valA = a.type === 'active' ? 0 : 1;
+    const valB = b.type === 'active' ? 0 : 1;
+    return valA - valB;
+  });
 });
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
@@ -77,7 +81,10 @@ const clickSkill = (skill: SkillModel | any) => {
               'active-skill': skill.type === 'active',
               'disabled-skill': skill.type === 'active' && !canAfford(skill)
             }"
-            :style="{ borderColor: getRarityColor(skill.rarity) }"
+            :style="{ 
+              borderColor: getRarityColor(skill.rarity),
+              borderStyle: skill.type === 'passive' ? 'dashed' : 'solid'
+            }"
             @click="clickSkill(skill)"
         >
           <el-tooltip placement="top" effect="light">
@@ -151,22 +158,16 @@ const clickSkill = (skill: SkillModel | any) => {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
   padding: 0.1rem;
-}
-
-@media (max-width: 767px) {
-  .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .skill-item-box {
   background: #2d2f31;
   border: 1px solid #444;
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 4px 8px;
   cursor: pointer;
   user-select: none;
   transition: transform 0.15s ease-out, filter 0.2s;
@@ -174,19 +175,20 @@ const clickSkill = (skill: SkillModel | any) => {
 }
 
 .skill-item-box.passive-skill {
-  cursor: not-allowed;
-  opacity: 0.75;
+  background: #1c242c;
+  cursor: help;
+  opacity: 0.9;
 }
 
 .skill-item-box.active-skill:hover:not(.disabled-skill) {
-  transform: scale(1.03);
+  transform: scale(1.01);
   filter: brightness(1.15);
 }
 
 .skill-item-box.disabled-skill {
   cursor: not-allowed;
-  opacity: 0.5;
-  filter: grayscale(0.5);
+  opacity: 0.4;
+  filter: grayscale(0.85);
 }
 
 .skill-inner {
@@ -196,8 +198,8 @@ const clickSkill = (skill: SkillModel | any) => {
 }
 
 .skill-image-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   object-fit: contain;
   image-rendering: pixelated;
   display: inline-block;
@@ -205,7 +207,7 @@ const clickSkill = (skill: SkillModel | any) => {
 }
 
 .icon {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .info {
@@ -224,7 +226,7 @@ const clickSkill = (skill: SkillModel | any) => {
 
 .name {
   font-weight: bold;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #eee;
   white-space: nowrap;
   overflow: hidden;
@@ -250,8 +252,12 @@ const clickSkill = (skill: SkillModel | any) => {
 }
 
 .passive-tag {
+  background: rgba(144, 147, 153, 0.2);
   color: #909399;
   font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 10px;
 }
 
 .cost-tag {
