@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+  
+  <!-- Slender Fireball Trail / Body (Pure Flame) -->
+  <rect x="3" y="12" width="2" height="2" fill="#eb3b5a" />
+  <rect x="4" y="11" width="2" height="2" fill="#eb3b5a" />
+  <rect x="5" y="10" width="2" height="2" fill="#fa8231" />
+  <rect x="6" y="9" width="2" height="2" fill="#fa8231" />
+  <rect x="7" y="8" width="2" height="2" fill="#fd9644" />
+  <rect x="8" y="7" width="2" height="2" fill="#fd9644" />
+  
+  <!-- Elongated Inner White-Hot / Yellow Core -->
+  <rect x="5" y="10" width="1" height="1" fill="#f7b731" />
+  <rect x="6" y="9" width="1" height="1" fill="#f7b731" />
+  <rect x="7" y="8" width="1" height="1" fill="#ffffff" />
+  <rect x="8" y="7" width="1" height="1" fill="#ffffff" />
+  <rect x="9" y="6" width="1" height="1" fill="#ffffff" />
+  <rect x="10" y="5" width="1" height="1" fill="#ffffff" />
+
+  <!-- Fiery Slender Head (Top-Right) -->
+  <rect x="9" y="5" width="3" height="3" fill="#fd9644" />
+  <rect x="10" y="4" width="3" height="3" fill="#fa8231" />
+  <rect x="11" y="3" width="3" height="3" fill="#eb3b5a" />
+  <rect x="12" y="2" width="1" height="1" fill="#ffffff" />
+  
+  <!-- Outer sparks -->
+  <rect x="2" y="11" width="1" height="1" fill="#eb3b5a" />
+  <rect x="13" y="5" width="1" height="1" fill="#fa8231" />
+</svg>

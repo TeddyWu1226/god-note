@@ -160,4 +160,22 @@ export const SkillStatus = {
             adDefend: 0
         }
     } as StatusEffect,
+    FireArmorStatus: {
+        name: '火焰裝甲',
+        icon: '🔥',
+        duration: 2,
+        isBuff: true,
+        description: '匯聚火焰形成的魔法裝甲，提升了  %adDefend% 點物理防禦力與  %dodge% 點閃避值。',
+        bonus: {
+            adDefend: 0,
+            dodge: 0,
+        }
+    } as StatusEffect,
+    IgnitionBlastStatus: {
+        name: '燃爆模式',
+        icon: '🤯',
+        duration: -1,
+        isBuff: true,
+        description: '燃爆狀態已啟用。回合開始時會引爆並移除所有帶有燃燒效果敵人的燃燒狀態，造成爆發傷害。'
+    } as StatusEffect,
 }

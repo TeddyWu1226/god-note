@@ -139,9 +139,9 @@ export class FireMaster extends SkillModel {
 }
 
 /**
- * 火焰法術技能樹
+ * 火焰法術基礎技能樹
  */
-export const FireSkillTree: Record<string, SkillTreeNode> = {
+export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
     FireAdaptability: {
         id: 'FireAdaptability',
         pathId: 'mana_adaptability',
@@ -168,5 +168,5 @@ export const FireSkillTree: Record<string, SkillTreeNode> = {
         checkEligible: (playerStore) => {
             return playerStore.hasSkill('FireAdvancement') !== undefined;
         }
-    }
+    },
 };

@@ -10,7 +10,8 @@ import {
     VerticalSlash
 } from "@/constants/skill/learned-skill/basic_skills/ad_skill";
 import {
-    AgilityBuff, Breakfall,
+    AgilityBuff,
+    Breakfall,
     BuffSkillTree,
     FightBuff,
     FocusBuff,
@@ -19,48 +20,86 @@ import {
 import {
     BloodManaLoop,
     BlueSkin,
-    BrainPowerBoost, DemonBody,
+    BrainPowerBoost,
+    DemonBody,
     DemonBodySkillTree,
-    PhysiqueBoost, PurpleSkin, RedSkin
+    PhysiqueBoost,
+    PurpleSkin,
+    RedSkin
 } from "@/constants/skill/learned-skill/basic_skills/demon_body";
 import {
     Assassinate,
-    ConcealBreath, ConcealBreathInstinct, Flurry, KnifeMaster,
-    KnifeBase, KnifePro, KnifeAdv,
-    KnifeSkillTree, SwiftStrike, SpeedStrike,
-    SneakAttack, SurpriseAttack,
-    MistBase, MistPro, KnifeWhirlwind,
-    Assassination, PoisonApply, PoisonStack
+    Assassination,
+    ConcealBreath,
+    ConcealBreathInstinct,
+    Flurry,
+    KnifeAdv,
+    KnifeBase,
+    KnifeMaster,
+    KnifePro,
+    KnifeSkillTree,
+    KnifeWhirlwind,
+    MistBase,
+    MistPro,
+    PoisonApply,
+    PoisonStack,
+    SneakAttack,
+    SpeedStrike,
+    SurpriseAttack,
+    SwiftStrike
 } from "./knife_skills";
 import {
-    BlockBase, BlockPro, BlockAdv, ShieldSkillTree,
-    ShieldBash, CounterShield, CounterShieldAdv
+    BlockAdv,
+    BlockBase,
+    BlockPro,
+    CounterShield,
+    CounterShieldAdv,
+    ShieldBash,
+    ShieldSkillTree
 } from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
 import {
     ApSkillTree,
     MagicBall,
-    Shockwave,
     ManaAdaptability,
-    ManaArmor
+    ManaArmor,
+    Shockwave
 } from "@/constants/skill/learned-skill/basic_skills/ap_skill";
 import {
-    ContinuousSwordHorizontal, ContinuousSwordPoint,
+    AssaultCharge,
+    ContinuousSwordHorizontal,
+    ContinuousSwordPoint,
     ContinuousSwordVertical,
+    DoubleSlash,
+    HorizontalSweep,
+    MasterSwordHorizontal,
+    MasterSwordPoint,
+    MasterSwordVertical,
+    SwordAdv,
+    SwordBase,
+    SwordDance,
     SwordMaster,
-    SwordBase, SwordPro, SwordAdv,
+    SwordPolish,
+    SwordPro,
     SwordSkillTree,
-    MasterSwordVertical, MasterSwordHorizontal, MasterSwordPoint,
-    DoubleSlash, TripleSlash, HorizontalSweep, WhirlwindSlash, ThrustCharge, AssaultCharge,
-    SwordPolish, SwordDance
+    ThrustCharge,
+    TripleSlash,
+    WhirlwindSlash
 } from "./sword_skills";
 import {CommonHeal} from "@/constants/skill/learned-skill/heal_skills/heal_skill";
 import {
     FireAdaptability,
     FireAdvancement,
+    FireArmor,
+    FireArrow,
+    FireBurst,
+    FireInfusion,
     FireMaster,
-    FireSkillTree
-} from "@/constants/skill/learned-skill/fire_skills/fire_base";
+    FireWard,
+    IgnitionBlast,
+    SearingWard,
+    FireSkillTree,
+} from "@/constants/skill/learned-skill/fire_skills";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -152,6 +191,14 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     Assassination: Assassination,
     PoisonStack: PoisonStack,
 
+    // 火焰系主動技能
+    FireArrow: FireArrow,
+    FireBurst: FireBurst,
+    FireWard: FireWard,
+    SearingWard: SearingWard,
+    FireArmor: FireArmor,
+    FireInfusion: FireInfusion,
+    IgnitionBlast: IgnitionBlast,
 
     // 副手技能
     ShieldBlock: ShieldBlock,

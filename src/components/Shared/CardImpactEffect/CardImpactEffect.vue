@@ -10,6 +10,7 @@ import ThrustImpact from './comps/ThrustImpact.vue';
 import AssassinateImpact from './comps/AssassinateImpact.vue';
 import PoisonImpact from './comps/PoisonImpact.vue';
 import StunImpact from './comps/StunImpact.vue';
+import BurnImpact from './comps/BurnImpact.vue';
 
 const props = defineProps({
   type: { type: String, default: 'physical' },
@@ -49,6 +50,8 @@ const impactComponent = computed(() => {
       return PoisonImpact;
     case 'stun':
       return StunImpact;
+    case 'burn':
+      return BurnImpact;
     default:
       return PhysicalImpact;
   }
