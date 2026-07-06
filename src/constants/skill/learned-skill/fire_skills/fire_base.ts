@@ -146,10 +146,7 @@ export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
         id: 'FireAdaptability',
         pathId: 'fire_mana_adaptability',
         tier: 1,
-        evolvesFrom: ['ManaAdaptability'],
-        checkEligible: (playerStore) => {
-            return playerStore.hasSkill('ManaAdaptability') !== undefined;
-        }
+        evolvesFrom: ['ManaAdaptability']
     },
     FireAdvancement: {
         id: 'FireAdvancement',
@@ -157,7 +154,9 @@ export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['FireAdaptability'],
         checkEligible: (playerStore) => {
-            return playerStore.hasSkill('FireAdaptability') !== undefined;
+            const baseSkill = playerStore.hasSkill('FireArrow');
+            const advSkill = playerStore.hasSkill('FireWard')
+            return !!baseSkill?.isProficiencyMax || !!advSkill;
         }
     },
     FireMaster: {
@@ -166,7 +165,8 @@ export const FireBaseSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['FireAdvancement'],
         checkEligible: (playerStore) => {
-            return playerStore.hasSkill('FireAdvancement') !== undefined;
+            const advSkill = playerStore.hasSkill('FireWard')
+            return !!advSkill?.isProficiencyMax
         }
     },
 };

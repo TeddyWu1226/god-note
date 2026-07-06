@@ -3,7 +3,6 @@ import {PlayerStoreType, SkillOnPlayerAttackedHitParams, SkillOnStartParams, Ski
 import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement} from "@/utils/create";
-import {ItemStatus} from "@/constants/status/item-status";
 import {ColorText} from "@/utils/color";
 import EvnStatus from "@/constants/status/evn-status";
 import {SkillStatus} from "@/constants/status/skill-status";
@@ -25,7 +24,7 @@ export class FireArrow extends SkillModel {
             costSp: 10,
             costMaxAction: true,
             maxProficiency: 50,
-            proficiencyGain: 1
+            proficiencyGain: 2
         });
     }
 
@@ -62,7 +61,7 @@ export class FireArrow extends SkillModel {
         });
 
         if (Math.random() < (this.burnChance / 100)) {
-            monster.addEffect(ItemStatus.OnBurn, {
+            monster.addEffect(EvnStatus.OnBurn, {
                 duration: this.burnDuration
             });
         }
@@ -88,19 +87,15 @@ export class FireBurst extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 0,
-            costSp: 15,
+            costSp: 20,
             costMaxAction: true,
-            maxProficiency: 100,
+            maxProficiency: 50,
             proficiencyGain: 2
         });
     }
 
     getDamage(playerStore: PlayerStoreType): number {
-        return Math.floor((playerStore.finalStats?.ap ?? 0) * 1.1) + Math.round(this.proficiency / 4) + 5;
-    }
-
-    get burnChance(): number {
-        return 1
+        return Math.floor((playerStore.finalStats?.ap ?? 0) * 1.1) + Math.round(this.proficiency / 2) + 5;
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -109,7 +104,7 @@ export class FireBurst extends SkillModel {
             baseValue: this.getDamage(playerStore),
             type: 'ap'
         })
-        return `射出一枚燃燒的火焰球，對目標造成 ${ColorText.ap(damage)}，且有 ${this.burnChance * 100}% 機率使目標陷入燃燒狀態，持續 5 回合。\n(熟練度影響傷害)`;
+        return `射出一枚燃燒的火焰球，對目標造成 ${ColorText.ap(damage)}，且使目標陷入燃燒狀態，持續 5 回合。\n(熟練度影響傷害)`;
     }
 
     protected execute({playerStore, monster}: SkillParams): boolean {
@@ -123,11 +118,9 @@ export class FireBurst extends SkillModel {
             skillName: this.name
         });
 
-        if (Math.random() < this.burnChance) {
-            monster.addEffect(ItemStatus.OnBurn, {
-                duration: 5
-            });
-        }
+        monster.addEffect(EvnStatus.OnBurn, {
+            duration: 5
+        });
 
         useCardImpactEffect(getMonsterElement(monster.id), 'burn');
         useFullScreenEffect({

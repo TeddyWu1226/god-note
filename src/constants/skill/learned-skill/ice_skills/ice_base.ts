@@ -121,7 +121,6 @@ export class IceMaster extends SkillModel {
 }
 
 
-
 /**
  * 寒冰基礎法術技能樹
  */
@@ -130,10 +129,7 @@ export const IceBaseSkillTree: Record<string, SkillTreeNode> = {
         id: 'IceAdaptability',
         pathId: 'ice_adaptability',
         tier: 1,
-        evolvesFrom: ['ManaAdaptability'],
-        checkEligible: (playerStore) => {
-            return playerStore.hasSkill('ManaAdaptability') !== undefined;
-        }
+        evolvesFrom: ['ManaAdaptability']
     },
     IceAdvancement: {
         id: 'IceAdvancement',
@@ -141,7 +137,9 @@ export const IceBaseSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['IceAdaptability'],
         checkEligible: (playerStore) => {
-            return playerStore.hasSkill('IceAdaptability') !== undefined;
+            const baseSkill = playerStore.hasSkill('IceArrow');
+            const advSkill = playerStore.hasSkill('IceBurst')
+            return !!baseSkill?.isProficiencyMax || !!advSkill;
         }
     },
     IceMaster: {
@@ -150,7 +148,8 @@ export const IceBaseSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['IceAdvancement'],
         checkEligible: (playerStore) => {
-            return playerStore.hasSkill('IceAdvancement') !== undefined;
+            const advSkill = playerStore.hasSkill('IceBurst')
+            return !!advSkill?.isProficiencyMax
         }
     }
 };

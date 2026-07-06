@@ -81,7 +81,7 @@ export class IceBurst extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 2,
-            costSp: 15,
+            costSp: 20,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -89,11 +89,11 @@ export class IceBurst extends SkillModel {
     }
 
     getDamage(playerStore: PlayerStoreType): number {
-        return Math.floor((playerStore.finalStats?.ap ?? 0) * 0.8);
+        return Math.floor((playerStore.finalStats?.ap ?? 0) * (0.8 + this.proficiency / 100));
     }
 
     get freezeChance(): number {
-        return 50 + this.proficiency;
+        return 30 + this.proficiency;
     }
 
     description(playerStore: PlayerStoreType): string {

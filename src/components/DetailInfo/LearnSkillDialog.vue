@@ -123,7 +123,15 @@ const openLearnSkill = () => {
 
     // 3. 玩家不能已經擁有此技能的進化後版本
     const hasEvolvedVersion = currentSkillIds.some(ownedId => isEvolvedFrom(ownedId, id));
-    return !hasEvolvedVersion;
+    if (hasEvolvedVersion) return false;
+
+    // 4. 檢查進化前置條件：若有定義 evolvesFrom，玩家必須已擁有其來源技能之一
+    if (node && node.evolvesFrom && node.evolvesFrom.length > 0) {
+      const hasPreRequisite = playerStore.info.skills.some((s: any) => node.evolvesFrom!.includes(s.id));
+      if (!hasPreRequisite) return false;
+    }
+
+    return true;
   });
 
   console.log('可學技能列', candidates)
