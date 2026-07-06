@@ -20,7 +20,7 @@ export class FireArrow extends SkillModel {
             name: "烈焰箭",
             icon: "skills/magic/fire_arrow.svg",
             type: 'active',
-            rarity: 'rare',
+            rarity: 'common',
             maxCd: 0,
             costSp: 10,
             costMaxAction: true,
@@ -68,6 +68,10 @@ export class FireArrow extends SkillModel {
         }
 
         useCardImpactEffect(getMonsterElement(monster.id), 'burn');
+        useFullScreenEffect({
+            message: this.name,
+            color: '#fa8231'
+        });
         return true;
     }
 }
@@ -82,7 +86,7 @@ export class FireBurst extends SkillModel {
             name: "火炎彈",
             icon: "skills/magic/fire_burst.svg",
             type: 'active',
-            rarity: 'perfect',
+            rarity: 'rare',
             maxCd: 0,
             costSp: 15,
             costMaxAction: true,
@@ -126,6 +130,10 @@ export class FireBurst extends SkillModel {
         }
 
         useCardImpactEffect(getMonsterElement(monster.id), 'burn');
+        useFullScreenEffect({
+            message: this.name,
+            color: '#eb3b5a'
+        });
         return true;
     }
 }
@@ -167,6 +175,10 @@ export class FireWard extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#fa8231'
+        });
         return true;
     }
 }
@@ -222,6 +234,10 @@ export class SearingWard extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#ff3f34'
+        });
         return true;
     }
 }

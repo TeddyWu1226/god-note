@@ -5,6 +5,7 @@ import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardI
 import {getMonsterElement} from "@/utils/create";
 import {ColorText} from "@/utils/color";
 import {SkillStatus} from "@/constants/status/skill-status";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 /**
  * 冰錐箭
@@ -60,6 +61,10 @@ export class IceArrow extends SkillModel {
         });
 
         useCardImpactEffect(getMonsterElement(monster.id), 'frozen');
+        useFullScreenEffect({
+            message: this.name,
+            color: '#74b9ff'
+        });
         return true;
     }
 }
@@ -116,6 +121,10 @@ export class IceBurst extends SkillModel {
         }
 
         useCardImpactEffect(getMonsterElement(monster.id), 'frozen');
+        useFullScreenEffect({
+            message: this.name,
+            color: '#0984e3'
+        });
         return true;
     }
 }
@@ -157,6 +166,10 @@ export class IceWard extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#00d2d3'
+        });
         return true;
     }
 }
@@ -211,6 +224,10 @@ export class GlacialWard extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#ffffff'
+        });
         return true;
     }
 }
@@ -252,6 +269,10 @@ export class IceArmor extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#74b9ff'
+        });
         return true;
     }
 }
@@ -293,6 +314,10 @@ export class IceInfusion extends SkillModel {
             }
         });
 
+        useFullScreenEffect({
+            message: this.name,
+            color: '#00d2d3'
+        });
         return true;
     }
 

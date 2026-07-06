@@ -15,7 +15,7 @@ export class FireAdaptability extends SkillModel {
             name: "元素適性: 火",
             icon: "skills/magic/fire_adaptability.svg",
             type: 'passive',
-            rarity: 'rare'
+            rarity: 'common'
         });
     }
 
@@ -48,7 +48,7 @@ export class FireAdvancement extends SkillModel {
             name: "元素進階: 火",
             icon: "skills/magic/fire_advancement.svg",
             type: 'passive',
-            rarity: 'perfect'
+            rarity: 'rare'
         });
     }
 
