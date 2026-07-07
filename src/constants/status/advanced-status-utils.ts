@@ -4,8 +4,8 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {UsualStatus} from "@/constants/status/usual-status";
 import {MonsterModel} from "@/models/monster-model";
 import EvnStatus from "@/constants/status/evn-status";
-import {useGameStateStore} from "@/store/game-state-store";
 import {SkillStatus} from "@/constants/status/skill-status";
+import {Vanguard} from "@/constants/skill/learned-skill/axe_skills/axe_relation_skill";
 
 /**
  * 寒冷堆疊邏輯
@@ -99,7 +99,7 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
 
 
 export const playerAddSavePower = (playerStore: PlayerStoreType, duration = 2) => {
-    if (!!playerStore.hasSkill('Steady')) {
+    if (!!playerStore.hasSkill('Steady') || !!playerStore.hasSkill('Vanguard')) {
         playerStore.addStatus(
             SkillStatus.SavePower2,
             {duration: duration}

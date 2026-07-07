@@ -259,7 +259,7 @@ export class AxeCyclone extends SkillModel {
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore.finalStats.ad ?? 0;
         const dodge = playerStore.finalStats.dodge ?? 0;
-        return Math.round(0.8 * ad + 0.8 * dodge);
+        return Math.round(0.8 * ad + 0.8 * Math.max(0, dodge));
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -282,7 +282,7 @@ export class AxeCyclone extends SkillModel {
                     type: 'ad',
                     skillName: this.name
                 });
-                useCardImpactEffect(getMonsterElement(enemy.id), 'vertical-slash');
+                useCardImpactEffect(getMonsterElement(enemy.id), 'horizontal-slash');
             }
         });
         useFullScreenEffect({
@@ -314,7 +314,7 @@ export class AxeHurricane extends SkillModel {
     getDamage(playerStore: PlayerStoreType): number {
         const ad = playerStore.finalStats.ad ?? 0;
         const dodge = playerStore.finalStats.dodge ?? 0;
-        return Math.round(1.2 * ad + 1 * dodge);
+        return Math.round(1.2 * ad + Math.max(0, dodge));
     }
 
     description(playerStore: PlayerStoreType): string {
@@ -337,7 +337,7 @@ export class AxeHurricane extends SkillModel {
                     type: 'ad',
                     skillName: this.name
                 });
-                useCardImpactEffect(getMonsterElement(enemy.id), 'vertical-slash');
+                useCardImpactEffect(getMonsterElement(enemy.id), 'horizontal-slash');
             }
         });
         useFullScreenEffect({
@@ -590,19 +590,11 @@ export class Vanguard extends SkillModel {
     }
 
     description(): string {
-        return `戰鬥開始時，獲得「蓄力」效果。`;
+        return `「蓄力」效果會額外提升 20% 抗性。`;
     }
 
     protected execute(): boolean {
         return true;
-    }
-
-    override onRoundStart({playerStore, gameStateStore, logStore}: SkillOnStartParams) {
-        if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) return;
-        if (gameStateStore.battleRound === 1) {
-            playerAddSavePower(playerStore, 1)
-            logStore.logger.add(`[先鋒] 戰鬥開始，獲得「蓄力」效果！`);
-        }
     }
 }
 
@@ -622,7 +614,7 @@ export class Steady extends SkillModel {
     }
 
     description(): string {
-        return `戰鬥開始時，獲得「蓄力」效果。此外，「蓄力」效果會額外提升 20% 抗性。`;
+        return `戰鬥開始時，獲得「蓄力」效果。「蓄力」效果會額外提升 20% 抗性。`;
     }
 
     protected execute(): boolean {
@@ -646,6 +638,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'DefensiveStrike',
         pathId: 'axeplay_passive',
         tier: 2,
+        evolvesFrom: ['VerticalSlash'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('VerticalSlash') !== undefined;
         }
@@ -663,6 +656,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'EvasiveStrike',
         pathId: 'axeplay_dodge',
         tier: 2,
+        evolvesFrom: ['VerticalSlash'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('VerticalSlash') !== undefined;
         }
@@ -697,6 +691,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'Barbaric',
         pathId: 'axeplay_shout',
         tier: 2,
+        evolvesFrom: ['HorizontalSlash'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('HorizontalSlash') !== undefined;
         }
@@ -714,6 +709,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'AxeCyclone',
         pathId: 'axeplay_spin',
         tier: 2,
+        evolvesFrom: ['HorizontalSlash'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('HorizontalSlash') !== undefined;
         }
@@ -731,6 +727,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'ArmorBreakStrike',
         pathId: 'axeplay_armor',
         tier: 2,
+        evolvesFrom: ['Thrust'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('Thrust') !== undefined;
         }
@@ -748,6 +745,7 @@ export const AxeRelationSkillTree: Record<string, SkillTreeNode> = {
         id: 'LeapStrike',
         pathId: 'axeplay_leap',
         tier: 2,
+        evolvesFrom: ['Thrust'],
         checkEligible: (playerStore) => {
             return playerStore.checkSkillPath('axeplay') && playerStore.hasSkill('Thrust') !== undefined;
         }
