@@ -258,6 +258,16 @@ export const SpecialWeapon = {
         quality: 0,
         ad: 1,
     } as EquipmentType,
+    WoodAxe: {
+        name: '木斧',
+        description: '用木頭削成的斧，起始武器。',
+        icon: '🪓',
+        position: EquipmentPosition.WEAPON,
+        quality: 0,
+        ad: 1,
+        isTwoHanded: true,
+        skill: 'PowerCharge',
+    } as EquipmentType,
     SpikeSpear: {
         name: '尖刺木槍',
         icon: '🪾',

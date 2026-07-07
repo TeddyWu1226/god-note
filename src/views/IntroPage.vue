@@ -39,12 +39,12 @@ const confirmClassSelection = async () => {
   playerStore.info.char = selectedClass.value;
 
   // 套用職業初始獎勵
-  // 基本是 200元來做計算
+  // 基本是 150元來做計算
   switch (selectedClass.value) {
     case CharEnum.Villager.value:
-      playerStore.equipItem(SpecialWeapon.WoodSword);
+      const startWeapon = Math.random() <= 0.5 ? SpecialWeapon.WoodSword : SpecialWeapon.WoodAxe
+      playerStore.equipItem(startWeapon);
       playerStore.gainItem(NormalFruits.RedApple, 2)
-      playerStore.info.gold = 50;
       break;
     case CharEnum.Merchant.value:
       playerStore.info.gold = 300;
@@ -53,12 +53,11 @@ const confirmClassSelection = async () => {
       break;
     case CharEnum.Thief.value:
       playerStore.equipItem(Dagger.Dagger0);
-      playerStore.info.gold = 50;
       break;
     case CharEnum.Stargazer.value:
-      playerStore.info.ap = 13;
+      playerStore.info.ap = 12;
       playerStore.info.ad = 5
-      playerStore.info.gold = 100;
+      playerStore.info.gold = 50;
       playerStore.addSkill('MagicBall')
       break;
 

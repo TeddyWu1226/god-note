@@ -12,6 +12,7 @@ import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils"
 import {WorldDefault} from "@/assets/const";
 import EvnStatus from "@/constants/status/evn-status";
 import {useGameStateStore} from "@/store/game-state-store";
+import {SkillModel} from "@/models/skill-model";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
@@ -116,6 +117,20 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             notHitPlayer()
         }
         logStore.logger.add(log);
+        if (!(defender instanceof MonsterClass)) {
+            const gameStateStore = useGameStateStore();
+            defender.info.skills.forEach((s: SkillModel) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        playerStore: defender,
+                        gameStateStore,
+                        logStore,
+                        monster: attacker as MonsterModel,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
+        }
         return outcome;
     }
 
@@ -160,7 +175,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     // 當玩家受到傷害前最後根據技能檢查
     if (!(defender instanceof MonsterClass)) {
         const gameStateStore = useGameStateStore();
-        defender.info.skills.forEach((s: any) => {
+        defender.info.skills.forEach((s: SkillModel) => {
             if (s && typeof s.onPlayerAttacked === 'function') {
                 s.onPlayerAttacked({
                     playerStore: defender,
@@ -206,7 +221,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
     logStore.logger.add(logMessage);
 
-    // 觸發受擊時消失狀態 (untilAttacked) 與玩家受擊技能 Hook (onPlayerAttacked)
+    // 觸發受擊時消失狀態 (untilAttacked)
     if (outcome.isHit) {
         defender.handleUntilAttacked();
     }
@@ -309,6 +324,21 @@ export function applySkillDamage({
             } else {
                 logStore.logger.add(`${targetName} 閃避了攻擊。`);
             }
+            // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能
+            if (!(target instanceof MonsterClass)) {
+                const gameStateStore = useGameStateStore();
+                target.info.skills.forEach((s: SkillModel) => {
+                    if (s && typeof s.onPlayerAttacked === 'function') {
+                        s.onPlayerAttacked({
+                            monster: speller as MonsterClass,
+                            playerStore: target,
+                            gameStateStore,
+                            logStore,
+                            attackedOutcome: outcome
+                        });
+                    }
+                });
+            }
             return outcome;
         }
         outcome.isHit = true;
@@ -326,16 +356,16 @@ export function applySkillDamage({
     // 施法者素質加成完畢計算
     let finalDamage = damage;
 
-    // --- 抗性減傷 (defendIncrease) ---
-    if (type !== 'true' && targetFinalStats.defendIncrease) {
-        const reduction = Math.min(targetFinalStats.defendIncrease, 95);
-        finalDamage *= (1 - reduction / 100);
-    }
-
     // --- 防禦減免 true 類型直接跳過固定防禦---
     if (type === 'ad' || type === 'ap') {
         // 物理與魔法：皆扣除防禦值 (adDefend)
         finalDamage = Math.max(1, finalDamage - (targetFinalStats.adDefend || 0));
+    }
+
+    // --- 抗性減傷 (defendIncrease) ---
+    if (type !== 'true' && targetFinalStats.defendIncrease) {
+        const reduction = Math.min(targetFinalStats.defendIncrease, 95);
+        finalDamage *= (1 - reduction / 100);
     }
 
     outcome.totalDamage = Math.floor(finalDamage);
@@ -359,13 +389,13 @@ export function applySkillDamage({
         }
     }
 
-    // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能 Hook (onPlayerAttacked)
+    // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能
     if (!(target instanceof MonsterClass)) {
         const gameStateStore = useGameStateStore();
-        target.info.skills.forEach((s: any) => {
+        target.info.skills.forEach((s: SkillModel) => {
             if (s && typeof s.onPlayerAttacked === 'function') {
                 s.onPlayerAttacked({
-                    monster: speller,
+                    monster: speller as MonsterClass,
                     playerStore: target,
                     gameStateStore,
                     logStore,
@@ -580,10 +610,10 @@ export const spawnMonsters = (
     eliteBoost = false
 ): MonsterClass[] => {
     const newMonsters: MonsterClass[] = [];
-    let strengtheningLevel = strengthening
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
         let monsterInstance = MonsterFactory.createMonster(m.code, m);
+        let strengtheningLevel = strengthening;
         if (eliteBoost) {
             // 菁英強化
             monsterInstance.name = `【菁英】${monsterInstance.name}`;
@@ -594,21 +624,21 @@ export const spawnMonsters = (
                     monsterInstance.class = ['elite'];
                 }
             }
-            strengtheningLevel += 2
+            strengtheningLevel = strengthening + 2;
         }
         // 基本階段強化
         if (strengtheningLevel) {
-            monsterInstance.level += strengtheningLevel
+            monsterInstance.level += strengtheningLevel;
             // 每多一等
             // 多 15% 血量
-            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * (1 + 0.15 * strengthening));
+            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * (1 + 0.15 * strengtheningLevel));
             monsterInstance.hp = monsterInstance.hpLimit;
             // 多 20% 輸出
-            monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengthening));
+            monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengtheningLevel));
             // 多 防禦
-            monsterInstance.adDefend += strengtheningLevel
+            monsterInstance.adDefend += strengtheningLevel;
             // 多掉落金幣
-            monsterInstance.dropGold = monsterInstance.dropGold * (1 + 0.15 * strengthening);
+            monsterInstance.dropGold = monsterInstance.dropGold * (1 + 0.15 * strengtheningLevel);
         }
         newMonsters.push(monsterInstance);
     }

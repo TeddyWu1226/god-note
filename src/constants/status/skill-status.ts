@@ -37,6 +37,7 @@ export const SkillStatus = {
     Terrified: {
         name: '威嚇',
         icon: '😰',
+        description: '輸出 %adIncrease%% ',
         duration: 2,
         bonus: {
             adIncrease: -20
