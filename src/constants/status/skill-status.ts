@@ -11,7 +11,37 @@ export const SkillStatus = {
             adIncrease: 100,
             hit: 20
         }
-    },
+    } as StatusEffect,
+    SavePower2: {
+        name: '蓄力',
+        icon: '💪',
+        duration: 2,
+        isBuff: true,
+        description: '提升 %adIncrease%% 物理傷害，%hit% 點命中值 以及 %defendIncrease%% 抗性',
+        bonus: {
+            adIncrease: 100,
+            hit: 20,
+            defendIncrease: 20
+        }
+    } as StatusEffect,
+    EvasiveStrike: {
+        name: '迴避攻勢',
+        icon: '⚡',
+        duration: 2,
+        isBuff: true,
+        description: '提升 %ad% 物理傷害',
+        bonus: {
+            ad: 10
+        }
+    } as StatusEffect,
+    Terrified: {
+        name: '威嚇',
+        icon: '😰',
+        duration: 2,
+        bonus: {
+            adIncrease: -20
+        }
+    } as StatusEffect,
     Focus: {
         name: '專注意志',
         icon: '🎯',
@@ -194,5 +224,23 @@ export const SkillStatus = {
         duration: 2,
         description: '被凍住了,無法行動',
         type: 'stuck'
+    } as StatusEffect,
+    ArmorBreak: {
+        name: '破甲',
+        icon: '⛓️‍💥',
+        duration: 3,
+        description: '防禦力 %adDefend% 點',
+        bonus: {
+            adDefend: -5
+        }
+    } as StatusEffect,
+    Cripple: {
+        name: '殘廢',
+        icon: '♿',
+        duration: 2,
+        description: '使輸出 %adIncrease%% ',
+        bonus: {
+            adIncrease: -20
+        }
     } as StatusEffect,
 }

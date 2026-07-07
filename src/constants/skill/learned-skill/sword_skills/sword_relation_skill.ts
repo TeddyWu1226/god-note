@@ -8,7 +8,6 @@ import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardI
 import {getMonsterElement, Sleep} from "@/utils/create";
 import {checkProbability} from "@/utils/math";
 import {MonsterModel} from "@/models/monster-model";
-import {UsualStatus} from "@/constants/status/usual-status";
 import {ColorText} from "@/utils/color";
 import {SkillStatus} from "@/constants/status/skill-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
@@ -132,7 +131,7 @@ export class ContinuousSwordPoint extends SkillModel {
             return
         }
         if (checkProbability((this.chance / 100))) {
-            monster.addEffect(UsualStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
+            monster.addEffect(SkillStatus.ArmorBreak, {bonus: {adDefend: -this.getValue(playerStore)}});
             useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         }
     }
@@ -250,7 +249,7 @@ export class MasterSwordPoint extends SkillModel {
             return
         }
         if (checkProbability((this.chance / 100))) {
-            monster.addEffect(UsualStatus.ArmorBreak, {
+            monster.addEffect(SkillStatus.ArmorBreak, {
                 bonus: {
                     adDefend: -this.getValue(playerStore),
                     defendIncrease: -10
@@ -524,8 +523,9 @@ export class ThrustCharge extends SkillModel {
             canCrit: true,
             skillName: this.name
         });
-
-        monster.addEffect(UsualStatus.Cripple);
+        if (monster.lastDamageResult.isHit) {
+            monster.addEffect(SkillStatus.Cripple);
+        }
 
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
@@ -576,7 +576,10 @@ export class AssaultCharge extends SkillModel {
             skillName: this.name
         });
 
-        monster.addEffect(UsualStatus.Cripple);
+        if (monster.lastDamageResult.isHit) {
+            monster.addEffect(SkillStatus.Cripple);
+        }
+
         useCardImpactEffect(getMonsterElement(monster.id), 'thrust');
         return true;
     }

@@ -120,6 +120,23 @@ import {
     AxeMaster,
     AxeBaseSkillTree
 } from "./axe_skills/axe_base";
+import {
+    DefensiveStrike,
+    ResistStrike,
+    EvasiveStrike,
+    DodgeStrike,
+    Vanguard,
+    Steady,
+    Barbaric,
+    Intimidate,
+    AxeCyclone,
+    AxeHurricane,
+    ArmorBreakStrike,
+    ArmorShatterStrike,
+    LeapStrike,
+    SkyCleave,
+    AxeRelationSkillTree
+} from "./axe_skills/axe_relation_skill";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -133,6 +150,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...FireSkillTree,
     ...IceSkillTree,
     ...AxeBaseSkillTree,
+    ...AxeRelationSkillTree,
 };
 // 💡 技能 ID 與 Subclass 類別對照表
 const SKILL_CLASS_MAP: Record<string, any> = {
@@ -238,6 +256,22 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     GlacialWard: GlacialWard,
     IceArmor: IceArmor,
     IceInfusion: IceInfusion,
+
+    // 斧術系主動與衍生被動技能
+    DefensiveStrike: DefensiveStrike,
+    ResistStrike: ResistStrike,
+    EvasiveStrike: EvasiveStrike,
+    DodgeStrike: DodgeStrike,
+    Vanguard: Vanguard,
+    Steady: Steady,
+    Barbaric: Barbaric,
+    Intimidate: Intimidate,
+    AxeCyclone: AxeCyclone,
+    AxeHurricane: AxeHurricane,
+    ArmorBreakStrike: ArmorBreakStrike,
+    ArmorShatterStrike: ArmorShatterStrike,
+    LeapStrike: LeapStrike,
+    SkyCleave: SkyCleave,
 
     // 副手技能
     ShieldBlock: ShieldBlock,

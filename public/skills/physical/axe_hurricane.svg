@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="100%" height="100%" shape-rendering="crispEdges">
+  <rect x="0.5" y="0.5" width="15" height="15" fill="none" stroke="#3d3d4e" stroke-width="1" rx="0.5" ry="0.5" />
+  
+  <!-- Spiral trails -->
+  <path d="M 8,8 A 3,3 0 0,0 5,5" fill="none" stroke="#00a8ff" stroke-width="1" />
+  <path d="M 8,8 A 5,5 0 0,1 13,8" fill="none" stroke="#dcdde1" stroke-width="1.5" />
+  <path d="M 8,8 A 7,7 0 0,0 1,8" fill="none" stroke="#718093" stroke-width="1" />
+  
+  <!-- Sparkles -->
+  <rect x="3" y="4" width="1" height="1" fill="#fbc531" />
+  <rect x="12" y="11" width="1" height="1" fill="#fbc531" />
+  <rect x="11" y="3" width="1" height="1" fill="#fbc531" />
+</svg>

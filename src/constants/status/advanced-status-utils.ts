@@ -5,6 +5,7 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {MonsterModel} from "@/models/monster-model";
 import EvnStatus from "@/constants/status/evn-status";
 import {useGameStateStore} from "@/store/game-state-store";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 /**
  * 寒冷堆疊邏輯
@@ -93,5 +94,20 @@ export const playerAdjustSanity = (playerStore: PlayerStoreType, amount: number)
             playerStore.removeStatus(EvnStatus.HighSanity.name);
             playerStore.removeStatus(EvnStatus.LowSanity.name);
         }
+    }
+}
+
+
+export const playerAddSavePower = (playerStore: PlayerStoreType, duration = 2) => {
+    if (!!playerStore.hasSkill('Steady')) {
+        playerStore.addStatus(
+            SkillStatus.SavePower2,
+            {duration: duration}
+        )
+    } else {
+        playerStore.addStatus(
+            SkillStatus.SavePower,
+            {duration: duration}
+        )
     }
 }

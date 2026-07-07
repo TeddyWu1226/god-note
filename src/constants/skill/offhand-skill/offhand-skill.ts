@@ -4,6 +4,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {ItemStatus} from "@/constants/status/item-status";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {SkillStatus} from "@/constants/status/skill-status";
+import {playerAddSavePower} from "@/constants/status/advanced-status-utils";
 
 export class ShieldBlock extends SkillModel {
     constructor() {
@@ -84,19 +85,12 @@ export class PowerCharge extends SkillModel {
         return `蓄積力氣，下一回合提升 ${this.adIncrease}% 物理傷害。`;
     }
 
-    protected execute(params: SkillParams): boolean {
-        const playerStore = params.playerStore;
-        if (!playerStore) return false;
-
-        playerStore.addStatus(
-            SkillStatus.SavePower, {bonus: {adIncrease: this.adIncrease}}
-        );
-
+    protected execute({playerStore}: SkillParams): boolean {
+        playerAddSavePower(playerStore)
         useFullScreenEffect({
             message: '蓄力',
             color: 'orange'
         });
-        useCardImpactEffect(null, 'buff');
         return true;
     }
 }
