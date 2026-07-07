@@ -51,6 +51,9 @@ export const useTrackerStore = defineStore('tracker', () => {
             if (isMatchedWeapon('Stick', weaponName)) {
                 currentKills.value['Stick'] = (currentKills.value['Stick'] || 0) + amount;
             }
+            if (isMatchedWeapon('Axe', weaponName)) {
+                currentKills.value['Axe'] = (currentKills.value['Axe'] || 0) + amount;
+            }
         }
     }
 

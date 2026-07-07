@@ -113,6 +113,13 @@ import {
     IceInfusion,
     IceSkillTree,
 } from "./ice_skills";
+import {
+    AxeBase,
+    AxePro,
+    AxeAdv,
+    AxeMaster,
+    AxeBaseSkillTree
+} from "./axe_skills/axe_base";
 
 export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...AdBasicSkillTree,
@@ -125,6 +132,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...SwordSkillTree,
     ...FireSkillTree,
     ...IceSkillTree,
+    ...AxeBaseSkillTree,
 };
 // 💡 技能 ID 與 Subclass 類別對照表
 const SKILL_CLASS_MAP: Record<string, any> = {
@@ -155,6 +163,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     PhysiqueBoost: PhysiqueBoost,
     BrainPowerBoost: BrainPowerBoost,
     SwordBase: SwordBase,
+    AxeBase: AxeBase,
     KnifeBase: KnifeBase,
     RedSkin: RedSkin,
     BlueSkin: BlueSkin,
@@ -170,7 +179,9 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     Breakfall: Breakfall,
 
     SwordPro: SwordPro,
+    AxePro: AxePro,
     SwordAdv: SwordAdv,
+    AxeAdv: AxeAdv,
     BlockPro: BlockPro,
     BlockAdv: BlockAdv,
     CounterShield: CounterShield,
@@ -195,6 +206,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     ConcealBreathInstinct: ConcealBreathInstinct,
 
     SwordMaster: SwordMaster,
+    AxeMaster: AxeMaster,
     DemonBody: DemonBody,
     KnifeMaster: KnifeMaster,
     MasterSwordVertical: MasterSwordVertical,

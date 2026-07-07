@@ -68,6 +68,7 @@ export const WeaponCnNameMapping = {
     'Sword': ['劍'],
     'Knife': ['小刀', '匕首'],
     'Stick': ['杖'],
+    'Axe': ['斧'],
     // 副手
     'Book': ['書', '捲'],
     'Shield': ['盾']

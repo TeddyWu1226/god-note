@@ -1,37 +1,33 @@
-/**
- * 劍術熟練度
- */
 import {SkillModel} from "@/models/skill-model";
 import {SkillTreeNode} from "@/types";
 import {WeaponCnNameMapping} from "@/constants/default-const";
 import {isEquip} from "@/constants/skill/utils";
 import {EquipmentPosition} from "@/enums/enums";
 
-export class SwordBase extends SkillModel {
+export class AxeBase extends SkillModel {
     constructor() {
         super({
-            id: 'SwordBase',
-            name: "劍術技巧",
-            icon: "skills/physical/sword_base.svg",
+            id: 'AxeBase',
+            name: "斧術技巧",
+            icon: "skills/physical/axe_base.svg",
             type: 'passive',
             rarity: 'common',
-            uniqueFields: ['SwordBase'],
+            uniqueFields: ['AxeBase'],
             maxProficiency: 100,
             proficiencyGain: 1
         });
     }
 
     addBonus() {
-        // 提升 5
         return {
-            hit: 5 + (Math.ceil(this.proficiency * 0.05)),// 10
-            adDefend: 1 + (Math.ceil(this.proficiency * 0.04)),// 5
+            hit: 5 + (Math.ceil(this.proficiency * 0.05)), // 10
+            critRate: 5 + (Math.ceil(this.proficiency * 0.05)), // 10
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Axe.join(', ')}」的武器時，提升 ${bonus.hit} 點命中，${bonus.critRate}% 爆擊率。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -40,22 +36,22 @@ export class SwordBase extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+        if (isEquip('Axe', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-export class SwordPro extends SkillModel {
+export class AxePro extends SkillModel {
     constructor() {
         super({
-            id: 'SwordPro',
-            name: "劍術精通",
-            icon: "skills/physical/sword_pro.svg",
+            id: 'AxePro',
+            name: "斧術精通",
+            icon: "skills/physical/axe_pro.svg",
             type: 'passive',
             rarity: 'rare',
-            uniqueFields: ['SwordBase'],
+            uniqueFields: ['AxeBase'],
             maxProficiency: 100,
             proficiencyGain: 1
         });
@@ -64,14 +60,13 @@ export class SwordPro extends SkillModel {
     addBonus() {
         return {
             hit: 10 + (Math.ceil(this.proficiency * 0.1)), // 20
-            adDefend: 4 + (Math.ceil(this.proficiency * 0.04)), // 8
-            ad: 3 + (Math.ceil(this.proficiency * 0.02)), // 5
+            critRate: 10 + (Math.ceil(this.proficiency * 0.05)), // 15
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Axe.join(', ')}」的武器時，提升 ${bonus.hit} 點命中，${bonus.critRate}% 爆擊率。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -80,22 +75,22 @@ export class SwordPro extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+        if (isEquip('Axe', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-export class SwordAdv extends SkillModel {
+export class AxeAdv extends SkillModel {
     constructor() {
         super({
-            id: 'SwordAdv',
-            name: "劍術進階精通",
-            icon: "skills/physical/sword_adv.svg",
+            id: 'AxeAdv',
+            name: "斧術進階精通",
+            icon: "skills/physical/axe_adv.svg",
             type: 'passive',
             rarity: 'perfect',
-            uniqueFields: ['SwordBase'],
+            uniqueFields: ['AxeBase'],
             maxProficiency: 100,
             proficiencyGain: 1
         });
@@ -104,14 +99,13 @@ export class SwordAdv extends SkillModel {
     addBonus() {
         return {
             hit: 20 + (Math.ceil(this.proficiency * 0.15)), // 35
-            adDefend: 8 + (Math.ceil(this.proficiency * 0.06)), // 14
-            ad: 8 + (Math.ceil(this.proficiency * 0.06)), // 14
+            critRate: 15 + (Math.ceil(this.proficiency * 0.05)), // 20
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`
+        return `裝備名稱含有「${WeaponCnNameMapping.Axe.join(', ')}」的武器時，提升 ${bonus.hit} 點命中，${bonus.critRate}% 爆擊率。`
             + `<br/>(裝備對應武器進行攻擊可以提升熟練度)`;
     }
 
@@ -120,37 +114,35 @@ export class SwordAdv extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+        if (isEquip('Axe', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-export class SwordMaster extends SkillModel {
+export class AxeMaster extends SkillModel {
     constructor() {
         super({
-            id: 'SwordMaster',
-            name: "劍術大師精通",
-            icon: "skills/physical/sword_master.svg",
+            id: 'AxeMaster',
+            name: "斧術大師精通",
+            icon: "skills/physical/axe_master.svg",
             type: 'passive',
             rarity: 'perfect',
-            uniqueFields: ['SwordBase'],
+            uniqueFields: ['AxeBase']
         });
     }
-
 
     addBonus() {
         return {
             hit: 50,
-            adDefend: 20,
-            ad: 20,
+            critRate: 25,
         }
     }
 
     description(): string {
         const bonus = this.addBonus()
-        return `裝備名稱含有「${WeaponCnNameMapping.Sword.join(', ')}」的武器時，提升 ${bonus.ad} 點物理攻擊力, ${bonus.hit} 點命中, ${bonus.adDefend} 點防禦。`;
+        return `裝備名稱含有「${WeaponCnNameMapping.Axe.join(', ')}」的武器時，提升 ${bonus.hit} 點命中，${bonus.critRate}% 爆擊率。`;
     }
 
     protected execute(): boolean {
@@ -158,51 +150,50 @@ export class SwordMaster extends SkillModel {
     }
 
     override getPassiveBonus(player?: any): Record<string, number> {
-        if (isEquip('Sword', EquipmentPosition.WEAPON, player)) {
+        if (isEquip('Axe', EquipmentPosition.WEAPON, player)) {
             return this.addBonus();
         }
         return {};
     }
 }
 
-
-export const SwordBaseSkillTree: Record<string, SkillTreeNode> = {
-    SwordBase: {
-        id: 'SwordBase',
-        pathId: 'swordplay',
+export const AxeBaseSkillTree: Record<string, SkillTreeNode> = {
+    AxeBase: {
+        id: 'AxeBase',
+        pathId: 'axeplay',
         tier: 0,
         checkEligible: (playerStore, trackerStore) => {
-            return trackerStore.getKillCount('Sword') >= 3;
+            return (trackerStore?.getKillCount('Axe') ?? 0) >= 3;
         }
     },
-    SwordPro: {
-        id: 'SwordPro',
-        pathId: 'swordplay',
+    AxePro: {
+        id: 'AxePro',
+        pathId: 'axeplay',
         tier: 1,
-        evolvesFrom: ['SwordBase'],
+        evolvesFrom: ['AxeBase'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('SwordBase');
+            const baseSkill = playerStore.hasSkill('AxeBase');
             return !!baseSkill?.isProficiencyMax;
         }
     },
-    SwordAdv: {
-        id: 'SwordAdv',
-        pathId: 'swordplay',
+    AxeAdv: {
+        id: 'AxeAdv',
+        pathId: 'axeplay',
         tier: 2,
-        evolvesFrom: ['SwordPro'],
+        evolvesFrom: ['AxePro'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('SwordPro');
+            const baseSkill = playerStore.hasSkill('AxePro');
             return !!baseSkill?.isProficiencyMax;
         }
     },
-    SwordMaster: {
-        id: 'SwordMaster',
-        pathId: 'swordplay',
+    AxeMaster: {
+        id: 'AxeMaster',
+        pathId: 'axeplay',
         tier: 3,
-        evolvesFrom: ['SwordAdv'],
+        evolvesFrom: ['AxeAdv'],
         checkEligible: (playerStore) => {
-            const baseSkill = playerStore.hasSkill('SwordAdv');
+            const baseSkill = playerStore.hasSkill('AxeAdv');
             return !!baseSkill?.isProficiencyMax;
         }
-    },
-}
+    }
+};
