@@ -24,8 +24,8 @@ export class SwordBase extends SkillModel {
     addBonus() {
         // 提升 5
         return {
-            hit: 5 + (Math.ceil(this.proficiency * 0.05)),
-            adDefend: 1 + (Math.ceil(this.proficiency * 0.04)),
+            hit: 5 + (Math.ceil(this.proficiency * 0.05)),// 10
+            adDefend: 1 + (Math.ceil(this.proficiency * 0.04)),// 5
         }
     }
 
