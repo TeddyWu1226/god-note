@@ -4,51 +4,51 @@ import {EquipmentPosition} from "@/enums/enums";
 
 export const Head = {
     HpHead0: {
-        name: '布盔',
-        description: '用多層棉布保護,給點溫暖。',
+        name: '生鏽頭盔',
+        description: '布滿斑駁鐵鏽的舊頭盔，雖然笨重，但能給頭部最基本的保護與安全感。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 0,
         hpLimit: 50
     } as EquipmentType,
     HpHead1: {
-        name: '皮質頭盔',
-        description: '簡單加工過的獸皮。',
+        name: '普通頭盔',
+        description: '使用鐵片與皮革簡單拼接製成的頭盔，工藝雖普通，但結構結實。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 1,
         hpLimit: 100
     } as EquipmentType,
     HpHead2: {
-        name: '強化鐵盔',
-        description: '內襯墊了厚棉布的鐵盔。',
+        name: '精良頭盔',
+        description: '精心打造並墊有厚棉內襯的精緻鐵盔，能有效緩衝衝擊，配戴起來十分舒適。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 2,
         hpLimit: 200
     } as EquipmentType,
     HpHead3: {
-        name: '守衛重盔',
-        description: '守衛標配的裝備，顯著提升生命力。',
+        name: '鋼鐵頭盔',
+        description: '正規軍衛兵標配的厚重鋼盔，優秀的鋼材結構給予人無比的安心感，顯著提升生命力。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 3,
-        hpLimit: 400
+        hpLimit: 350
     } as EquipmentType,
     HpHead4: {
-        name: '騎士之盔',
-        description: '精銳騎士的標準配備，提供不錯的生命力。',
+        name: '合金頭盔',
+        description: '以稀有金屬混合鍛造的輕量化合金頭盔，防護與舒適兼具，提供極佳的生命力。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 4,
-        hpLimit: 700
+        hpLimit: 550
     } as EquipmentType,
     HpHead5: {
-        name: '巨像戰盔',
-        description: '模仿遠古巨像打造，賦予頑強的生命力。',
+        name: '精鋼頭盔',
+        description: '仿照遠古巨像頭部結構鍛造的精鋼重盔，能與配戴者的生命氣息共鳴，賦予頑強的生命力。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 5,
-        hpLimit: 1000
+        hpLimit: 800
     } as EquipmentType
 };
