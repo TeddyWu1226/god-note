@@ -20,7 +20,7 @@ export class FireAdaptability extends SkillModel {
     }
 
     get spRegen(): number {
-        return 3;
+        return 2;
     }
 
     description(playerStore: PlayerStoreType): string {

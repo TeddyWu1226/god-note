@@ -195,11 +195,12 @@ export const Axe = {
 export const MagicStick = {
     MagicStick0: {
         name: '生鏽法杖',
-        description: '表皮剝落且金屬環生鏽的古老法杖，雖然年久失修，但內部仍迴盪著一絲倔強的魔力漣漪。',
+        description: '表皮剝落且金屬環生鏽的法杖，雖然年久失修，但內部仍迴盪著一絲倔強的魔力漣漪。',
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 0,
-        ap: 5,
+        ap: 4,
+        spRegen: 1,
     } as EquipmentType,
     MagicStick1: {
         name: '普通法杖',
@@ -207,7 +208,8 @@ export const MagicStick = {
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 1,
-        ap: 10,
+        ap: 8,
+        spRegen: 1,
     } as EquipmentType,
     MagicStick2: {
         name: '精良法杖',
@@ -215,7 +217,8 @@ export const MagicStick = {
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 2,
-        ap: 20,
+        ap: 16,
+        spRegen: 2,
     } as EquipmentType,
     MagicStick3: {
         name: '鋼鐵法杖',
@@ -223,7 +226,8 @@ export const MagicStick = {
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 3,
-        ap: 40,
+        ap: 32,
+        spRegen: 2,
     } as EquipmentType,
     MagicStick4: {
         name: '合金法杖',
@@ -231,7 +235,8 @@ export const MagicStick = {
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 4,
-        ap: 80,
+        ap: 64,
+        spRegen: 3
     } as EquipmentType,
     MagicStick5: {
         name: '精鋼法杖',
@@ -239,7 +244,8 @@ export const MagicStick = {
         icon: '🪄',
         position: EquipmentPosition.WEAPON,
         quality: 5,
-        ap: 160,
+        ap: 128,
+        spRegen: 3
     } as EquipmentType,
 };
 

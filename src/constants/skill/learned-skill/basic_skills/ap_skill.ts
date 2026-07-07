@@ -125,7 +125,7 @@ export class Shockwave extends SkillModel {
                 monster.addEffect(UsualStatus.Stuck);
             }
 
-            useCardImpactEffect(getMonsterElement(params.monster.id), 'magic');
+            useCardImpactEffect(getMonsterElement(monster.id), 'magic');
         });
 
         return true;
@@ -148,12 +148,12 @@ export class ManaAdaptability extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `提升自身 2 點法力回復值。`;
+        return `提升自身 1 點法力回復值。`;
     }
 
     getPassiveBonus(): Record<string, number> {
         return {
-            spRegen: 2
+            spRegen: 1
         };
     }
 
