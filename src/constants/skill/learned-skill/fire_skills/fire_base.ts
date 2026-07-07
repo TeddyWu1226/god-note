@@ -77,6 +77,9 @@ export class FireAdvancement extends SkillModel {
     }
 
     override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (monster.hasStatus(EvnStatus.OnBurn.name)) {
             const dmg = Math.floor(attackedOutcome.totalDamage - Math.max(attackedOutcome.totalDamage * this.damageReduction, 5));
             attackedOutcome.totalDamage = Math.max(dmg, 0)
@@ -127,6 +130,9 @@ export class FireMaster extends SkillModel {
     }
 
     override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (monster.hasStatus(EvnStatus.OnBurn.name)) {
             const dmg = Math.floor(attackedOutcome.totalDamage - Math.max(attackedOutcome.totalDamage * this.damageReduction, 10));
             attackedOutcome.totalDamage = Math.max(dmg, 0)

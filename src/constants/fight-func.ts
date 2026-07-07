@@ -158,21 +158,19 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     // 最終計算輸出
     outcome.totalDamage = damageTaken;
     // 當玩家受到傷害前最後根據技能檢查
-    if (outcome.isHit) {
-        if (!(defender instanceof MonsterClass)) {
-            const gameStateStore = useGameStateStore();
-            defender.info.skills.forEach((s: any) => {
-                if (s && typeof s.onPlayerAttacked === 'function') {
-                    s.onPlayerAttacked({
-                        playerStore: defender,
-                        gameStateStore,
-                        logStore,
-                        monster: attacker as MonsterModel,
-                        attackedOutcome: outcome
-                    });
-                }
-            });
-        }
+    if (!(defender instanceof MonsterClass)) {
+        const gameStateStore = useGameStateStore();
+        defender.info.skills.forEach((s: any) => {
+            if (s && typeof s.onPlayerAttacked === 'function') {
+                s.onPlayerAttacked({
+                    playerStore: defender,
+                    gameStateStore,
+                    logStore,
+                    monster: attacker as MonsterModel,
+                    attackedOutcome: outcome
+                });
+            }
+        });
     }
     // 更新生命值
     if (defender instanceof MonsterClass) {
@@ -362,21 +360,19 @@ export function applySkillDamage({
     }
 
     // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能 Hook (onPlayerAttacked)
-    if (outcome.isHit) {
-        if (!(target instanceof MonsterClass)) {
-            const gameStateStore = useGameStateStore();
-            target.info.skills.forEach((s: any) => {
-                if (s && typeof s.onPlayerAttacked === 'function') {
-                    s.onPlayerAttacked({
-                        monster: speller,
-                        playerStore: target,
-                        gameStateStore,
-                        logStore,
-                        attackedOutcome: outcome
-                    });
-                }
-            });
-        }
+    if (!(target instanceof MonsterClass)) {
+        const gameStateStore = useGameStateStore();
+        target.info.skills.forEach((s: any) => {
+            if (s && typeof s.onPlayerAttacked === 'function') {
+                s.onPlayerAttacked({
+                    monster: speller,
+                    playerStore: target,
+                    gameStateStore,
+                    logStore,
+                    attackedOutcome: outcome
+                });
+            }
+        });
     }
 
     // --- 扣除目標 HP ---

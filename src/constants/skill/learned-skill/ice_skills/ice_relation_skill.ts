@@ -321,8 +321,10 @@ export class IceInfusion extends SkillModel {
         return true;
     }
 
-    onPlayerAttacked({playerStore, monster, logStore}: SkillOnPlayerAttackedHitParams): void {
-        if (!playerStore || !monster || !logStore) return;
+    onPlayerAttacked({playerStore, monster, logStore, attackedOutcome}: SkillOnPlayerAttackedHitParams): void {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (!playerStore.hasStatus(SkillStatus.IceArmorStatus.name)) return;
         monster.addEffect(SkillStatus.Frozen);
         logStore.logger.add(`[寒冰護體] 寒氣反彈，使 ${monster.name} 陷入冰凍狀態！`);

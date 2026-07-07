@@ -155,6 +155,9 @@ export class CounterShield extends SkillModel {
     }
 
     override onPlayerAttacked({playerStore, monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (!isEquip('Shield', EquipmentPosition.OFFHAND, playerStore.info)) {
             return;
         }
@@ -189,6 +192,9 @@ export class CounterShieldAdv extends SkillModel {
     }
 
     override onPlayerAttacked({playerStore, monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (!isEquip('Shield', EquipmentPosition.OFFHAND, playerStore.info)) {
             return;
         }

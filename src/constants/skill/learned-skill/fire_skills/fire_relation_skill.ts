@@ -314,7 +314,10 @@ export class FireInfusion extends SkillModel {
         return 40
     }
 
-    onPlayerAttacked({monster}: SkillOnPlayerAttackedHitParams): void {
+    onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams): void {
+        if (!attackedOutcome.isHit) {
+            return;
+        }
         if (monster.hp > 0) {
             monster.addEffect(EvnStatus.OnBurn)
             useCardImpactEffect(getMonsterElement(monster.id), 'burn');
