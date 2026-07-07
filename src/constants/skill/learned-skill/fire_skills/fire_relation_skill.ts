@@ -21,7 +21,7 @@ export class FireArrow extends SkillModel {
             type: 'active',
             rarity: 'common',
             maxCd: 0,
-            costSp: 10,
+            costSp: 15,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -87,7 +87,7 @@ export class FireBurst extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 0,
-            costSp: 20,
+            costSp: 25,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -188,7 +188,7 @@ export class SearingWard extends SkillModel {
             type: 'active',
             rarity: 'perfect',
             maxCd: 3,
-            costSp: 25,
+            costSp: 30,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2

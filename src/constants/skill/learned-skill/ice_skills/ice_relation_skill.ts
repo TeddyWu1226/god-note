@@ -19,7 +19,7 @@ export class IceArrow extends SkillModel {
             type: 'active',
             rarity: 'common',
             maxCd: 0,
-            costSp: 10,
+            costSp: 15,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -81,7 +81,7 @@ export class IceBurst extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 2,
-            costSp: 20,
+            costSp: 25,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -141,7 +141,7 @@ export class IceWard extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 5,
-            costSp: 30,
+            costSp: 25,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 5
@@ -186,7 +186,7 @@ export class GlacialWard extends SkillModel {
             type: 'active',
             rarity: 'perfect',
             maxCd: 5,
-            costSp: 30,
+            costSp: 40,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 5
@@ -245,7 +245,7 @@ export class IceArmor extends SkillModel {
             type: 'active',
             rarity: 'rare',
             maxCd: 3,
-            costSp: 15,
+            costSp: 20,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 5
@@ -290,7 +290,7 @@ export class IceInfusion extends SkillModel {
             type: 'active',
             rarity: 'perfect',
             maxCd: 3,
-            costSp: 22,
+            costSp: 20,
             costMaxAction: true,
             maxProficiency: 50,
             proficiencyGain: 2
@@ -349,7 +349,7 @@ export class IceWind extends SkillModel {
     }
 
     description(): string {
-        return `使身軀周圍環繞刺骨寒風，提升自身 ${this.dodge} 點閃避值。`;
+        return `使身軀周圍環繞寒風之勢，提升自身 ${this.dodge} 點閃避值。`;
     }
 
     getPassiveBonus(): Record<string, number> {
