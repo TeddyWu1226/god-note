@@ -55,7 +55,7 @@ const EvnStatus = {
         duration: -1,
         description: "受到強烈的魔力風暴襲擊，在戰鬥中每回合損失 %value% 點生命值（受物理防禦力減免）。",
         type: "damage",
-        value: 25,
+        value: 20,
         affectedByDefense: true
     } as StatusEffect,
     Sanity: {

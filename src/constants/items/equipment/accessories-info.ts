@@ -220,4 +220,13 @@ export const SpecialAccessory = {
         adIncrease: 1000,
         hit: 100
     } as EquipmentType,
+    TitanHeart: {
+        name: '泰坦之心',
+        description: '將存在感固定在虛無中。',
+        icon: '🫀',
+        position: EquipmentPosition.ACCESSORY1,
+        quality: 10,
+        hpRegen: 100,
+        hit: 100
+    } as EquipmentType,
 }

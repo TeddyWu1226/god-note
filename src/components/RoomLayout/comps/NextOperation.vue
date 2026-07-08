@@ -23,6 +23,12 @@ const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
 const relicStore = useRelicStore();
 
+const isBossDefeated = (day: number): boolean => {
+  const bossKey = `stage_${gameStateStore.currentStage}_${day}`;
+  const isDefeated = !!gameStateStore.defeatedBosses?.[bossKey];
+  return isDefeated || gameStateStore.isInClearedStage;
+};
+
 const createNextRooms = () => {
   gameStateStore.nextRooms = []
 
@@ -42,25 +48,44 @@ const createNextRooms = () => {
     return
   }
 
-  // 當前是已通關過的大關時，套用特判邏輯
-  if (gameStateStore.isInClearedStage) {
-    // 第 50 天 (stageDays === 49) 與第 100 天 (stageDays === 99) 強制進入驛站
-    if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
-      gameStateStore.nextRooms = [RoomEnum.Station.value]
-      return
+  // 特判第 50 天 (stageDays === 49) 與第 100 天 (stageDays === 99) 及其前一天的邏輯
+  const isDay50BossDefeated = isBossDefeated(50);
+  const isDay100BossDefeated = isBossDefeated(100);
+
+  // 第 49 天 (當前選擇第 50 天房間前一天，即 stageDays === 48)
+  if (gameStateStore.stageDays === 48) {
+    if (!isDay50BossDefeated) {
+      gameStateStore.nextRooms = [RoomEnum.Rest.value];
+      return;
     }
-  } else {
-    // 尚未通關過的大關 (原本邏輯)
-    // 49 與 99 天必定只能休息
-    if (gameStateStore.stageDays === 48 || gameStateStore.stageDays === 98) {
-      gameStateStore.nextRooms = [RoomEnum.Rest.value]
-      return
+  }
+
+  // 第 50 天 (當前選擇第 50 天房間，即 stageDays === 49)
+  if (gameStateStore.stageDays === 49) {
+    if (isDay50BossDefeated) {
+      gameStateStore.nextRooms = [RoomEnum.Station.value];
+    } else {
+      gameStateStore.nextRooms = [RoomEnum.Boss.value];
     }
-    // 50 與 100 天必定挑戰 BOSS
-    if (gameStateStore.stageDays === 49 || gameStateStore.stageDays === 99) {
-      gameStateStore.nextRooms = [RoomEnum.Boss.value]
-      return
+    return;
+  }
+
+  // 第 99 天 (當前選擇第 100 天房間前一天，即 stageDays === 98)
+  if (gameStateStore.stageDays === 98) {
+    if (!isDay100BossDefeated) {
+      gameStateStore.nextRooms = [RoomEnum.Rest.value];
+      return;
     }
+  }
+
+  // 第 100 天 (當前選擇第 100 天房間，即 stageDays === 99)
+  if (gameStateStore.stageDays === 99) {
+    if (isDay100BossDefeated) {
+      gameStateStore.nextRooms = [RoomEnum.Station.value];
+    } else {
+      gameStateStore.nextRooms = [RoomEnum.Boss.value];
+    }
+    return;
   }
   if (relicStore.hasRelic && gameStateStore.currentStage === relicStore.lastStage && gameStateStore.stageDays === 10) {
     gameStateStore.nextRooms = [RoomEnum.Event.value]

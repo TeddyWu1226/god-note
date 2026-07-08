@@ -62,7 +62,11 @@ onMounted(() => {
           <el-button type="success" @click="onRest">
             休息一會
           </el-button>
-          <el-button type="warning" @click="gameStateStore.openStageSelectDialog(true)">
+          <el-button
+              type="warning"
+              v-if="gameStateStore.isInClearedStage"
+              @click="gameStateStore.openStageSelectDialog(true)"
+          >
             前往其他區域
           </el-button>
         </template>

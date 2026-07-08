@@ -91,7 +91,7 @@ const give = () => {
   // playerStore.equipItem(Weapon.Axe3)
   // playerStore.equipItem(Weapon.Dagger2)
   // playerStore.equipItem(Offhand.Shield3)
-  // playerStore.gainItem(SpecialAccessory.SoulAnchor)
+  playerStore.gainItem(SpecialAccessory.TitanHeart)
 
   // 給道具
   // playerStore.gainItem(Material.BadNormal, 100)

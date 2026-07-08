@@ -85,6 +85,9 @@ export const useGameStateStore = defineStore('game-state', () => {
     /** 額外記錄表，用於存放暫存的特殊機制、任務或小遊戲變數 */
     const otherRecord = ref<Record<string, any>>({});
 
+    /** 已擊敗的BOSS記錄 (Key格式：'stage_StageNum_BossDay') */
+    const defeatedBosses = ref<Record<string, boolean>>({});
+
     /** 當前戰鬥的累計回合數 */
     const battleRound = ref(1);
 
@@ -189,6 +192,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         if (restart) {
             eventProcess.value = {} as Record<SpecialEventEnum, number>;
             otherRecord.value = {}
+            defeatedBosses.value = {};
             maxClearedStage.value = 1; // 只有在徹底 restart (重置輪迴) 時才重置為 1 (只解鎖第 1 大關)
         }
         bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
@@ -280,6 +284,12 @@ export const useGameStateStore = defineStore('game-state', () => {
                 currentState.value = GameState.SELECTION_PHASE;
                 bottomPanelMode.value = 'backpack'; // 戰鬥勝利結算時，切換回背包模式以查看掉落物
 
+                // 記錄擊敗 Boss 標誌
+                if (currentRoomValue.value === RoomEnum.Boss.value) {
+                    const bossKey = `stage_${currentStage.value}_${stageDays.value}`;
+                    defeatedBosses.value[bossKey] = true;
+                }
+
                 // 擊敗大關 BOSS (Day 100 Boss) 時，立即更新最高解鎖大關數 (當前層數 + 1)
                 if (currentRoomValue.value === RoomEnum.Boss.value && stageDays.value === 100) {
                     maxClearedStage.value = Math.max(maxClearedStage.value, currentStage.value + 1);
@@ -366,7 +376,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         switchEnemy,
         currentEventType,
         lastEventType,
-        eventProcess, otherRecord,
+        eventProcess, otherRecord, defeatedBosses,
         getEventProcess,
         stateIs,
         roomIs,
