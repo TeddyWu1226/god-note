@@ -644,9 +644,9 @@ export class EmpireEliteKnight extends MonsterModel {
         super({
             code: 'EmpireEliteKnight',
             icon: '/monsters/empire_elite_knight.png',
-            name: '帝國菁英騎士',
-            description: '派遣來討伐魔王的帝國菁英，受魔素與不知名力量蠱惑而瘋癲墮落於此。',
-            class: ['secret'],
+            name: '帝國皇家騎士',
+            description: '數年前派遣來討伐魔王的帝國菁英，受魔素與不知名力量蠱惑而瘋癲墮落於此。',
+            class: ['boss'],
             ad: 60,
             critIncrease: 200,
             critRate: 15,
@@ -655,25 +655,53 @@ export class EmpireEliteKnight extends MonsterModel {
             hit: 50,
             hp: 600,
             hpLimit: 600,
-            lifeSteal: 200,
+            lifeSteal: 100,
             level: 45,
             noExp: true,
             dropGold: 0
         });
     }
 
-    override onDeadHook({gameStateStore, logStore}: MonsterActionParams) {
-        if (gameStateStore) {
-            gameStateStore.currentEnemy.push(gameStateStore.createMonster(this.code));
-        }
-        useFloatingMessage(
-            '...',
-            getMonsterElement(this.id),
-            {
-                duration: 2000,
-                color: 'red'
+    override onStartHook() {
+        useEpicSubtitle("「打倒...魔王...」", 2000);
+    }
+
+    override onDeadHook({gameStateStore, playerStore}: MonsterActionParams) {
+        playerAdjustSanity(playerStore, -40)
+        const currentSans = playerStore.hasStatus(EvnStatus.Sanity.name)
+        let lines = '「打倒...魔王...」'
+        if (currentSans) {
+            if (0 <= currentSans.value && currentSans.value < 50) {
+                lines = "「魔王...倒下了...」"
+            } else if (-50 < currentSans.value && currentSans.value < 0) {
+                lines = "「魔王...還活著...」"
+            } else if (-100 < currentSans.value && currentSans.value <= -50) {
+                function getNum(): number {
+                    const now = new Date();
+
+                    const seconds =
+                        now.getHours() * 3600 +
+                        now.getMinutes() * 60 +
+                        now.getSeconds();
+
+                    return Math.floor(seconds / 86.4)
+                }
+
+                const num = getNum();
+                lines = `「第${num}個...第${num + 1}個...」`
+            } else if (-100 === currentSans.value) {
+                lines = "「沒有同伴...只有...魔王」"
             }
-        );
+        }
+        if (-100 !== currentSans.value) {
+            gameStateStore.currentEnemy.push(gameStateStore.createMonster(this.code));
+        } else {
+            playerStore.gainExp({monsterLevel: this.level})
+            playerStore.addGold(3000)
+        }
+        useEpicSubtitle(lines, 2000);
+
+
     }
 }
 
