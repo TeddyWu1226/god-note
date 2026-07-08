@@ -37,7 +37,7 @@ const skillInstance = computed(() => {
       <el-divider content-position="left">
         武技
       </el-divider>
-      <div style="display:flex;flex-wrap: wrap">
+      <div style="font-size: 0.85rem; color: #ff9f43; line-height: 1.4; text-align: center; word-break: break-word; white-space: normal; width: 100%;">
         {{ skillInstance.itemDescription }}
       </div>
     </template>
@@ -69,15 +69,43 @@ const skillInstance = computed(() => {
   align-items: center;
   text-align: center;
   min-width: 10rem;
+  max-width: 14rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 12px 6px 12px 10px;
+  word-break: break-word;
 }
+
+/* 輕量微型捲動條 */
+.detail-container::-webkit-scrollbar {
+  width: 4px;
+}
+.detail-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.detail-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+.detail-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 
 .detail-icon {
   font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 4px;
 }
 
 .detail-desc {
   color: #888;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 6px 0;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
 }
 
 .detail-stats {

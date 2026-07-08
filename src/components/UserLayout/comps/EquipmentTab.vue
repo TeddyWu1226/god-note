@@ -45,7 +45,10 @@ const onTouchHandleEquip = createDoubleTapHandler((item: any, index: number) => 
             @dblclick="handleEquip(item, index)"
             @touchend="onTouchHandleEquip(item, index)"
         >
-          <span style="font-size: 1.2rem">{{ item.icon }}</span>
+          <div class="equip-icon-wrapper">
+            <span class="icon">{{ item.icon }}</span>
+            <span v-if="item.enhanceLevel" class="lvl-badge">+{{ item.enhanceLevel }}</span>
+          </div>
           <div class="equip-info">
             <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color') }">
               {{ item.name }}{{ item.enhanceLevel ? ' +' + item.enhanceLevel : '' }}

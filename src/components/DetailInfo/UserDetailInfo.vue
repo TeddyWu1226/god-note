@@ -258,6 +258,13 @@ const getRarityName = (rarity: string) => {
             @dblclick="handleUnequip(pos.value)"
             @touchend="onTouchUnequip(pos.value)"
         >
+          <!-- 強化等級標記 (右上角) -->
+          <div
+              v-if="playerStore.info.equips?.[pos.value as keyof typeof playerStore.info.equips]?.enhanceLevel"
+              class="equip-enhance-badge"
+          >
+            +{{ playerStore.info.equips[pos.value as keyof typeof playerStore.info.equips]?.enhanceLevel }}
+          </div>
           <el-tooltip
               v-if="playerStore.info.equips?.[pos.value as keyof typeof playerStore.info.equips]"
               effect="light"
@@ -541,6 +548,22 @@ const getRarityName = (rarity: string) => {
   align-items: center;
   position: relative;
   transition: transform 0.2s;
+}
+
+.equip-enhance-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: #9c27b0;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 0 4px;
+  border-radius: 4px;
+  line-height: 1.2;
+  z-index: 5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
 }
 
 .stat-bonus {

@@ -262,6 +262,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
               @click="handleSellDoubleClick(item)"
               @touchend="onTouchItem(item)"
           >
+            <div class="item-enhance-badge" v-if="item.enhanceLevel">+{{ item.enhanceLevel }}</div>
             <div class="item-icon">{{ item.icon }}</div>
             <div class="item-name" :style="{ color: getEnumColumn(QualityEnum, item.quality, 'color', '#fff') }">
               {{ item.name }}
@@ -295,6 +296,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
                      @touchend="onTouchSellItem(entry)"
                 >
                   <div class="item-badge" v-if="entry.count > 1">x{{ entry.count }}</div>
+                  <div class="item-enhance-badge" v-if="entry.item.enhanceLevel">+{{ entry.item.enhanceLevel }}</div>
                   <div class="item-icon">{{ entry.item.icon }}</div>
                   <div class="item-name" :style="{color:getEnumColumn(QualityEnum, entry.item.quality, 'color')}">
                     {{ entry.item.name }}{{ entry.item.enhanceLevel ? ' +' + entry.item.enhanceLevel : '' }}
