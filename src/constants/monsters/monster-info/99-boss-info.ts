@@ -647,19 +647,33 @@ export class EmpireEliteKnight extends MonsterModel {
             name: '帝國菁英騎士',
             description: '派遣來討伐魔王的帝國菁英，受魔素與不知名力量蠱惑而瘋癲墮落於此。',
             class: ['secret'],
-            ad: 50,
+            ad: 60,
             critIncrease: 200,
             critRate: 15,
-            adDefend: 28,
+            adDefend: 40,
             dodge: 50,
             hit: 50,
             hp: 600,
-            hpLimit: 1200,
-            lifeSteal: 100,
+            hpLimit: 600,
+            lifeSteal: 200,
             level: 45,
             noExp: true,
             dropGold: 0
         });
+    }
+
+    override onDeadHook({gameStateStore, logStore}: MonsterActionParams) {
+        if (gameStateStore) {
+            gameStateStore.currentEnemy.push(gameStateStore.createMonster(this.code));
+        }
+        useFloatingMessage(
+            '...',
+            getMonsterElement(this.id),
+            {
+                duration: 2000,
+                color: 'red'
+            }
+        );
     }
 }
 

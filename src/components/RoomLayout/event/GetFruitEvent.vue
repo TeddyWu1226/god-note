@@ -117,7 +117,7 @@ const onLeave = () => {
     // 怪物強化
     boss.hpLimit += playerStore.finalStats.hpLimit
     boss.hp += playerStore.finalStats.hpLimit
-    gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [MonsterFactory.createMonster(boss.code, boss)])
+    gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [gameStateStore.createMonster(boss.code, boss)])
     gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true);
   } else {
     gameStateStore.transitionToNextState();

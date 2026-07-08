@@ -90,7 +90,7 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
   // 如果有玩家有妄想狀態額外新增怪物
   if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
-    newMonsters.push(MonsterFactory.createMonster(Monster.DelusionMonster.code))
+    newMonsters.push(gameStateStore.createMonster(Monster.DelusionMonster.code))
   }
 
   // 同步到 Store 做持久化緩存
@@ -136,7 +136,7 @@ const createBoss = () => {
   } else {
     boss = stageBoss.main
   }
-  newMonsters = [MonsterFactory.createMonster(boss.code, boss)]
+  newMonsters = [gameStateStore.createMonster(boss.code, boss)]
 
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);

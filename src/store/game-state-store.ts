@@ -350,6 +350,10 @@ export const useGameStateStore = defineStore('game-state', () => {
         environmentMode.value = mode;
     }
 
+    function createMonster(code: string, savedData: Partial<any> = {}): MonsterModel {
+        return MonsterFactory.createMonster(code, savedData);
+    }
+
     // --- 記得導出所有要在組件中使用的東西 ---
     return {
         currentRoomValue, difficulty, isDead,
@@ -383,7 +387,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         enterJudgmentStage,
         showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage,
         isShowStats,
-        environmentMode, setEnvironmentMode
+        environmentMode, setEnvironmentMode, createMonster
     };
 }, {
     persist: {

@@ -10,7 +10,6 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
 import {WorldDefault} from "@/assets/const";
-import EvnStatus from "@/constants/status/evn-status";
 import {useGameStateStore} from "@/store/game-state-store";
 import {SkillModel} from "@/models/skill-model";
 
@@ -98,6 +97,7 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         };
     }
     const logStore = useLogStore();
+    const gameStateStore = useGameStateStore();
     // 1. 執行傷害計算
     const damageOutput: DamageResult = calculateDamage(attackerFinalStats, defenderFinalStats);
 
@@ -118,7 +118,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         }
         logStore.logger.add(log);
         if (!(defender instanceof MonsterClass)) {
-            const gameStateStore = useGameStateStore();
             defender.info.skills.forEach((s: SkillModel) => {
                 if (s && typeof s.onPlayerAttacked === 'function') {
                     s.onPlayerAttacked({
@@ -160,7 +159,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     outcome.totalDamage = damageTaken;
     // 當玩家受到傷害前最後根據技能檢查
     if (!(defender instanceof MonsterClass)) {
-        const gameStateStore = useGameStateStore();
         defender.info.skills.forEach((s: SkillModel) => {
             if (s && typeof s.onPlayerAttacked === 'function') {
                 s.onPlayerAttacked({
@@ -277,6 +275,7 @@ export function applySkillDamage({
                                      modifiers
                                  }: ApplySkillDamageParams): BattleOutcome {
     const logStore = useLogStore();
+    const gameStateStore = useGameStateStore();
     const targetFinalStats = target instanceof MonsterClass ? target.getEffectiveStats() : target.finalStats
     let {spellerStats, damage} = getSkillFinalDamage({
         speller,
@@ -312,7 +311,6 @@ export function applySkillDamage({
             }
             // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能
             if (!(target instanceof MonsterClass)) {
-                const gameStateStore = useGameStateStore();
                 target.info.skills.forEach((s: SkillModel) => {
                     if (s && typeof s.onPlayerAttacked === 'function') {
                         s.onPlayerAttacked({
@@ -363,7 +361,6 @@ export function applySkillDamage({
 
     // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能
     if (!(target instanceof MonsterClass)) {
-        const gameStateStore = useGameStateStore();
         target.info.skills.forEach((s: SkillModel) => {
             if (s && typeof s.onPlayerAttacked === 'function') {
                 s.onPlayerAttacked({
@@ -584,7 +581,7 @@ export const spawnMonsters = (
     const newMonsters: MonsterClass[] = [];
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
-        let monsterInstance = MonsterFactory.createMonster(m.code, m);
+        let monsterInstance = useGameStateStore().createMonster(m.code, m);
         let strengtheningLevel = strengthening;
         if (eliteBoost) {
             // 菁英強化
