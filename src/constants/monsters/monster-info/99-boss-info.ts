@@ -101,7 +101,6 @@ export class Twilight extends MonsterModel {
 
     override onDeadHook({playerStore}: any) {
         useEpicSubtitle("「希望...與汝再...舞一曲...」", 3000);
-        playerStore.removeItem(SpecialItem.PauseToken.name, -1);
     }
 
     override onRoundBehaviorHook() {
@@ -267,7 +266,7 @@ export class FireWyrmling extends MonsterModel {
             level: 12,
             dropGold: 800,
             chaseIncrease: 200,
-            drop: []
+            drop: [{item: SpecialItem.DragonBlood, chance: 1}]
         });
     }
 

@@ -43,6 +43,8 @@ export enum SpecialEventEnum {
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件
     NeedWater = 'NeedWater', // 沙丘
+    DragonSkeleton = 'DragonSkeleton', // 龍之骸骨
+    AncientWrath = 'AncientWrath', // 遠古的憤怒
 
 }
 

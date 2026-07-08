@@ -6,6 +6,7 @@ import {SpecialEventEnum} from "@/enums/enums";
 import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 import {useRelicStore} from "@/store/relic-store";
+import {SpecialItem} from "@/constants/items/special-item-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -24,16 +25,26 @@ const GeneralEvent = [
     canAppear: () => true
   },
   {
-    type: SpecialEventEnum.GetFruit, // 魔樹事件
-    canAppear: () => gameStateStore.currentStage === 1
-  },
-  {
     type: SpecialEventEnum.BushSearch, // 草叢翻找事件
     canAppear: () => gameStateStore.currentStage === 1
   },
   {
     type: SpecialEventEnum.Potion, // 藥水事件
     canAppear: () => gameStateStore.currentStage > 1
+  },
+  // 背叛的隱藏任務
+  {
+    type: SpecialEventEnum.GetFruit, // 魔樹事件
+    canAppear: () => gameStateStore.currentStage === 1
+  },
+  // 憤怒的隱藏任務
+  {
+    type: SpecialEventEnum.DragonSkeleton, // 龍之骸骨事件
+    canAppear: () => gameStateStore.currentStage === 3 && playerStore.hasItem(SpecialItem.DragonBlood.name)[0]
+  },
+  {
+    type: SpecialEventEnum.AncientWrath, // 遠古的憤怒事件
+    canAppear: () => gameStateStore.currentStage === 2 && gameStateStore.otherRecord['ANCIENT_WRATH_UNLOCKED'] === true
   }
 ];
 

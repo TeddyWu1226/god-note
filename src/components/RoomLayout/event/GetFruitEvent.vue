@@ -95,9 +95,9 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         break;
       case 'sacrifice_all':
         // 第五階段：獻祭全部生命
-        playerStore.gainExp({amount: 200})
         playerStore.info.hp = 1;
-        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，邪氣從樹中爆發,伴隨龐大的魔力瀰漫後消失在空氣之中,化作經驗給你吸收。";
+        playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 0) + 1;
+        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，邪氣從樹中爆發,伴隨龐大的魔力瀰漫後消失在空氣之中,獲得一個技能的力量。";
 
         break;
     }
