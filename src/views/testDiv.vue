@@ -63,9 +63,22 @@ const onLeve3Test = () => {
   playerStore.equipItem(Weapon.Dagger1)
   playerStore.equipItem(Offhand.Shield1)
 }
+
+const onLeve4Test = () => {
+  selectStage(4)
+  // 第二大關破完大概 31 等
+  playerStore.gainExp({amount: 6500})
+  // 第一大關破完大概 裝備
+  playerStore.equipItem(Head.HpHead2)
+  playerStore.equipItem(Armor.DefendArmor2)
+  playerStore.equipItem(Weapon.Sword2)
+  // playerStore.equipItem(Weapon.Dagger2)
+  playerStore.equipItem(Offhand.Shield2)
+}
 const onTest = () => {
   // onLeve2Test()
-  onLeve3Test()
+  // onLeve3Test()
+  onLeve4Test()
   // playerStore.gainExp({amount: 1000})
 }
 
@@ -73,14 +86,18 @@ const giveMoney = () => {
   playerStore.addGold(1000)
 }
 const give = () => {
-  // playerStore.addGold(1000)
+  // 給裝備系列
+  playerStore.equipItem(Head.HpHead3)
+  playerStore.equipItem(Armor.DefendArmor3)
+  playerStore.equipItem(Weapon.Axe3)
+  // playerStore.equipItem(Weapon.Dagger2)
+  // playerStore.equipItem(Offhand.Shield3)
+  // playerStore.gainItem(SpecialAccessory.SoulAnchor)
 
+  // 給道具
   // playerStore.gainItem(Material.BadNormal, 100)
   // playerStore.gainItem(Offhand.Book5)
-  // playerStore.gainItem(Weapon.Sword0)
-  playerStore.gainItem(SpecialAccessory.SoulAnchor)
-
-  playerStore.gainItem(Usable.BurningPotion, 3)
+  // playerStore.gainItem(Usable.BurningPotion, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }

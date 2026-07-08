@@ -6,6 +6,7 @@ export const SkillStatus = {
         icon: '💪',
         duration: 2,
         isBuff: true,
+        untilAttack: true,
         description: '提升 %adIncrease%% 物理傷害 與 %hit% 點命中值',
         bonus: {
             adIncrease: 100,
@@ -17,6 +18,7 @@ export const SkillStatus = {
         icon: '💪',
         duration: 2,
         isBuff: true,
+        untilAttack: true,
         description: '提升 %adIncrease%% 物理傷害，%hit% 點命中值 以及 %defendIncrease%% 抗性',
         bonus: {
             adIncrease: 100,

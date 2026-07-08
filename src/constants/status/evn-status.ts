@@ -69,18 +69,18 @@ const EvnStatus = {
         name: '亢奮',
         icon: '🤩',
         duration: -1,
-        description: '你陷入亢奮狀態。命中值 %hit% 點，閃避值 %dodge% 點。',
+        description: '你陷入亢奮狀態。命中值 %hit% 點，閃避值 %dodge% 點。亢奮狀態下逃跑機率大幅降低。',
         bonus: {
             hit: 30,
             dodge: -30,
-            runIncrease: -30
+            runIncrease: -100
         }
     } as StatusEffect,
     LowSanity: {
         name: '妄想',
         icon: '🤪',
         duration: -1,
-        description: '你陷入妄想狀態。命中值 %hit% 點，閃避值 %dodge% 點。',
+        description: '你陷入妄想狀態。命中值 %hit% 點，閃避值 %dodge% 點。妄想狀態下選擇戰鬥會遇到不知名的怪物。',
         bonus: {
             hit: -30,
             dodge: 30

@@ -33,8 +33,10 @@ import FightOperation from "@/components/RoomLayout/room/FightRoom/FightOperatio
 import {Sleep} from "@/utils/create";
 import {useDebounceFn} from "@vueuse/core";
 import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
-import {isMatchedWeapon, WeaponCnNameMapping} from "@/constants/default-const";
+import {isMatchedWeapon, WeaponCnNameMapping, WeaponMatchType} from "@/constants/default-const";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
+import EvnStatus from "@/constants/status/evn-status";
+import {Monster} from "@/constants/monsters/monster-info";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -82,10 +84,15 @@ const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
 const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
   let strengthening = 0
-  if(gameStateStore.isInClearedStage){
+  if (gameStateStore.isInClearedStage) {
     strengthening = Math.ceil(Math.max(0, gameStateStore.days / 50))
   }
   const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
+  // 如果有玩家有妄想狀態額外新增怪物
+  if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
+    newMonsters.push(MonsterFactory.createMonster(Monster.DelusionMonster.code))
+  }
+
   // 同步到 Store 做持久化緩存
   gameStateStore.setCurrentEnemy(newMonsters);
 }
@@ -311,7 +318,7 @@ const onEndTurn = () => {
 }
 
 const checkWeaponProficiency = () => {
-  Object.keys(WeaponCnNameMapping).forEach((key) => {
+  Object.keys(WeaponCnNameMapping).forEach((key: WeaponMatchType) => {
     const weaponProficiency = playerStore.info.skills?.find((s: SkillModel) => s.uniqueFields.includes(`${key}Base`));
 
     const weaponName = playerStore.info.equips?.weapon?.name || '';
@@ -521,7 +528,7 @@ const init = () => {
   } else {
     switch (currentRoomValue.value) {
       case RoomEnum.Fight.value:
-        genMonsters(1, getWeightByStage() || {'Error': 1});
+        genMonsters(1, getWeightByStage());
         break;
       case RoomEnum.EliteFight.value:
         genEliteMonster();

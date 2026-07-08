@@ -4,12 +4,11 @@ import {Material} from "@/constants/items/material/material-info";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import EvnStatus from "@/constants/status/evn-status";
 import {
+    GameStateStoreType,
     MonsterActionParams,
-    MonsterOnAttackParams,
-    MonsterRoundBehaviorParams,
     MonsterOnAttackedParams,
     MonsterOnAttackHitParams,
-    GameStateStoreType
+    MonsterOnAttackParams
 } from "@/types";
 import {UsualStatus} from "@/constants/status/usual-status";
 
@@ -43,9 +42,6 @@ export class SplitSlime extends MonsterModel {
         this.updateState(gameStateStore);
     }
 
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        this.updateState(gameStateStore);
-    }
 
     private updateState(gameStateStore: any) {
         switch (gameStateStore?.environmentMode) {
@@ -93,9 +89,6 @@ export class SplitIllusion extends MonsterModel {
         this.updateState(gameStateStore);
     }
 
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        this.updateState(gameStateStore);
-    }
 
     private updateState(gameStateStore: any) {
         switch (gameStateStore?.environmentMode) {
@@ -262,14 +255,42 @@ export class SplitStalker extends MonsterModel {
     }
 }
 
-// ==========================================
-// 分裂之谷怪物導出 (Export Registry)
-// ==========================================
+export class DelusionMonster extends MonsterModel {
+    constructor() {
+        super({
+            icon: '👤',
+            code: 'DelusionMonster',
+            name: '???',
+            class: ['secret', 'icon-purple'],
+            description: '???',
+            ad: 0,
+            critIncrease: WorldDefault.critIncrease,
+            critRate: 0,
+            adDefend: 0,
+            dodge: 50,
+            hit: 50,
+            hp: 1,
+            hpLimit: 1,
+            level: 1,
+            dropGold: 0,
+            drop: []
+        });
+    }
+
+    override onStartHook({playerStore}: MonsterActionParams) {
+        // 獲取玩家屬性
+        this.ad = Math.floor(Math.max(playerStore.info.ad, playerStore.info.ap) / 2)
+        this.dodge = playerStore.info.dodge
+        this.hit = playerStore.info.hit
+        this.hp = Math.floor(playerStore.info.hpLimit / 2)
+    }
+}
 
 export const SplitCanyonMonster = {
     SplitSlime: new SplitSlime(),
     SplitIllusion: new SplitIllusion(),
     SplitButterfly: new SplitButterfly(),
     SplitHound: new SplitHound(),
-    SplitStalker: new SplitStalker()
+    SplitStalker: new SplitStalker(),
+    DelusionMonster: new DelusionMonster()
 };
