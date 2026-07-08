@@ -171,9 +171,9 @@ export class SplitHound extends MonsterModel {
             name: '幻想獵犬',
             class: [],
             description: '受環境能量影響的獵犬。爆擊率取決於目標身上理智值。',
-            ad: 66,
+            ad: 43,
             critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
+            critRate: 0,
             adDefend: 38,
             dodge: 60,
             hit: 100,
@@ -210,7 +210,7 @@ export class SplitHound extends MonsterModel {
 export class SplitStalker extends MonsterModel {
     constructor() {
         super({
-            icon: '👤',
+            icon: '𓀁',
             code: 'SplitStalker',
             name: '幻想行者',
             class: [],
@@ -262,7 +262,7 @@ export class DelusionMonster extends MonsterModel {
             code: 'DelusionMonster',
             name: '???',
             class: ['secret', 'icon-purple'],
-            description: '???',
+            description: '妄想的產物',
             ad: 0,
             critIncrease: WorldDefault.critIncrease,
             critRate: 0,
@@ -282,6 +282,7 @@ export class DelusionMonster extends MonsterModel {
         this.ad = Math.floor(Math.max(playerStore.info.ad, playerStore.info.ap) / 2)
         this.dodge = playerStore.info.dodge
         this.hit = playerStore.info.hit
+        this.hpLimit = Math.floor(playerStore.info.hpLimit / 2)
         this.hp = Math.floor(playerStore.info.hpLimit / 2)
     }
 }
