@@ -45,7 +45,7 @@ export const Head = {
     } as EquipmentType,
     HpHead5: {
         name: '精鋼頭盔',
-        description: '仿照遠古巨像頭部結構鍛造的精鋼重盔，能與配戴者的生命氣息共鳴，賦予頑強的生命力。',
+        description: '精鋼結構鍛造的頭盔，能與配戴者的生命氣息共鳴，賦予頑強的生命力。',
         icon: '🪖',
         position: EquipmentPosition.HEAD,
         quality: 5,

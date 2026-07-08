@@ -120,7 +120,7 @@ export function useShopLogic(currentStage: number, days: number) {
         }
 
         // --- 極深層 (41 ~ 50層) ---
-        if (currentStage > 4) {
+        if (currentStage >= 4) {
             if (roll < 10) return QualityEnum.Perfect.value; // 10% 完美
             if (roll < 50) return QualityEnum.Rare.value; // 40% 稀有
             if (roll < 90) return QualityEnum.Fine.value; // 40% 精良

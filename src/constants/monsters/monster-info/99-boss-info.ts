@@ -335,6 +335,7 @@ export class BurrowingBehemoth extends MonsterModel {
             dropGold: 600
         });
     }
+
     override onStartHook({gameStateStore, logStore}: MonsterActionParams) {
         useFloatingMessage(
             '咕吼!!',
@@ -474,7 +475,7 @@ export class RockGolemClone extends MonsterModel {
         super({
             code: 'RockGolemClone',
             icon: '/monsters/rock_golem_normal.png',
-            name: '巨岩魔像',
+            name: '魔岩巨像',
             description: '沙塵與岩石幻化出的龐然大物，與本體具有相同的威壓與形體，但胸口核心之處似乎少了一絲靈動。',
             class: ['boss', 'big'],
             ad: 55,
@@ -519,7 +520,7 @@ export class RockGolemGroup extends MonsterModel {
         super({
             code: 'RockGolemGroup',
             icon: '/monsters/rock_golem_normal.png',
-            name: '巨岩魔像',
+            name: '魔岩巨像',
             description: '由無數荒野巨石聚合而成的魔力核心載體。它們在岩石中重組與分裂，只有擊破那顆恆久的魔力源泉，才能令魔像群徹底靜止。',
             class: ['boss', 'big'],
             ad: 55,
@@ -553,7 +554,7 @@ export class RockGolemGroup extends MonsterModel {
         }
 
         gameStateStore.currentEnemy = list;
-        logStore.logger.add(`巨岩魔像群發動了【石像軍團】！`);
+        logStore.logger.add(`魔岩巨像群發動了【石像軍團】！`);
         gameStateStore.triggerScreenShake(800);
     }
 
@@ -581,7 +582,7 @@ export class RockGolemGroup extends MonsterModel {
                 if (hasClones) {
                     gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
                     if (logStore) {
-                        logStore.logger.add(`💀 巨岩魔像群本尊的核心再次受到重創！所有分身化為碎石消散！`);
+                        logStore.logger.add(`💀 魔岩巨像本尊的核心再次受到重創！所有分身化為碎石消散！`);
                     }
                 }
             }
@@ -628,7 +629,7 @@ export class RockGolemGroup extends MonsterModel {
 
     override onDeadHook({gameStateStore, logStore}: any) {
         if (logStore) {
-            logStore.logger.add(`💀 巨岩魔像群本尊的核心破碎崩潰！所有分身也化為碎石消散！`);
+            logStore.logger.add(`💀 魔岩巨像本尊的核心破碎崩潰！所有分身也化為碎石消散！`);
         }
         // 清除現有分身
         gameStateStore.currentEnemy = gameStateStore.currentEnemy.filter((m: any) => m.code !== 'RockGolemClone');
@@ -638,34 +639,30 @@ export class RockGolemGroup extends MonsterModel {
 /**
  * --- 分裂之谷 (Split Canyon) Bosses ---
  */
-export class StormColossus extends MonsterModel {
+export class EmpireEliteKnight extends MonsterModel {
     constructor() {
         super({
-            code: 'StormColossus',
-            icon: '🤖',
-            name: '風暴巨像',
-            description: '由峽谷雷雨雲催生的古老符文構裝體，掌控風暴力量',
-            class: ['boss', 'big'],
-            ad: 80,
+            code: 'EmpireEliteKnight',
+            icon: '/monsters/empire_elite_knight.png',
+            name: '帝國菁英騎士',
+            description: '派遣來討伐魔王的帝國菁英，受魔素與不知名力量蠱惑而瘋癲墮落於此。',
+            class: ['secret'],
+            ad: 50,
             critIncrease: 200,
             critRate: 15,
-            adDefend: 45,
-            dodge: 15,
-            hit: 80,
-            hp: 2500,
-            hpLimit: 2500,
-            level: 20,
-            dropGold: 800
+            adDefend: 28,
+            dodge: 50,
+            hit: 50,
+            hp: 600,
+            hpLimit: 1200,
+            lifeSteal: 100,
+            level: 45,
+            noExp: true,
+            dropGold: 0
         });
     }
-
-    override onAttackHitHook({playerStore, logStore}: any) {
-        if (checkProbability(0.5)) {
-            playerStore.addStatus(UnitStatus.Shock);
-            logStore.logger.add(`🤖 風暴巨像釋放了閃電，你感電了！`);
-        }
-    }
 }
+
 
 export class DualElementalist extends MonsterModel {
     constructor() {
@@ -1006,7 +1003,7 @@ export const Boss = {
     RockGolemGroup: new RockGolemGroup(),
 
     // --- 分裂之谷 (Split Canyon) ---
-    StormColossus: new StormColossus(),
+    EmpireEliteKnight: new EmpireEliteKnight(),
     DualElementalist: new DualElementalist(),
 
     // --- 終焉深淵 (End Abyss) ---
@@ -1037,7 +1034,7 @@ export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType 
         main: Boss.RockGolemGroup
     },
     4: {
-        mini: Boss.StormColossus,
+        mini: Boss.EmpireEliteKnight,
         main: Boss.DualElementalist
     },
     5: {
