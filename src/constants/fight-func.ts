@@ -5,7 +5,6 @@ import {useLogStore} from "@/store/log-store";
 import {getRandomItemByWeight, notHitPlayer} from "@/utils/create";
 import {Monster} from "@/constants/monsters/monster-info";
 import {type MonsterModel, MonsterModel as MonsterClass} from "@/models/monster-model";
-import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {ItemStatus} from "@/constants/status/item-status";
 import {UsualStatus} from "@/constants/status/usual-status";
 import {checkAndApplyResistance} from "@/constants/status/advanced-status-utils";
@@ -157,11 +156,11 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
 
     // 最終計算輸出
     outcome.totalDamage = damageTaken;
-    // 當玩家受到傷害前最後根據技能檢查
+    // 當玩家受到傷害前，先執行 before-attack hooks（可用於減傷等修改最終傷害值的判定）
     if (!(defender instanceof MonsterClass)) {
         defender.info.skills.forEach((s: SkillModel) => {
-            if (s && typeof s.onPlayerAttacked === 'function') {
-                s.onPlayerAttacked({
+            if (s && typeof s.onPlayerBeforeAttacked === 'function') {
+                s.onPlayerBeforeAttacked({
                     playerStore: defender,
                     gameStateStore,
                     logStore,
@@ -208,6 +207,20 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
     // 觸發受擊時消失狀態 (untilAttacked)
     if (outcome.isHit) {
         defender.handleUntilAttacked();
+        if (!(defender instanceof MonsterClass)) {
+            // 當玩家受到攻擊扣血後，執行 after-attack hooks（可用於反擊、附帶異常狀態等判定）
+            defender.info.skills.forEach((s: SkillModel) => {
+                if (s && typeof s.onPlayerAttacked === 'function') {
+                    s.onPlayerAttacked({
+                        playerStore: defender,
+                        gameStateStore,
+                        logStore,
+                        monster: attacker as MonsterModel,
+                        attackedOutcome: outcome
+                    });
+                }
+            });
+        }
     }
 
     return outcome;
@@ -359,11 +372,11 @@ export function applySkillDamage({
         outcome.totalDamage = 0;
     }
 
-    // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能
+    // 當玩家受到傷害前，先執行 before-attack hooks
     if (!(target instanceof MonsterClass)) {
         target.info.skills.forEach((s: SkillModel) => {
-            if (s && typeof s.onPlayerAttacked === 'function') {
-                s.onPlayerAttacked({
+            if (s && typeof s.onPlayerBeforeAttacked === 'function') {
+                s.onPlayerBeforeAttacked({
                     monster: speller as MonsterClass,
                     playerStore: target,
                     gameStateStore,

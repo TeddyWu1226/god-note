@@ -33,14 +33,20 @@ export class DefensiveStrike extends SkillModel {
         return true;
     }
 
-    override onPlayerAttacked({playerStore, monster, attackedOutcome, logStore}: SkillOnPlayerAttackedHitParams) {
+    override onPlayerAttacked({playerStore, monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (!attackedOutcome.isHit) {
             return;
         }
         if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) return;
-        if (Math.random() <= 0.20) {
-            const outcome = applyAttackDamage(playerStore, monster)
-            logStore.logger.add(`[防禦一擊] 受到傷害觸發反擊，對 ${monster.name} 造成了 ${outcome.totalDamage} 點傷害！`);
+        if (Math.random() <= 0.2) {
+            monster.lastDamageResult = applySkillDamage({
+                speller: playerStore,
+                target: monster,
+                baseValue: playerStore.finalStats.ad,
+                type: 'ad',
+                skillName: this.name,
+                sureHit: true
+            });
             useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
         }
     }
@@ -77,14 +83,20 @@ export class ResistStrike extends SkillModel {
         return {};
     }
 
-    override onPlayerAttacked({playerStore, monster, attackedOutcome, logStore}: SkillOnPlayerAttackedHitParams) {
+    override onPlayerAttacked({playerStore, monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (!attackedOutcome.isHit) {
             return;
         }
         if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) return;
         if (Math.random() <= 0.25) {
-            const outcome = applyAttackDamage(playerStore, monster)
-            logStore.logger.add(`[抵抗一擊] 受到傷害觸發反擊，對 ${monster.name} 造成了 ${outcome.totalDamage} 點傷害！`);
+            monster.lastDamageResult = applySkillDamage({
+                speller: playerStore,
+                target: monster,
+                baseValue: playerStore.finalStats.ad,
+                type: 'ad',
+                skillName: this.name,
+                sureHit: true
+            });
             useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
         }
     }

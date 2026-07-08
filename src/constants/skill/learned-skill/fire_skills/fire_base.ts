@@ -76,7 +76,7 @@ export class FireAdvancement extends SkillModel {
         };
     }
 
-    override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+    override onPlayerBeforeAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (!attackedOutcome.isHit) {
             return;
         }
@@ -129,7 +129,7 @@ export class FireMaster extends SkillModel {
         };
     }
 
-    override onPlayerAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
+    override onPlayerBeforeAttacked({monster, attackedOutcome}: SkillOnPlayerAttackedHitParams) {
         if (!attackedOutcome.isHit) {
             return;
         }
