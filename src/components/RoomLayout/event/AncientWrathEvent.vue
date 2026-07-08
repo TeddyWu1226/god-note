@@ -47,7 +47,7 @@ const handleFinish = () => {
 </script>
 
 <template>
-  <RoomTemplate title="遠古的憤怒">
+  <RoomTemplate title="神秘的地穴">
     <template #default>
       <div class="general-event">
         <!-- 階段 0：發現神祕洞窟 -->

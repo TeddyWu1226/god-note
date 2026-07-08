@@ -448,6 +448,19 @@ const handleSellAll = (type: 'items' | 'equipments') => {
 
 .detail-dialog-body {
   padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-dialog-body :deep(.detail-container) {
+  max-width: 100%;
+  min-width: 100%;
+  width: 100%;
+  max-height: none;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
 }
 
 .item-detail-info {
@@ -456,7 +469,8 @@ const handleSellAll = (type: 'items' | 'equipments') => {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
   font-weight: bold;
-  font-size: 1.05rem
+  font-size: 1.05rem;
+  width: 100%;
 }
 
 /* 手機板樣式適配微調 */

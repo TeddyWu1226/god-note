@@ -79,7 +79,6 @@ const onTest = () => {
   // onLeve2Test()
   // onLeve3Test()
   onLeve4Test()
-  // playerStore.gainExp({amount: 1000})
 }
 
 const giveMoney = () => {
@@ -87,9 +86,9 @@ const giveMoney = () => {
 }
 const give = () => {
   // 給裝備系列
-  playerStore.equipItem(Head.HpHead3)
-  playerStore.equipItem(Armor.DefendArmor3)
-  playerStore.equipItem(Weapon.Axe3)
+  // playerStore.equipItem(Head.HpHead3)
+  // playerStore.equipItem(Armor.DefendArmor3)
+  // playerStore.equipItem(Weapon.Axe3)
   // playerStore.equipItem(Weapon.Dagger2)
   // playerStore.equipItem(Offhand.Shield3)
   // playerStore.gainItem(SpecialAccessory.SoulAnchor)
@@ -97,7 +96,7 @@ const give = () => {
   // 給道具
   // playerStore.gainItem(Material.BadNormal, 100)
   // playerStore.gainItem(Offhand.Book5)
-  // playerStore.gainItem(Usable.BurningPotion, 3)
+  playerStore.gainItem(Usable.TeleportCrystal, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }
