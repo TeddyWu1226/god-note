@@ -51,25 +51,17 @@ export class SplitSlime extends MonsterModel {
         switch (gameStateStore?.environmentMode) {
             case 'day':
                 this.icon = '🟡'
-                this.class = ['icon-yellow']
-                if (this.hasStatus(EvnStatus.NighttimeEffect.name)) {
-                    this.removeStatus(EvnStatus.NighttimeEffect.name);
-                }
-                this.addEffect(EvnStatus.DaytimeEffect);
+                this.class.push('icon-yellow')
                 break
             case 'night':
                 this.icon = '🟣'
-                this.class = ['icon-purple']
-                if (this.hasStatus(EvnStatus.DaytimeEffect.name)) {
-                    this.removeStatus(EvnStatus.DaytimeEffect.name);
-                }
-                this.addEffect(EvnStatus.NighttimeEffect);
+                this.class.push('icon-purple')
                 break
         }
     }
 
-    override onAttackedHook({playerStore, logStore}: MonsterOnAttackedParams) {
-        let amount = this.hasStatus(EvnStatus.DaytimeEffect.name) ? 3 : -3
+    override onAttackedHook({playerStore, logStore, gameStateStore}: MonsterOnAttackedParams) {
+        let amount = gameStateStore.environmentMode === 'day' ? 3 : -3
         playerAdjustSanity(playerStore, amount);
         logStore.logger.add(`魔物身上的能量刺穿你的靈魂，使你的理智 ${amount > 0 ? '+' : ''}${amount}`)
     }
@@ -83,7 +75,7 @@ export class SplitIllusion extends MonsterModel {
             name: '幻想魔元素',
             class: [],
             description: '受龐大魔能量匯集而成具有反映環境的魔力元素體。',
-            ad: 45,
+            ad: 40,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
             adDefend: 35,
@@ -109,26 +101,20 @@ export class SplitIllusion extends MonsterModel {
         switch (gameStateStore?.environmentMode) {
             case 'day':
                 this.icon = '🌕'
-                this.class = ['icon-yellow']
-                this.addEffect(EvnStatus.DaytimeEffect);
+                this.class.push('icon-yellow')
                 break
             case 'night':
                 this.icon = '🌑'
-                this.class = ['icon-purple']
-                this.addEffect(EvnStatus.NighttimeEffect);
+                this.class.push('icon-purple')
                 break
         }
     }
 
     override onAttackHitHook({playerStore, logStore}: MonsterOnAttackHitParams) {
         const currentSens = playerStore.hasStatus(EvnStatus.Sanity.name)
-        if ((this.hasStatus(EvnStatus.DaytimeEffect.name) && currentSens.value > 0) ||
-            (this.hasStatus(EvnStatus.NighttimeEffect.name) && currentSens.value < 0)
-        ) {
-            const damage = Math.floor(Math.abs(currentSens.value) / 3)
-            playerStore.takeDamage(damage)
-            logStore.logger.add(`魔物身上相同的能量侵蝕你的理智，使你受到 ${damage} 點傷害`)
-        }
+        const damage = Math.floor(Math.abs(currentSens.value) / 3)
+        playerStore.takeDamage(damage)
+        logStore.logger.add(`魔物身上能量侵蝕你的理智，使你受到 ${damage} 點傷害`)
         return true;
     }
 }
@@ -138,9 +124,9 @@ export class SplitButterfly extends MonsterModel {
         super({
             icon: '🦋',
             code: 'SplitButterfly',
-            name: '幻想蝶妖',
+            name: '幻想蝶',
             class: [],
-            description: '受龐大魔能量影響的蝶妖。在對應的環境下擁有高額閃避或是高額輸出。',
+            description: '受龐大魔能量影響的蝶型魔物。在對應的環境下擁有高額閃避或是高額輸出。',
             ad: 30,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -161,8 +147,7 @@ export class SplitButterfly extends MonsterModel {
 
     private updateState(gameStateStore: GameStateStoreType) {
         if (gameStateStore?.environmentMode === 'day') {
-            this.class = ['icon-yellow'];
-            this.addEffect(EvnStatus.DaytimeEffect);
+            this.class.push('icon-yellow');
             this.addEffect({
                 name: '閃匿',
                 icon: '🦋',
@@ -172,8 +157,7 @@ export class SplitButterfly extends MonsterModel {
                 bonus: {dodge: 50}
             });
         } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = ['icon-purple'];
-            this.addEffect(EvnStatus.NighttimeEffect);
+            this.class.push('icon-purple')
             this.addEffect({
                 name: '夜襲',
                 icon: '🦋',
@@ -193,7 +177,7 @@ export class SplitHound extends MonsterModel {
             code: 'SplitHound',
             name: '幻想獵犬',
             class: [],
-            description: '受環境能量影響的獵犬。狩獵屬於另一方勢力的敵人時必定爆擊。',
+            description: '受環境能量影響的獵犬。爆擊率取決於目標身上理智值。',
             ad: 66,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -213,23 +197,19 @@ export class SplitHound extends MonsterModel {
     }
 
     private updateState(gameStateStore: any) {
-        if (gameStateStore?.environmentMode === 'day') {
-            this.class = ['icon-yellow'];
-            this.addEffect(EvnStatus.DaytimeEffect);
-        } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = ['icon-purple'];
-            this.addEffect(EvnStatus.NighttimeEffect);
+        switch (gameStateStore?.environmentMode) {
+            case 'day':
+                this.class.push('icon-yellow');
+                break;
+            case 'night':
+                this.class.push('icon-purple');
+                break;
         }
     }
 
     override onAttackHook({playerStore}: MonsterOnAttackParams) {
-        if (this.hasStatus(EvnStatus.DaytimeEffect.name) && playerStore.hasStatus(EvnStatus.LowSanity.name) ||
-            this.hasStatus(EvnStatus.NighttimeEffect.name) && playerStore.hasStatus(EvnStatus.HighSanity.name)
-        ) {
-            this.critRate = 100;
-        } else {
-            this.critRate = 15;
-        }
+        const currentSens = playerStore.hasStatus(EvnStatus.Sanity.name)
+        this.critRate = Math.floor(Math.abs(currentSens.value))
         return true;
     }
 }
@@ -261,22 +241,23 @@ export class SplitStalker extends MonsterModel {
     }
 
     private updateState(gameStateStore: GameStateStoreType) {
-        if (gameStateStore?.environmentMode === 'day') {
-            this.class = ['icon-yellow'];
-            this.addEffect(EvnStatus.DaytimeEffect);
-        } else if (gameStateStore?.environmentMode === 'night') {
-            this.class = ['icon-purple'];
-            this.addEffect(EvnStatus.NighttimeEffect);
+        switch (gameStateStore?.environmentMode) {
+            case 'day':
+                this.class.push('icon-yellow');
+                break;
+            case 'night':
+                this.class.push('icon-purple');
+                break;
         }
         this.addEffect(UsualStatus.Resistance, {value: 3, duration: -1});
     }
 
     onAttackedHook({playerStore, logStore}: MonsterOnAttackedParams) {
-        if (this.hasStatus(EvnStatus.DaytimeEffect.name) && playerStore.hasStatus(EvnStatus.LowSanity.name) ||
-            this.hasStatus(EvnStatus.NighttimeEffect.name) && playerStore.hasStatus(EvnStatus.HighSanity.name)
-        ) {
-            playerStore.takeDamage(this.ad)
-            logStore.logger.add(`魔物身上的相反的能量刺穿了你，造成 ${this.ad} 真實傷害`)
+        const currentSens = playerStore.hasStatus(EvnStatus.Sanity.name)
+        const damage = Math.floor(Math.abs(currentSens.value) / 2)
+        {
+            playerStore.takeDamage(damage)
+            logStore.logger.add(`魔物身上的能量刺穿了你，造成 ${damage} 真實傷害`)
         }
     }
 }

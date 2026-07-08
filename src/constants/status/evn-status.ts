@@ -69,13 +69,22 @@ const EvnStatus = {
         name: '亢奮',
         icon: '🤩',
         duration: -1,
-        description: '亢奮狀態。攻擊「白晝」魔物時傷害降低 50%；受到「黑夜」魔物攻擊時傷害增加 50%。'
+        description: '你陷入亢奮狀態。命中值 %hit% 點，閃避值 %dodge% 點。',
+        bonus: {
+            hit: 30,
+            dodge: -30,
+            runIncrease: -30
+        }
     } as StatusEffect,
     LowSanity: {
         name: '妄想',
         icon: '🤪',
         duration: -1,
-        description: '妄想狀態。攻擊「黑夜」魔物時傷害降低 50%；受到「白晝」魔物攻擊時傷害增加 50%。'
+        description: '你陷入妄想狀態。命中值 %hit% 點，閃避值 %dodge% 點。',
+        bonus: {
+            hit: -30,
+            dodge: 30
+        }
     } as StatusEffect,
     DaytimeEffect: {
         name: '白晝',

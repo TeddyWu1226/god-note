@@ -155,20 +155,6 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         damageTaken = 0;
         outcome.totalDamage = 0;
     }
-    // todo: 待移除
-    if (defender instanceof MonsterClass) {
-        if (attacker.hasStatus(EvnStatus.HighSanity.name) && defender.hasStatus(EvnStatus.DaytimeEffect.name)) {
-            damageTaken = Math.floor(damageTaken * 0.5);
-        } else if (attacker.hasStatus(EvnStatus.LowSanity.name) && defender.hasStatus(EvnStatus.NighttimeEffect.name)) {
-            damageTaken = Math.floor(damageTaken * 0.5);
-        }
-    } else {
-        if (defender.hasStatus(EvnStatus.HighSanity.name) && attacker.hasStatus(EvnStatus.NighttimeEffect.name)) {
-            damageTaken = Math.floor(damageTaken * 1.5);
-        } else if (defender.hasStatus(EvnStatus.LowSanity.name) && attacker.hasStatus(EvnStatus.DaytimeEffect.name)) {
-            damageTaken = Math.floor(damageTaken * 1.5);
-        }
-    }
 
     // 最終計算輸出
     outcome.totalDamage = damageTaken;
@@ -373,20 +359,6 @@ export function applySkillDamage({
     // --- 檢查「抵抗」狀態效果 ---
     if (checkAndApplyResistance(target)) {
         outcome.totalDamage = 0;
-    }
-    // todo: 待移除
-    if (target instanceof MonsterClass) {
-        if (speller.hasStatus(EvnStatus.HighSanity.name) && target.hasStatus(EvnStatus.DaytimeEffect.name)) {
-            outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-        } else if (speller.hasStatus(EvnStatus.LowSanity.name) && target.hasStatus(EvnStatus.NighttimeEffect.name)) {
-            outcome.totalDamage = Math.floor(outcome.totalDamage * 0.5);
-        }
-    } else {
-        if (target.hasStatus(EvnStatus.HighSanity.name) && speller.hasStatus(EvnStatus.NighttimeEffect.name)) {
-            outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
-        } else if (target.hasStatus(EvnStatus.LowSanity.name) && speller.hasStatus(EvnStatus.DaytimeEffect.name)) {
-            outcome.totalDamage = Math.floor(outcome.totalDamage * 1.5);
-        }
     }
 
     // 當玩家受到傷害前最後根據技能檢查 玩家受擊技能

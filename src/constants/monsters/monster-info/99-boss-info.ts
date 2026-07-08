@@ -835,7 +835,6 @@ export class DayTitan extends MonsterModel {
 
     override onStartHook() {
         useEpicSubtitle("「光芒所及之處，皆為吾之領域。凡人，直視這萬丈烈陽吧！」", 4000);
-        this.addEffect(EvnStatus.DaytimeEffect);
     }
 
     override onAttackHook({playerStore, logStore}: MonsterOnAttackParams) {
@@ -902,7 +901,6 @@ export class NightTitan extends MonsterModel {
 
     override onStartHook() {
         useEpicSubtitle("「黑暗終將籠罩一切，在永無止境的虛空呢喃中崩潰吧。」", 4000);
-        this.addEffect(EvnStatus.NighttimeEffect);
     }
 
     override onAttackHook({playerStore, logStore}: MonsterOnAttackParams) {
