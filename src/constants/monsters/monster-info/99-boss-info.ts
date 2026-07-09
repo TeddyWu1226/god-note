@@ -1007,8 +1007,9 @@ export class DemonWood extends MonsterModel {
         });
     }
 
-    override onStartHook() {
+    override onStartHook({gameStateStore}: MonsterActionParams) {
         useEpicSubtitle("「走？身為異族的你別想逃！」", 2500);
+        gameStateStore.triggerScreenShake(2000)
     }
 
     override onRoundBehaviorHook({playerStore, logStore}: MonsterRoundBehaviorParams) {

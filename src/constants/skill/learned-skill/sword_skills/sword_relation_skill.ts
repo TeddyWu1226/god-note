@@ -308,7 +308,15 @@ export class DoubleSlash extends SkillModel {
                 type: 'ad',
                 skillName: `${this.name} (${i + 1}擊)`
             });
-            useCardImpactEffect(getMonsterElement(monster.id), 'physical');
+            switch (i) {
+                case 0:
+                    useCardImpactEffect(getMonsterElement(monster.id), 'horizontal-slash');
+                    break
+                case 1:
+                    useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
+                    break
+            }
+
             if (i < 1) await Sleep(200);
         }
 
