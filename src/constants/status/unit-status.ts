@@ -188,4 +188,31 @@ export const UnitStatus = {
             adDefend: 5
         }
     } as StatusEffect,
+    KnightUp: {
+        name: '騎士的守護',
+        icon: '🛡️',
+        duration: -1,
+        isBuff: true,
+        type: 'heal',
+        value: 100,
+        description: `受到騎士的守護, 近乎無敵`,
+        bonus: {
+            adDefend: 999
+        }
+    } as StatusEffect,
+    SaintUp: {
+        name: '聖女的守護',
+        icon: '🛡️',
+        duration: -1,
+        isBuff: true,
+        description: `受到聖女的祝福, 而獲得大幅強化的BUFF`,
+        type: 'heal',
+        value: 100,
+        bonus: {
+            ad: 25,
+            adDefend: 25,
+            hit: 50,
+            dodge: 50
+        }
+    } as StatusEffect,
 }

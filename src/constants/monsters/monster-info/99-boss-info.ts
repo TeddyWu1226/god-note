@@ -10,7 +10,7 @@ import {
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
     MonsterRoundBehaviorParams,
-    MonsterType
+    MonsterType, TrackerStoreType
 } from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -20,6 +20,7 @@ import {playerGetColdStackEffects, playerAdjustSanity} from "@/constants/status/
 import {applyAttackDamage, applySkillDamage} from "@/constants/fight-func";
 import EvnStatus from "@/constants/status/evn-status";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
+import {useTrackerStore} from "@/store/track-store";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -699,23 +700,50 @@ export class TheLastSaint extends MonsterModel {
             ad: 20,
             critIncrease: 0,
             critRate: 0,
-            adDefend: 30,
+            adDefend: 0,
             dodge: 60,
             hit: 70,
             hp: 1000,
             hpLimit: 1000,
             level: 50,
             dropGold: 2000,
+            chaseIncrease: 200,
             drop: []
         });
     }
 
-    override onStartHook() {
-        useEpicSubtitle("「離開這裡...我快要...無法克制了...」", 3000);
+    stage4FinalBossRaid(gameStateStore: GameStateStoreType) {
+        const trackStore = useTrackerStore()
+        if (trackStore.isMonsterDefeated(Boss.FallenKnight3.code)) {
+            return
+        }
+        const bossPool = [
+            (new FinalFallenKnight1()).code,
+            (new FinalFallenKnight2()).code,
+            (new FinalFallenKnight3()).code,
+        ];
+        // 計算已擊敗的前置 Boss 數量，決定挑戰哪一階段（0 = Phase 1, 1 = Phase 2, 2 = Phase 3）
+        const knightStatus = bossPool.slice(0, 2).filter(code => trackStore.isMonsterDefeated(code)).length;
+        const Knight = gameStateStore.createMonster(bossPool[knightStatus]);
+        gameStateStore.currentEnemy.unshift(Knight)
+    }
+
+    override onStartHook({gameStateStore}: MonsterActionParams) {
+        useEpicSubtitle("「人類?不...你是誰?!」", 3000);
+        this.stage4FinalBossRaid(gameStateStore)
+    }
+
+
+    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
+        if (gameStateStore.currentEnemy.length > 1) {
+            this.addEffect(UnitStatus.KnightUp)
+        } else {
+            this.removeStatus(UnitStatus.KnightUp.name)
+        }
     }
 
     override onDeadHook({playerStore}: MonsterActionParams) {
-        useEpicSubtitle("「謝謝汝...靈魂...終於得到了解脫...」", 3000);
+        useEpicSubtitle("「為什麼...」", 3000);
     }
 }
 
@@ -841,6 +869,64 @@ export class FallenKnight3 extends FallenKnight2 {
     }
 }
 
+export class FinalFallenKnight1 extends FallenKnight1 {
+    constructor(params: any = {}) {
+        super(Object.assign({
+            code: 'FinalFallenKnight1',
+        }, params));
+    }
+
+    override onStartHook() {
+    }
+
+    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
+        if (gameStateStore.currentEnemy.length > 1) {
+            this.addEffect(UnitStatus.SaintUp)
+        }
+    }
+
+    override onDeadHook({gameStateStore}: MonsterActionParams) {
+        gameStateStore.currentEnemy.unshift(new FinalFallenKnight2())
+    }
+}
+
+export class FinalFallenKnight2 extends FallenKnight2 {
+    constructor(params: any = {}) {
+        super(Object.assign({
+            code: 'FinalFallenKnight2',
+        }, params));
+    }
+
+    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
+        if (gameStateStore.currentEnemy.length > 1) {
+            this.addEffect(UnitStatus.SaintUp)
+        }
+    }
+
+    override onStartHook() {
+    }
+
+    override onDeadHook({gameStateStore}: MonsterActionParams) {
+        gameStateStore.currentEnemy.unshift(new FinalFallenKnight3())
+    }
+}
+
+export class FinalFallenKnight3 extends FallenKnight3 {
+    constructor(params: any = {}) {
+        super(Object.assign({
+            code: 'FinalFallenKnight3',
+        }, params));
+    }
+
+    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
+        if (gameStateStore.currentEnemy.length > 1) {
+            this.addEffect(UnitStatus.SaintUp)
+        }
+    }
+
+    override onStartHook() {
+    }
+}
 
 /**
  * --- 終焉深淵 (End Abyss) Bosses ---
@@ -1161,6 +1247,9 @@ export const Boss = {
     FallenKnight1: new FallenKnight1(),
     FallenKnight2: new FallenKnight2(),
     FallenKnight3: new FallenKnight3(),
+    FinalFallenKnight1: new FinalFallenKnight1(),
+    FinalFallenKnight2: new FinalFallenKnight2(),
+    FinalFallenKnight3: new FinalFallenKnight3(),
 
     // --- 終焉深淵 (End Abyss) ---
     AbyssSpecter: new AbyssSpecter(),
@@ -1173,7 +1262,7 @@ export const Boss = {
     // --- 特殊 Boss ---
     DayTitan: new DayTitan(),
     NightTitan: new NightTitan(),
-    DemonWood: new DemonWood()
+    DemonWood: new DemonWood(),
 };
 
 export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType }> = {
