@@ -91,7 +91,6 @@ const give = () => {
   // playerStore.equipItem(Weapon.Axe3)
   // playerStore.equipItem(Weapon.Dagger2)
   // playerStore.equipItem(Offhand.Shield3)
-  playerStore.gainItem(SpecialAccessory.TitanHeart)
 
   // 給道具
   // playerStore.gainItem(Material.BadNormal, 100)
@@ -100,8 +99,17 @@ const give = () => {
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }
+
+const giveJump = () => {
+  playerStore.gainItem(Usable.TeleportCrystal, 3)
+}
 const heal = () => {
   playerStore.healFull()
+}
+
+const godEquip = ()=>{
+  playerStore.equipItem(SpecialAccessory.TitanHeart)
+  playerStore.equipItem(SpecialAccessory.SoulAnchor)
 }
 
 const setRoom = () => {
@@ -117,17 +125,19 @@ const onSave = () => {
   <el-card class="test">
     <el-button @click="isClose = !isClose" style="width: 100% ">縮放</el-button>
     <div style="padding-top: 5px" v-if="!isClose">
-      <div>
-        <el-button @click="giveMoney">給錢</el-button>
-        <el-button @click="give">給道具</el-button>
+      <div class="cheat-btn-group">
         <el-button @click="heal">回血</el-button>
-        <el-button @click="setRoom">房間</el-button>
-        <el-button @click="onTest">作弊</el-button>
+        <el-button @click="giveMoney">給錢</el-button>
         <el-button @click="onLevelUp">升等</el-button>
+        <el-button @click="setRoom">房間</el-button>
+        <el-button @click="give">道具</el-button>
+        <el-button @click="godEquip">神裝</el-button>
+        <el-button @click="giveJump">跳關</el-button>
         <el-button @click="onSave">存檔</el-button>
+        <el-button @click="onTest">作弊</el-button>
       </div>
-      <div style="width: 200px">
-        <el-input v-model="selectDay">
+      <div class="day-skip-container">
+        <el-input v-model="selectDay" placeholder="天數">
           <template #append>
             <el-button @click="onSelectDay">
               跳天
@@ -185,5 +195,25 @@ const onSave = () => {
   right: 50px;
   z-index: 6000;
   max-width: 30%;
+  min-width: 280px;
+}
+
+.cheat-btn-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.cheat-btn-group .el-button {
+  margin: 0 !important;
+  width: 100%;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.day-skip-container {
+  width: 100%;
+  margin-bottom: 10px;
 }
 </style>

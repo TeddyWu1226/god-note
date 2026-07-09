@@ -271,15 +271,8 @@ export class FireWyrmling extends MonsterModel {
     }
 
     override onStartHook({playerStore, gameStateStore}: MonsterActionParams) {
-        useFloatingMessage(
-            '吼!!!!',
-            getMonsterElement(this.id),
-            {
-                duration: 2000,
-                color: 'red'
-            }
-        );
-        gameStateStore.triggerScreenShake(2000);
+        useEpicSubtitle("火山深處的洞穴傳來響亮的怒吼，隨即飛出一隻傳說的火龍", 2500);
+        gameStateStore.triggerScreenShake(2000)
         playerStore.addStatus(UnitStatus.Scared, {duration: 5});
     }
 
@@ -336,14 +329,6 @@ export class BurrowingBehemoth extends MonsterModel {
     }
 
     override onStartHook({gameStateStore, logStore}: MonsterActionParams) {
-        useFloatingMessage(
-            '咕吼!!',
-            getMonsterElement(this.id),
-            {
-                duration: 2000,
-                color: 'red'
-            }
-        );
         this.triggerBurrow(gameStateStore);
     }
 
@@ -387,7 +372,7 @@ export class BurrowingBehemoth extends MonsterModel {
         }
         if (this.burrowCountdown > 0) {
             useFloatingMessage(
-                '蓄力中...',
+                '潛伏中...',
                 getMonsterElement(this.id),
                 {
                     duration: 1000,
@@ -399,9 +384,8 @@ export class BurrowingBehemoth extends MonsterModel {
         return true
     }
 
-    override onRoundBehaviorHook({playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
         const hpRatio = this.hp / this.hpLimit;
-
         if (hpRatio <= 0.75 && !this.triggered75) {
             this.triggerBurrow(gameStateStore);
         } else if (hpRatio <= 0.5 && !this.triggered50) {
@@ -446,7 +430,7 @@ export class BurrowingBehemoth extends MonsterModel {
         this.icon = '🕳️';
         this.addEffect(UsualStatus.DigHoleResistance);
         useFloatingMessage(
-            '鑽入地洞！',
+            '鑽入地洞...',
             getMonsterElement(this.id),
             {
                 duration: 2000,

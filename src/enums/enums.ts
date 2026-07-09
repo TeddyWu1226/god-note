@@ -45,6 +45,7 @@ export enum SpecialEventEnum {
     NeedWater = 'NeedWater', // 沙丘
     DragonSkeleton = 'DragonSkeleton', // 龍之骸骨
     AncientWrath = 'AncientWrath', // 遠古的憤怒
+    EndlessBetrayal = 'EndlessBetrayal', // 無盡的背叛
 
 }
 

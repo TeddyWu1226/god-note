@@ -41,3 +41,32 @@
     color: #909399; /* 灰色 */
     text-align: center;
 }
+
+
+/* 故事相關 */
+.story-text {
+    text-align: left;
+    color: #e6a23c;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 1rem 0;
+}
+
+.special-item-text {
+    color: #f56c6c;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.shine {
+    animation: shine-glow 2s infinite alternate;
+}
+
+@keyframes shine-glow {
+    from {
+        filter: drop-shadow(0 0 2px #fff);
+    }
+    to {
+        filter: drop-shadow(0 0 10px #f56c6c);
+    }
+}

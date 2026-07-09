@@ -9,6 +9,7 @@ import BushSearchEvent from "@/components/RoomLayout/event/BushSearchEvent.vue";
 import UnknownGraveEvent from "@/components/RoomLayout/event/UnknownGraveEvent.vue";
 import DragonSkeletonEvent from "@/components/RoomLayout/event/DragonSkeletonEvent.vue";
 import AncientWrathEvent from "@/components/RoomLayout/event/AncientWrathEvent.vue";
+import EndlessBetrayalEvent from "@/components/RoomLayout/event/EndlessBetrayalEvent.vue";
 
 export const eventComponentMap = {
 	[SpecialEventEnum.None]: NoneEvent,
@@ -21,4 +22,5 @@ export const eventComponentMap = {
 	[SpecialEventEnum.UnknownGrave]: UnknownGraveEvent,
 	[SpecialEventEnum.DragonSkeleton]: DragonSkeletonEvent,
 	[SpecialEventEnum.AncientWrath]: AncientWrathEvent,
+	[SpecialEventEnum.EndlessBetrayal]: EndlessBetrayalEvent,
 };

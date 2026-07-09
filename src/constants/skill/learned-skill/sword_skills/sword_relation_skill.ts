@@ -310,10 +310,10 @@ export class DoubleSlash extends SkillModel {
             });
             switch (i) {
                 case 0:
-                    useCardImpactEffect(getMonsterElement(monster.id), 'horizontal-slash');
+                    useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
                     break
                 case 1:
-                    useCardImpactEffect(getMonsterElement(monster.id), 'vertical-slash');
+                    useCardImpactEffect(getMonsterElement(monster.id), 'horizontal-slash');
                     break
             }
 

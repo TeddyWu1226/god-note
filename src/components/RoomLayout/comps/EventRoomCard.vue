@@ -12,6 +12,12 @@ const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 const trackerStore = useTrackerStore();
 const relicStore = useRelicStore();
+
+const isCurrentBossDefeated = (day: number): boolean => {
+  const bossKey = `stage_${gameStateStore.currentStage}_${day}`;
+  const isDefeated = !!gameStateStore.defeatedBosses?.[bossKey];
+  return isDefeated || gameStateStore.isInClearedStage;
+};
 /**
  * 事件配置表：控制隨機權限
  */
@@ -37,6 +43,10 @@ const GeneralEvent = [
     type: SpecialEventEnum.GetFruit, // 魔樹事件
     canAppear: () => gameStateStore.currentStage === 1
   },
+  {
+    type: SpecialEventEnum.EndlessBetrayal, // 無盡的背叛事件
+    canAppear: () => gameStateStore.currentStage === 1 && isCurrentBossDefeated(100) && playerStore.hasItem(SpecialItem.AvelynNecklace.name)[0]
+  },
   // 憤怒的隱藏任務
   {
     type: SpecialEventEnum.DragonSkeleton, // 龍之骸骨事件
@@ -45,7 +55,8 @@ const GeneralEvent = [
   {
     type: SpecialEventEnum.AncientWrath, // 遠古的憤怒事件
     canAppear: () => gameStateStore.currentStage === 2 && gameStateStore.otherRecord['ANCIENT_WRATH_UNLOCKED'] === true
-  }
+  },
+
 ];
 
 const SpecifyEvent = [
