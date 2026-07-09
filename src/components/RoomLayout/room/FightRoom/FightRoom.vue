@@ -111,8 +111,22 @@ const getWeightByStage = () => {
 //生成菁英戰鬥
 const Stage4FinalBossRaid = () => {
   // 第一次遇見
-  const checkKillCount = trackStore.getKillCount()
-  const newMonsters = [gameStateStore.createMonster(Boss.FallenKnight1.code, Boss.FallenKnight1)]
+  let knightStatus = 0
+  if (trackStore.isMonsterDefeated(Boss.FallenKnight1.code)) {
+    knightStatus = 1
+  } else if (trackStore.isMonsterDefeated(Boss.FallenKnight2.code)) {
+    knightStatus = 2
+  }
+  let Knight = gameStateStore.createMonster(Boss.FallenKnight1.code)
+  switch (knightStatus) {
+    case 1:
+      Knight = gameStateStore.createMonster(Boss.FallenKnight2.code)
+      break;
+    case 2:
+      Knight = gameStateStore.createMonster(Boss.FallenKnight3.code)
+      break;
+  }
+  const newMonsters = [Knight]
   //
 
   // 同步到 Store 做持久化緩存
