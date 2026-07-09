@@ -28,16 +28,17 @@ const skillInstance = computed(() => {
 <template>
   <div class="detail-container">
     <div class="detail-icon">{{ props.item.icon }}</div>
-    <h3 :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
-      {{ props.item.name }}{{ props.item.enhanceLevel ? ' +' + props.item.enhanceLevel : '' }}{{ props.item.usable ? '(消耗品)' : '' }}
-    </h3>
-
-    <p class="detail-desc">{{ props.item.description }}</p>
+    <p class="item-name" :style="{ color: getEnumColumn(QualityEnum, props.item.quality, 'color', '#fff') }">
+      {{ props.item.name }}{{
+        props.item.enhanceLevel ? ' +' + props.item.enhanceLevel : ''
+      }}{{ props.item.usable ? '(消耗品)' : '' }}
+    </p>
     <template v-if="skillInstance && skillInstance.itemDescription">
       <el-divider content-position="left">
         武技
       </el-divider>
-      <div style="font-size: 0.85rem; color: #ff9f43; line-height: 1.4; text-align: center; word-break: break-word; white-space: normal; width: 100%;">
+      <div
+          style="font-size: 0.85rem; color: #ff9f43; line-height: 1.4; text-align: center; word-break: break-word; white-space: normal; width: 100%;">
         {{ skillInstance.itemDescription }}
       </div>
     </template>
@@ -59,6 +60,7 @@ const skillInstance = computed(() => {
         </div>
       </template>
     </div>
+    <p class="detail-desc">{{ props.item.description }}</p>
   </div>
 </template>
 
@@ -80,21 +82,28 @@ const skillInstance = computed(() => {
 .detail-container::-webkit-scrollbar {
   width: 4px;
 }
+
 .detail-container::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .detail-container::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
 }
+
 .detail-container::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.item-name {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
 
 .detail-icon {
   font-size: 3rem;
-  line-height: 1.2;
+  margin-top: 0.5rem;
   margin-bottom: 4px;
 }
 
