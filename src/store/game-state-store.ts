@@ -226,6 +226,8 @@ export const useGameStateStore = defineStore('game-state', () => {
         eventAction.value = 0;
         battleRound.value = 1;
         playerActionPoints.value = 0;
+        // 進入新房間，清除上一間商店的商品快取
+        delete otherRecord.value['SHOP_GOODS'];
         // 進入房間時判定：如果是戰鬥房間且玩家擁有主動技能，預設開啟技能面板，否則開啟背包面板
         const playerStore = usePlayerStore();
         const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];

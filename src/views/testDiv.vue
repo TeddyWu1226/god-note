@@ -18,7 +18,7 @@ const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
 const trackerStore = useTrackerStore()
 const saveStore = useSaveStore()
-const isClose = ref(true);
+const isClose = ref(false);
 // 天數
 const selectDay = ref(1);
 const onSelectDay = () => {
@@ -103,11 +103,18 @@ const give = () => {
 const giveJump = () => {
   playerStore.gainItem(Usable.TeleportCrystal, 3)
 }
+
+const refresh = () => {
+  // 洗技能緩存
+  playerStore.info.pendingSkillCandidates = []
+  // 洗商店緩存
+  delete gameStateStore.otherRecord['SHOP_GOODS']
+}
 const heal = () => {
   playerStore.healFull()
 }
 
-const godEquip = ()=>{
+const godEquip = () => {
   playerStore.equipItem(SpecialAccessory.TitanHeart)
   playerStore.equipItem(SpecialAccessory.SoulAnchor)
 }
@@ -127,14 +134,19 @@ const onSave = () => {
     <div style="padding-top: 5px" v-if="!isClose">
       <div class="cheat-btn-group">
         <el-button @click="heal">回血</el-button>
-        <el-button @click="giveMoney">給錢</el-button>
-        <el-button @click="onLevelUp">升等</el-button>
         <el-button @click="setRoom">房間</el-button>
+        <el-button @click="onLevelUp">升等</el-button>
+        <el-button @click="onSave">存檔</el-button>
+      </div>
+      <div class="cheat-btn-group">
         <el-button @click="give">道具</el-button>
+        <el-button @click="giveMoney">給錢</el-button>
         <el-button @click="godEquip">神裝</el-button>
         <el-button @click="giveJump">跳關</el-button>
-        <el-button @click="onSave">存檔</el-button>
+        <el-button @click="refresh">刷緩</el-button>
         <el-button @click="onTest">作弊</el-button>
+
+
       </div>
       <div class="day-skip-container">
         <el-input v-model="selectDay" placeholder="天數">
@@ -202,7 +214,7 @@ const onSave = () => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 1rem;
 }
 
 .cheat-btn-group .el-button {

@@ -13,7 +13,7 @@ import DwarfBlacksmith from "./comps/DwarfBlacksmith.vue";
 // import BardPanel from "./comps/BardPanel.vue";
 
 const gameStateStore = useGameStateStore();
-const {generateGoods} = useShopLogic(gameStateStore.currentStage, gameStateStore.days);
+const {generateGoods, findItemTemplateByName} = useShopLogic(gameStateStore.currentStage, gameStateStore.days);
 
 const itemList = ref([]);
 const currentView = ref<string>('camp'); // 'camp' 或 staffList 內定義的人員 ID
@@ -56,11 +56,40 @@ const activeStaff = computed(() => staffList.find(staff => staff.id === currentV
 onMounted(() => {
   // 只有第一次進入 EventPhase 會初始化商品
   if (gameStateStore.stateIs(GameState.EVENT_PHASE)) {
-    itemList.value = generateGoods();
+    let rawGoods = gameStateStore.otherRecord['SHOP_GOODS'];
+    if (!rawGoods || rawGoods.length === 0) {
+      rawGoods = generateGoods();
+    }
+
+    // 統一根據名稱、價格與售出狀態還原為完整道具物件
+    itemList.value = rawGoods.map((entry: any) => {
+      const template = findItemTemplateByName(entry.name);
+      if (!template) return null;
+      return {
+        ...JSON.parse(JSON.stringify(template)),
+        price: entry.price,
+        sold: entry.sold
+      };
+    }).filter(Boolean);
   } else {
     isExited.value = true;
   }
 });
+
+// 監聽商品狀態改變，自動儲存輕量化資訊至存檔快取
+watch(
+  itemList,
+  (newItems) => {
+    if (newItems && newItems.length > 0) {
+      gameStateStore.otherRecord['SHOP_GOODS'] = newItems.map((item: any) => ({
+        name: item.name,
+        price: item.price,
+        sold: item.sold
+      }));
+    }
+  },
+  { deep: true }
+);
 
 const emit = defineEmits(['cancel']);
 const cancel = (): void => {

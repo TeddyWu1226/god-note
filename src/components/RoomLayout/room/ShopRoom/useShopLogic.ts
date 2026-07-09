@@ -168,28 +168,48 @@ export function useShopLogic(currentStage: number, days: number) {
             return getRandomItemsByQuality(1, q, false, Potions)[0];
         });
 
-        // 附上價格
-        const _equips = equips.map(item => ({
-            ...item,
+        // 附上價格與僅輸出輕量格式
+        const _equips = equips.filter(Boolean).map(item => ({
+            name: item.name,
             price: calculatePrice(item.quality ?? 0, EQUIP_BASE_PRICE),
-            sold: false
+            sold: false,
+            quality: item.quality ?? 0
         }));
-        let _usable = usable.map(item => ({
-            ...item,
+        let _usable = usable.filter(Boolean).map(item => ({
+            name: item.name,
             price: item.quality ? item.quality * item.quality * 50 : 50,
-            sold: false
+            sold: false,
+            quality: item.quality ?? 0
         }));
-        const _potions = potions.map(item => ({
-            ...item,
+        const _potions = potions.filter(Boolean).map(item => ({
+            name: item.name,
             price: calculatePrice(item.quality ?? 0, POTION_BASE_PRICE, true),
-            sold: false
+            sold: false,
+            quality: item.quality ?? 0
         }));
         sortByQuality(_equips);
         sortByQuality(_usable);
         sortByQuality(_potions);
 
-        return [..._equips, ..._usable, ..._potions].filter(Boolean);
+        // 移除輔助排序屬性，返回最乾淨的輕量規格
+        return [..._equips, ..._usable, ..._potions].map(({name, price, sold}) => ({
+            name,
+            price,
+            sold
+        }));
     };
 
-    return {getEquipWeightedQuality, generateGoods};
+    const findItemTemplateByName = (name: string) => {
+        const allTemplates = [
+            ...Object.values(Armor),
+            ...Object.values(Head),
+            ...Object.values(Offhand),
+            ...Object.values(Weapon),
+            ...Object.values(Potions),
+            ...Object.values(Usable)
+        ];
+        return allTemplates.find(item => item.name === name);
+    };
+
+    return {getEquipWeightedQuality, generateGoods, findItemTemplateByName};
 }
