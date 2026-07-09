@@ -7,17 +7,13 @@ import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 import {useRelicStore} from "@/store/relic-store";
 import {SpecialItem} from "@/constants/items/special-item-info";
+import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
 const trackerStore = useTrackerStore();
 const relicStore = useRelicStore();
 
-const isCurrentBossDefeated = (day: number): boolean => {
-  const bossKey = `stage_${gameStateStore.currentStage}_${day}`;
-  const isDefeated = !!gameStateStore.defeatedBosses?.[bossKey];
-  return isDefeated || gameStateStore.isInClearedStage;
-};
 /**
  * 事件配置表：控制隨機權限
  */
@@ -45,7 +41,7 @@ const GeneralEvent = [
   },
   {
     type: SpecialEventEnum.EndlessBetrayal, // 無盡的背叛事件
-    canAppear: () => gameStateStore.currentStage === 1 && isCurrentBossDefeated(100) && playerStore.hasItem(SpecialItem.AvelynNecklace.name)[0]
+    canAppear: () => gameStateStore.currentStage === 1 && trackerStore.isMonsterDefeated(Boss.Twilight.code) && playerStore.hasItem(SpecialItem.AvelynNecklace.name)[0]
   },
   // 憤怒的隱藏任務
   {

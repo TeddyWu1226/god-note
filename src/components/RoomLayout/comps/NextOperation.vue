@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted} from "vue";
+import {onMounted} from "vue";
 import {getEnumColumn} from "@/utils/enum";
 import {RoomEnum} from "@/enums/room-enum";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -14,6 +14,7 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {StageEnum} from "@/enums/stage-enum";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import {useRelicStore} from "@/store/relic-store";
+import {StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 
 const props = defineProps({
   disabled: Boolean,
@@ -24,9 +25,12 @@ const trackerStore = useTrackerStore()
 const relicStore = useRelicStore();
 
 const isBossDefeated = (day: number): boolean => {
-  const bossKey = `stage_${gameStateStore.currentStage}_${day}`;
-  const isDefeated = !!gameStateStore.defeatedBosses?.[bossKey];
-  return isDefeated || gameStateStore.isInClearedStage;
+  if (gameStateStore.isInClearedStage) return true;
+  const stageBoss = StageBosses[gameStateStore.currentStage];
+  if (!stageBoss) return false;
+  const boss = day === 50 ? stageBoss.mini : (day === 100 ? stageBoss.main : null);
+  if (!boss) return false;
+  return trackerStore.isMonsterDefeated(boss.code)
 };
 
 const createNextRooms = () => {

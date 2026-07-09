@@ -21,20 +21,15 @@ export const useTrackerStore = defineStore('tracker', () => {
 
     /**
      * 增加擊殺計數
-     * @param monsterName 怪物名稱
+     * @param monsterCode 怪物代碼
      * @param amount 增加數量 (預設 1)
      */
-    function recordKill(monsterName: string, amount: number = 1) {
+    function recordKill(monsterCode: string, amount: number = 1) {
         // 圖鑑解鎖
         const encyclopediaStore = useEncyclopediaStore();
-        const name = monsterName.replace(/^【菁英】/, "")
-        encyclopediaStore.unlockMonster(name);
+        encyclopediaStore.unlockMonster(monsterCode);
         // 紀錄擊殺
-        // if (monsterName.startsWith('【菁英】')) {
-        //     currentKills.value['ELITE'] = (currentKills.value['ELITE'] || 0) + amount
-        // }
-
-        currentKills.value[name] = (currentKills.value[name] || 0) + amount
+        currentKills.value[monsterCode] = (currentKills.value[monsterCode] || 0) + amount
         currentKills.value['TOTAL'] = (currentKills.value['TOTAL'] || 0) + amount
         // 和平重新計算
         achievementsCount.value.peaceDay = 0
@@ -60,10 +55,18 @@ export const useTrackerStore = defineStore('tracker', () => {
 
     /**
      * 獲取特定目標的進度
-     * @param monsterName 全部 TOTAL,菁英 ElITE
+     * @param monsterCode 全部 TOTAL
      */
-    function getKillCount(monsterName: string = 'TOTAL'): number {
-        return currentKills.value[monsterName] || 0
+    function getKillCount(monsterCode: string = 'TOTAL'): number {
+        return currentKills.value[monsterCode] || 0
+    }
+
+    /**
+     * 檢查怪物是否被擊敗過
+     * @param monsterCode
+     */
+    function isMonsterDefeated(monsterCode: string): boolean {
+        return (currentKills.value[monsterCode] || 0) > 0
     }
 
 
@@ -83,6 +86,7 @@ export const useTrackerStore = defineStore('tracker', () => {
         achievementsCount,
         recordKill,
         getKillCount,
+        isMonsterDefeated,
         init
     }
 }, {

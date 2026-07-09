@@ -7,7 +7,7 @@ import {ref} from 'vue';
  */
 export const useEncyclopediaStore = defineStore('encyclopedia', () => {
 
-    /** 已解鎖的怪物名稱集合 (擊敗後解鎖) */
+    /** 已解鎖的怪物代碼/名稱集合 (擊敗後解鎖) */
     const unlockedMonsters = ref<string[]>([]);
 
     /** 已解鎖的裝備名稱集合 (擁有過即解鎖) */
@@ -15,12 +15,13 @@ export const useEncyclopediaStore = defineStore('encyclopedia', () => {
 
     /**
      * 解鎖怪物圖鑑
-     * @param monsterName 怪物原始名稱（去除菁英前綴後的名稱）
+     * @param monsterCode 怪物代碼
      */
-    function unlockMonster(monsterName: string) {
-        const name = monsterName.replace(/^【菁英】/, '');
-        if (!unlockedMonsters.value.includes(name)) {
-            unlockedMonsters.value.push(name);
+    function unlockMonster(monsterCode: string) {
+        if (!monsterCode) return;
+        const code = monsterCode.replace(/^【菁英】/, '');
+        if (!unlockedMonsters.value.includes(code)) {
+            unlockedMonsters.value.push(code);
             unlockedMonsters.value = [...new Set(unlockedMonsters.value)]
         }
     }
@@ -38,9 +39,11 @@ export const useEncyclopediaStore = defineStore('encyclopedia', () => {
         }
     }
 
-    /** 檢查怪物是否已解鎖 */
-    function isMonsterUnlocked(monsterName: string): boolean {
-        return unlockedMonsters.value.includes(monsterName);
+    /** 檢查怪物是否已解鎖 (支援 code 與舊有 name 的雙重比對以向下相容) */
+    function isMonsterUnlocked(monsterCode: string, monsterName?: string): boolean {
+        if (unlockedMonsters.value.includes(monsterCode)) return true;
+        if (monsterName && unlockedMonsters.value.includes(monsterName)) return true;
+        return false;
     }
 
     /** 檢查裝備是否已解鎖 */
