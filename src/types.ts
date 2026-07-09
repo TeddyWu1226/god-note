@@ -161,6 +161,7 @@ export interface UserType extends UnitType {
     currentExp?: number
     statPoints?: number // 升級點數
     pendingSkillPoints?: number // 待分配的技能點數
+    pendingSkillCandidates?: string[] // 緩存的隨機技能候選 ID 列表 (防止 F5 刷技能)
     actionValue?: number
     offhandSkillCds?: Record<string, number> // 臨時/副手技能冷卻狀態
 }

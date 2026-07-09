@@ -80,6 +80,15 @@ const openLearnSkill = () => {
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
   const trackerStore = useTrackerStore();
 
+  // 若已有緩存的技能候選者，直接載入緩存的技能
+  if (playerStore.info.pendingSkillCandidates && playerStore.info.pendingSkillCandidates.length > 0) {
+    drawnSkills.value = playerStore.info.pendingSkillCandidates.map((id: string) => SkillFactory.createSkill(id));
+    replaceMode.value = false;
+    selectedNewSkill.value = null;
+    isShowLearnSkill.value = true;
+    return;
+  }
+
   const candidates = Object.keys(SKILL_TEMPLATES).filter(id => {
     // 玩家不能已經擁有此技能
     if (currentSkillIds.includes(id)) return false;
@@ -144,6 +153,9 @@ const openLearnSkill = () => {
   const shuffled = candidates.sort(() => 0.5 - Math.random());
   const selectedIds = shuffled.slice(0, Math.min(3, shuffled.length));
 
+  // 儲存至隨機技能緩存中，防止 F5 刷技能
+  playerStore.info.pendingSkillCandidates = selectedIds;
+
   // 轉化為 SkillModel 類別實例
   drawnSkills.value = selectedIds.map(id => SkillFactory.createSkill(id));
 
@@ -173,6 +185,7 @@ watch(isShowLearnSkill, (newVal) => {
 
 const skipLearn = () => {
   playerStore.info.pendingSkillPoints = Math.max(0, (playerStore.info.pendingSkillPoints || 1) - 1);
+  playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
   isShowLearnSkill.value = false;
   ElMessage.info('您放棄了本次學習新技能的機會。');
 };
@@ -209,6 +222,7 @@ const selectSkill = (skill: any) => {
 
     // 3. 扣減點數與提示
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
+    playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
     ElMessage.success(`技能進化！成功獲得：${skill.name}！`);
     isShowLearnSkill.value = false;
     return;
@@ -219,6 +233,7 @@ const selectSkill = (skill: any) => {
     // 還有空位，直接學習
     playerStore.info.skills.push(skill);
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
+    playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
     ElMessage.success(`學會了新技能：${skill.name}！`);
     isShowLearnSkill.value = false;
   } else {
@@ -238,6 +253,7 @@ const confirmReplacement = (oldSkillId: string) => {
   if (index > -1) {
     playerStore.info.skills[index] = selectedNewSkill.value;
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
+    playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
     ElMessage.success(`學會了新技能：${selectedNewSkill.value.name}，並替換了：${oldName}！`);
   }
 
