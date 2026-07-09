@@ -720,8 +720,8 @@ export class TheLastSaint extends MonsterModel {
 }
 
 export class FallenKnight1 extends MonsterModel {
-    constructor() {
-        super({
+    constructor(params: any = {}) {
+        super(Object.assign({
             code: 'FallenKnight1',
             icon: '/monsters/fallen_knight.png',
             name: '墮落的騎士',
@@ -730,15 +730,15 @@ export class FallenKnight1 extends MonsterModel {
             ad: 60,
             critIncrease: 200,
             critRate: 0,
-            adDefend: 40,
-            dodge: 35,
+            adDefend: 50,
+            dodge: 70,
             hit: 70,
             hp: 1000,
             hpLimit: 1000,
             level: 60,
             dropGold: 0,
             drop: []
-        });
+        }, params));
     }
 
     override onStartHook() {
@@ -753,106 +753,63 @@ export class FallenKnight1 extends MonsterModel {
             this.addEffect(UsualStatus.Angry);
             useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
         } else if (cycleRound === 3) {
-            this.addEffect(UsualStatus.AdDefendInCrease, {bonus: {adDefend: 50}, duration: 1});
+            this.addEffect(UnitStatus.KnightAdDefend, {bonus: {adDefend: 50}, duration: 1});
             useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
         }
     }
 
-    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
-        if (this.hasStatus(UsualStatus.AdDefendInCrease.name)) {
+    override onAttackHook({playerStore}: MonsterOnAttackParams) {
+        if (this.hasStatus(UnitStatus.KnightAdDefend.name)) {
             return false;
         }
     }
 }
 
-export class FallenKnight2 extends MonsterModel {
-    constructor() {
-        super({
+export class FallenKnight2 extends FallenKnight1 {
+    constructor(params: any = {}) {
+        super(Object.assign({
             code: 'FallenKnight2',
             icon: '/monsters/broken_fallen_knight.png',
-            name: '墮落的騎士',
-            description: '聖女的守衛騎士。',
-            class: ['boss', 'big'],
-            ad: 60,
-            critIncrease: 200,
-            critRate: 0,
             adDefend: 30,
-            dodge: 35,
-            hit: 70,
-            hp: 1000,
-            hpLimit: 1000,
-            level: 60,
-            dropGold: 0,
-            drop: []
-        });
+            lifeSteal: 50
+        }, params));
     }
 
     override onStartHook() {
         useEpicSubtitle("「我要..守護...」", 3000);
     }
 
-    override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
-        const cycleRound = ((battleRound - 1) % 7) + 1;
-        const monsterElement = getMonsterElement(this.id)
-        if (cycleRound === 1) {
-            this.addEffect(UsualStatus.Angry);
-            useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
-        } else if (cycleRound === 3) {
-            this.addEffect(UsualStatus.AdDefendInCrease, {bonus: {adDefend: 50}, duration: 1});
-            useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
-        }
-    }
-
-    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
-        if (this.hasStatus(UsualStatus.AdDefendInCrease.name)) {
-            return false;
-        }
-    }
-
     override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
         const monsterElement = getMonsterElement(this.id)
-        if (this.hasStatus(UsualStatus.AdDefendInCrease.name)) {
+        if (this.hasStatus(UnitStatus.KnightAdDefend.name)) {
             applyAttackDamage(this, playerStore);
             useFloatingMessage('反擊!', monsterElement, {color: 'red', duration: 1500});
         }
     }
 }
 
-
-export class FallenKnight3 extends MonsterModel {
-    constructor() {
-        super({
+export class FallenKnight3 extends FallenKnight2 {
+    constructor(params: any = {}) {
+        super(Object.assign({
             code: 'FallenKnight3',
             icon: '/monsters/broken_fallen_knight_last_stand.png',
-            name: '墮落的騎士',
-            description: '聖女的守衛騎士。',
-            class: ['boss', 'big'],
-            ad: 60,
-            critIncrease: 200,
-            critRate: 0,
-            adDefend: 30,
-            dodge: 35,
-            hit: 70,
-            hp: 1000,
-            hpLimit: 1000,
-            level: 60,
-            dropGold: 0,
-            drop: []
-        });
+            lifeSteal: 100
+        }, params));
     }
 
     override onStartHook() {
         useEpicSubtitle("「守護...」", 3000);
     }
 
-    override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+    override onRoundBehaviorHook({battleRound}: MonsterRoundBehaviorParams) {
+        // 第二回合必定爆擊, 第三回合會格擋
         const cycleRound = ((battleRound - 1) % 7) + 1;
         const monsterElement = getMonsterElement(this.id)
         if (cycleRound === 1) {
             this.addEffect(UsualStatus.Angry);
             useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
         } else if (cycleRound === 3) {
-            this.addEffect(UsualStatus.AdDefendInCrease, {bonus: {adDefend: 50}, duration: 1});
+            this.addEffect(UnitStatus.KnightAdDefend, {bonus: {adDefend: 50}, duration: 1});
             useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
         } else if (cycleRound === 5) {
             this.addEffect(UsualStatus.Resistance, {value: 2, duration: 2});
@@ -860,8 +817,8 @@ export class FallenKnight3 extends MonsterModel {
         }
     }
 
-    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
-        if (this.hasStatus(UsualStatus.AdDefendInCrease.name)) {
+    override onAttackHook({playerStore}: MonsterOnAttackParams) {
+        if (this.hasStatus(UnitStatus.KnightAdDefend.name)) {
             return false;
         }
         if (this.hasStatus(UsualStatus.Resistance.name)) {
@@ -880,14 +837,6 @@ export class FallenKnight3 extends MonsterModel {
                 duration: 1500
             });
             return false;
-        }
-    }
-
-    override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
-        const monsterElement = getMonsterElement(this.id)
-        if (this.hasStatus(UsualStatus.AdDefendInCrease.name)) {
-            applyAttackDamage(this, playerStore);
-            useFloatingMessage('反擊!', monsterElement, {color: 'red', duration: 1500});
         }
     }
 }

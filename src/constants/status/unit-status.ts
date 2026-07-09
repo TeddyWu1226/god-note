@@ -177,4 +177,15 @@ export const UnitStatus = {
         duration: 4,
         description: '時間到了就會發生可怕的事',
     } as StatusEffect,
+    KnightAdDefend: {
+        name: '防禦提升',
+        icon: '🛡️',
+        duration: 1,
+        isBuff: true,
+        untilAttack: true,
+        description: `短暫的大幅提升自身 %adDefend% 防禦`,
+        bonus: {
+            adDefend: 5
+        }
+    } as StatusEffect,
 }

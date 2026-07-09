@@ -175,7 +175,7 @@ export class SplitHound extends MonsterModel {
             ad: 43,
             critIncrease: WorldDefault.critIncrease,
             critRate: 0,
-            adDefend: 38,
+            adDefend: 10,
             dodge: 60,
             hit: 100,
             hp: 700,

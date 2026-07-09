@@ -82,7 +82,7 @@ const MonsterCardRefs = ref<Record<string, MonsterCardExposed>>({});
 const monsterDropGold = ref(0)
 const monsterDropItems = ref<ItemType[]>([])
 // 怪物生成
-const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false) => {
+const genMonsters = (count: number, weight: Record<string, number>, eliteBoost = false): MonsterModel[] => {
   let strengthening = 0
   if (gameStateStore.isInClearedStage) {
     strengthening = Math.ceil(Math.max(0, gameStateStore.days / 50))
@@ -92,9 +92,7 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
   if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
     newMonsters.push(gameStateStore.createMonster(Monster.DelusionMonster.code))
   }
-
-  // 同步到 Store 做持久化緩存
-  gameStateStore.setCurrentEnemy(newMonsters);
+  return newMonsters
 }
 
 
@@ -108,47 +106,39 @@ const getWeightByStage = () => {
   return monsterMap || EndlessWeights;
 }
 
-//生成菁英戰鬥
+
 const Stage4FinalBossRaid = () => {
-  // 第一次遇見
-  let knightStatus = 0
-  if (trackStore.isMonsterDefeated(Boss.FallenKnight1.code)) {
-    knightStatus = 1
-  } else if (trackStore.isMonsterDefeated(Boss.FallenKnight2.code)) {
-    knightStatus = 2
-  }
-  let Knight = gameStateStore.createMonster(Boss.FallenKnight1.code)
-  switch (knightStatus) {
-    case 1:
-      Knight = gameStateStore.createMonster(Boss.FallenKnight2.code)
-      break;
-    case 2:
-      Knight = gameStateStore.createMonster(Boss.FallenKnight3.code)
-      break;
-  }
-  const newMonsters = [Knight]
-  //
+  const bossPool = [
+    Boss.FallenKnight1.code,
+    Boss.FallenKnight2.code,
+    Boss.FallenKnight3.code
+  ];
 
-  // 同步到 Store 做持久化緩存
-  gameStateStore.setCurrentEnemy(newMonsters);
+  // 計算已擊敗的前置 Boss 數量，決定挑戰哪一階段（0 = Phase 1, 1 = Phase 2, 2 = Phase 3）
+  const knightStatus = bossPool.slice(0, 2).filter(code => trackStore.isMonsterDefeated(code)).length;
+  const Knight = gameStateStore.createMonster(bossPool[knightStatus]);
+  return [Knight]
 }
-
-const genEliteMonster = () => {
+//生成菁英戰鬥
+const genEliteMonster = (): MonsterModel[] => {
   const useWeight = getWeightByStage();
-  if (!useWeight) return;
+  if (!useWeight) return [];
 
-  const monsterCount = Math.floor(Math.random() * 3) + 1;
   // 如果是第四階段 天數>50 菁英戰鬥強制是墮落的騎士
+  let newMonsters: MonsterModel[]
   if (gameStateStore.currentStage === 4 && !gameStateStore.isInClearedStage && gameStateStore.stageDays > 50) {
-    Stage4FinalBossRaid()
-  } else {
-    genMonsters(
+    newMonsters = Stage4FinalBossRaid()
+  }
+  // 建立菁英怪物
+  if (!newMonsters) {
+    const monsterCount = Math.floor(Math.random() * 3) + 1;
+    newMonsters = genMonsters(
         monsterCount,
         useWeight,
         monsterCount === 1
     );
   }
-
+  return newMonsters
 }
 
 
@@ -156,9 +146,7 @@ const genEliteMonster = () => {
  * 高效率查詢
  */
 
-const createBoss = () => {
-  let newMonsters: MonsterModel[]
-
+const createBoss = (): MonsterModel[] => {
   const stageBoss = StageBosses[gameStateStore.currentStage]
   let boss: MonsterType
   if (gameStateStore.stageDays === 50) {
@@ -166,10 +154,7 @@ const createBoss = () => {
   } else {
     boss = stageBoss.main
   }
-  newMonsters = [gameStateStore.createMonster(boss.code, boss)]
-
-  // 同步到 Store 做持久化緩存
-  gameStateStore.setCurrentEnemy(newMonsters);
+  return [gameStateStore.createMonster(boss.code)]
 }
 
 /**
@@ -556,17 +541,20 @@ const init = () => {
   if (gameStateStore.switchEnemy && gameStateStore.switchEnemy.length > 0) {
     gameStateStore.setCurrentEnemy(gameStateStore.takeSwitchEnemy());
   } else {
+    let newMonsters: MonsterModel[]
     switch (currentRoomValue.value) {
       case RoomEnum.Fight.value:
-        genMonsters(1, getWeightByStage());
+        newMonsters = genMonsters(1, getWeightByStage());
         break;
       case RoomEnum.EliteFight.value:
-        genEliteMonster();
+        newMonsters = genEliteMonster();
         break;
       case RoomEnum.Boss.value:
-        createBoss()
+        newMonsters = createBoss()
         break
     }
+    // 同步到 Store 做持久化緩存
+    gameStateStore.setCurrentEnemy(newMonsters);
   }
   // 回合開始的觸發
   nextTick().then(() => {
