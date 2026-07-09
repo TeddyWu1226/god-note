@@ -207,7 +207,7 @@ export class SurpriseAttack extends SkillModel {
                 }
             });
         }
-        return Math.floor((baseDodge + equipDodge) / 2);
+        return Math.floor(Math.max((baseDodge + equipDodge), 0) / 2);
     }
 
     description(playerStore: PlayerStoreType): string {
