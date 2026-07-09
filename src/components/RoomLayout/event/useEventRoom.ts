@@ -11,6 +11,7 @@ import DragonSkeletonEvent from "@/components/RoomLayout/event/DragonSkeletonEve
 import AncientWrathEvent from "@/components/RoomLayout/event/AncientWrathEvent.vue";
 import EndlessBetrayalEvent from "@/components/RoomLayout/event/EndlessBetrayalEvent.vue";
 
+
 export const eventComponentMap = {
 	[SpecialEventEnum.None]: NoneEvent,
 	[SpecialEventEnum.Gamble]: GambleEvent,

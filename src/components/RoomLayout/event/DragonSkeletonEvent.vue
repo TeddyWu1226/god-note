@@ -22,8 +22,7 @@ const initEvent = () => {
     if (gameStateStore.stageDays > 50) {
       pool.push('giant');
     }
-    const picked = pool[Math.floor(Math.random() * pool.length)];
-    gameStateStore.otherRecord['DRAGON_SKELETON_TYPE'] = picked;
+    gameStateStore.otherRecord['DRAGON_SKELETON_TYPE'] = pool[Math.floor(Math.random() * pool.length)];
   }
   skeletonType.value = gameStateStore.otherRecord['DRAGON_SKELETON_TYPE'];
 };
@@ -143,21 +142,6 @@ const handleLeave = () => {
   font-weight: bold;
 }
 
-.pulse {
-  animation: pulse-glow 2s infinite;
-}
-
-@keyframes pulse-glow {
-  0% {
-    filter: drop-shadow(0 0 5px gold);
-  }
-  50% {
-    filter: drop-shadow(0 0 20px white);
-  }
-  100% {
-    filter: drop-shadow(0 0 5px gold);
-  }
-}
 
 .gray {
   filter: grayscale(100%);
