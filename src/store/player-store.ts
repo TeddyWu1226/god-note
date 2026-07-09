@@ -29,6 +29,7 @@ export const usePlayerStore = defineStore('player-info', () => {
     const statusEffects = ref<StatusEffect[]>([]);
     const skillProficiency = ref<{ [key: string]: number }>({})
     const isRestoring = ref(false);
+    const refreshCount = ref(0);
     let _onEquipActionCallback: (() => void) | null = null;
     const setEquipActionCallback = (cb: (() => void) | null) => {
         _onEquipActionCallback = cb;
@@ -448,6 +449,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         info.value = JSON.parse(JSON.stringify(DEFAULT_USER_INFO));
         statusEffects.value = []
         skillProficiency.value = {}
+        refreshCount.value = 0;
         assignInitialEquipmentIds();
     };
 
@@ -857,6 +859,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         info, skillProficiency,
         stopValueChangeAnimation,
         isRestoring,
+        refreshCount,
         setEquipActionCallback,
         totalBonus,
         finalStats,

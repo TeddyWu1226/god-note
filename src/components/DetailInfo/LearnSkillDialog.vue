@@ -15,6 +15,7 @@ const drawnSkills = ref<SkillModel[]>([]);
 const replaceMode = ref(false);
 const selectedNewSkill = ref<SkillModel | null>(null);
 
+
 const getRarityColor = (rarity: string) => {
   const colors: Record<string, string> = {
     common: '#b2bec3',
@@ -76,12 +77,12 @@ const isEvolvedFrom = (evolvedId: string, baseId: string): boolean => {
   return false;
 };
 
-const openLearnSkill = () => {
+const openLearnSkill = (isRefresh = false) => {
   const currentSkillIds = playerStore.info.skills ? playerStore.info.skills.map((s: any) => s.id) : [];
   const trackerStore = useTrackerStore();
 
-  // 若已有緩存的技能候選者，直接載入緩存的技能
-  if (playerStore.info.pendingSkillCandidates && playerStore.info.pendingSkillCandidates.length > 0) {
+  // 若已有緩存的技能候選者且非刷新，直接載入緩存的技能
+  if (!isRefresh && playerStore.info.pendingSkillCandidates && playerStore.info.pendingSkillCandidates.length > 0) {
     drawnSkills.value = playerStore.info.pendingSkillCandidates.map((id: string) => SkillFactory.createSkill(id));
     replaceMode.value = false;
     selectedNewSkill.value = null;
@@ -100,12 +101,24 @@ const openLearnSkill = () => {
       const playerLevel = playerStore.info.level || 1;
       let requiredLevel = 0;
       switch (node.tier) {
-        case 1: requiredLevel = 5; break;
-        case 2: requiredLevel = 10; break;
-        case 3: requiredLevel = 25; break;
-        case 4: requiredLevel = 40; break;
-        case 5: requiredLevel = 60; break;
-        case 6: requiredLevel = 80; break;
+        case 1:
+          requiredLevel = 5;
+          break;
+        case 2:
+          requiredLevel = 10;
+          break;
+        case 3:
+          requiredLevel = 25;
+          break;
+        case 4:
+          requiredLevel = 40;
+          break;
+        case 5:
+          requiredLevel = 60;
+          break;
+        case 6:
+          requiredLevel = 80;
+          break;
       }
       if (playerLevel < requiredLevel) return false;
     }
@@ -149,12 +162,23 @@ const openLearnSkill = () => {
     return;
   }
 
+  // 刷新時去重邏輯：若可選候選技能總數大於等於 6，過濾掉上一批次
+  let finalCandidates = candidates;
+  if (isRefresh && candidates.length >= 6) {
+    const previousBatch = playerStore.info.pendingSkillCandidates || [];
+    finalCandidates = candidates.filter(id => !previousBatch.includes(id));
+  }
+
   // 隨機選出最多三個
-  const shuffled = candidates.sort(() => 0.5 - Math.random());
+  const shuffled = finalCandidates.sort(() => 0.5 - Math.random());
   const selectedIds = shuffled.slice(0, Math.min(3, shuffled.length));
 
   // 儲存至隨機技能緩存中，防止 F5 刷技能
   playerStore.info.pendingSkillCandidates = selectedIds;
+
+  if (!isRefresh && playerStore.refreshCount === 0) {
+    playerStore.refreshCount = 3;
+  }
 
   // 轉化為 SkillModel 類別實例
   drawnSkills.value = selectedIds.map(id => SkillFactory.createSkill(id));
@@ -186,8 +210,23 @@ watch(isShowLearnSkill, (newVal) => {
 const skipLearn = () => {
   playerStore.info.pendingSkillPoints = Math.max(0, (playerStore.info.pendingSkillPoints || 1) - 1);
   playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
+  playerStore.refreshCount = 0; // 清空刷新次數
   isShowLearnSkill.value = false;
   ElMessage.info('您放棄了本次學習新技能的機會。');
+};
+
+const refreshSkills = () => {
+  const refreshes = playerStore.refreshCount;
+  if (refreshes <= 0) {
+    ElMessage.warning('刷新次數已達上限（最多3次）！');
+    return;
+  }
+
+  // 扣減刷新次數
+  playerStore.refreshCount = refreshes - 1;
+
+  // 重新抽牌，傳入 isRefresh = true 以執行去重與快取重寫
+  openLearnSkill(true);
 };
 
 const selectSkill = (skill: any) => {
@@ -223,6 +262,7 @@ const selectSkill = (skill: any) => {
     // 3. 扣減點數與提示
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
     playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
+    playerStore.refreshCount = 0; // 清空刷新次數
     ElMessage.success(`技能進化！成功獲得：${skill.name}！`);
     isShowLearnSkill.value = false;
     return;
@@ -234,6 +274,7 @@ const selectSkill = (skill: any) => {
     playerStore.info.skills.push(skill);
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
     playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
+    playerStore.refreshCount = 0; // 清空刷新次數
     ElMessage.success(`學會了新技能：${skill.name}！`);
     isShowLearnSkill.value = false;
   } else {
@@ -254,6 +295,7 @@ const confirmReplacement = (oldSkillId: string) => {
     playerStore.info.skills[index] = selectedNewSkill.value;
     playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 1) - 1;
     playerStore.info.pendingSkillCandidates = []; // 清空技能緩存
+    playerStore.refreshCount = 0; // 清空刷新次數
     ElMessage.success(`學會了新技能：${selectedNewSkill.value.name}，並替換了：${oldName}！`);
   }
 
@@ -283,8 +325,16 @@ const cancelReplaceMode = () => {
       :close-on-press-escape="false"
   >
     <div class="learn-skill-container">
-      <div v-if="!replaceMode" class="learn-intro">
-        請從以下三個隨機技能中選擇一個學習：
+      <div v-if="!replaceMode" class="learn-intro-header">
+        <span class="learn-intro-text">請從以下三個隨機技能中選擇一個學習：</span>
+        <el-button
+            type="warning"
+            class="refresh-btn"
+            :disabled="(playerStore.refreshCount) <= 0"
+            @click="refreshSkills"
+        >
+          刷新 (剩餘 {{ playerStore.refreshCount }} 次)
+        </el-button>
       </div>
       <div v-else class="learn-intro warn">
         ⚠️ 技能欄位已滿！請點擊下方的<strong>現有技能</strong>，將其替換為 <strong>{{ selectedNewSkill?.name }}</strong>：
@@ -424,6 +474,26 @@ const cancelReplaceMode = () => {
   flex-direction: column;
   align-items: center;
   padding: 10px;
+}
+
+.learn-intro-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.learn-intro-text {
+  font-size: 0.95rem;
+  color: #ccc;
+  text-align: left;
+}
+
+.refresh-btn {
+  flex-shrink: 0;
+  font-weight: bold;
 }
 
 .learn-intro {
