@@ -990,7 +990,7 @@ export class DemonWood extends MonsterModel {
             icon: '/monsters/demon_wood.png',
             name: '背叛的樹妖',
             class: ['boss', 'big', 'icon-purple'],
-            description: '背叛森林的樹之魔物。',
+            description: '受到「神諭」而背叛德魯伊的樹妖。是它「撬開」了完美的結界，造成滅族的那只蝴蝶。',
             ad: 12,
             critIncrease: 150,
             critRate: 25,
@@ -999,15 +999,16 @@ export class DemonWood extends MonsterModel {
             hit: 10,
             hp: 200,
             hpLimit: 200,
+            lifeSteal: 100,
             level: 15,
             dropGold: 0,
-            chaseIncrease: 0,
-            drop: []
+            chaseIncrease: 500,
+            drop: [{item: SpecialItem.AvelynNecklace, chance: 1}]
         });
     }
 
     override onStartHook() {
-        useEpicSubtitle("「你是我的救命稻草，也是我復仇的第一滴血！」", 2500);
+        useEpicSubtitle("「走？身為異族的你別想逃！」", 2500);
     }
 
     override onRoundBehaviorHook({playerStore, logStore}: MonsterRoundBehaviorParams) {

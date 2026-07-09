@@ -10,7 +10,6 @@ import {Potions} from "@/constants/items/usalbe-item/potion-info";
 import {getRandomElements} from "@/utils/math";
 import {GodThings} from "@/constants/items/usalbe-item/usable-info";
 import {RoomEnum} from "@/enums/room-enum";
-import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {Boss} from "@/constants/monsters/monster-info/99-boss-info";
 
 const gameStateStore = useGameStateStore();
@@ -55,19 +54,19 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         const picked = getRandomElements(['adIncrease', 'apIncrease', 'defendIncrease'])[0]
         if (picked === 'adIncrease') {
           playerStore.info.adIncrease += 2;
-          finalText.value += "生長出一個咖啡色的果實，吃下後物理增傷永久提升了！";
+          finalText.value += "生長出一個咖啡色嫩芽苞，吃下後物理增傷永久提升了！";
         } else if (picked === 'apIncrease') {
           playerStore.info.apIncrease += 2;
-          finalText.value += "生長出一個藍色的果實，吃下後法術增傷永久提升了！";
+          finalText.value += "生長出一個藍色嫩枝嫩芽苞，吃下後法術增傷永久提升了！";
         } else {
           playerStore.info.defendIncrease += 2;
-          finalText.value += "生長出一個綠色的果實，吃下後抗性永久提升了！";
+          finalText.value += "生長出一個綠色的嫩芽苞，吃下後抗性永久提升了！";
         }
         break;
       case 'juice':
         finalText.value = '枯樹長出了嫩芽，'
         playerStore.gainExp({amount: 50})
-        finalText.value += "生長出一個鮮紅色的嫩葉，吃下後經驗提升了！";
+        finalText.value += "生長出一個青綠色的嫩芽苞，吃下後經驗提升了！";
         break;
       case 'destroy':
         playerStore.gainItem(GodThings.BurningWood, getRandomElements([2, 2, 3, 3, 4])[0]);
@@ -81,7 +80,7 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         }
         playerStore.info.hp -= 50;
         playerStore.info.hpLimit += 25;
-        finalText.value = "古樹貪婪地吸食了鮮血，作為回報，生命上限增加了。";
+        finalText.value = "魔樹吸食了你的鮮血，釋放了紅色霧氣，你吸收後生命上限增加了。";
         break;
       case 'sacrifice_sp':
         if (playerStore.info.sp < 50) {
@@ -91,13 +90,13 @@ const handleChoice = (type: 'herb' | 'juice' | 'destroy' | 'sacrifice_hp' | 'sac
         }
         playerStore.info.sp -= 50;
         playerStore.info.spLimit += 25;
-        finalText.value = "古樹吸取了你的魔力，你感到靈魂一顫，魔力上限提升了。";
+        finalText.value = "古樹吸取了你的魔力，釋放了藍色霧氣，你吸收後魔力上限提升了。";
         break;
       case 'sacrifice_all':
         // 第五階段：獻祭全部生命
         playerStore.info.hp = 1;
         playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 0) + 1;
-        finalText.value = "你獻祭所有生命...魔樹發出了滿足的震動，邪氣從樹中爆發,伴隨龐大的魔力瀰漫後消失在空氣之中,獲得一個技能的力量。";
+        finalText.value = "你獻祭所有生命...魔樹觸碰到你的根源後驚恐的震動，邪氣從樹中爆發，樹體化做紫色霧氣消散，你吸收後獲得進化的力量。";
 
         break;
     }
@@ -116,13 +115,34 @@ const onLeave = () => {
     const boss = Boss.DemonWood
     // 怪物強化
     boss.hpLimit += playerStore.finalStats.hpLimit
-    boss.hp += playerStore.finalStats.hpLimit
+    boss.hp = Math.floor(boss.hpLimit / 2)
     gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [gameStateStore.createMonster(boss.code, boss)])
     gameStateStore.addEventProcess(SpecialEventEnum.GetFruit, true);
   } else {
     gameStateStore.transitionToNextState();
   }
 }
+
+const currentProcess = computed(() => gameStateStore.getEventProcess(SpecialEventEnum.GetFruit))
+
+const treeWhisper = computed(() => {
+  switch (currentProcess.value) {
+    case 0:
+      return "「...大家..都死了...賜我生機...或者，死...」"
+    case 1:
+      return "「背叛者不是我，是祂...。生命，能再給我一點嗎?……」"
+    case 2:
+      return "「受蠱惑的是祢...祢背叛了始祖...。你...還需要一點...」"
+    case 3:
+      return "「她終究只是傀儡...我們終究會被捨棄...。更多...更多生命力量...」"
+    case 4:
+      return "「神諭是正確的...。更多...更多自然力量...」"
+    case 5:
+      return "「是那些異神..異族..!。異族!獻出你的生命!」"
+    default:
+      return ""
+  }
+})
 
 /**初始化**/
 const init = () => {
@@ -159,13 +179,30 @@ init()
         <template v-else-if="gameStateStore.eventAction === 0">
           <div class="event-icon">🪾</div>
           <div class="dialog-box">
-            <template v-if="!isAdvanced">
-              一顆<b>邪惡氣息的枯樹</b>聳立在那，<br/>雖然沒有葉子，卻散發著奇異的波動。<br/>
+            <template v-if="currentProcess === 0">
+              一顆<b>邪惡氣息的枯樹</b>聳立在那，雖然沒有葉子，卻散發著奇異的波動。<br/>
               你感覺它似乎在渴望著某些水分...
+              <div class="whisper-text">{{ treeWhisper }}</div>
             </template>
-            <template v-else>
-              魔樹再次出現，這一次它的枝幹變成了暗紅色，<br/>
-              低沉的聲音在你腦海響起：「獻祭...獲得...更多...」
+            <template v-else-if="currentProcess === 1">
+              魔樹再次出現，這一次它的枝幹有些發紅，低沉的呢喃傳來：
+              <div class="whisper-text">{{ treeWhisper }}</div>
+            </template>
+            <template v-else-if="currentProcess === 2">
+              魔樹上長出了幾片深色的葉子，散發出更加強烈的魔力波動：
+              <div class="whisper-text">{{ treeWhisper }}</div>
+            </template>
+            <template v-else-if="currentProcess === 3">
+              魔樹的樹皮開始龜裂，流出暗紅色的汁液，它在瘋狂呼喚著：
+              <div class="whisper-text">{{ treeWhisper }}</div>
+            </template>
+            <template v-else-if="currentProcess === 4">
+              魔樹的核心部位隱約露出一個破碎項鍊的空殼，散發出重疊的重音：
+              <div class="whisper-text">{{ treeWhisper }}</div>
+            </template>
+            <template v-else-if="currentProcess === 5">
+              魔樹的枝幹劇烈顫動，將你整個人籠罩在妖異的陰影下：
+              <div class="whisper-text">{{ treeWhisper }}</div>
             </template>
           </div>
         </template>
@@ -182,12 +219,11 @@ init()
           </div>
         </template>
 
-
       </div>
     </template>
 
-    <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
-      <template v-if="gameStateStore.eventAction === 0">
+    <template #button>
+      <template v-if="gameStateStore.stateIs(GameState.EVENT_PHASE) && gameStateStore.eventAction === 0">
         <template v-if="!isAdvanced">
           <!--    提交物品     -->
           <el-button
@@ -203,13 +239,13 @@ init()
             提供 [{{ Potions.Magic0.name }}]
           </el-button>
           <el-button
-              v-if="gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 0"
+              v-if="currentProcess === 0"
               type="danger"
               @click="handleChoice('destroy')">
             拆毀它
           </el-button>
         </template>
-        <template v-else-if="gameStateStore.getEventProcess(SpecialEventEnum.GetFruit) === 5">
+        <template v-else-if="currentProcess === 5">
           <el-button
               type="danger"
               @click="handleChoice('sacrifice_all')">
@@ -220,7 +256,10 @@ init()
           <el-button type="danger" @click="handleChoice('sacrifice_hp')">獻祭 50 HP</el-button>
           <el-button type="primary" @click="handleChoice('sacrifice_sp')">獻祭 50 SP</el-button>
         </template>
-        <el-button type="info" @click="onLeave">快步離開</el-button>
+        <el-button type="info" @click="onLeave">{{
+            currentProcess === 5 ? '快步離開 (觸發戰鬥)' : '快步離開'
+          }}
+        </el-button>
       </template>
     </template>
   </RoomTemplate>
@@ -261,5 +300,13 @@ init()
   }
 }
 
+.whisper-text {
+  color: #e6a23c;
+  font-style: italic;
+  margin-top: 10px;
+  padding-left: 8px;
+  border-left: 2px solid #e6a23c;
+  font-weight: bold;
+}
 
 </style>
