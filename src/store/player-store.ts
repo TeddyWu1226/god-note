@@ -759,6 +759,7 @@ export const usePlayerStore = defineStore('player-info', () => {
         } else if (level <= 50) {
             return 30 * level;
         }
+        return 50 * level;
     };
 
     const gainExp = (source: { monsterLevel?: number; amount?: number, noExp?: boolean }) => {

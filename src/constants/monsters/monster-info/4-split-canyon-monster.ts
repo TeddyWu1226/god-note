@@ -74,7 +74,7 @@ export class SplitIllusion extends MonsterModel {
             description: '受龐大魔能量匯集而成具有反映環境的魔力元素體。',
             ad: 40,
             critIncrease: WorldDefault.critIncrease,
-            critRate: WorldDefault.critRate,
+            critRate: 0,
             adDefend: 35,
             dodge: 65,
             hit: 100,
@@ -215,11 +215,11 @@ export class SplitStalker extends MonsterModel {
             code: 'SplitStalker',
             name: '幻想行者',
             class: [],
-            description: '適應極端日夜環境的峽谷行者。',
-            ad: 65,
+            description: '人形態精神生命體，但這裡如此險惡，怎麼來的?',
+            ad: 50,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
-            adDefend: 50,
+            adDefend: 30,
             dodge: 80,
             hit: 100,
             hp: 800,
@@ -248,7 +248,7 @@ export class SplitStalker extends MonsterModel {
 
     onAttackedHook({playerStore, logStore}: MonsterOnAttackedParams) {
         const currentSens = playerStore.hasStatus(EvnStatus.Sanity.name)
-        const damage = Math.floor(Math.abs(currentSens.value) / 2)
+        const damage = Math.floor(Math.abs(currentSens.value) / 3)
         {
             playerStore.takeDamage(damage)
             logStore.logger.add(`魔物身上的能量刺穿了你，造成 ${damage} 真實傷害`)

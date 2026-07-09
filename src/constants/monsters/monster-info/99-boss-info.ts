@@ -677,7 +677,7 @@ export class EmpireEliteKnight extends MonsterModel {
             }
         }
         if (-100 !== currentSans.value) {
-            gameStateStore.currentEnemy.push(gameStateStore.createMonster(this.code));
+            gameStateStore.currentEnemy = [gameStateStore.createMonster(this.code)]
         } else {
             playerStore.gainExp({monsterLevel: this.level})
             playerStore.addGold(3000)

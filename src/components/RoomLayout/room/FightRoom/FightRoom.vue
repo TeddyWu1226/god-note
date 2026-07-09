@@ -21,7 +21,6 @@ import {EndlessWeights} from "@/constants/stage-monster-weights";
 import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 import {useLogStore} from "@/store/log-store";
 import {MonsterModel} from "@/models/monster-model";
-import {MonsterFactory} from "@/constants/monsters/monster-factory";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
 import {stageMonsterWeightsMap} from "@/constants/stage-weights";
 import {useTrackerStore} from "@/store/track-store";
@@ -87,12 +86,7 @@ const genMonsters = (count: number, weight: Record<string, number>, eliteBoost =
   if (gameStateStore.isInClearedStage) {
     strengthening = Math.ceil(Math.max(0, gameStateStore.days / 50))
   }
-  const newMonsters = spawnMonsters(count, weight, strengthening, eliteBoost);
-  // 如果有玩家有妄想狀態額外新增怪物
-  if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
-    newMonsters.push(gameStateStore.createMonster(Monster.DelusionMonster.code))
-  }
-  return newMonsters
+  return spawnMonsters(count, weight, strengthening, eliteBoost)
 }
 
 
@@ -108,12 +102,15 @@ const getWeightByStage = () => {
 
 
 const Stage4FinalBossRaid = () => {
+  if (trackStore.isMonsterDefeated(Boss.FallenKnight3.code)) {
+    return []
+  }
+
   const bossPool = [
     Boss.FallenKnight1.code,
     Boss.FallenKnight2.code,
     Boss.FallenKnight3.code
   ];
-
   // 計算已擊敗的前置 Boss 數量，決定挑戰哪一階段（0 = Phase 1, 1 = Phase 2, 2 = Phase 3）
   const knightStatus = bossPool.slice(0, 2).filter(code => trackStore.isMonsterDefeated(code)).length;
   const Knight = gameStateStore.createMonster(bossPool[knightStatus]);
@@ -130,7 +127,7 @@ const genEliteMonster = (): MonsterModel[] => {
     newMonsters = Stage4FinalBossRaid()
   }
   // 建立菁英怪物
-  if (!newMonsters) {
+  if (!newMonsters || !newMonsters?.length) {
     const monsterCount = Math.floor(Math.random() * 3) + 1;
     newMonsters = genMonsters(
         monsterCount,
@@ -552,6 +549,10 @@ const init = () => {
       case RoomEnum.Boss.value:
         newMonsters = createBoss()
         break
+    }
+    // 如果有玩家有妄想狀態額外新增怪物
+    if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
+      newMonsters.push(gameStateStore.createMonster(Monster.DelusionMonster.code))
     }
     // 同步到 Store 做持久化緩存
     gameStateStore.setCurrentEnemy(newMonsters);
