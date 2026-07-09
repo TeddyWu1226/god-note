@@ -11,6 +11,7 @@ import {
     MonsterOnAttackParams
 } from "@/types";
 import {UsualStatus} from "@/constants/status/usual-status";
+import {applySkillDamage} from "@/constants/fight-func";
 
 // ==========================================
 // 幻想系列環境適應怪物 (Split Adaptable Monsters)
@@ -262,7 +263,7 @@ export class DelusionMonster extends MonsterModel {
             code: 'DelusionMonster',
             name: '???',
             class: ['secret', 'icon-purple'],
-            description: '妄想的產物',
+            description: '妄想的產物, 直擊你的心靈層面, 所造成的傷害都會穿透裝甲造成真實傷害',
             ad: 0,
             critIncrease: WorldDefault.critIncrease,
             critRate: 0,
@@ -284,6 +285,18 @@ export class DelusionMonster extends MonsterModel {
         this.hit = playerStore.info.hit
         this.hpLimit = Math.floor(playerStore.info.hpLimit / 2)
         this.hp = Math.floor(playerStore.info.hpLimit / 2)
+    }
+
+    override onAttackHook({playerStore}: MonsterOnAttackParams) {
+        applySkillDamage({
+            speller: this,
+            target: playerStore,
+            baseValue: this.ad,
+            type: "true",
+            sureHit: true,
+            skillName: '精神攻擊'
+        })
+        return false
     }
 }
 

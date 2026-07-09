@@ -688,31 +688,61 @@ export class EmpireEliteKnight extends MonsterModel {
     }
 }
 
-
-export class DualElementalist extends MonsterModel {
+export class TheLastSaint extends MonsterModel {
     constructor() {
         super({
-            code: 'DualElementalist',
-            icon: '🧙',
-            name: '雙星元素使',
-            description: '同時驅使分裂之谷光明與黑暗兩儀力量的古老元素使',
-            class: ['mystery'],
-            ad: 120,
-            critIncrease: 200,
-            critRate: 20,
-            adDefend: 35,
-            dodge: 30,
-            hit: 100,
-            hp: 4000,
-            hpLimit: 4000,
-            level: 22,
-            dropGold: 1500,
+            code: 'TheLastSaint',
+            icon: '/monsters/last_saint.png',
+            name: '最後的聖女',
+            description: '數年前攜著聖光前往峽谷深處的帝國聖女。雖受詛咒與外神黑暗力量侵蝕而墮落受困，但其心中仍存有最後一絲神聖理性在痛苦掙扎。',
+            class: ['boss'],
+            ad: 20,
+            critIncrease: 0,
+            critRate: 0,
+            adDefend: 30,
+            dodge: 60,
+            hit: 70,
+            hp: 1000,
+            hpLimit: 1000,
+            level: 50,
+            dropGold: 2000,
             drop: []
         });
     }
 
     override onStartHook() {
-        useEpicSubtitle("「一邊是白晝，一邊是永夜，這便是兩儀的真理。」", 4000);
+        useEpicSubtitle("「離開這裡...我快要...無法克制了...」", 3000);
+    }
+
+    override onDeadHook({playerStore}: MonsterActionParams) {
+        useEpicSubtitle("「謝謝汝...靈魂...終於得到了解脫...」", 3000);
+    }
+}
+
+export class FallenKnight1 extends MonsterModel {
+    constructor() {
+        super({
+            code: 'FallenKnight1',
+            icon: '/monsters/fallen_knight.png',
+            name: '墮落的騎士',
+            description: '曾誓言效忠聖光的聖殿騎士，卻在追尋聖女的道路上逐漸被黑暗腐蝕，最終淪為只知殺戮的空殼騎士。',
+            class: ['boss'],
+            ad: 60,
+            critIncrease: 220,
+            critRate: 20,
+            adDefend: 60,
+            dodge: 15,
+            hit: 110,
+            hp: 6000,
+            hpLimit: 6000,
+            level: 26,
+            dropGold: 2500,
+            drop: []
+        });
+    }
+
+    override onStartHook() {
+        useEpicSubtitle("「守護...聖女...」", 3000);
     }
 }
 
@@ -1031,7 +1061,8 @@ export const Boss = {
 
     // --- 分裂之谷 (Split Canyon) ---
     EmpireEliteKnight: new EmpireEliteKnight(),
-    DualElementalist: new DualElementalist(),
+    TheLastSaint: new TheLastSaint(),
+    FallenKnight1: new FallenKnight1(),
 
     // --- 終焉深淵 (End Abyss) ---
     AbyssSpecter: new AbyssSpecter(),
@@ -1062,7 +1093,7 @@ export const StageBosses: Record<number, { mini: MonsterType; main: MonsterType 
     },
     4: {
         mini: Boss.EmpireEliteKnight,
-        main: Boss.DualElementalist
+        main: Boss.TheLastSaint
     },
     5: {
         mini: Boss.AbyssSpecter,

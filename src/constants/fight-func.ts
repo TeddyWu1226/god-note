@@ -131,8 +131,8 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
         }
         return outcome;
     }
-
-    let damageTaken = damageOutput.totalDamage
+    // 最終計算輸出
+    outcome.totalDamage = damageOutput.totalDamage
     if (!(defender instanceof MonsterClass)) {
         // 額外效果-格檔檢查
         if (outcome.isCrit && !!defender.hasStatus(ItemStatus.Block.name)) {
@@ -142,20 +142,18 @@ export function applyAttackDamage(attacker: PlayerStoreType | MonsterClass, defe
             } else if (defender.hasSkill('BlockPro')) {
                 blockMultiplier = 0.25;
             } else if (defender.hasSkill('BlockBase')) {
-                blockMultiplier = 0.25;
+                blockMultiplier = 0.35;
             }
-            damageTaken = Math.round(damageTaken * blockMultiplier);
+            outcome.totalDamage = Math.round(outcome.totalDamage * blockMultiplier);
             (attacker as MonsterClass).status.push(UsualStatus.Stuck);
         }
     }
     // 檢查「抵抗」狀態效果
     if (checkAndApplyResistance(defender)) {
-        damageTaken = 0;
         outcome.totalDamage = 0;
     }
 
-    // 最終計算輸出
-    outcome.totalDamage = damageTaken;
+
     // 當玩家受到傷害前，先執行 before-attack hooks（可用於減傷等修改最終傷害值的判定）
     if (!(defender instanceof MonsterClass)) {
         defender.info.skills.forEach((s: SkillModel) => {

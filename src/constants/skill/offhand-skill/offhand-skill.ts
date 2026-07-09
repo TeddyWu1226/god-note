@@ -17,23 +17,14 @@ export class ShieldBlock extends SkillModel {
             costSp: 10,
             costAction: 1,
             maxCd: 3,
-            itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則降低該次傷害並額外造成對方暫時暈眩。[冷卻: 2 回合]'
+            itemDescription: '舉起盾牌進行防禦，本回合內提升防禦力以抵擋傷害，如果敵方爆擊，則降低該次傷害並額外造成對方暫時暈眩。\n[冷卻: 2 回合]'
         });
     }
 
     getDefend(playerStore: PlayerStoreType): number {
         const shellDefend = playerStore?.info?.equips?.offhand?.adDefend
         if (!shellDefend) return 0;
-        if (playerStore.hasSkill('BlockAdv')) {
-            return Math.round(shellDefend * 2.0) + 10;
-        }
-        if (playerStore.hasSkill('BlockPro')) {
-            return Math.round(shellDefend * 1.5) + 10;
-        }
-        if (playerStore.hasSkill('BlockBase')) {
-            return shellDefend + 5;
-        }
-        return shellDefend;
+        return Math.floor(shellDefend * 1.2) + 5;
     }
 
     description(playerStore: PlayerStoreType): string {

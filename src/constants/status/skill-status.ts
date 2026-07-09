@@ -113,7 +113,7 @@ export const SkillStatus = {
     SwordPolishStatus: {
         name: '打磨',
         icon: '✨',
-        duration: 3,
+        duration: 4,
         isBuff: true,
         description: '提升 %ad% 點物理攻擊力',
         bonus: {

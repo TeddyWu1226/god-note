@@ -2,7 +2,7 @@
  * 盾牌相關
  */
 import {SkillModel} from "@/models/skill-model";
-import {SkillTreeNode, PlayerStoreType, SkillParams, SkillOnPlayerAttackedHitParams} from "@/types";
+import {SkillTreeNode, PlayerStoreType, SkillParams, SkillOnPlayerAttackedHitParams, UserType} from "@/types";
 import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
 import {EquipmentPosition} from "@/enums/enums";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -23,15 +23,20 @@ export class BlockBase extends SkillModel {
     }
 
     description(): string {
-        return `完美格擋（格擋敵方暴擊）的受傷比例減少至25%。`;
+        return `裝備盾牌時,額外提升 15% 盾牌提供的防禦值, 完美格擋（格擋敵方暴擊）的受傷比例減少至35%。`;
     }
 
     protected execute(): boolean {
         return true;
     }
 
-    override getPassiveBonus(): Record<string, number> {
-        return {};
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        if (!isEquip('Shield', EquipmentPosition.OFFHAND, player)) {
+            return {}
+        }
+        return {
+            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.15)
+        }
     }
 }
 
@@ -48,15 +53,20 @@ export class BlockPro extends SkillModel {
     }
 
     description(): string {
-        return `完美格擋（格擋敵方暴擊）的受傷比例減少至25%，並提升主動格擋時獲得的防禦值。`;
+        return `裝備盾牌時,額外提升 25% 盾牌提供的防禦值, 完美格擋（格擋敵方暴擊）的受傷比例減少至25%。`;
     }
 
     protected execute(): boolean {
         return true;
     }
 
-    override getPassiveBonus(): Record<string, number> {
-        return {};
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        if (!isEquip('Shield', EquipmentPosition.OFFHAND, player)) {
+            return {}
+        }
+        return {
+            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.25)
+        }
     }
 }
 
@@ -73,15 +83,20 @@ export class BlockAdv extends SkillModel {
     }
 
     description(): string {
-        return `完美格擋（格擋敵方暴擊）的受傷比例減少至10%，並大幅提升主動格擋時獲得的防禦值。`;
+        return `裝備盾牌時,額外提升 35% 盾牌提供的防禦值, 完美格擋（格擋敵方暴擊）的受傷比例減少至15%。`;
     }
 
     protected execute(): boolean {
         return true;
     }
 
-    override getPassiveBonus(): Record<string, number> {
-        return {};
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        if (!isEquip('Shield', EquipmentPosition.OFFHAND, player)) {
+            return {}
+        }
+        return {
+            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.35)
+        }
     }
 }
 
@@ -204,6 +219,15 @@ export class CounterShieldAdv extends SkillModel {
                 monster.addEffect(UsualStatus.Stuck);
                 useCardImpactEffect(getMonsterElement(monster.id), 'stun');
             }
+        }
+    }
+
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        if (!isEquip('Shield', EquipmentPosition.OFFHAND, player)) {
+            return {}
+        }
+        return {
+            adDefend: 4 + (Math.ceil(this.proficiency * 0.04)), // 8
         }
     }
 }
