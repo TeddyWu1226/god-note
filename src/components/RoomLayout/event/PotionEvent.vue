@@ -67,20 +67,10 @@ const drinkPotion = () => {
       const healAmount = 20 + (stage * 20);
       playerStore.info.hp = Math.min(playerStore.finalStats.hpLimit, playerStore.info.hp + healAmount);
       resultMsg.value = `味道意外地清甜！恢復了 <span style="color: #4caf50; font-weight: bold;">${healAmount} HP</span>。`;
-
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
-        resultMsg.value += `<br/>想起手上的空瓶,順手用這乾淨的液體裝了滿了它。`
-        gameStateStore.otherRecord['WATER'] = 2
-      }
     } else if (rnd < 55) {
       // 10% 惡作劇
       resultType.value = 'neutral';
       resultMsg.value = `<br/>喝完後你緩解了口渴。`;
-
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
-        resultMsg.value += `<br/>你想起手上的空瓶,順手用這奇怪的液體裝了滿了它。`
-        gameStateStore.otherRecord['WATER'] = 2
-      }
     } else {
       // 45% 機率：獲得狀態效果 (Buff/Debuff)
       resultType.value = 'debuff';
@@ -92,11 +82,6 @@ const drinkPotion = () => {
       playerStore.addStatus(randomStatus);
 
       resultMsg.value = `嘔... 味道怪怪的！你感到身體產生異樣，獲得狀態 <span style="color: #ff4d4f; font-weight: bold;">${randomStatus.name}</span>。`;
-
-      if (!isShowPotion.value && !!gameStateStore.otherRecord['WATER'] && !gameStateStore.isEventClose(SpecialEventEnum.NeedWater)) {
-        resultMsg.value += `<br/>你想起手上的空瓶,順手用這奇怪的液體裝了滿了它。`
-        gameStateStore.otherRecord['WATER'] = 3
-      }
     }
 
     // 動畫結束，切換狀態

@@ -42,7 +42,6 @@ export enum SpecialEventEnum {
     UnknownGrave = 'UnknownGrave', // 不知名的墓
     None = 'None', // 幽靈事件
     GetFruit = 'GetFruit', 	// 魔樹事件
-    NeedWater = 'NeedWater', // 沙丘
     DragonSkeleton = 'DragonSkeleton', // 龍之骸骨
     AncientWrath = 'AncientWrath', // 遠古的憤怒
     EndlessBetrayal = 'EndlessBetrayal', // 無盡的背叛
