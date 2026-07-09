@@ -12,9 +12,8 @@ const props = defineProps({
 })
 
 const encyclopediaStore = useEncyclopediaStore()
-const isUnlocked = (monsterName: string) => {
-  // return true
-  return encyclopediaStore.unlockedMonsters.includes(monsterName);
+const isUnlocked = (monster: MonsterModel) => {
+  return encyclopediaStore.isMonsterUnlocked(monster.code, monster.name);
 }
 
 // 當前選擇的魔物索引
@@ -52,10 +51,10 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
           v-for="(monster, index) in props.monsterList"
           :key="monster.name || index"
           class="monster-list-item"
-          :class="{ active: selectedIndex === index, locked: !isUnlocked(monster.name) }"
+          :class="{ active: selectedIndex === index, locked: !isUnlocked(monster) }"
           @click="selectedIndex = index"
       >
-        <template v-if="isUnlocked(monster.name)">
+        <template v-if="isUnlocked(monster)">
           <span class="monster-avatar">
             <img v-if="isImageIcon(monster.icon)" :src="resolveIconPath(monster.icon)" class="monster-image-icon"
                  alt="monster icon"/>
@@ -84,7 +83,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
       </div>
 
       <!-- 未解鎖狀態 -->
-      <div v-else-if="!isUnlocked(selectedMonster.name)" class="locked-state">
+      <div v-else-if="!isUnlocked(selectedMonster)" class="locked-state">
         <div class="lock-graphic">
           <div class="lock-glow"></div>
           <span class="lock-icon">🔒</span>

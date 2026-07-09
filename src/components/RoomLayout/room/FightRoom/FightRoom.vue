@@ -189,7 +189,7 @@ const whenMonsterDead = () => {
     // 紀錄死亡
     logStore.logger.add(`${selectedMonster.name} 死亡`)
     // 紀錄擊殺
-    trackStore.recordKill(selectedMonster.name)
+    trackStore.recordKill(selectedMonster.code)
     // 經驗取得
     playerStore.gainExp({monsterLevel: selectedMonster.level, noExp: selectedMonster?.noExp})
     // 掉落金幣
