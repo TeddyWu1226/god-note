@@ -30,7 +30,7 @@ export const UsualStatus = {
     } as StatusEffect,
     Resistance: {
         name: '抵抗',
-        icon: '3🤽🏼‍♀️',
+        icon: '%value%🤽🏼‍♀️',
         duration: 4,
         isBuff: true,
         description: '使得前 %value% 次受到的傷害歸 0',

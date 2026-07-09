@@ -6,7 +6,7 @@ import {SpecialItem} from "@/constants/items/special-item-info";
 import {checkProbability, isMultiple} from "@/utils/math";
 import {
     GameStateStoreType,
-    MonsterActionParams,
+    MonsterActionParams, MonsterOnAttackedParams,
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
     MonsterRoundBehaviorParams,
@@ -17,7 +17,7 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {getMonsterElement} from "@/utils/create";
 import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects, playerAdjustSanity} from "@/constants/status/advanced-status-utils";
-import {applySkillDamage} from "@/constants/fight-func";
+import {applyAttackDamage, applySkillDamage} from "@/constants/fight-func";
 import EvnStatus from "@/constants/status/evn-status";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 
@@ -725,18 +725,18 @@ export class FallenKnight1 extends MonsterModel {
             code: 'FallenKnight1',
             icon: '/monsters/fallen_knight.png',
             name: '墮落的騎士',
-            description: '曾誓言效忠聖光的聖殿騎士，卻在追尋聖女的道路上逐漸被黑暗腐蝕，最終淪為只知殺戮的空殼騎士。',
+            description: '曾誓言效忠聖光的聖殿騎士，卻在追尋聖女的道路上逐漸被黑暗腐蝕，最終淪為只知殺戮 of 空殼騎士。',
             class: ['boss'],
             ad: 60,
-            critIncrease: 220,
-            critRate: 20,
-            adDefend: 60,
-            dodge: 15,
-            hit: 110,
-            hp: 6000,
-            hpLimit: 6000,
-            level: 26,
-            dropGold: 2500,
+            critIncrease: 200,
+            critRate: 0,
+            adDefend: 40,
+            dodge: 35,
+            hit: 70,
+            hp: 1000,
+            hpLimit: 1000,
+            level: 60,
+            dropGold: 0,
             drop: []
         });
     }
@@ -744,7 +744,103 @@ export class FallenKnight1 extends MonsterModel {
     override onStartHook() {
         useEpicSubtitle("「守護...聖女...」", 3000);
     }
+
+    override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+        const cycleRound = ((battleRound - 1) % 7) + 1;
+        const monsterElement = getMonsterElement(this.id)
+        if (cycleRound === 1) {
+            this.addEffect(UsualStatus.Angry);
+            useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
+        } else if (cycleRound === 3) {
+            this.addEffect(UsualStatus.AdDefendInCrease, {bonus: {adDefend: 50}, duration: 1});
+            useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
+        }
+    }
+
+    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        const cycleRound = ((gameStateStore.battleRound - 1) % 7) + 1;
+        if (cycleRound === 3) {
+            return false;
+        }
+    }
 }
+
+export class FallenKnight2 extends MonsterModel {
+    constructor() {
+        super({
+            code: 'FallenKnight2',
+            icon: '/monsters/broken_fallen_knight.png',
+            name: '墮落的騎士',
+            description: '曾誓言效忠聖光的聖殿騎士，卻在追尋聖女的道路上逐漸被黑暗腐蝕，最終淪為只知殺戮 of 空殼騎士。',
+            class: ['boss'],
+            ad: 60,
+            critIncrease: 200,
+            critRate: 0,
+            adDefend: 30,
+            dodge: 35,
+            hit: 70,
+            hp: 1000,
+            hpLimit: 1000,
+            level: 60,
+            dropGold: 0,
+            drop: []
+        });
+    }
+
+    override onStartHook() {
+        useEpicSubtitle("「守護...聖女...」", 3000);
+    }
+
+    override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
+        const cycleRound = ((battleRound - 1) % 7) + 1;
+        const monsterElement = getMonsterElement(this.id)
+        if (cycleRound === 1) {
+            this.addEffect(UsualStatus.Angry);
+            useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
+        } else if (cycleRound === 3) {
+            this.addEffect(UsualStatus.AdDefendInCrease, {bonus: {adDefend: 50}, duration: 1});
+            useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
+        } else if (cycleRound === 5) {
+            this.addEffect(UsualStatus.Resistance, {value: 2, duration: 2});
+            useFloatingMessage('..!', monsterElement, {color: 'yellow', duration: 1500});
+        }
+    }
+
+    override onAttackHook({playerStore, gameStateStore, logStore}: MonsterOnAttackParams) {
+        const cycleRound = ((gameStateStore.battleRound - 1) % 5) + 1;
+        if (cycleRound === 3 || cycleRound === 5) {
+            return false;
+        }
+        if (cycleRound === 5) {
+            if (this.hasStatus(UsualStatus.Resistance.name)) {
+                this.removeStatus(UsualStatus.Resistance.name);
+                applySkillDamage({
+                    speller: this,
+                    target: playerStore,
+                    baseValue: 200,
+                    type: 'true',
+                    sureHit: true,
+                    skillName: '黑暗劍氣'
+                });
+                useFullScreenEffect({
+                    message: '黑暗劍氣',
+                    color: 'purple',
+                    duration: 1500
+                });
+                return false;
+            }
+        }
+    }
+
+    override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
+        const monsterElement = getMonsterElement(this.id)
+        if (this.hasStatus(UsualStatus.Resistance.name)) {
+            applyAttackDamage(this, playerStore);
+            useFloatingMessage('!', monsterElement, {color: 'red', duration: 1500});
+        }
+    }
+}
+
 
 /**
  * --- 終焉深淵 (End Abyss) Bosses ---
@@ -1063,6 +1159,7 @@ export const Boss = {
     EmpireEliteKnight: new EmpireEliteKnight(),
     TheLastSaint: new TheLastSaint(),
     FallenKnight1: new FallenKnight1(),
+    FallenKnight2: new FallenKnight2(),
 
     // --- 終焉深淵 (End Abyss) ---
     AbyssSpecter: new AbyssSpecter(),

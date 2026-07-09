@@ -18,7 +18,7 @@ import {ElMessage} from "element-plus";
 import {usePlayerStore} from "@/store/player-store";
 import {StageEnum} from "@/enums/stage-enum";
 import {EndlessWeights} from "@/constants/stage-monster-weights";
-import {StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
+import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
 import {useLogStore} from "@/store/log-store";
 import {MonsterModel} from "@/models/monster-model";
 import {MonsterFactory} from "@/constants/monsters/monster-factory";
@@ -109,16 +109,32 @@ const getWeightByStage = () => {
 }
 
 //生成菁英戰鬥
+const Stage4FinalBossRaid = () => {
+  // 第一次遇見
+  const checkKillCount = trackStore.getKillCount()
+  const newMonsters = [gameStateStore.createMonster(Boss.FallenKnight1.code, Boss.FallenKnight1)]
+  //
+
+  // 同步到 Store 做持久化緩存
+  gameStateStore.setCurrentEnemy(newMonsters);
+}
+
 const genEliteMonster = () => {
   const useWeight = getWeightByStage();
   if (!useWeight) return;
 
   const monsterCount = Math.floor(Math.random() * 3) + 1;
-  genMonsters(
-      monsterCount,
-      useWeight,
-      monsterCount === 1
-  );
+  // 如果是第四階段 天數>50 菁英戰鬥強制是墮落的騎士
+  if (gameStateStore.currentStage === 4 && !gameStateStore.isInClearedStage && gameStateStore.stageDays > 50) {
+    Stage4FinalBossRaid()
+  } else {
+    genMonsters(
+        monsterCount,
+        useWeight,
+        monsterCount === 1
+    );
+  }
+
 }
 
 
