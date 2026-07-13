@@ -10,7 +10,7 @@ import {
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
     MonsterRoundBehaviorParams,
-    MonsterType
+    MonsterType, PlayerStoreType
 } from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -695,19 +695,20 @@ export class TheLastSaint extends MonsterModel {
             code: 'TheLastSaint',
             icon: '/monsters/last_saint.png',
             name: '最後的聖女',
-            description: '數年前攜著聖光前往峽谷深處的帝國聖女。雖受詛咒與外神黑暗力量侵蝕而墮落受困，但其心中仍存有最後一絲神聖理性在痛苦掙扎。',
-            class: ['boss'],
+            description: '受到泰坦能量污染的聖女。',
+            class: ['mystery'],
             ad: 20,
             critIncrease: 0,
             critRate: 0,
-            adDefend: 0,
+            adDefend: 20,
             dodge: 60,
             hit: 70,
             hp: 1000,
             hpLimit: 1000,
-            level: 50,
+            level: 60,
             dropGold: 2000,
             chaseIncrease: 200,
+            defendIncrease: 30,
             drop: []
         });
     }
@@ -724,6 +725,7 @@ export class TheLastSaint extends MonsterModel {
         }
         const Knight = gameStateStore.createMonster('FinalFallenKnight');
         Knight.hp = Math.floor(Knight.hp * hp_percent / 100)
+        Knight.addEffect(UnitStatus.SaintUp)
         gameStateStore.currentEnemy.unshift(Knight)
     }
 
@@ -732,13 +734,30 @@ export class TheLastSaint extends MonsterModel {
         this.stage4FinalBossRaid(gameStateStore)
     }
 
+    countDown = 4
 
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        if (gameStateStore.currentEnemy.length > 1) {
-            this.addEffect(UnitStatus.KnightUp)
-        } else {
-            this.removeStatus(UnitStatus.KnightUp.name)
+    checkKnightIsDead({gameStateStore, playerStore}: MonsterRoundBehaviorParams) {
+        const exist = gameStateStore.currentEnemy.some((monster) => monster.code === 'FinalFallenKnight')
+        if (exist) return
+        this.countDown -= 1
+        switch (this.countDown) {
+            case 3:
+                useEpicSubtitle("「我的騎士...」", 2000);
+                break;
+            case 2:
+                useEpicSubtitle("「我等訴願...」", 2000);
+                break;
+            case 1:
+                useEpicSubtitle("「在此終結...」", 2000);
+                break;
         }
+        if (this.countDown <= 0) {
+            playerStore.takeDamage(999999)
+        }
+    }
+
+    override onRoundBehaviorHook(params: MonsterRoundBehaviorParams) {
+        this.checkKnightIsDead(params)
     }
 
     override onDeadHook({playerStore}: MonsterActionParams) {
@@ -825,6 +844,7 @@ export class FallenKnight3 extends FallenKnight2 {
     }
 
     override onStartHook() {
+        this.addEffect(UnitStatus.KnightUp)
         useEpicSubtitle("「守護...」", 3000);
     }
 
@@ -844,25 +864,29 @@ export class FallenKnight3 extends FallenKnight2 {
         }
     }
 
+    useDarkBlade(playerStore: PlayerStoreType) {
+        applySkillDamage({
+            speller: this,
+            target: playerStore,
+            baseValue: 250,
+            type: 'true',
+            sureHit: true,
+            skillName: '黑暗劍氣'
+        });
+        useFullScreenEffect({
+            message: '黑暗劍氣',
+            color: 'purple',
+            duration: 1500
+        });
+    }
+
     override onAttackHook({playerStore}: MonsterOnAttackParams) {
         if (this.hasStatus(UnitStatus.KnightAdDefend.name)) {
             return false;
         }
         if (this.hasStatus(UsualStatus.Resistance.name)) {
             this.removeStatus(UsualStatus.Resistance.name);
-            applySkillDamage({
-                speller: this,
-                target: playerStore,
-                baseValue: 200,
-                type: 'true',
-                sureHit: true,
-                skillName: '黑暗劍氣'
-            });
-            useFullScreenEffect({
-                message: '黑暗劍氣',
-                color: 'purple',
-                duration: 1500
-            });
+            this.useDarkBlade(playerStore);
             return false;
         }
     }
@@ -873,15 +897,38 @@ export class FinalFallenKnight extends FallenKnight3 {
     constructor(params: any = {}) {
         super(Object.assign({
             code: 'FinalFallenKnight',
+            icon: '/monsters/fallen_knight.png',
             adDefend: 50,
             hp: 3000,
             hpLimit: 3000
         }, params));
     }
 
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        if (gameStateStore.currentEnemy.length > 1) {
-            this.addEffect(UnitStatus.SaintUp)
+    checkSaintIsDead({gameStateStore}: MonsterOnAttackParams) {
+        return gameStateStore.currentEnemy.some((monster) => monster.code === 'FinalFallenKnight')
+    }
+
+    check = false
+
+    override onRoundBehaviorHook(params: MonsterRoundBehaviorParams) {
+        super.onRoundBehaviorHook(params)
+        const isSaintDead = this.checkSaintIsDead(params)
+        if (isSaintDead && !this.check) {
+            this.check = true
+            this.icon = '/monsters/broken_fallen_knight_last_stand.png'
+            this.ad += 40
+            this.defendIncrease += 30
+        }
+    }
+
+
+    override onAttackHook(param: MonsterOnAttackParams) {
+        const isSaintDead = this.checkSaintIsDead(param)
+        if (isSaintDead) {
+            this.useDarkBlade(param.playerStore);
+            return false;
+        } else {
+            return super.onAttackHook(param)
         }
     }
 

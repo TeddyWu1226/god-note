@@ -189,17 +189,17 @@ export const UnitStatus = {
         }
     } as StatusEffect,
     KnightUp: {
-        name: '雙生殞命',
+        name: '騎士的詛咒',
         icon: '👥️',
         duration: -1,
         isBuff: true,
-        description: `受到騎士誓約的詛咒，回合開始時會復活聖女。`,
+        description: `受到騎士誓約的詛咒。回合開始時若騎士已死，會用盡最後的力氣施展終結之技。`,
     } as StatusEffect,
     SaintUp: {
-        name: '雙生殞命',
+        name: '聖女的詛咒',
         icon: '👥️',
         duration: -1,
         isBuff: true,
-        description: `受到聖女祈願的詛咒，回合開始時會復活騎士。`,
+        description: `受到聖女祈願的詛咒。回合開始時若聖女已死，會獲得強大的力量。`,
     } as StatusEffect,
 }

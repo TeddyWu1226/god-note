@@ -79,4 +79,11 @@ defineExpose({
   border-color: rgba(138, 43, 226, 0.25) !important;
   transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
 }
+
+.env-sand {
+  box-shadow: inset 0 0 40px rgb(226 119 43 / 0.3),
+  inset 0 0 80px rgb(226 119 43 / 0.12) !important;
+  border-color: rgba(226 119 43/ 0.25) !important;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease, border-color 0.8s ease;
+}
 </style>

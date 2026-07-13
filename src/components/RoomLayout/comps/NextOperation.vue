@@ -167,8 +167,12 @@ const updateEnvironmentStatus = () => {
       EvnStatus.LowSanity.name,
     ];
     playerStore.statusEffects = playerStore.statusEffects.filter(e => !envStatusNames.includes(e.name));
+    gameStateStore.setEnvironmentMode(undefined)
   }
   // 根據當前關卡與天數賦予對應的環境效果
+  if (gameStateStore.stageDays === 0) {
+    resetEvn()
+  }
   switch (stage) {
     case StageEnum.GiantsWasteland.value:
       // 大荒地環境：魔力風暴 - 每回合扣 30 hp (受物理防禦減免)
@@ -181,12 +185,12 @@ const updateEnvironmentStatus = () => {
           });
         }
         playerStore.addStatus(EvnStatus.Sandstorm);
+        gameStateStore.setEnvironmentMode('sand')
       } else {
         resetEvn()
       }
       break;
-
-    case 4:
+    case StageEnum.SplitCanyon.value:
       if (!playerStore.hasStatus('理智')) {
         playerAdjustSanity(playerStore, 0);
       }
@@ -207,7 +211,6 @@ const updateEnvironmentStatus = () => {
       }
       gameStateStore.setEnvironmentMode(isDay ? 'day' : 'night')
       break;
-
     default:
       resetEvn()
   }

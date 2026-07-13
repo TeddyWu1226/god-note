@@ -44,7 +44,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     const isVictory = ref(false);
 
     /** 環境參數 (第四階段使用：'day' | 'night'，可擴充 'hell' | 'heaven' 等) */
-    const environmentMode = ref<'day' | 'night' | undefined>(undefined);
+    const environmentMode = ref<'day' | 'night' | 'sand' | undefined>(undefined);
 
     /** 隨機產生的後續可選房間類型列表 */
     const nextRooms = ref<number[]>([]);
@@ -142,7 +142,7 @@ export const useGameStateStore = defineStore('game-state', () => {
     // ==========================================
     // 計算屬性 (Getters / Computed)
     // ==========================================
-    
+
     /**
      * 獲取指定特殊事件的進度計數
      * 不存在或 0 代表沒發生過，-1 代表永久關閉
@@ -243,16 +243,16 @@ export const useGameStateStore = defineStore('game-state', () => {
         isBattleWon.value = false;
         currentEnemy.value = [];
         currentState.value = GameState.EVENT_PHASE;
-        
+
         // 重製事件
         currentEventType.value = null;
         eventAction.value = 0;
         battleRound.value = 1;
         playerActionPoints.value = 0;
-        
+
         // 進入新房間，清除上一間商店的商品快取
         delete otherRecord.value['SHOP_GOODS'];
-        
+
         // 進入房間時判定：如果是戰鬥房間且玩家擁有主動技能，預設開啟技能面板，否則開啟背包面板
         const playerStore = usePlayerStore();
         const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];
@@ -442,7 +442,7 @@ export const useGameStateStore = defineStore('game-state', () => {
      * 設定當前的環境狀態 (例如：白天/夜晚)
      * @param mode 環境類型
      */
-    function setEnvironmentMode(mode?: 'day' | 'night'): void {
+    function setEnvironmentMode(mode?: 'day' | 'night' | 'sand'): void {
         environmentMode.value = mode;
     }
 

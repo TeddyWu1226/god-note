@@ -121,8 +121,8 @@ export class RockBull extends MonsterModel {
             icon: '🐂',
             code: 'RockBull',
             name: '岩牛',
-            description: '全身覆蓋著堅硬岩石的牛型魔物，在血量低於一半時會憤怒。在憤怒時命中目標時，會使敵方繳械',
-            ad: 32,
+            description: '全身覆蓋著堅硬岩石的牛型魔物，在受到攻擊時會憤怒。在憤怒時命中目標時，會使敵方繳械',
+            ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: 0,
             adDefend: 20,
@@ -136,24 +136,24 @@ export class RockBull extends MonsterModel {
         });
     }
 
-    override onRoundBehaviorHook() {
-        if (this.hp <= (this.hpLimit / 2)) {
-            this.addEffect(UsualStatus.Angry)
-        }
+    override onAttackedHook() {
+        this.addEffect(UsualStatus.Angry)
     }
 
     override onAttackHitHook({playerStore, gameStateStore}: MonsterOnAttackHitParams) {
         if (this.hasStatus(UsualStatus.Angry.name)) {
-            playerStore.unequipItem('weapon')
-            useFloatingMessage(
-                '武器掉落了...',
-                null,
-                {
-                    duration: 1000,
-                    color: 'red'
-                }
-            );
-            gameStateStore.triggerScreenShake(500)
+            const weapon = playerStore.unequipItem('weapon')
+            if (weapon) {
+                useFloatingMessage(
+                    `手上的 ${weapon.name} 掉落了...`,
+                    null,
+                    {
+                        duration: 1000,
+                        color: 'red'
+                    }
+                );
+                gameStateStore.triggerScreenShake(500)
+            }
         }
     }
 }
