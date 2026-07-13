@@ -156,6 +156,13 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
                     color: 'green',
                 });
                 callback(true)
+            } else if (!!playerStore.hasStatus('燃燒')) {
+                playerStore.removeStatus('燃燒');
+                useFullScreenEffect({
+                    message: '燃燒狀態已消除',
+                    color: 'red',
+                });
+                callback(true)
             } else {
                 cantUse()
                 callback(false);

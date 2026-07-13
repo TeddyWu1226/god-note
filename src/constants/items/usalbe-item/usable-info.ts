@@ -11,8 +11,8 @@ export const Usable = {
         skill: 'useBurningPotion'
     } as UsableType,
     UnPoisonPotion: {
-        name: '解毒劑',
-        description: '可以使自身消除「中毒」效果',
+        name: '冰涼的解毒劑',
+        description: '可以使自身消除「中毒」,「燃燒」效果',
         icon: '💉',
         quality: 1,
         usable: true,
@@ -53,7 +53,7 @@ export const Usable = {
     TeleportCrystal: {
         name: '轉移水晶',
         quality: 6,
-        description: '神秘的水晶，只能在「選擇路徑階段」使用。使用後將你傳送至深處驛站，並強制選擇接下來要前往的區域。',
+        description: '神秘的水晶，只能在「選擇路徑階段」使用。使用後將你傳送逃離，並強制選擇接下來要前往的區域。',
         icon: '🔮',
         usable: true,
         skill: 'useTeleportCrystal'

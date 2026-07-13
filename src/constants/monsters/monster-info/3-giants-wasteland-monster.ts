@@ -6,6 +6,8 @@ import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullS
 import {UsualStatus} from "@/constants/status/usual-status";
 import {MonsterOnAttackedParams, MonsterOnAttackHitParams} from "@/types";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {SkillStatus} from "@/constants/status/skill-status";
+import EvnStatus from "@/constants/status/evn-status";
 
 export class SandSlime extends MonsterModel {
     constructor() {
@@ -210,7 +212,7 @@ export class PoisonFlower extends MonsterModel {
             icon: '🌺',
             code: 'PoisonFlower',
             name: '毒食人花怪',
-            description: '在荒野生長的花形魔物，觸碰他時會使得敵人中毒',
+            description: '在荒野生長的花形魔物，擁有毒刺可以使觸碰他時會使得敵人中毒(但可以靠燃燒使其暫時無法作用)',
             ad: 21,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -226,6 +228,7 @@ export class PoisonFlower extends MonsterModel {
     }
 
     override onAttackedHook({playerStore}: MonsterOnAttackedParams) {
+        if (this.hasStatus(EvnStatus.OnBurn.name)) return
         playerStore.addStatus(UnitStatus.Poison)
     }
 }

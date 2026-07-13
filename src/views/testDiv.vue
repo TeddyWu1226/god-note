@@ -24,6 +24,9 @@ const selectDay = ref(1);
 const onSelectDay = () => {
   gameStateStore.stageDays = Number(selectDay.value);
 };
+const onSelectTotalDay = () => {
+  gameStateStore.days = Number(selectDay.value);
+};
 // 跳關
 const selectStage = (stageVal: number) => {
   playerStore.healFull()
@@ -153,6 +156,13 @@ const onSave = () => {
           <template #append>
             <el-button @click="onSelectDay">
               跳天
+            </el-button>
+          </template>
+        </el-input>
+        <el-input v-model="selectDay" placeholder="天數">
+          <template #append>
+            <el-button @click="onSelectTotalDay">
+              跳總天
             </el-button>
           </template>
         </el-input>

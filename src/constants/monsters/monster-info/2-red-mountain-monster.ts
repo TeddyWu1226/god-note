@@ -6,6 +6,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {playerGetColdStackEffects} from "@/constants/status/advanced-status-utils";
 import {MonsterOnAttackedParams, MonsterOnAttackHitParams} from "@/types";
 import {UnitStatus} from "@/constants/status/unit-status";
+import EvnStatus from "@/constants/status/evn-status";
 
 
 /**
@@ -96,7 +97,7 @@ export class FrostGolem extends MonsterModel {
             code: 'FrostGolem',
             name: '寒冰魔像',
             class: ['elite', 'icon-blue'],
-            description: '由冰雪編織而成的重裝魔能守衛。防禦力堅實，且每一次拳擊命中都會直接為目標施加強烈寒冷效果。',
+            description: '由冰雪編織而成的重裝魔能守衛。防禦力堅實，且每一次拳擊命中都會直接為目標施加強烈寒冷效果(如果有燃燒狀態則暫時失去此效果)。',
             ad: 20,
             critIncrease: WorldDefault.critIncrease,
             critRate: WorldDefault.critRate,
@@ -113,6 +114,7 @@ export class FrostGolem extends MonsterModel {
     }
 
     override onAttackHitHook({playerStore}: MonsterOnAttackHitParams) {
+        if (this.hasStatus(EvnStatus.OnBurn.name)) return
         playerGetColdStackEffects(playerStore, -4)
     }
 }

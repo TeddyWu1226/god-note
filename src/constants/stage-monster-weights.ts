@@ -168,32 +168,26 @@ export const EndAbyssWeights4: Record<string, number> = {
  * 第六階段：審判之日 (Judgment Stage)
  */
 export const JudgmentStageWeights1: Record<string, number> = {
-    JudgmentSlime: 40,
     LightInquisitor: 30,
     AngelSentry: 30
 };
 
 export const JudgmentStageWeights2: Record<string, number> = {
-    JudgmentSlime: 20,
     LightInquisitor: 20,
     AngelSentry: 30,
-    HolyArchon: 30
 };
 
 export const JudgmentStageWeights3: Record<string, number> = {
     AngelSentry: 20,
-    HolyArchon: 30,
     SeraphimGuard: 15,
     DivineExecutioner: 15,
-    JudgmentWatcher: 10,
-    FaithZealot: 10
+    JudgmentWatcher: 10
 };
 
 export const JudgmentStageWeights4: Record<string, number> = {
     SeraphimGuard: 25,
     DivineExecutioner: 25,
     JudgmentWatcher: 25,
-    FaithZealot: 25
 };
 
 /**
