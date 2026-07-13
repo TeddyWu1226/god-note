@@ -681,7 +681,6 @@ export class EmpireEliteKnight extends MonsterModel {
         }
         if (-100 !== currentSans.value) {
             const newOne = gameStateStore.exchangeEnemy(this.id, gameStateStore.createMonster(this.code))
-            console.log('newOne.id', newOne.id)
             nextTick().then(
                 () => {
                     useCardImpactEffect(getMonsterElement(newOne.id), 'purple-wave');
