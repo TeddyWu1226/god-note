@@ -21,6 +21,8 @@ import {applyAttackDamage, applySkillDamage} from "@/constants/fight-func";
 import EvnStatus from "@/constants/status/evn-status";
 import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroStatusEffect";
 import {useTrackerStore} from "@/store/track-store";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
+import {nextTick} from "vue";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -678,7 +680,13 @@ export class EmpireEliteKnight extends MonsterModel {
             }
         }
         if (-100 !== currentSans.value) {
-            gameStateStore.exchangeEnemy(this.id, gameStateStore.createMonster(this.code))
+            const newOne = gameStateStore.exchangeEnemy(this.id, gameStateStore.createMonster(this.code))
+            console.log('newOne.id', newOne.id)
+            nextTick().then(
+                () => {
+                    useCardImpactEffect(getMonsterElement(newOne.id), 'purple-wave');
+                }
+            )
         } else {
             playerStore.gainExp({monsterLevel: this.level})
             playerStore.addGold(3000)

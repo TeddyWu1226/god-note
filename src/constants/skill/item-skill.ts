@@ -6,10 +6,9 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {UnitStatus} from "@/constants/status/unit-status";
 import {Boss} from "../monsters/monster-info/99-boss-info";
 import {useSaveStore} from "@/store/save-store";
-import EvnStatus from "@/constants/status/evn-status";
-import {useCardStatusEffect} from "@/components/RoomLayout/comps/useCardStatusEffect";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {getMonsterElement} from "@/utils/create";
+import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 
 const cantUse = () => {
     showEffect(
@@ -139,16 +138,7 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
             }
             if (monster) {
                 monster.addEffect(ItemStatus.OnBurn)
-                const monsterElement = getMonsterElement(monster.id)
-                if (monsterElement) {
-                    useCardStatusEffect({
-                        target: monsterElement,
-                        message: '燃燒',
-                        color: '#e67e22',
-                        icon: '🔥',
-                        duration: 500
-                    });
-                }
+                useCardImpactEffect(getMonsterElement(params.monster.id), 'burn');
                 callback(true)
                 return
             }

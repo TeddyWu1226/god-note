@@ -13,7 +13,8 @@ export type ImpactType =
     | 'poison'
     | 'stun'
     | 'burn'
-    | 'frozen';
+    | 'frozen'
+    | 'purple-wave';
 
 /**
  * 在目標 DOM 元素正上方播放打擊特效覆蓋層
@@ -28,7 +29,7 @@ export function useCardImpactEffect(
     const container = document.createElement('div');
     let positionStyle = {};
 
-    if (targetElement) {
+    if (targetElement && type !== 'purple-wave') {
         // 確保目標元件 position 不是 static，以便 absolute 定位容器能正確對齊
         const computedStyle = window.getComputedStyle(targetElement);
         if (computedStyle.position === 'static') {
@@ -52,6 +53,24 @@ export function useCardImpactEffect(
             width: '100%',
             height: '100%',
             position: 'absolute',
+        };
+    } else if (targetElement && type === 'purple-wave') {
+        // 掛載到 document.body 進行 fixed 全域定位，防止被目標元件本身的 overflow: hidden 裁切
+        document.body.appendChild(container);
+        container.style.position = 'fixed';
+        container.style.overflow = 'visible';
+        container.style.pointerEvents = 'none';
+        container.style.zIndex = '9999';
+
+        const rect = targetElement.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(targetElement);
+        positionStyle = {
+            top: `${rect.top}px`,
+            left: `${rect.left}px`,
+            width: `${rect.width}px`,
+            height: `${rect.height}px`,
+            position: 'fixed',
+            borderRadius: computedStyle.borderRadius || '12px'
         };
     } else {
         // 若無目標元件，則作為 fallback 掛載到 document.body 進行 fixed 全域定位

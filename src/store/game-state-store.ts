@@ -290,15 +290,15 @@ export const useGameStateStore = defineStore('game-state', () => {
      * @param newEnemy 新的怪物實例
      * @returns 是否成功替換
      */
-    function exchangeEnemy(enemyId: string, newEnemy: MonsterModel): boolean {
+    function exchangeEnemy(enemyId: string, newEnemy: MonsterModel): MonsterModel | undefined {
         const existIndex = currentEnemy.value.findIndex((monster) => monster?.id === enemyId);
 
         if (existIndex >= 0) {
             currentEnemy.value.splice(existIndex, 1, newEnemy);
             currentEnemy.value = [...currentEnemy.value];
-            return true;
+            return newEnemy;
         }
-        return false;
+        return undefined;
     }
 
     /**

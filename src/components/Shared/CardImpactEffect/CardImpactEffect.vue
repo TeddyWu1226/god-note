@@ -12,6 +12,7 @@ import PoisonImpact from './comps/PoisonImpact.vue';
 import StunImpact from './comps/StunImpact.vue';
 import BurnImpact from './comps/BurnImpact.vue';
 import FrozenImpact from './comps/FrozenImpact.vue';
+import PurpleWaveImpact from './comps/PurpleWaveImpact.vue';
 
 const props = defineProps({
   type: { type: String, default: 'physical' },
@@ -55,6 +56,8 @@ const impactComponent = computed(() => {
       return BurnImpact;
     case 'frozen':
       return FrozenImpact;
+    case 'purple-wave':
+      return PurpleWaveImpact;
     default:
       return PhysicalImpact;
   }
@@ -62,7 +65,7 @@ const impactComponent = computed(() => {
 </script>
 
 <template>
-  <div v-if="isActive" class="card-impact-overlay" :style="positionStyle">
+  <div v-if="isActive" class="card-impact-overlay" :class="{ 'is-visible-overflow': type === 'purple-wave' }" :style="positionStyle">
     <component :is="impactComponent" />
   </div>
 </template>
@@ -73,5 +76,9 @@ const impactComponent = computed(() => {
   overflow: hidden;
   border-radius: 12px; /* 貼合一般卡片邊角 */
   box-sizing: border-box;
+}
+
+.card-impact-overlay.is-visible-overflow {
+  overflow: visible;
 }
 </style>
