@@ -139,29 +139,49 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
     }, {deep: true, immediate: true});
 
-    // --- Getters (用 computed 代替) ---
+    // ==========================================
+    // 計算屬性 (Getters / Computed)
+    // ==========================================
+    
     /**
-     * 不存在或0代表沒發生過
-     * -1 永久不發生
+     * 獲取指定特殊事件的進度計數
+     * 不存在或 0 代表沒發生過，-1 代表永久關閉
      */
     const getEventProcess = computed(() => (event: SpecialEventEnum): number => {
         return eventProcess.value[event] ?? 0;
     });
 
+    /**
+     * 檢查遊戲是否處於指定狀態
+     */
     const stateIs = computed(() => (stateToCheck: GameState): boolean => {
         return currentState.value === stateToCheck;
     });
 
+    /**
+     * 檢查當前房間是否為指定的類型值或在類型值清單中
+     */
     const roomIs = computed(() => (roomValue: number | number[]): boolean => {
         if (Array.isArray(roomValue)) {
             return roomValue.includes(currentRoomValue.value);
         }
         return currentRoomValue.value === roomValue;
     });
-    /** 是否在已通關關卡 **/
-    const isInClearedStage = computed(() => currentStage.value < maxClearedStage.value)
 
-    // --- Actions ---
+    /**
+     * 是否處於已通關的歷史關卡中
+     */
+    const isInClearedStage = computed(() => currentStage.value < maxClearedStage.value);
+
+    // ==========================================
+    // 遊戲狀態行為方法 (Actions)
+    // ==========================================
+
+    /**
+     * 初始化或重置遊戲狀態
+     * @param stageNum 大關卡編號 (預設為 1)
+     * @param restart 是否徹底重置 (重置輪迴，清除歷史最大進度與特殊紀錄)
+     */
     function init(stageNum = 1, restart = false): void {
         if (stageNum === 1 || restart) {
             currentState.value = GameState.INITIAL;
@@ -173,7 +193,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
         stageDays.value = 0;
         roomId.value = 0;
-        thisStageAppear.value = []
+        thisStageAppear.value = [];
         currentStage.value = stageNum;
         isBattleWon.value = false;
         currentEnemy.value = [];
@@ -184,16 +204,19 @@ export const useGameStateStore = defineStore('game-state', () => {
         playerActionPoints.value = 0;
         isPlayerTurn.value = true;
         lastEventType.value = null;
-        eventAction.value = 0
+        eventAction.value = 0;
         if (restart) {
             eventProcess.value = {} as Record<SpecialEventEnum, number>;
-            otherRecord.value = {}
+            otherRecord.value = {};
             maxClearedStage.value = 1; // 只有在徹底 restart (重置輪迴) 時才重置為 1 (只解鎖第 1 大關)
         }
         bottomPanelMode.value = 'backpack'; // 重置時預設顯示背包
         console.log('遊戲狀態已重置');
     }
 
+    /**
+     * 進入審判階段 (特殊大關)
+     */
     function enterJudgmentStage(): void {
         days.value = 1001;
         stageDays.value = 0;
@@ -210,19 +233,26 @@ export const useGameStateStore = defineStore('game-state', () => {
         thisStageAppear.value = [];
     }
 
+    /**
+     * 切換房間，重置房間相關的暫存與狀態，並根據房間類型自動開啟面板
+     * @param roomValue 目標房間類型的數值
+     */
     function setRoom(roomValue: number): void {
-        roomId.value += 1
+        roomId.value += 1;
         currentRoomValue.value = roomValue ?? RoomEnum.Fight.value;
         isBattleWon.value = false;
         currentEnemy.value = [];
         currentState.value = GameState.EVENT_PHASE;
+        
         // 重製事件
         currentEventType.value = null;
         eventAction.value = 0;
         battleRound.value = 1;
         playerActionPoints.value = 0;
+        
         // 進入新房間，清除上一間商店的商品快取
         delete otherRecord.value['SHOP_GOODS'];
+        
         // 進入房間時判定：如果是戰鬥房間且玩家擁有主動技能，預設開啟技能面板，否則開啟背包面板
         const playerStore = usePlayerStore();
         const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];
@@ -234,6 +264,9 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
     }
 
+    /**
+     * 根據玩家屬性重置並補充回合行動點數 (AP)
+     */
     function refillActionPoints(): void {
         const playerStore = usePlayerStore();
         playerActionPoints.value = Math.floor((playerStore.finalStats.actionValue ?? 50) / 50);
@@ -241,8 +274,8 @@ export const useGameStateStore = defineStore('game-state', () => {
 
     /**
      * 突然切換至戰鬥房間
-     * @param roomValue
-     * @param monsters
+     * @param roomValue 戰鬥房間類型
+     * @param monsters 備戰怪物列表
      */
     function switchToFightRoom(roomValue: number, monsters?: MonsterModel[]): void {
         if (monsters) {
@@ -251,27 +284,54 @@ export const useGameStateStore = defineStore('game-state', () => {
         setRoom(roomValue);
     }
 
+    /**
+     * 替換怪物
+     * @param enemyId 要被替換的怪物 ID
+     * @param newEnemy 新的怪物實例
+     * @returns 是否成功替換
+     */
+    function exchangeEnemy(enemyId: string, newEnemy: MonsterModel): boolean {
+        const existIndex = currentEnemy.value.findIndex((monster) => monster?.id === enemyId);
+
+        if (existIndex >= 0) {
+            currentEnemy.value.splice(existIndex, 1, newEnemy);
+            currentEnemy.value = [...currentEnemy.value];
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 突然切換至事件房間
-     * @param event
+     * @param event 特殊事件類型
      */
     function switchToEventRoom(event: SpecialEventEnum): void {
         setRoom(RoomEnum.Event.value);
         currentEventType.value = event;
     }
 
+    /**
+     * 設定當前房間中的敵方怪物列表
+     * @param monsters 怪物實例陣列
+     */
     function setCurrentEnemy(monsters: MonsterModel[]): void {
-        currentEnemy.value = monsters
+        currentEnemy.value = monsters;
     }
 
-
+    /**
+     * 取出並清空後備準備登場的怪物列表
+     * @returns 準備登場的怪物實例陣列
+     */
     function takeSwitchEnemy(): MonsterModel[] {
-        const enemy = [...switchEnemy.value]
-        switchEnemy.value = []
-        return enemy
+        const enemy = [...switchEnemy.value];
+        switchEnemy.value = [];
+        return enemy;
     }
 
+    /**
+     * 設定戰鬥勝負狀態，若獲勝則自動進入結算與選關階段，並清空敵方列表
+     * @param won 是否獲勝
+     */
     function setBattleWon(won: boolean): void {
         const battleRooms = [RoomEnum.Fight.value, RoomEnum.EliteFight.value, RoomEnum.Boss.value];
         if (battleRooms.includes(currentRoomValue.value)) {
@@ -289,6 +349,9 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
     }
 
+    /**
+     * 推進並切換當前的遊戲主要階段 (State Loop)
+     */
     function transitionToNextState(): void {
         switch (currentState.value) {
             case GameState.INITIAL:
@@ -301,11 +364,19 @@ export const useGameStateStore = defineStore('game-state', () => {
         }
     }
 
+    /**
+     * 設定目前觸發的特殊事件
+     * @param event 特殊事件類型
+     */
     function setEvent(event: SpecialEventEnum) {
         currentEventType.value = event;
         lastEventType.value = event;
     }
 
+    /**
+     * 判斷指定特殊事件是否已永久關閉 (-1)
+     * @param event 特殊事件類型
+     */
     function isEventClose(event: SpecialEventEnum) {
         if (!eventProcess.value[event]) {
             return false;
@@ -313,29 +384,49 @@ export const useGameStateStore = defineStore('game-state', () => {
         return eventProcess.value[event] === -1;
     }
 
+    /**
+     * 增加指定特殊事件的進度計數，或直接關閉該事件
+     * @param event 特殊事件類型
+     * @param close 是否關閉事件 (設為 -1)
+     */
     function addEventProcess(event: SpecialEventEnum, close: boolean = false) {
         if (close) {
-            eventProcess.value[event] = -1
+            eventProcess.value[event] = -1;
         } else {
             const currentCount = eventProcess.value[event] ?? 0;
             eventProcess.value[event] = currentCount + 1;
         }
     }
 
+    /**
+     * 紀錄本關卡中已出現過的特定怪物/物件 Key，避免重複觸發
+     * @param key 出現過物件的唯一標識符/名稱
+     */
     function recordThisStageAppear(key: string) {
         thisStageAppear.value = Array.from(new Set([...thisStageAppear.value, key]));
     }
 
+    /**
+     * 檢查指定物件 Key 是否在本大關已出現過
+     * @param key 物件唯一標識符/名稱
+     */
     function thisStageAlreadyAppear(key: string): boolean {
-        return thisStageAppear.value.includes(key)
+        return thisStageAppear.value.includes(key);
     }
 
-
+    /**
+     * 開啟大關選擇彈窗
+     * @param closable 彈窗是否允許點擊外部或手動關閉 (預設為 true)
+     */
     function openStageSelectDialog(closable = true): void {
         isStageSelectClosable.value = closable;
         showStageSelectDialog.value = true;
     }
 
+    /**
+     * 選擇並進入指定大關，會自動將玩家血量補滿，並重置天數與房間
+     * @param stageVal 目標大關編號
+     */
     function selectStage(stageVal: number): void {
         const playerStore = usePlayerStore();
         playerStore.healFull();
@@ -347,48 +438,100 @@ export const useGameStateStore = defineStore('game-state', () => {
         showStageSelectDialog.value = false;
     }
 
+    /**
+     * 設定當前的環境狀態 (例如：白天/夜晚)
+     * @param mode 環境類型
+     */
     function setEnvironmentMode(mode?: 'day' | 'night'): void {
         environmentMode.value = mode;
     }
 
+    /**
+     * 調用 MonsterFactory 創建指定的怪物實例
+     * @param code 怪物代碼 (ID)
+     * @param savedData 怪物存檔數據 (可選)
+     */
     function createMonster(code: string, savedData: Partial<any> = {}): MonsterModel {
         return MonsterFactory.createMonster(code, savedData);
     }
 
-    // --- 記得導出所有要在組件中使用的東西 ---
+    // ==========================================
+    // 匯出屬性與方法 (Exports)
+    // ==========================================
     return {
-        currentRoomValue, difficulty, isDead,
-        days, stageDays, maxClearedStage, isVictory, nextRooms, isInClearedStage,
+        // --- 1. 基礎遊戲與關卡狀態 (Game & Stage State) ---
+        currentRoomValue,
         currentStage,
+        isDead,
+        days,
+        stageDays,
+        maxClearedStage,
+        isVictory,
+        nextRooms,
+        roomId,
+        difficulty,
+        environmentMode,
+
+        // --- 2. 戰鬥與回合狀態 (Battle & Round State) ---
         currentState,
         isBattleWon,
-        thisStageAppear,
         currentEnemy,
         switchEnemy,
-        currentEventType,
-        lastEventType,
-        eventProcess, otherRecord,
-        getEventProcess,
-        stateIs,
-        roomIs,
-        roomId,
-        eventAction,
         battleRound,
         playerActionPoints,
         isPlayerTurn,
-        refillActionPoints,
+
+        // --- 3. 事件紀錄相關狀態 (Event Records State) ---
+        currentEventType,
+        lastEventType,
+        eventProcess,
+        eventAction,
+        thisStageAppear,
+        otherRecord,
+
+        // --- 4. UI 彈窗與顯示面板狀態 (UI & Dialog State) ---
+        showStageSelectDialog,
+        isStageSelectClosable,
+        isShowStats,
         bottomPanelMode,
         isScreenShaking,
-        triggerScreenShake,
-        init, transitionToNextState,
-        setRoom, switchToFightRoom, switchToEventRoom, takeSwitchEnemy,
-        setCurrentEnemy, setBattleWon,
-        setEvent, isEventClose,
-        addEventProcess, recordThisStageAppear, thisStageAlreadyAppear,
+
+        // --- 5. 計算屬性 (Getters / Computed) ---
+        isInClearedStage,
+        getEventProcess,
+        stateIs,
+        roomIs,
+
+        // --- 6. 核心流程動作 (Core Actions) ---
+        init,
+        transitionToNextState,
         enterJudgmentStage,
-        showStageSelectDialog, isStageSelectClosable, openStageSelectDialog, selectStage,
-        isShowStats,
-        environmentMode, setEnvironmentMode, createMonster
+
+        // --- 7. 房間與階段切換動作 (Room & Phase Actions) ---
+        setRoom,
+        switchToFightRoom,
+        switchToEventRoom,
+
+        // --- 8. 戰鬥與敵怪處理動作 (Battle & Monster Actions) ---
+        refillActionPoints,
+        setCurrentEnemy,
+        exchangeEnemy,
+        takeSwitchEnemy,
+        setBattleWon,
+        createMonster,
+
+        // --- 9. 特殊事件處理動作 (Event Actions) ---
+        setEvent,
+        isEventClose,
+        addEventProcess,
+        recordThisStageAppear,
+        thisStageAlreadyAppear,
+
+        // --- 10. 介面互動動作 (UI Actions) ---
+        openStageSelectDialog,
+        selectStage,
+        setEnvironmentMode,
+        triggerScreenShake
     };
 }, {
     persist: {

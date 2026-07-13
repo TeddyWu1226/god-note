@@ -10,7 +10,7 @@ import {
     MonsterOnAttackHitParams,
     MonsterOnAttackParams,
     MonsterRoundBehaviorParams,
-    MonsterType, TrackerStoreType
+    MonsterType
 } from "@/types";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {UsualStatus} from "@/constants/status/usual-status";
@@ -678,7 +678,7 @@ export class EmpireEliteKnight extends MonsterModel {
             }
         }
         if (-100 !== currentSans.value) {
-            gameStateStore.currentEnemy = [gameStateStore.createMonster(this.code)]
+            gameStateStore.exchangeEnemy(this.id, gameStateStore.createMonster(this.code))
         } else {
             playerStore.gainExp({monsterLevel: this.level})
             playerStore.addGold(3000)
@@ -714,22 +714,21 @@ export class TheLastSaint extends MonsterModel {
 
     stage4FinalBossRaid(gameStateStore: GameStateStoreType) {
         const trackStore = useTrackerStore()
+        let hp_percent = 100
         if (trackStore.isMonsterDefeated(Boss.FallenKnight3.code)) {
-            return
+            hp_percent = 25
+        } else if (trackStore.isMonsterDefeated(Boss.FallenKnight2.code)) {
+            hp_percent = 50
+        } else if (trackStore.isMonsterDefeated(Boss.FallenKnight1.code)) {
+            hp_percent = 75
         }
-        const bossPool = [
-            (new FinalFallenKnight1()).code,
-            (new FinalFallenKnight2()).code,
-            (new FinalFallenKnight3()).code,
-        ];
-        // 計算已擊敗的前置 Boss 數量，決定挑戰哪一階段（0 = Phase 1, 1 = Phase 2, 2 = Phase 3）
-        const knightStatus = bossPool.slice(0, 2).filter(code => trackStore.isMonsterDefeated(code)).length;
-        const Knight = gameStateStore.createMonster(bossPool[knightStatus]);
+        const Knight = gameStateStore.createMonster('FinalFallenKnight');
+        Knight.hp = Math.floor(Knight.hp * hp_percent / 100)
         gameStateStore.currentEnemy.unshift(Knight)
     }
 
     override onStartHook({gameStateStore}: MonsterActionParams) {
-        useEpicSubtitle("「人類?不...你是誰?!」", 3000);
+        useEpicSubtitle("「我的騎士...殲滅神的敵人吧...」", 3000);
         this.stage4FinalBossRaid(gameStateStore)
     }
 
@@ -774,13 +773,13 @@ export class FallenKnight1 extends MonsterModel {
     }
 
     override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
-        // 第二回合必定爆擊, 第三回合會格擋
+        // 第2回合必定爆擊, 第4回合會格擋
         const cycleRound = ((battleRound - 1) % 7) + 1;
         const monsterElement = getMonsterElement(this.id)
-        if (cycleRound === 1) {
+        if (cycleRound === 2) {
             this.addEffect(UsualStatus.Angry);
             useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
-        } else if (cycleRound === 3) {
+        } else if (cycleRound === 4) {
             this.addEffect(UnitStatus.KnightAdDefend, {bonus: {adDefend: 50}, duration: 1});
             useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
         }
@@ -830,16 +829,16 @@ export class FallenKnight3 extends FallenKnight2 {
     }
 
     override onRoundBehaviorHook({battleRound}: MonsterRoundBehaviorParams) {
-        // 第二回合必定爆擊, 第三回合會格擋
+        // 第2回合必定爆擊, 第4回合會格擋, 第6回合集氣
         const cycleRound = ((battleRound - 1) % 7) + 1;
         const monsterElement = getMonsterElement(this.id)
-        if (cycleRound === 1) {
+        if (cycleRound === 2) {
             this.addEffect(UsualStatus.Angry);
             useFloatingMessage('！', monsterElement, {color: 'red', duration: 1500});
-        } else if (cycleRound === 3) {
+        } else if (cycleRound === 4) {
             this.addEffect(UnitStatus.KnightAdDefend, {bonus: {adDefend: 50}, duration: 1});
             useFloatingMessage('...', monsterElement, {color: 'blue', duration: 1500});
-        } else if (cycleRound === 5) {
+        } else if (cycleRound === 6) {
             this.addEffect(UsualStatus.Resistance, {value: 2, duration: 2});
             useFloatingMessage('..!', monsterElement, {color: 'yellow', duration: 1500});
         }
@@ -869,52 +868,14 @@ export class FallenKnight3 extends FallenKnight2 {
     }
 }
 
-export class FinalFallenKnight1 extends FallenKnight1 {
+
+export class FinalFallenKnight extends FallenKnight3 {
     constructor(params: any = {}) {
         super(Object.assign({
-            code: 'FinalFallenKnight1',
-        }, params));
-    }
-
-    override onStartHook() {
-    }
-
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        if (gameStateStore.currentEnemy.length > 1) {
-            this.addEffect(UnitStatus.SaintUp)
-        }
-    }
-
-    override onDeadHook({gameStateStore}: MonsterActionParams) {
-        gameStateStore.currentEnemy.unshift(new FinalFallenKnight2())
-    }
-}
-
-export class FinalFallenKnight2 extends FallenKnight2 {
-    constructor(params: any = {}) {
-        super(Object.assign({
-            code: 'FinalFallenKnight2',
-        }, params));
-    }
-
-    override onRoundBehaviorHook({gameStateStore}: MonsterRoundBehaviorParams) {
-        if (gameStateStore.currentEnemy.length > 1) {
-            this.addEffect(UnitStatus.SaintUp)
-        }
-    }
-
-    override onStartHook() {
-    }
-
-    override onDeadHook({gameStateStore}: MonsterActionParams) {
-        gameStateStore.currentEnemy.unshift(new FinalFallenKnight3())
-    }
-}
-
-export class FinalFallenKnight3 extends FallenKnight3 {
-    constructor(params: any = {}) {
-        super(Object.assign({
-            code: 'FinalFallenKnight3',
+            code: 'FinalFallenKnight',
+            adDefend: 50,
+            hp: 3000,
+            hpLimit: 3000
         }, params));
     }
 
@@ -1247,9 +1208,7 @@ export const Boss = {
     FallenKnight1: new FallenKnight1(),
     FallenKnight2: new FallenKnight2(),
     FallenKnight3: new FallenKnight3(),
-    FinalFallenKnight1: new FinalFallenKnight1(),
-    FinalFallenKnight2: new FinalFallenKnight2(),
-    FinalFallenKnight3: new FinalFallenKnight3(),
+    FinalFallenKnight: new FinalFallenKnight(),
 
     // --- 終焉深淵 (End Abyss) ---
     AbyssSpecter: new AbyssSpecter(),

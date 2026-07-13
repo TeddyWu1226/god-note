@@ -48,10 +48,10 @@ def clean_image_background(input_path, output_path):
                 
                 components.append((comp, touches_border))
 
-    # Step 3: Make components transparent if they are large or touch the border
-    # Large components (> 15 pixels) or components touching the border are background
+    # Step 3: Make components transparent if they touch the border
+    # Components touching the border are background. We preserve internal white details.
     for comp, touches_border in components:
-        if len(comp) > 15 or touches_border:
+        if touches_border:
             for cx, cy in comp:
                 pixels[cx, cy] = (255, 255, 255, 0) # Completely transparent
 
