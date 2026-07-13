@@ -694,7 +694,7 @@ export class TheLastSaint extends MonsterModel {
         super({
             code: 'TheLastSaint',
             icon: '/monsters/last_saint.png',
-            name: '最後的聖女',
+            name: '帝國的聖女',
             description: '受到泰坦能量污染的聖女。',
             class: ['mystery'],
             ad: 20,
@@ -716,11 +716,11 @@ export class TheLastSaint extends MonsterModel {
     stage4FinalBossRaid(gameStateStore: GameStateStoreType) {
         const trackStore = useTrackerStore()
         let hp_percent = 100
-        if (trackStore.isMonsterDefeated(Boss.FallenKnight3.code)) {
+        if (trackStore.isMonsterDefeated('FallenKnight3')) {
             hp_percent = 25
-        } else if (trackStore.isMonsterDefeated(Boss.FallenKnight2.code)) {
+        } else if (trackStore.isMonsterDefeated('FallenKnight2')) {
             hp_percent = 50
-        } else if (trackStore.isMonsterDefeated(Boss.FallenKnight1.code)) {
+        } else if (trackStore.isMonsterDefeated('FallenKnight1')) {
             hp_percent = 75
         }
         const Knight = gameStateStore.createMonster('FinalFallenKnight');
@@ -731,6 +731,7 @@ export class TheLastSaint extends MonsterModel {
 
     override onStartHook({gameStateStore}: MonsterActionParams) {
         useEpicSubtitle("「我的騎士...殲滅神的敵人吧...」", 3000);
+        this.addEffect(UnitStatus.KnightUp)
         this.stage4FinalBossRaid(gameStateStore)
     }
 
@@ -761,7 +762,7 @@ export class TheLastSaint extends MonsterModel {
     }
 
     override onDeadHook({playerStore}: MonsterActionParams) {
-        useEpicSubtitle("「為什麼...」", 3000);
+        useEpicSubtitle("「神...誰才是神...」", 3000);
     }
 }
 
@@ -905,7 +906,7 @@ export class FinalFallenKnight extends FallenKnight3 {
     }
 
     checkSaintIsDead({gameStateStore}: MonsterOnAttackParams) {
-        return gameStateStore.currentEnemy.some((monster) => monster.code === 'FinalFallenKnight')
+        return !gameStateStore.currentEnemy.some((monster) => monster.code === 'TheLastSaint')
     }
 
     check = false

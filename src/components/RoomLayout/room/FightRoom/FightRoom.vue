@@ -216,7 +216,9 @@ const debounceWhenMonsterDead = useDebounceFn(
  * 每回合開始觸發：觸發怪物指定回合特性(除了第一回合)
  */
 const tickStartAllMonsters = () => {
-  gameStateStore.currentEnemy.forEach(monster => {
+  [...gameStateStore.currentEnemy].forEach(monster => {
+    // 確保該怪物在當前敵怪清單中依然存在（未被先前的 Hook 移除或替換）
+    if (!gameStateStore.currentEnemy.some(e => e?.id === monster?.id)) return;
     if (monster.hp <= 0) return;
     // 處理回合習性行為
     monster.triggerRoundBehavior(
@@ -234,7 +236,8 @@ const tickStartAllMonsters = () => {
  * 每回合結束觸發：更新所有怪物狀態
  */
 function tickEndAllMonsters() {
-  gameStateStore.currentEnemy.forEach(monster => {
+  [...gameStateStore.currentEnemy].forEach(monster => {
+    if (!gameStateStore.currentEnemy.some(e => e?.id === monster?.id)) return;
     if (monster.hp <= 0) return;
     // 處理 DoT/HoT 等狀態效果
     monster.tickEffects(logStore);
@@ -559,7 +562,8 @@ const init = () => {
   }
   // 回合開始的觸發
   nextTick().then(() => {
-    gameStateStore.currentEnemy.forEach((monster) => {
+    [...gameStateStore.currentEnemy].forEach((monster) => {
+      if (!gameStateStore.currentEnemy.some(e => e?.id === monster?.id)) return;
       monster.triggerOnStart({
         playerStore: playerStore,
         gameStateStore: gameStateStore,
