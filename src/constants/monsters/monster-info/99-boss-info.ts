@@ -704,7 +704,7 @@ export class TheLastSaint extends MonsterModel {
             name: '帝國的聖女',
             description: '受到泰坦能量污染的聖女。',
             class: ['mystery'],
-            ad: 20,
+            ad: 30,
             critIncrease: 0,
             critRate: 0,
             adDefend: 20,
@@ -766,10 +766,40 @@ export class TheLastSaint extends MonsterModel {
 
     override onRoundBehaviorHook(params: MonsterRoundBehaviorParams) {
         this.checkKnightIsDead(params)
+        const cycleRound = ((params.battleRound - 1) % 7) + 1;
+        if (cycleRound === 5) {
+            this.addEffect(UsualStatus.Resistance, {value: 2, duration: 2});
+            useFloatingMessage('施法預備...', getMonsterElement(this.id), {color: 'gray', duration: 1500});
+        }
     }
 
     override onDeadHook({playerStore}: MonsterActionParams) {
         useEpicSubtitle("「神...誰才是神...」", 3000);
+    }
+
+    override onAttackHook({playerStore, gameStateStore}: MonsterOnAttackParams): boolean | void {
+        if (this.hasStatus(UsualStatus.Resistance.name)) {
+            this.removeStatus(UsualStatus.Resistance.name);
+            useFloatingMessage('大治療術', getMonsterElement(this.id), {color: 'yellow', duration: 1500});
+            gameStateStore.currentEnemy.forEach((monster) => {
+                if (monster.hp > 0) {
+                    monster.hp = Math.min(monster.getEffectiveStats().hpLimit, monster.hp + 200)
+                    useCardImpactEffect(getMonsterElement(monster.id), 'heal')
+                }
+            })
+
+        } else {
+            applySkillDamage({
+                speller: this,
+                target: playerStore,
+                baseValue: this.ad,
+                type: "true",
+                skillName: '法術攻擊'
+            })
+            useCardImpactEffect(null, 'magic')
+        }
+
+        return false
     }
 }
 
@@ -780,7 +810,7 @@ export class FallenKnight1 extends MonsterModel {
             icon: '/monsters/fallen_knight.png',
             name: '墮落的騎士',
             description: '聖女的守衛騎士。',
-            class: ['boss', 'big'],
+            class: ['boss'],
             ad: 60,
             critIncrease: 200,
             critRate: 0,
@@ -789,7 +819,7 @@ export class FallenKnight1 extends MonsterModel {
             hit: 70,
             hp: 1000,
             hpLimit: 1000,
-            level: 60,
+            level: 50,
             dropGold: 0,
             drop: []
         }, params));
@@ -908,7 +938,9 @@ export class FinalFallenKnight extends FallenKnight3 {
             icon: '/monsters/fallen_knight.png',
             adDefend: 50,
             hp: 3000,
-            hpLimit: 3000
+            hpLimit: 3000,
+            level: 60,
+            chaseIncrease: 200,
         }, params));
     }
 
@@ -924,7 +956,7 @@ export class FinalFallenKnight extends FallenKnight3 {
         if (isSaintDead && !this.check) {
             this.check = true
             this.icon = '/monsters/broken_fallen_knight_last_stand.png'
-            this.ad += 40
+            this.ad = 250
             this.defendIncrease += 30
         }
     }

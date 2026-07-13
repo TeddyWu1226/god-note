@@ -95,7 +95,7 @@ const give = () => {
   // 給道具
   // playerStore.gainItem(Material.BadNormal, 100)
   // playerStore.gainItem(Offhand.Book5)
-  playerStore.gainItem(Usable.TeleportCrystal, 3)
+  playerStore.gainItem(Usable.SmokeBomb, 3)
   // playerStore.gainItem(Potions.Heal0, 10)
   // playerStore.gainItem(Usable.SmokeBomb)
 }

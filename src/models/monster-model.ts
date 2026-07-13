@@ -77,8 +77,6 @@ export class MonsterModel implements MonsterType {
     /**
      * 計算包含 Buff/Debuff 狀態後的實際屬性值
      */
-
-
     getEffectiveStats(): MonsterType {
         const finalStats: MonsterType = {
             id: this.id,
