@@ -53,7 +53,7 @@ export const Usable = {
     TeleportCrystal: {
         name: '轉移水晶',
         quality: 6,
-        description: '神秘的水晶，只能在「選擇路徑階段」使用。使用後將你傳送逃離，並強制選擇接下來要前往的區域。',
+        description: '使用後將你傳送逃離，並強制選擇接下來要前往的區域。',
         icon: '🔮',
         usable: true,
         skill: 'useTeleportCrystal'
