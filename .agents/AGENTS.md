@@ -18,3 +18,7 @@
     </RoomTemplate>
     ```
   - Declaring a slot nested deep inside conditionals will fail the Vue template compilation and break the development server.
+
+## Testing Rules
+
+- 測試一律都由我自己測試

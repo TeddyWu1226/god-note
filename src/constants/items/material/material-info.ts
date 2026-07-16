@@ -28,7 +28,7 @@ export const MonsterCrystals = {
     MediumUpperNormal: {
         name: '上級魔物晶石',
         icon: '🟦',
-        description: '中階強大魔物掉落的核心，散發螢藍色光芒',
+        description: '中階魔物掉落的核心，散發螢藍色光芒',
         quality: 3,
         price: 80
     } as ItemType,
@@ -36,7 +36,7 @@ export const MonsterCrystals = {
     MediumSuperiorNormal: {
         name: '優級魔物晶石',
         icon: '🟪',
-        description: '受魔界影響可怕魔物掉落的核心，魔力波動極其強大。',
+        description: '高階魔物掉落的核心，魔力波動極其強大。',
         quality: 4,
         price: 160
     } as ItemType,
@@ -44,7 +44,7 @@ export const MonsterCrystals = {
     TopNormal: {
         name: '頂級魔物晶石',
         icon: '🟥',
-        description: '只存在於神話故事中紀錄的魔石，不敢想像擁有此核心的怪物有多麼可怕。',
+        description: '強大魔族的威力。',
         quality: 5,
         price: 320
     } as ItemType,
@@ -57,9 +57,54 @@ export const MonsterCrystals = {
         price: 1000
     } as ItemType,
 };
-export const SpecialItems = {
 
-}
+export const BossCrystals = {
+    AncientRoots: {
+        name: '古蜘蛛的晶石',
+        icon: '♦️',
+        description: '古蜘蛛掉落的晶石。',
+        quality: 6,
+        price: 100
+    } as ItemType,
+    Twilight: {
+        name: '神代者的晶石',
+        icon: '♦️',
+        description: '神祗代理者掉落的晶石。',
+        quality: 6,
+        price: 300
+    } as ItemType,
+    FrostGiant: {
+        name: '巨人的晶石',
+        icon: '♦️',
+        description: '冰凍的巨人掉落的晶石。',
+        quality: 6,
+        price: 600
+    } as ItemType,
+    FireWyrmling: {
+        name: '幼龍的晶石',
+        icon: '♦️',
+        description: '炎幼龍掉落的晶石。',
+        quality: 6,
+        price: 1000
+    } as ItemType,
+    BurrowingBehemoth: {
+        name: '巨獸的晶石',
+        icon: '♦️',
+        description: '掘地巨獸掉落的晶石。',
+        quality: 6,
+        price: 1500
+    } as ItemType,
+    RockGolemGroup: {
+        name: '巨像的晶石',
+        icon: '♦️',
+        description: '魔岩巨像掉落的晶石。',
+        quality: 6,
+        price: 2100
+    } as ItemType,
+};
+
+export const SpecialItems = {}
 export const Material = {
-    ...MonsterCrystals
+    ...MonsterCrystals,
+    ...BossCrystals
 }

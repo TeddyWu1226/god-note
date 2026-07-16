@@ -23,6 +23,7 @@ import {useHeroStatusEffect} from "@/components/Shared/FullScreenEffect/useHeroS
 import {useTrackerStore} from "@/store/track-store";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {nextTick} from "vue";
+import {Material} from "@/constants/items/material/material-info";
 
 /**
  * --- 迷霧森林 (Misty Forest) Bosses ---
@@ -44,8 +45,10 @@ export class AncientSpider extends MonsterModel {
             hp: 300,
             hpLimit: 300,
             level: 5,
-            dropGold: 100,
-            chaseIncrease: 200
+            chaseIncrease: 200,
+            drop: [
+                {item: Material.AncientRoots, chance: 1}
+            ]
         });
     }
 
@@ -90,9 +93,10 @@ export class Twilight extends MonsterModel {
             hp: 650,
             hpLimit: 650,
             level: 10,
-            dropGold: 300,
             chaseIncrease: 200,
-            drop: []
+            drop: [
+                {item: Material.Twilight, chance: 1}
+            ]
         });
     }
 
@@ -180,8 +184,11 @@ export class FrostGiant extends MonsterModel {
             hp: 1250,
             hpLimit: 2500,
             level: 15,
-            dropGold: 400,
-            chaseIncrease: 200
+            dropGold: 0,
+            chaseIncrease: 200,
+            drop: [
+                {item: Material.FrostGiant, chance: 1}
+            ]
         });
     }
 
@@ -267,9 +274,12 @@ export class FireWyrmling extends MonsterModel {
             hp: 1000,
             hpLimit: 1000,
             level: 12,
-            dropGold: 800,
+            dropGold: 0,
             chaseIncrease: 200,
-            drop: [{item: SpecialItem.DragonBlood, chance: 1}]
+            drop: [
+                {item: SpecialItem.DragonBlood, chance: 1},
+                {item: Material.FireWyrmling, chance: 1}
+            ]
         });
     }
 
@@ -327,7 +337,10 @@ export class BurrowingBehemoth extends MonsterModel {
             hp: 2000,
             hpLimit: 2000,
             level: 30,
-            dropGold: 600
+            dropGold: 0,
+            drop: [
+                {item: Material.BurrowingBehemoth, chance: 1}
+            ]
         });
     }
 
@@ -518,8 +531,10 @@ export class RockGolemGroup extends MonsterModel {
             hp: 2000,
             hpLimit: 2000,
             level: 35,
-            dropGold: 1000,
-            drop: []
+            dropGold: 0,
+            drop: [
+                {item: Material.RockGolemGroup, chance: 1}
+            ]
         });
     }
 
