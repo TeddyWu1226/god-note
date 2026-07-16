@@ -7,6 +7,7 @@ import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillParams, SkillTreeNode} from "@/types";
 import {SkillStatus} from "@/constants/status/skill-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
+import {useLogStore} from "@/store/log-store";
 
 export class FocusBuff extends SkillModel {
     constructor() {
@@ -16,9 +17,9 @@ export class FocusBuff extends SkillModel {
             icon: "skills/physical/focus_buff.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 5,
+            maxCd: 4,
             costSp: 10,
-            costAction: 0,
+            costAction: 1,
             maxProficiency: 0,
             proficiencyGain: 0
         });
@@ -49,16 +50,16 @@ export class WillBuff extends SkillModel {
             icon: "skills/physical/will_buff.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 5,
+            maxCd: 4,
             costSp: 10,
-            costAction: 0,
+            costAction: 1,
             maxProficiency: 0,
             proficiencyGain: 0
         });
     }
 
     description(): string {
-        return `提升自身 10% 抗性，持續 3 回合。`;
+        return `獲得 3 點物理防禦，持續 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
@@ -81,16 +82,16 @@ export class FightBuff extends SkillModel {
             icon: "skills/physical/fight_buff.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 5,
+            maxCd: 4,
             costSp: 10,
-            costAction: 0,
+            costAction: 1,
             maxProficiency: 0,
             proficiencyGain: 0
         });
     }
 
     description(): string {
-        return `提升自身 10% 增傷，持續 3 回合。`;
+        return `增加 5 點物理與魔法攻擊力，持續 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
@@ -113,9 +114,9 @@ export class AgilityBuff extends SkillModel {
             icon: "skills/physical/agility_buff.svg",
             type: 'active',
             rarity: 'common',
-            maxCd: 5,
+            maxCd: 4,
             costSp: 10,
-            costAction: 0,
+            costAction: 1,
             maxProficiency: 0,
             proficiencyGain: 0
         });
@@ -198,10 +199,145 @@ export class Breakfall extends SkillModel {
 }
 
 /**
+ * 看破 (Level 2)
+ */
+export class FocusPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'FocusPro',
+            name: "看破",
+            icon: "skills/physical/focus_pro.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 1,
+            costSp: 5,
+            costAction: 0,
+            maxProficiency: 0,
+            proficiencyGain: 0
+        });
+    }
+
+    description(): string {
+        return `提升自身 20 點命中。指定怪物顯示該怪物現在詳細數值在戰鬥日誌中。`;
+    }
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            dodge: 20,
+        };
+    }
+
+    protected execute({playerStore, monster}: SkillParams): boolean {
+        if (!playerStore || !monster) return false;
+
+        const logStore = useLogStore();
+        logStore.logger.add(`[看破] 洞悉 ${monster.name} 的狀態：等級 ${monster.level}，HP: ${monster.hp}/${monster.hpLimit}，物理攻擊(AD): ${monster.ad}，物理防禦: ${monster.adDefend}，閃避: ${monster.dodge}，命中: ${monster.hit}`);
+
+        useFullScreenEffect({
+            message: this.name,
+            color: '#3498db',
+        });
+        return true;
+    }
+}
+
+/**
+ * 壁壘 (Level 3)
+ */
+export class WillPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'WillPro',
+            name: "壁壘",
+            icon: "skills/physical/will_pro.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['堅定意志系']
+        });
+    }
+
+    description(): string {
+        return `獲得 6 點防禦與 5% 抗性。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            adDefend: 6,
+            defendIncrease: 5
+        };
+    }
+}
+
+/**
+ * 驍勇 (Level 3)
+ */
+export class FightPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'FightPro',
+            name: "驍勇",
+            icon: "skills/physical/fight_pro.svg",
+            type: 'passive',
+            rarity: 'perfect',
+            uniqueFields: ['戰鬥意志系']
+        });
+    }
+
+    description(): string {
+        return `增加 10 點物理與魔法攻擊力，且獲得 5% 吸血。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            ad: 10,
+            ap: 10,
+            lifeSteal: 5
+        };
+    }
+}
+
+/**
+ * 靈巧 (Level 2)
+ */
+export class AgilityPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'AgilityPro',
+            name: "靈巧",
+            icon: "skills/physical/agility_pro.svg",
+            type: 'passive',
+            rarity: 'rare',
+            uniqueFields: ['敏捷意志系']
+        });
+    }
+
+    description(): string {
+        return `增加 20 點閃避。逃跑失敗後，可暫時獲得 20 點閃避，持續 1 回合。`;
+    }
+
+    protected execute(): boolean {
+        return true;
+    }
+
+    override getPassiveBonus(): Record<string, number> {
+        return {
+            dodge: 20
+        };
+    }
+}
+
+/**
  * Buff系列
  * */
 export const BuffSkillTree: Record<string, SkillTreeNode> = {
-    WillBuff: {id: 'WillBuff', pathId: 'will', tier: 1},
+    WillBuff: {id: 'WillBuff', pathId: 'will', tier: 0},
     FocusBuff: {
         id: 'FocusBuff',
         pathId: 'focus',
@@ -211,7 +347,7 @@ export const BuffSkillTree: Record<string, SkillTreeNode> = {
             return currentHit >= 5;
         }
     },
-    FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 1},
+    FightBuff: {id: 'FightBuff', pathId: 'fight', tier: 0},
     AgilityBuff: {
         id: 'AgilityBuff',
         pathId: 'agility',
@@ -225,10 +361,38 @@ export const BuffSkillTree: Record<string, SkillTreeNode> = {
     Breakfall: {
         id: 'Breakfall',
         pathId: 'break_fall',
-        tier: 2,
+        tier: 1,
         checkEligible: (playerStore) => {
             const currentDodge = playerStore.finalStats.dodge
-            return currentDodge >= 10;
+            return currentDodge >= 20;
         }
+    },
+    FocusPro: {
+        id: 'FocusPro',
+        pathId: 'focus',
+        tier: 2,
+        evolvesFrom: ['FocusBuff'],
+        checkEligible: (playerStore) => playerStore.hasSkill('FocusBuff') !== undefined
+    },
+    WillPro: {
+        id: 'WillPro',
+        pathId: 'will',
+        tier: 3,
+        evolvesFrom: ['WillBuff'],
+        checkEligible: (playerStore) => playerStore.hasSkill('WillBuff') !== undefined
+    },
+    FightPro: {
+        id: 'FightPro',
+        pathId: 'fight',
+        tier: 3,
+        evolvesFrom: ['FightBuff'],
+        checkEligible: (playerStore) => playerStore.hasSkill('FightBuff') !== undefined
+    },
+    AgilityPro: {
+        id: 'AgilityPro',
+        pathId: 'agility',
+        tier: 2,
+        evolvesFrom: ['AgilityBuff'],
+        checkEligible: (playerStore) => playerStore.hasSkill('AgilityBuff') !== undefined
     },
 }

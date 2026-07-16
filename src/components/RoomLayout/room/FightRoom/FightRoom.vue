@@ -36,6 +36,7 @@ import {isMatchedWeapon, WeaponCnNameMapping, WeaponMatchType} from "@/constants
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import EvnStatus from "@/constants/status/evn-status";
 import {Monster} from "@/constants/monsters/monster-info";
+import {SkillStatus} from "@/constants/status/skill-status";
 
 const gameStateStore = useGameStateStore()
 const playerStore = usePlayerStore()
@@ -491,6 +492,10 @@ const onRun = async () => {
   if (!gameStateStore.isPlayerTurn) return
   if (isPlayerStuck() || !canEscape(playerStore.finalStats, gameStateStore.currentEnemy)) {
     logStore.logger.add('逃跑失敗....')
+    if (playerStore.hasSkill('AgilityPro') !== undefined) {
+      playerStore.addStatus(SkillStatus.DexterousBuff)
+      logStore.logger.add('【靈巧】發揮作用，獲得額外閃避提升！')
+    }
     showEffect(
         {
           text: "逃跑失敗...",

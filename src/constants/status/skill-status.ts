@@ -60,9 +60,9 @@ export const SkillStatus = {
         icon: '🛡️',
         duration: 3,
         isBuff: true,
-        description: `提升自身 %defendIncrease% 點抗性，持續 %duration% 回合`,
+        description: `獲得 %adDefend% 點防禦，持續 %duration% 回合`,
         bonus: {
-            defendIncrease: 10
+            adDefend: 3
         }
     } as StatusEffect,
     Fight: {
@@ -70,10 +70,10 @@ export const SkillStatus = {
         icon: '✊',
         duration: 3,
         isBuff: true,
-        description: `提升自身 %adIncrease%% 總輸出，持續 %duration% 回合`,
+        description: `增加 %ad% 點物理與 %ap% 點魔法攻擊力，持續 %duration% 回合`,
         bonus: {
-            adIncrease: 10,
-            apIncrease: 10
+            ad: 5,
+            ap: 5
         }
     } as StatusEffect,
     Agility: {
@@ -244,6 +244,16 @@ export const SkillStatus = {
         description: '使輸出 %adIncrease%% ',
         bonus: {
             adIncrease: -20
+        }
+    } as StatusEffect,
+    DexterousBuff: {
+        name: '靈巧',
+        icon: '💨',
+        duration: 1,
+        isBuff: true,
+        description: '逃跑失敗後獲得額外 20 點閃避',
+        bonus: {
+            dodge: 20
         }
     } as StatusEffect,
 }

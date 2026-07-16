@@ -11,11 +11,15 @@ import {
 } from "@/constants/skill/learned-skill/basic_skills/ad_skill";
 import {
     AgilityBuff,
+    AgilityPro,
     Breakfall,
     BuffSkillTree,
     FightBuff,
+    FightPro,
     FocusBuff,
-    WillBuff
+    FocusPro,
+    WillBuff,
+    WillPro
 } from "@/constants/skill/learned-skill/basic_skills/buff_skill";
 import {
     BloodManaLoop,
@@ -204,6 +208,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     Assassinate: Assassinate,
     ConcealBreath: ConcealBreath,
     Breakfall: Breakfall,
+    FocusPro: FocusPro,
+    AgilityPro: AgilityPro,
 
     SwordPro: SwordPro,
     AxePro: AxePro,
@@ -250,6 +256,8 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     Assassination: Assassination,
     PoisonStack: PoisonStack,
     DualWieldAdv: DualWieldAdv,
+    WillPro: WillPro,
+    FightPro: FightPro,
 
     // 火焰系主動技能
     FireArrow: FireArrow,
