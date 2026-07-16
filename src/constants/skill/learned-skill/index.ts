@@ -59,6 +59,13 @@ import {
 } from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
 import {
+    DualWieldBase,
+    DualWieldPro,
+    DualWieldAdv,
+    DualWieldMaster,
+    DualWieldSkillTree
+} from "./basic_skills/dual_wield_skill";
+import {
     ApSkillTree,
     MagicBall,
     ManaAdaptability,
@@ -146,6 +153,7 @@ export const SKILL_TREE_NODES: Record<string, SkillTreeNode> = {
     ...KnifeSkillTree,
     ...ShieldSkillTree,
     ...StickSkillTree,
+    ...DualWieldSkillTree,
     ...SwordSkillTree,
     ...FireSkillTree,
     ...IceSkillTree,
@@ -187,6 +195,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     BlueSkin: BlueSkin,
     BlockBase: BlockBase,
     ShieldBash: ShieldBash,
+    DualWieldBase: DualWieldBase,
     // Level 2
 
     Flurry: Flurry,
@@ -213,6 +222,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     SwordPolish: SwordPolish,
     BloodManaLoop: BloodManaLoop,
     PurpleSkin: PurpleSkin,
+    DualWieldPro: DualWieldPro,
 
     KnifePro: KnifePro,
     KnifeAdv: KnifeAdv,
@@ -239,6 +249,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     KnifeWhirlwind: KnifeWhirlwind,
     Assassination: Assassination,
     PoisonStack: PoisonStack,
+    DualWieldAdv: DualWieldAdv,
 
     // 火焰系主動技能
     FireArrow: FireArrow,
@@ -272,6 +283,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     ArmorShatterStrike: ArmorShatterStrike,
     LeapStrike: LeapStrike,
     SkyCleave: SkyCleave,
+    DualWieldMaster: DualWieldMaster,
 
     // 副手技能
     ShieldBlock: ShieldBlock,
