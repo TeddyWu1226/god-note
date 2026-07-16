@@ -48,7 +48,7 @@ export const SkillStatus = {
     Focus: {
         name: '專注意志',
         icon: '🎯',
-        duration: 3,
+        duration: 4,
         isBuff: true,
         description: `提升自身 %hit% 點命中，持續 %duration% 回合`,
         bonus: {
@@ -68,7 +68,7 @@ export const SkillStatus = {
     Fight: {
         name: '戰鬥意志',
         icon: '✊',
-        duration: 3,
+        duration: 4,
         isBuff: true,
         description: `增加 %ad% 點物理與 %ap% 點魔法攻擊力，持續 %duration% 回合`,
         bonus: {

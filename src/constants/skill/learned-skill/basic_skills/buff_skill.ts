@@ -26,7 +26,7 @@ export class FocusBuff extends SkillModel {
     }
 
     description(): string {
-        return `提升自身 10 點命中，持續 3 回合。`;
+        return `提升自身 10 點命中，持續 4 回合。`;
     }
 
     protected execute(params: SkillParams): boolean {
@@ -91,7 +91,7 @@ export class FightBuff extends SkillModel {
     }
 
     description(): string {
-        return `增加 5 點物理與魔法攻擊力，持續 3 回合。`;
+        return `增加 5 點物理與魔法攻擊力，持續 4 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {

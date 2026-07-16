@@ -1,5 +1,5 @@
-import {SkillModel} from "src/models/skill-model";
-import {PlayerStoreType, SkillTreeNode, UserType} from "src/types";
+import {SkillModel} from "@/models/skill-model";
+import {PlayerStoreType, SkillTreeNode, UserType} from "@/types";
 
 /**
  * 雙持技巧提升 (Level 1)
