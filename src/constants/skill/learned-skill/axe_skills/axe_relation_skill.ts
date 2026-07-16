@@ -1,11 +1,12 @@
 import {SkillModel} from "@/models/skill-model";
 import {PlayerStoreType, SkillOnPlayerAttackedHitParams, SkillOnStartParams, SkillParams, SkillTreeNode} from "@/types";
-import {applyAttackDamage, applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
+import {applySkillDamage, getSkillFinalDamage} from "@/constants/fight-func";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement} from "@/utils/create";
 import {EquipmentPosition} from "@/enums/enums";
-import {isEquip} from "@/constants/skill/utils";
+import {isEquip, wrongWeaponEffect} from "@/constants/skill/utils";
 import {SkillStatus} from "@/constants/status/skill-status";
+import {ItemStatus} from "@/constants/status/item-status";
 import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 import {ColorText} from "@/utils/color";
 import {playerAddSavePower} from "@/constants/status/advanced-status-utils";
@@ -103,75 +104,111 @@ export class ResistStrike extends SkillModel {
 }
 
 /**
- * 迴避一劈 (Level 2)
+ * 架勢 (Level 2)
  */
 export class EvasiveStrike extends SkillModel {
     constructor() {
         super({
             id: 'EvasiveStrike',
-            name: "迴避一劈",
+            name: "架勢",
             icon: "skills/physical/evasive_strike.svg",
-            type: 'passive',
+            type: 'active',
             rarity: 'rare',
-            uniqueFields: ['迴避一劈系']
+            maxCd: 4,
+            costAction: 1,
+            costSp: 15,
+            uniqueFields: ['格擋斧系']
         });
     }
 
-    description(): string {
-        return `迴避敵人攻擊成功後，獲得「迴避攻勢」效果，使自身物理攻擊力提升 10 點。`;
+    getDefend(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        const adIncrease = playerStore?.finalStats?.adIncrease ?? 0;
+        return Math.round(ad * 0.4 * ((adIncrease / 100) + 1))
     }
 
-    protected execute(): boolean {
-        return true;
+    description(playerStore: PlayerStoreType): string {
+        const def = this.getDefend(playerStore);
+        return `舉起斧頭擺出防禦架勢。本回合獲得「格擋」效果，物理防禦力提升 ${def} 點（40%物理攻擊力,物理增幅會加成）。`;
     }
 
-    override onPlayerAttacked({playerStore, attackedOutcome, logStore}: SkillOnPlayerAttackedHitParams) {
-        if (attackedOutcome.isHit) {
-            return;
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+        if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Axe');
+            return false;
         }
-        if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) return;
-        playerStore.addStatus(SkillStatus.EvasiveStrike);
-        logStore.logger.add(`[迴避一劈] 成功閃避攻擊，獲得物理攻擊力提升！`);
+
+        const def = this.getDefend(playerStore);
+        playerStore.addStatus(
+            ItemStatus.Block,
+            {
+                bonus: {
+                    adDefend: def
+                }
+            }
+        );
+        useFullScreenEffect({
+            message: '格擋',
+            color: 'gray'
+        });
+        useCardImpactEffect(null, 'buff');
+        return true;
     }
 }
 
 /**
- * 閃身一劈 (Level 3)
+ * 熟練架勢 (Level 3)
  */
 export class DodgeStrike extends SkillModel {
     constructor() {
         super({
             id: 'DodgeStrike',
-            name: "閃身一劈",
+            name: "熟練架勢",
             icon: "skills/physical/dodge_strike.svg",
-            type: 'passive',
+            type: 'active',
             rarity: 'perfect',
-            uniqueFields: ['迴避一劈系']
+            maxCd: 2,
+            costAction: 1,
+            costSp: 0,
+            uniqueFields: ['格擋斧系']
         });
     }
 
-    description(): string {
-        return `提升自身 25 點閃避。迴避敵人攻擊成功後，獲得 1 回合的「閃身一劈」效果，使自身物理攻擊力提升 20 點。`;
+    getDefend(playerStore: PlayerStoreType): number {
+        const ad = playerStore?.finalStats?.ad ?? 0;
+        const adIncrease = playerStore?.finalStats?.adIncrease ?? 0;
+        return Math.round(ad * 0.4 * ((adIncrease / 100) + 1))
     }
 
-    protected execute(): boolean {
+    description(playerStore: PlayerStoreType): string {
+        const def = this.getDefend(playerStore);
+        return `舉起斧頭擺出防禦架勢。本回合獲得「格擋」效果，物理防禦力提升 ${def} 點（40%物理攻擊力,物理增幅會加成）。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if (!playerStore) return false;
+        if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) {
+            wrongWeaponEffect('Axe');
+            return false;
+        }
+
+        const def = this.getDefend(playerStore);
+        playerStore.addStatus(
+            ItemStatus.Block,
+            {
+                bonus: {
+                    adDefend: def
+                }
+            }
+        );
+
+        useFullScreenEffect({
+            message: '格擋',
+            color: 'gray'
+        });
+        useCardImpactEffect(null, 'buff');
         return true;
-    }
-
-    override getPassiveBonus(player?: any): Record<string, number> {
-        if (isEquip('Axe', EquipmentPosition.WEAPON, player)) {
-            return {dodge: 25};
-        }
-        return {};
-    }
-
-    override onPlayerAttacked({playerStore, attackedOutcome, logStore}: SkillOnPlayerAttackedHitParams) {
-        if (attackedOutcome.isHit) {
-            return;
-        }
-        if (!isEquip('Axe', EquipmentPosition.WEAPON, playerStore.info)) return;
-        playerStore.addStatus(SkillStatus.EvasiveStrike);
-        logStore.logger.add(`[閃身一劈] 成功閃避攻擊，獲得物理攻擊力提升！`);
     }
 }
 
