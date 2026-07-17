@@ -53,4 +53,10 @@ export const RoomEnum = {
         icon: '🔔',
         color: '#FF9800',
     },
+    StageEnd: {
+        value: 11,
+        label: '階層末尾',
+        icon: '📜',
+        color: '#9C27B0',
+    },
 };

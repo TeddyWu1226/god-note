@@ -14,6 +14,7 @@ import {ItemSkill} from "@/constants/skill/item-skill";
 import {usePlayerStore} from "@/store/player-store";
 import {GodThings, Usable} from "@/constants/items/usalbe-item/usable-info";
 import StationRoom from "@/components/RoomLayout/room/StationRoom/StationRoom.vue";
+import StageEndRoom from "@/components/RoomLayout/room/StageEndRoom/StageEndRoom.vue";
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -104,6 +105,10 @@ watch(() => gameStateStore.roomId,
   />
   <StationRoom
       v-else-if="currentRoomValue === RoomEnum.Station.value"
+      :key="gameStateStore.roomId"
+  />
+  <StageEndRoom
+      v-else-if="currentRoomValue === RoomEnum.StageEnd.value"
       :key="gameStateStore.roomId"
   />
 </template>

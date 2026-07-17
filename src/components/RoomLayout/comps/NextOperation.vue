@@ -36,11 +36,6 @@ const isBossDefeated = (day: number): boolean => {
 const createNextRooms = () => {
   gameStateStore.nextRooms = []
 
-  // 如果已經大於等於 1000 天，且不在審判之關卡，不生成普通房間（下一步將會強制為進入審判）
-  if (gameStateStore.days >= 1000 && gameStateStore.currentStage !== 6) {
-    return
-  }
-
   // 審判之關卡邏輯 (Stage 6)
   if (gameStateStore.currentStage === 6) {
     if (gameStateStore.stageDays === 4 || gameStateStore.stageDays === 9) {
@@ -136,6 +131,11 @@ const continueStage = () => {
   updateEnvironmentStatus()
 }
 
+const goToStageEnd = () => {
+  gameStateStore.setRoom(RoomEnum.StageEnd.value)
+  gameStateStore.nextRooms = []
+}
+
 
 const triggerJudgmentStage = () => {
   playerStore.healFull()
@@ -223,29 +223,16 @@ defineExpose({
 </script>
 
 <template>
-  <!-- 總天數已達 1000 天，且尚未進入審判之關卡 -->
-  <template v-if="gameStateStore.days >= 1000 && gameStateStore.currentStage !== 6">
-    <el-button
-        color="#d32f2f"
-        style="width: 100%; height: 3.5rem; font-size: 1.1rem; font-weight: bold; border: 2px solid gold; box-shadow: 0 0 10px rgba(255,215,0,0.5);"
-        :disabled="props.disabled"
-        @click="triggerJudgmentStage"
-    >
-      ⚖️ 迎接命運之審判 (進入第 1001 天)
-    </el-button>
-  </template>
-
-
   <!-- 已通關大關 BOSS 結算 (適用於第一次挑戰大關 Boss 勝利) -->
-  <template v-else-if="gameStateStore.isBattleWon && gameStateStore.roomIs(RoomEnum.Boss.value)">
+  <template v-if="gameStateStore.isBattleWon && gameStateStore.roomIs(RoomEnum.Boss.value)">
     <el-button
         v-if="gameStateStore.stageDays === 100"
         color="var(--el-color-success)"
         style="height: 3rem; font-weight: bold; width: 100%;"
         :disabled="props.disabled"
-        @click="gameStateStore.openStageSelectDialog(false)"
+        @click="goToStageEnd"
     >
-      選擇下一個區域 🗺️
+      繼續 ➡️
     </el-button>
     <el-button
         v-else-if="gameStateStore.stageDays === 50"

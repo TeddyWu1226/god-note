@@ -173,6 +173,11 @@ export const useGameStateStore = defineStore('game-state', () => {
      */
     const isInClearedStage = computed(() => currentStage.value < maxClearedStage.value);
 
+    /**
+     * 是否現在超過 1000 天 (是否神罰開始)
+     */
+    const isGodPunishmentStarted = computed(() => days.value > 1000);
+
     // ==========================================
     // 遊戲狀態行為方法 (Actions)
     // ==========================================
@@ -501,6 +506,7 @@ export const useGameStateStore = defineStore('game-state', () => {
         getEventProcess,
         stateIs,
         roomIs,
+        isGodPunishmentStarted,
 
         // --- 6. 核心流程動作 (Core Actions) ---
         init,
