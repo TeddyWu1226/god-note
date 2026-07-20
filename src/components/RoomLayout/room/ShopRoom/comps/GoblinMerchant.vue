@@ -323,7 +323,7 @@ const handleSellAll = (type: 'items' | 'equipments') => {
     >
       <div v-if="selectedItem" class="detail-dialog-body">
         <!-- 顯示物品詳細資訊（不包含玩家擁有的金錢） -->
-        <ItemInfo :item="activeTab === 'buy' ? selectedItem : selectedItem.item"/>
+        <ItemInfo :item="activeTab === 'buy' ? selectedItem : selectedItem.item" context="dialog"/>
         <!-- 金額顯示區 -->
         <div class="item-detail-info">
           <span v-if="activeTab === 'buy'" style="color: #67c23a;">
