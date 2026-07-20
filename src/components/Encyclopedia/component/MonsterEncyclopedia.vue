@@ -180,7 +180,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
                     </span>
                   </div>
                 </div>
-                <div class="drop-right">
+                <div v-if="dropItem.chance !== 1" class="drop-right">
                   <span class="drop-rate" :style="{ color: getQualityColor(dropItem.item?.quality) }">
                     {{ Math.round(dropItem.chance * 100) }}%
                   </span>
@@ -610,7 +610,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
 }
 
 .avatar-image {
-  width: 130%!important;
+  width: 130% !important;
   z-index: 1;
 }
 
