@@ -590,9 +590,10 @@ export const spawnMonsters = (
     eliteBoost = false
 ): MonsterClass[] => {
     const newMonsters: MonsterClass[] = [];
+    const gameStateStore = useGameStateStore()
     for (let i = 0; i < count; i++) {
         let m = getRandomItemByWeight(weight, Monster);
-        let monsterInstance = useGameStateStore().createMonster(m.code, m);
+        let monsterInstance = gameStateStore.createMonster(m.code, m);
         let strengtheningLevel = strengthening;
         if (eliteBoost) {
             // 菁英強化
@@ -607,14 +608,26 @@ export const spawnMonsters = (
             strengtheningLevel = strengthening + 2;
         }
         // 基本階段強化
+        let rate: { hpLimit: number; ad: number }
+        if (gameStateStore.isGodPunishmentStarted) {
+            rate = {
+                hpLimit: 0.3,
+                ad: 0.4,
+            }
+        } else {
+            rate = {
+                hpLimit: 0.15,
+                ad: 0.2,
+            }
+        }
         if (strengtheningLevel) {
             monsterInstance.level += strengtheningLevel;
             // 每多一等
             // 多 15% 血量
-            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * (1 + 0.15 * strengtheningLevel));
+            monsterInstance.hpLimit = Math.round(monsterInstance.hpLimit * (1 + rate.hpLimit * strengtheningLevel));
             monsterInstance.hp = monsterInstance.hpLimit;
             // 多 20% 輸出
-            monsterInstance.ad = Math.round(monsterInstance.ad * (1 + 0.2 * strengtheningLevel));
+            monsterInstance.ad = Math.round(monsterInstance.ad * (1 + rate.ad * strengtheningLevel));
             // 多 防禦
             monsterInstance.adDefend += strengtheningLevel;
             // 多掉落金幣
