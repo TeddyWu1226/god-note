@@ -29,7 +29,7 @@ const handleLeave = () => {
     <template #button v-if="gameStateStore.stateIs(GameState.EVENT_PHASE)">
       <template v-if="gameStateStore.eventAction === 0">
         <el-button type="primary" @click="handleLeave" style="width: 100%; height: 3.5rem; font-weight: bold; font-size: 1.1rem;">
-          繼續 ➡️
+          繼續
         </el-button>
       </template>
     </template>

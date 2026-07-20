@@ -51,6 +51,10 @@ const GeneralEvent = [
   {
     type: SpecialEventEnum.AncientWrath, // 遠古的憤怒事件
     canAppear: () => gameStateStore.currentStage === 2 && gameStateStore.otherRecord['ANCIENT_WRATH_UNLOCKED'] === true
+  },
+  {
+    type: SpecialEventEnum.LostAdventurer, // 迷路的冒險者事件
+    canAppear: () => gameStateStore.currentStage >= 2
   }
 ];
 

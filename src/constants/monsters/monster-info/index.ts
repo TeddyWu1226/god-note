@@ -5,6 +5,7 @@ import {SplitCanyonMonster} from "@/constants/monsters/monster-info/4-split-cany
 import {EndAbyssMonster} from "@/constants/monsters/monster-info/5-end-abyss-monster";
 import {JudgmentStageMonster} from "@/constants/monsters/monster-info/6-judgment-stage-monster";
 import {Boss} from "@/constants/monsters/monster-info/99-boss-info";
+import {SpecialMonster} from "@/constants/monsters/monster-info/98-special-monster";
 
 export const Monster = {
     ...MistyForestMonster,
@@ -13,5 +14,6 @@ export const Monster = {
     ...SplitCanyonMonster,
     ...EndAbyssMonster,
     ...JudgmentStageMonster,
+    ...SpecialMonster,
     ...Boss,
 };

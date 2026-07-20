@@ -232,7 +232,7 @@ defineExpose({
         :disabled="props.disabled"
         @click="goToStageEnd"
     >
-      繼續 ➡️
+      繼續
     </el-button>
     <el-button
         v-else-if="gameStateStore.stageDays === 50"

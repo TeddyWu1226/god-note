@@ -46,7 +46,7 @@ export enum SpecialEventEnum {
     AncientWrath = 'AncientWrath', // 遠古的憤怒
     EndlessBetrayal = 'EndlessBetrayal', // 無盡的背叛
     EndBell = 'EndBell', // 末鐘響起
-
+    LostAdventurer = 'LostAdventurer', // 迷路的冒險者
 }
 
 /**
