@@ -4,6 +4,7 @@ import {GameState} from "@/enums/enums";
 import NextOperation from "@/components/RoomLayout/comps/NextOperation.vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {computed, ref} from "vue";
+import {UserValueLayout} from "@/components/UserValueLayout";
 
 const props = defineProps({
   title: {type: String, required: false},
@@ -42,6 +43,7 @@ defineExpose({
     </div>
 
   </el-card>
+  <UserValueLayout/>
   <div class="operation-layout">
     <NextOperation ref="NextOperationRef" v-if="gameStateStore.stateIs(GameState.SELECTION_PHASE)"/>
     <slot v-else-if="$slots.button" name="button"></slot>

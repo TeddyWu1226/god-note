@@ -59,7 +59,7 @@ const onTouchHandleUse = createDoubleTapHandler((potion: UsableType, event?: any
 </script>
 
 <template>
-  <el-scrollbar height="7rem">
+  <el-scrollbar height="100%">
     <div v-if="sortedConsumables.length > 0" class="potion-grid">
       <div
           v-for="entry in sortedConsumables"

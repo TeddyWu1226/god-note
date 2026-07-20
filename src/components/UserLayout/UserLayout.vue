@@ -3,7 +3,6 @@ import {ref, watch} from 'vue'
 import {usePlayerStore} from '@/store/player-store'
 import ConsumableTab from "@/components/UserLayout/comps/ConsumableTab.vue"
 import EquipmentTab from "@/components/UserLayout/comps/EquipmentTab.vue"
-import MaterialTab from "@/components/UserLayout/comps/MaterialTab.vue"
 
 const emit = defineEmits(['onItemSkill']); // 聲明要轉發的事件
 const playerStore = usePlayerStore()
@@ -65,7 +64,43 @@ watch(activeName, (val) => {
 </template>
 
 <style scoped>
+.inventory-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: none;
+}
+
 .inventory-card :deep(.el-card__body) {
   padding: 0 !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.inventory-card :deep(.el-tabs) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inventory-card :deep(.el-tabs__content) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inventory-card :deep(.el-tab-pane) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 </style>

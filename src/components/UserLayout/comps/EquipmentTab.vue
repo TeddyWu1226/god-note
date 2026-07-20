@@ -33,7 +33,7 @@ const onTouchHandleEquip = createDoubleTapHandler((item: any, index: number) => 
 </script>
 
 <template>
-  <el-scrollbar height="7rem">
+  <el-scrollbar height="100%">
     <div v-if="playerStore.info.equipments?.length > 0" class="item-grid">
       <el-tooltip v-for="(item, index) in playerStore.info.equipments" :key="index" effect="light" trigger="click">
         <template #content>

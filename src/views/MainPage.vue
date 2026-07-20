@@ -9,7 +9,6 @@ import {RoomEnum} from "@/enums/room-enum";
 import {GameState} from "@/enums/enums";
 import {getEnumColumn} from "@/utils/enum";
 import {StageEnum} from "@/enums/stage-enum";
-import {UserValueLayout} from "@/components/UserValueLayout";
 import {UserDetailInfo} from "@/components/DetailInfo";
 import {ElMessageBox, ElNotification} from "element-plus";
 import {StageTransition} from "@/components/StageTransition";
@@ -127,7 +126,6 @@ watch(
         <el-main>
           <FloorInfoLayout/>
           <RoomLayout ref="RoomLayoutRef"/>
-          <UserValueLayout/>
           <UserLayout
               v-if="gameStateStore.bottomPanelMode === 'backpack' || !isCombatRoom"
               class="user-layout"
