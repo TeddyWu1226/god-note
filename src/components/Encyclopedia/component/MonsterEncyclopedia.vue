@@ -178,9 +178,6 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
                     <span class="drop-name" :style="{ color: getQualityColor(dropItem.item?.quality) }">
                       {{ dropItem.item?.name }}
                     </span>
-                    <span class="drop-desc" v-if="dropItem.item?.description">
-                      {{ dropItem.item?.description }}
-                    </span>
                   </div>
                 </div>
                 <div class="drop-right">
@@ -192,7 +189,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
               </div>
             </div>
             <div v-else-if="!selectedMonster.dropGold" class="no-loot">
-              💀 該魔物沒有常規攜帶的任何寶石或金幣戰利品。
+              無
             </div>
           </div>
         </div>
