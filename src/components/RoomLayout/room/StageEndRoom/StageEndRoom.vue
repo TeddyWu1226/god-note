@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import '../../room.css'
 import {computed} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
@@ -14,45 +14,92 @@ const stageStory = computed(() => {
   switch (gameStateStore.currentStage) {
     case 1:
       return {
-        title: "迷霧深處的低語",
+        title: "迷霧散去之後",
         icon: "📜",
-        desc: "【在此填寫第一大關（迷霧森林）通關後的劇情故事文字】\n例如：你成功擊敗了守護森林的強大魔物，四周的迷霧漸漸散去。然而，空氣中卻傳來一股奇特的低語聲，似乎在警告你這僅僅是個開始..."
+        desc: () => (
+          <>
+            籠罩四周的重重迷霧終於漸漸消散，前方通往其他區域的道路隨之變得清晰可見。
+            原本因大霧阻撓而被迫停擺的人們，如今正加緊重組與開通
+            <span class="special-item-text">補給線路</span>
+            ，全力支援已踏上征途、前去討伐魔王的勇者們。
+          </>
+        )
       };
     case 2:
       return {
-        title: "赤之山脈的餘燼",
+        title: "末裔",
         icon: "🌋",
-        desc: "【在此填寫第二大關（赤之山脈）通關後的劇情故事文字】\n例如：山脈深處的熱浪與風雪歸於平靜，魔王的僕從在岩漿中灰飛煙滅。通往更高層的通道已然開啟，滾燙的餘燼指引著你的前路..."
+        desc: () => (
+          <>
+            赤之山脈上那暴虐惡劣的天候終於逐漸轉為溫和，空氣中肆虐的
+            <span class="special-item-text">魔素量</span>
+            隨之大幅下降。那些被阻隔在前的人類隊伍與後援冒險者，終於能夠安全前行、繼續深入這片被遺忘的土地。
+          </>
+        )
       };
     case 3:
       return {
         title: "大荒地的沉寂",
         icon: "🗿",
-        desc: "【在此填寫第三大關（大荒地）通關後的劇情故事文字】\n例如：肆虐的魔沙塵暴終於止息，狂暴的魔力重新歸於沉寂。在大地的裂隙中，古代石碑上隱約浮現出指向神明居所的古老圖騰..."
+        desc: () => (
+          <>
+            肆虐大地的魔沙塵暴終於止息，狂暴的魔力再次歸於沉靜。
+            在大地的裂隙中，古老石碑上隱約浮現出指向神明居所的
+            <span class="special-item-text">神秘印記</span>
+            ，默默見證著這片荒蕪之地的和平。
+          </>
+        )
       };
     case 4:
       return {
         title: "裂變之谷的極光",
         icon: "🌌",
-        desc: "【在此填寫第四大關（分裂之谷）通關後的劇情故事文字】\n例如：光與暗的交錯在此處凝聚成永恆的極光。隨著深谷守衛的倒下，命運的光芒刺破虛空，為你展現出終焉深淵的輪廓..."
+        desc: () => (
+          <>
+            光暗交錯的深谷守護者已被悉數擊退，虛空中的裂縫正緩緩合攏。
+            極光璀璨灑下，照亮了通向
+            <span class="special-item-text">終焉深淵</span>
+            的崎嶇道路，最後的命運抉擇已在眼前。
+          </>
+        )
       };
     case 5:
       return {
         title: "終焉深淵的彼方",
         icon: "🏛️",
-        desc: "【在此填寫第五大關（終焉深淵）通關後的劇情故事文字】\n例如：星核的核心劇烈震顫，不可一世的深淵主宰化為星塵。迴廊彼方的命運之門已經敞開，你已完成了凡人無可比擬的壯舉..."
+        desc: () => (
+          <>
+            星核深處發出了最後的悲鳴，深淵主宰徹底消散在虛空中。
+            封印千年的
+            <span class="special-item-text">眾神之廊</span>
+            終於重見天日，你踏出的每一步，都在改寫凡人挑戰神明的歷史。
+          </>
+        )
       };
     case 6:
       return {
         title: "審判落幕",
         icon: "⚖️",
-        desc: "【在此填寫第六大關（審判之日）通關後的劇情故事文字】\n例如：天平傾斜，神明失色。在命運的審判之日，你以凡人之軀傲立於星穹之上，書寫了屬於你自己的神話..."
+        desc: () => (
+          <>
+            天平傾斜，審判終結。
+            在命運交織的星河深處，你以不屈的意志傲立於諸神之上，開創了屬於凡人的
+            <span class="special-item-text">全新紀元</span>
+            。
+          </>
+        )
       };
     default:
       return {
         title: "未知的終點",
         icon: "🧭",
-        desc: "【在此填寫未知關卡（預設）通關後的劇情故事文字】\n例如：這片區域的考驗已經結束，新的篇章正等待著你前去探索..."
+        desc: () => (
+          <>
+            這片未知區域的考驗已經順利度過，前方那神秘的
+            <span class="special-item-text">時空之門</span>
+            正等待著你踏入，開始全新的旅程。
+          </>
+        )
       };
   }
 });
@@ -66,14 +113,14 @@ const onGoToOtherStage = () => {
   <RoomTemplate :title="roomTitle">
     <template #default>
       <div class="general-event">
-        <div class="event-icon">{{ stageStory.icon }}</div>
+        <div class="event-icon shine">{{ stageStory.icon }}</div>
         <div class="dialog-box" style="padding: 1.5rem 1rem;">
           <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: var(--el-color-primary); text-align: center;">
             {{ stageStory.title }}
           </h3>
-          <p style="margin: 0.5rem 0; line-height: 1.6; font-size: 1.05rem; white-space: pre-line; color: var(--el-text-color-primary);">
-            {{ stageStory.desc }}
-          </p>
+          <div class="story-text">
+            <component :is="stageStory.desc" />
+          </div>
         </div>
       </div>
     </template>
@@ -90,4 +137,32 @@ const onGoToOtherStage = () => {
 </template>
 
 <style scoped>
+/* 故事相關 */
+.story-text {
+  text-align: left;
+  color: #e6a23c;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+:deep(.special-item-text) {
+  color: #f56c6c;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.shine {
+  animation: shine-glow 2s infinite alternate;
+}
+
+@keyframes shine-glow {
+  from {
+    filter: drop-shadow(0 0 2px #fff);
+  }
+  to {
+    filter: drop-shadow(0 0 10px #f56c6c);
+  }
+}
 </style>

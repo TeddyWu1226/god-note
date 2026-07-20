@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {usePlayerStore} from "@/store/player-store";
 import {useGameStateStore} from "@/store/game-state-store";
+import {RoomEnum} from "@/enums/room-enum";
 
 const emit = defineEmits(['cancel']);
 const props = defineProps({
@@ -12,7 +13,7 @@ const gameStateStore = useGameStateStore()
 
 const gainFirstPower = () => {
   playerStore.info.pendingSkillPoints = (playerStore.info.pendingSkillPoints || 0) + 1;
-  gameStateStore.transitionToNextState();
+  gameStateStore.setRoom(RoomEnum.MainEvent.value);
 };
 
 </script>

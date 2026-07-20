@@ -177,7 +177,7 @@ const openLearnSkill = (isRefresh = false) => {
   playerStore.info.pendingSkillCandidates = selectedIds;
 
   if (!isRefresh && playerStore.refreshCount === 0) {
-    playerStore.refreshCount = 3;
+    playerStore.refreshCount = 2;
   }
 
   // 轉化為 SkillModel 類別實例
@@ -218,7 +218,7 @@ const skipLearn = () => {
 const refreshSkills = () => {
   const refreshes = playerStore.refreshCount;
   if (refreshes <= 0) {
-    ElMessage.warning('刷新次數已達上限（最多3次）！');
+    ElMessage.warning('刷新次數已達上限！');
     return;
   }
 
