@@ -112,9 +112,9 @@ watch(
           <span>締造開始 - 經過了 {{ gameStateStore.days }} 天 -</span>
           <div>
 
-            <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>
-              📖 說明
-            </el-button>
+            <!--            <el-button type="primary" style="height: 2rem" size="small" @click="showIllustrate" plain>-->
+            <!--              📖 說明-->
+            <!--            </el-button>-->
             <el-button type="info" style="height: 2rem" size="small" @click="showEncyclopedia" plain>
               📚 圖鑑
             </el-button>
@@ -144,6 +144,7 @@ watch(
     <el-dialog
         v-model="isShowIllustration"
         title="📖 說明"
+        top="5vh"
         width="500px"
         custom-class="illustration-dialog"
     >

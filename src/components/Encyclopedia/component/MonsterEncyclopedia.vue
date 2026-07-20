@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {computed, PropType, ref, watch} from "vue";
+import "@/components/RoomLayout/comps/monster-animation.scss";
 import {MonsterModel} from "@/models/monster-model";
 import {useEncyclopediaStore} from "@/store/encyclopedia-store";
 import {resolveIconPath} from "@/utils/ui-helper";
@@ -51,15 +52,14 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
           v-for="(monster, index) in props.monsterList"
           :key="monster.name || index"
           class="monster-list-item"
-          :class="{ active: selectedIndex === index, locked: !isUnlocked(monster) }"
+          :class="[
+            { active: selectedIndex === index, locked: !isUnlocked(monster) },
+            ...(monster.class || []),
+            !monster.class?.includes('boss') && !monster.class?.includes('elite') && !monster.class?.includes('mystery') && !monster.class?.includes('secret') ? 'normal' : ''
+          ]"
           @click="selectedIndex = index"
       >
         <template v-if="isUnlocked(monster)">
-          <span class="monster-avatar">
-            <img v-if="isImageIcon(monster.icon)" :src="resolveIconPath(monster.icon)" class="monster-image-icon"
-                 alt="monster icon"/>
-            <span v-else class="monster-icon">{{ monster.icon }}</span>
-          </span>
           <span class="monster-name">
           {{ monster.name }}
           </span>
@@ -96,19 +96,18 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
       <!-- 已解鎖狀態 -->
       <div v-else class="unlocked-details">
         <!-- 頭部橫幅區 -->
-        <div :class="{'monster-header':true,
-  'boss':selectedMonster.class?.includes('boss'),
-  'elite':selectedMonster.class?.includes('elite'),
-    'mystery':selectedMonster.class?.includes('mystery')
-}">
-          <div class="avatar-glow-wrapper">
+        <div
+            :class="['monster-header', ...(selectedMonster.class || []), !selectedMonster.class?.includes('boss') && !selectedMonster.class?.includes('elite') && !selectedMonster.class?.includes('mystery') && !selectedMonster.class?.includes('secret') ? 'normal' : '']">
+          <div class="avatar-glow-wrapper" :class="selectedMonster.class">
             <div class="avatar-glow"></div>
-            <img
-                v-if="isImageIcon(selectedMonster.icon)"
-                :src="resolveIconPath(selectedMonster.icon)"
-                class="avatar-image"
-                alt="monster icon"/>
-            <span v-else class="avatar-emoji">{{ selectedMonster.icon }}</span>
+            <div class="avatar-inner">
+              <img
+                  v-if="isImageIcon(selectedMonster.icon)"
+                  :src="resolveIconPath(selectedMonster.icon)"
+                  class="avatar-image"
+                  alt="monster icon"/>
+              <span v-else class="avatar-emoji">{{ selectedMonster.icon }}</span>
+            </div>
           </div>
           <div class="header-info">
             <div class="title-row">
@@ -119,6 +118,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
               <span v-if="selectedMonster.class?.includes('boss')" class="class-badge boss">☠️ 首領魔物</span>
               <span v-else-if="selectedMonster.class?.includes('elite')" class="class-badge elite">🔥 菁英魔物</span>
               <span v-else-if="selectedMonster.class?.includes('mystery')" class="class-badge mystery">📜 神話魔物</span>
+              <span v-else-if="selectedMonster.class?.includes('secret')" class="class-badge secret">🔮 神秘魔物</span>
             </div>
           </div>
         </div>
@@ -241,6 +241,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   flex-direction: column;
   gap: 6px;
   padding-right: 4px;
+  height: 100%;
 }
 
 .monster-list-item {
@@ -255,6 +256,9 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
+  animation: none !important;
+  box-shadow: none !important;
 
   &:hover {
     background: rgba(255, 255, 255, 0.07);
@@ -290,7 +294,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
     }
 
     .monster-name {
-      color: #8c8c8c;
+      color: #8c8c8c !important;
       font-style: italic;
     }
   }
@@ -314,30 +318,16 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   flex: 1;
 }
 
+.normal .monster-name {
+  color: #85e396 !important;
+}
+
 .badge-dot {
   font-size: 0.65rem;
   padding: 1px 4px;
   border-radius: 4px;
   line-height: 1;
   font-weight: bold;
-
-  &.boss {
-    background: rgba(245, 108, 108, 0.2);
-    color: #f56c6c;
-    border: 1px solid rgba(245, 108, 108, 0.3);
-  }
-
-  &.elite {
-    background: rgba(230, 162, 60, 0.2);
-    color: #e6a23c;
-    border: 1px solid rgba(230, 162, 60, 0.3);
-  }
-
-  &.mystery {
-    background: rgba(245, 108, 108, 0.2);
-    color: #7307cc;
-    border: 1px solid rgba(245, 108, 108, 0.3);
-  }
 }
 
 /* 右側欄：詳細資訊面板 */
@@ -459,10 +449,12 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
+  animation: none !important;
+  box-shadow: none !important;
 
   // 各種品質/類別的漸層背景
   &.mystery {
-    background: linear-gradient(135deg, rgb(41 26 67) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(135deg, rgba(74, 59, 0, 0.25) 0%, rgba(0, 0, 0, 0) 100%);
 
     &::after {
       content: '';
@@ -471,22 +463,46 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
       right: 0;
       width: 100px;
       height: 100px;
-      background: radial-gradient(circle, rgb(157 80 239 / 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
     }
 
     .avatar-glow {
-      background: radial-gradient(circle, rgb(138 80 239 / 0.4) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
       animation: pulseBoss 2s infinite ease-in-out;
     }
 
     .monster-title-name {
-      color: #b175e8;
-      text-shadow: 0 0 8px rgba(239, 83, 80, 0.3);
+      color: #ffe066;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    }
+  }
+
+  &.secret {
+    background: linear-gradient(135deg, rgba(18, 0, 30, 0.25) 0%, rgba(0, 0, 0, 0) 100%);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(106, 13, 173, 0.08) 0%, transparent 70%);
+    }
+
+    .avatar-glow {
+      background: radial-gradient(circle, rgba(106, 13, 173, 0.4) 0%, transparent 70%);
+      animation: pulseBoss 2s infinite ease-in-out;
+    }
+
+    .monster-title-name {
+      color: #d1a3ff;
+      text-shadow: 0 0 8px rgba(106, 13, 173, 0.3);
     }
   }
 
   &.boss {
-    background: linear-gradient(135deg, rgba(239, 83, 80, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(135deg, rgba(74, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 100%);
 
     &::after {
       content: '';
@@ -504,29 +520,33 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
     }
 
     .monster-title-name {
-      color: #ff7675;
+      color: #ff8a8a;
       text-shadow: 0 0 8px rgba(239, 83, 80, 0.3);
     }
   }
 
   &.elite {
-    background: linear-gradient(135deg, rgba(255, 167, 38, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(135deg, rgba(38, 140, 239, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
 
     .avatar-glow {
-      background: radial-gradient(circle, rgba(255, 167, 38, 0.35) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(38, 140, 239, 0.35) 0%, transparent 70%);
       animation: pulseElite 2s infinite ease-in-out;
     }
 
     .monster-title-name {
-      color: #ffeaa7;
+      color: #86c0f8;
     }
   }
 
   &.normal {
-    background: linear-gradient(135deg, rgba(66, 165, 245, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(135deg, rgba(103, 194, 58, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
 
     .avatar-glow {
-      background: radial-gradient(circle, rgba(66, 165, 245, 0.2) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(103, 194, 58, 0.25) 0%, transparent 70%);
+    }
+
+    .monster-title-name {
+      color: #85e396;
     }
   }
 }
@@ -541,6 +561,18 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.avatar-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .avatar-glow {
@@ -581,8 +613,7 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
 }
 
 .avatar-image {
-  height: 2rem;
-  width: 2rem;
+  width: 130%!important;
   z-index: 1;
 }
 
@@ -627,18 +658,23 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   border-radius: 4px;
 
   &.mystery {
-    background: rgb(199 108 245 / 0.15);
-    color: #b175e8;
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffe066;
   }
 
   &.boss {
     background: rgba(245, 108, 108, 0.15);
-    color: #f56c6c;
+    color: #ff8a8a;
   }
 
   &.elite {
-    background: rgba(230, 162, 60, 0.15);
-    color: #e6a23c;
+    background: rgba(38, 140, 239, 0.15);
+    color: #86c0f8;
+  }
+
+  &.secret {
+    background: rgba(106, 13, 173, 0.15);
+    color: #d1a3ff;
   }
 
   &.normal {
@@ -889,8 +925,4 @@ const monsterStats = Object.values(StatEnum).filter((stat) => {
   padding: 4px;
 }
 
-.monster-image-icon {
-  width: 1rem;
-  height: 1rem;
-}
 </style>

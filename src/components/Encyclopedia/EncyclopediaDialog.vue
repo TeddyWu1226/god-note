@@ -8,6 +8,7 @@ const dialogVisible = defineModel({type: Boolean})
   <el-dialog
       v-model="dialogVisible"
       title="📚 圖鑑"
+      top="5vh"
       width="650px"
       custom-class="encyclopedia-dialog"
       :append-to-body="true"
@@ -18,7 +19,7 @@ const dialogVisible = defineModel({type: Boolean})
         <EncyclopediaMonsterTab/>
       </el-tab-pane>
       <el-tab-pane label="裝備">
-        測試
+        待完成
       </el-tab-pane>
     </el-tabs>
   </el-dialog>

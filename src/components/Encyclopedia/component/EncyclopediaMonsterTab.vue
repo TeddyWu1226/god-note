@@ -9,6 +9,7 @@ import {SplitCanyonMonster} from "@/constants/monsters/monster-info/4-split-cany
 import {EndAbyssMonster} from "@/constants/monsters/monster-info/5-end-abyss-monster";
 import {JudgmentStageMonster} from "@/constants/monsters/monster-info/6-judgment-stage-monster";
 import {Boss} from "@/constants/monsters/monster-info/99-boss-info";
+import {computed} from "vue";
 
 const gameStateStore = useGameStateStore();
 
@@ -25,6 +26,10 @@ const monsterInfoMapping = {
   6: JudgmentStageMonster,
 }
 
+const allowInEncyclopediaBoss = computed(() => {
+  return Object.values(Boss).filter((boss) => !boss.code.startsWith('FallenKnight'))
+})
+
 </script>
 
 <template>
@@ -40,7 +45,7 @@ const monsterInfoMapping = {
     <el-tab-pane
         label="BOSS☠️"
     >
-      <MonsterEncyclopedia :monster-list="Object.values(Boss)"></MonsterEncyclopedia>
+      <MonsterEncyclopedia :monster-list="allowInEncyclopediaBoss"></MonsterEncyclopedia>
     </el-tab-pane>
   </el-tabs>
 </template>

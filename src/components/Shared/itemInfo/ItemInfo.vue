@@ -60,7 +60,6 @@ const skillInstance = computed(() => {
         </div>
       </template>
     </div>
-    <p class="detail-desc">{{ props.item.description }}</p>
   </div>
 </template>
 
@@ -119,7 +118,6 @@ const skillInstance = computed(() => {
 
 .detail-stats {
   width: 100%;
-  margin-bottom: 1.5rem;
 }
 
 .stat-row {
