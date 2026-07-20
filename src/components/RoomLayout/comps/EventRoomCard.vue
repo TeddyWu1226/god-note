@@ -54,8 +54,7 @@ const GeneralEvent = [
   },
   {
     type: SpecialEventEnum.LostAdventurer, // 迷路的冒險者事件
-    // canAppear: () => gameStateStore.currentStage >= 2
-    canAppear: () => true
+    canAppear: () => gameStateStore.currentStage <= 3
   }
 ];
 

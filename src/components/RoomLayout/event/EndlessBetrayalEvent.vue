@@ -72,7 +72,7 @@ const handleFinish = () => {
               <p>「為了苟延殘喘，吾跪伏於入侵者的腳下...」</p>
               <p>「明知那名女子只是祂們派來的監視者，卻又無可救藥地愛上她。」</p>
               <p>「卻又因為我的失職造成她的死亡。」</p>
-              <p>「是吾造成的一切，是吾背叛了森林。」</p>
+              <p>「是吾造成的一切，是吾的執迷不悟，背叛了森林。」</p>
             </div>
           </div>
         </template>
@@ -82,7 +82,7 @@ const handleFinish = () => {
           <div class="event-icon shine">≠</div>
           <div class="dialog-box">
             <p>項鍊與其中殘存最後的能量融合，最終在強光中碎裂、重組。</p>
-            <p>被背叛與背叛他人的那份無法釋懷的情感充斥著你的心中。</p>
+            <p>執迷不悟的妄為情感充斥著你的心中。</p>
             <p>你手中出現了神祕符文-<span class="special-item-text">背叛</span></p>
           </div>
         </template>
