@@ -562,6 +562,10 @@ const init = () => {
     if (playerStore.hasStatus(EvnStatus.LowSanity.name)) {
       newMonsters.push(gameStateStore.createMonster(Monster.DelusionMonster.code))
     }
+    // 如果是戰鬥房間且已啟動神罰，有 25% 機率額外多出 AngelSentry 怪物
+    if (currentRoomValue.value === RoomEnum.Fight.value && gameStateStore.isGodPunishmentStarted && Math.random() < 0.25) {
+      newMonsters.push(gameStateStore.createMonster(Monster.AngelSentry.code))
+    }
     // 同步到 Store 做持久化緩存
     gameStateStore.setCurrentEnemy(newMonsters);
   }
