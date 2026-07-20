@@ -15,6 +15,7 @@ import {StageEnum} from "@/enums/stage-enum";
 import {playerAdjustSanity} from "@/constants/status/advanced-status-utils";
 import {useRelicStore} from "@/store/relic-store";
 import {StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
+import {SpecialEventEnum} from "@/enums/enums";
 
 const props = defineProps({
   disabled: Boolean,
@@ -35,6 +36,12 @@ const isBossDefeated = (day: number): boolean => {
 
 const createNextRooms = () => {
   gameStateStore.nextRooms = []
+
+  // 1000 天結束後的選項只有「特殊事件」按鈕可以選
+  if (gameStateStore.days === 1000 && !gameStateStore.isEventClose(SpecialEventEnum.EndBell)) {
+    gameStateStore.nextRooms = [RoomEnum.Event.value]
+    return
+  }
 
   // 審判之關卡邏輯 (Stage 6)
   if (gameStateStore.currentStage === 6) {
@@ -136,13 +143,6 @@ const goToStageEnd = () => {
   gameStateStore.nextRooms = []
 }
 
-
-const triggerJudgmentStage = () => {
-  playerStore.healFull()
-  gameStateStore.enterJudgmentStage()
-  updateEnvironmentStatus()
-  useEpicSubtitle("⚖️ 審判時刻已到，終焉的考驗降臨...", 4000);
-}
 
 onMounted(() => {
   if (gameStateStore.nextRooms.length > 0) {

@@ -45,6 +45,7 @@ export enum SpecialEventEnum {
     DragonSkeleton = 'DragonSkeleton', // 龍之骸骨
     AncientWrath = 'AncientWrath', // 遠古的憤怒
     EndlessBetrayal = 'EndlessBetrayal', // 無盡的背叛
+    EndBell = 'EndBell', // 末鐘響起
 
 }
 

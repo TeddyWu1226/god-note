@@ -7,7 +7,7 @@ import {usePlayerStore} from "@/store/player-store";
 import {useTrackerStore} from "@/store/track-store";
 import {useRelicStore} from "@/store/relic-store";
 import {SpecialItem} from "@/constants/items/special-item-info";
-import {Boss, StageBosses} from "@/constants/monsters/monster-info/99-boss-info";
+import {Boss} from "@/constants/monsters/monster-info/99-boss-info";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -51,14 +51,17 @@ const GeneralEvent = [
   {
     type: SpecialEventEnum.AncientWrath, // 遠古的憤怒事件
     canAppear: () => gameStateStore.currentStage === 2 && gameStateStore.otherRecord['ANCIENT_WRATH_UNLOCKED'] === true
-  },
-
+  }
 ];
 
 const SpecifyEvent = [
   {
+    type: SpecialEventEnum.EndBell, // 末鐘響起事件
+    canAppear: () => gameStateStore.days === 1000
+  },
+  {
     type: SpecialEventEnum.UnknownGrave, // 不知名的墓事件
-    canAppear: () => relicStore.hasRelic && gameStateStore.currentStage === relicStore.lastStage && gameStateStore.stageDays === 10
+    canAppear: () => relicStore.hasRelic && gameStateStore.stageDays === 10
   },
 ]
 
