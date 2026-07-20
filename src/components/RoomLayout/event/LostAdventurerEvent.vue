@@ -1,21 +1,28 @@
 <script setup lang="ts">
 import {useGameStateStore} from "@/store/game-state-store";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
-import {GameState, SpecialEventEnum} from "@/enums/enums";
+import {GameState} from "@/enums/enums";
 import AdventurerScenario from "@/components/RoomLayout/event/LostAdventurer/AdventurerScenario.vue";
 import WitchScenario from "@/components/RoomLayout/event/LostAdventurer/WitchScenario.vue";
 import ThiefScenario from "@/components/RoomLayout/event/LostAdventurer/ThiefScenario.vue";
+import '../room.css'
 
 const gameStateStore = useGameStateStore();
 
 const handleApproach = () => {
   // 隨機從三種情況中選擇一種
   // 3: 冒險者 (需要指定消耗品)
+  delete gameStateStore.otherRecord['ADVENTURER_NEED_ITEM'];
+  delete gameStateStore.otherRecord['ADVENTURER_REWARD_GOLD'];
+  delete gameStateStore.otherRecord['ADVENTURER_RESOLVED'];
   // 4: 神秘女巫 (需要指定晶石)
+  delete gameStateStore.otherRecord['WITCH_NEED_ITEM'];
+  delete gameStateStore.otherRecord['WITCH_REWARD_EXP'];
+  delete gameStateStore.otherRecord['WITCH_RESOLVED'];
   // 5: 盜賊 (強制進入戰鬥)
+  delete gameStateStore.otherRecord['THIEF_SURRENDERED'];
   const scenarios = [3, 4, 5];
-  const chosen = scenarios[Math.floor(Math.random() * scenarios.length)];
-  gameStateStore.eventAction = chosen;
+  gameStateStore.eventAction = scenarios[Math.floor(Math.random() * scenarios.length)];
 };
 
 const handleIgnore = () => {
@@ -23,7 +30,6 @@ const handleIgnore = () => {
 };
 
 const handleFinish = () => {
-  gameStateStore.addEventProcess(SpecialEventEnum.LostAdventurer, true);
   gameStateStore.transitionToNextState();
 };
 </script>
@@ -36,16 +42,14 @@ const handleFinish = () => {
         <div class="event-icon">👤</div>
         <div class="dialog-box">
           <p>在不遠處你隱約看見了模糊的身影晃動。</p>
-          <p>在這種幽暗幽深的地方迷路，對方的身份必定不簡單。</p>
           <p class="question-text">你是否要走上前去靠近看看？</p>
         </div>
       </div>
 
       <!-- 敬而遠之 -->
       <div v-else-if="gameStateStore.eventAction === 2" class="general-event">
-        <div class="event-icon">🚶</div>
         <div class="dialog-box">
-          <p>出於謹慎，你決定不打擾他們，默默地繞過這群神祕的人影繼續趕路...</p>
+          <p>出於謹慎，默默地繞過神祕的人影繼續趕路...</p>
         </div>
       </div>
 

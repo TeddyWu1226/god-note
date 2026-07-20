@@ -7,8 +7,8 @@ export class EventThief extends MonsterModel {
         super({
             icon: '🥷',
             code: 'EventThief',
-            name: '迷途的強盜',
-            description: '潛伏在暗處的惡徒，專門襲擊落單的冒險者。出招狠辣，身手敏捷。',
+            name: '強盜',
+            description: '潛伏在暗處的惡徒，專門襲擊落單的人。出招狠辣，身手敏捷。',
             ad: 22,
             critIncrease: WorldDefault.critIncrease,
             critRate: 20,

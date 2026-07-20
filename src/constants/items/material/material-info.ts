@@ -20,7 +20,7 @@ export const MonsterCrystals = {
     MediumNormal: {
         name: '中級魔物晶石',
         icon: '🟩',
-        description: '中階魔物掉落的核心，散發螢綠色光芒。',
+        description: '中階魔物掉落的核心。',
         quality: 2,
         price: 40
     } as ItemType,
@@ -28,7 +28,7 @@ export const MonsterCrystals = {
     MediumUpperNormal: {
         name: '上級魔物晶石',
         icon: '🟦',
-        description: '中階魔物掉落的核心，散發螢藍色光芒',
+        description: '中階魔物掉落的核心',
         quality: 3,
         price: 80
     } as ItemType,
@@ -36,7 +36,7 @@ export const MonsterCrystals = {
     MediumSuperiorNormal: {
         name: '優級魔物晶石',
         icon: '🟪',
-        description: '高階魔物掉落的核心，魔力波動極其強大。',
+        description: '高階魔物掉落的核心。',
         quality: 4,
         price: 160
     } as ItemType,
@@ -44,7 +44,7 @@ export const MonsterCrystals = {
     TopNormal: {
         name: '頂級魔物晶石',
         icon: '🟥',
-        description: '強大魔族的威力。',
+        description: '魔族才能擁有的核心。',
         quality: 5,
         price: 320
     } as ItemType,
