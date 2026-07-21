@@ -17,6 +17,14 @@ const relicStore = useRelicStore();
 /**
  * 事件配置表：控制隨機權限
  */
+// 補給隊事件控制表
+const supplyState = gameStateStore.otherRecord['SUPPLY_TEAM'] || {
+  firstChoice: '',
+  firstStage: 0,
+  secondChoice: '',
+  lastEncounterStage: 0,
+  hasReachedStage3Or4: false
+};
 const GeneralEvent = [
   {
     type: SpecialEventEnum.Gamble,
@@ -55,6 +63,27 @@ const GeneralEvent = [
   {
     type: SpecialEventEnum.LostAdventurer, // 迷路的冒險者事件
     canAppear: () => gameStateStore.currentStage <= 3
+  },
+  {
+    type: SpecialEventEnum.SupplyTeam1, // 補給隊第一次相遇
+    canAppear: () => {
+      const currentStage = gameStateStore.currentStage;
+      return currentStage === 2;
+    }
+  },
+  {
+    type: SpecialEventEnum.SupplyTeam2, // 補給隊第二次相遇
+    canAppear: () => {
+      // 必須在第 3 階段，且第一次相遇事件已完成/關閉
+      return gameStateStore.currentStage === 3 && 
+             gameStateStore.isEventClose(SpecialEventEnum.SupplyTeam1);
+    }
+  },
+  {
+    type: SpecialEventEnum.SupplyTeam3, // 補給隊第三次相遇
+    canAppear: () => {
+      return gameStateStore.currentStage === 4;
+    }
   }
 ];
 

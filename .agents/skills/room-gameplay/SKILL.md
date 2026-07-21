@@ -28,10 +28,18 @@ This guide helps developers maintain room transitions, navigation, event flows, 
   - `currentRoomValue`: Current room code (matches values in `RoomEnum`).
   - `nextRooms`: A randomly generated list of next rooms presented to the player for choice.
 
-### 2. Special Events Engine
+### 2. Special Events Engine & Progress Tracking
 - `currentEventType` and `lastEventType` track the current and previous Special Events.
-- `eventProcess` map stores progress integers for each `SpecialEventEnum`.
-- Read current event states using the `getEventProcess(event)` getter.
+- **`eventProcess` Map & Helper Functions**:
+  - `eventProcess` stores a progress integer (`number`) for each `SpecialEventEnum`.
+  - **Read Event Progress**: Use the computed getter `gameStateStore.getEventProcess(event)` to safely retrieve progress (returns `0` if undefined/not started).
+  - **Close Completed Events**: Call `gameStateStore.addEventProcess(event, true)` to close an event (sets progress to `-1`).
+  - **Check Closed Status**: Use `gameStateStore.isEventClose(event)` to verify if an event is closed. The random event generator in `EventRoomCard.vue` automatically filters out closed events via `!gameStateStore.isEventClose(event.type)`.
+- **Multi-Phase Sequential Events (Best Practice)**:
+  - If a storyline has multiple distinct stages/encounters (e.g., `Event1`, `Event2`, `Event3`), register them as **separate enums** (e.g. `SpecialEventEnum.SupplyTeam1`, `SpecialEventEnum.SupplyTeam2`, `SpecialEventEnum.SupplyTeam3`) and separate Vue components.
+  - Upon completing each phase, call `addEventProcess(EventX, true)` to close the current phase's event.
+  - In `EventRoomCard.vue`'s `canAppear()`, chain checks using `isEventClose(previousEvent)` to control the progression order (e.g., Phase 2 can only appear if Phase 1 is closed).
+  - Store choices or metadata that cross phases (e.g., specific choices made or the stage where the event occurred) in `gameStateStore.otherRecord`.
 
 ### 3. Room Routing & UI Mounting
 - **`RoomLayout.vue`**: Switch-mounts the correct Vue component depending on `gameStateStore.currentRoomValue`:

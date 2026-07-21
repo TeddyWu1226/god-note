@@ -47,6 +47,9 @@ export enum SpecialEventEnum {
     EndlessBetrayal = 'EndlessBetrayal', // 無盡的背叛
     EndBell = 'EndBell', // 末鐘響起
     LostAdventurer = 'LostAdventurer', // 迷路的冒險者
+    SupplyTeam1 = 'SupplyTeam1', // 補給隊第一次相遇
+    SupplyTeam2 = 'SupplyTeam2', // 補給隊第二次相遇
+    SupplyTeam3 = 'SupplyTeam3', // 補給隊第三次相遇
 }
 
 /**
