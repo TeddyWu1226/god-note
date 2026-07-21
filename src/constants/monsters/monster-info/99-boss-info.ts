@@ -3,7 +3,7 @@ import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatin
 import {UnitStatus} from "@/constants/status/unit-status";
 import {useEpicSubtitle} from "@/components/Shared/EpicSubtitle/useEpicSubtitle";
 import {SpecialItem} from "@/constants/items/special-item-info";
-import {checkProbability, isMultiple} from "@/utils/math";
+import {checkProbability, getCycleRound, isMultiple} from "@/utils/math";
 import {
     GameStateStoreType,
     MonsterActionParams, MonsterOnAttackedParams,
@@ -781,7 +781,7 @@ export class TheLastSaint extends MonsterModel {
 
     override onRoundBehaviorHook(params: MonsterRoundBehaviorParams) {
         this.checkKnightIsDead(params)
-        const cycleRound = ((params.battleRound - 1) % 7) + 1;
+        const cycleRound = getCycleRound(params.battleRound, 7)
         if (cycleRound === 5) {
             this.addEffect(UsualStatus.Resistance, {value: 2, duration: 2});
             useFloatingMessage('施法預備...', getMonsterElement(this.id), {color: 'gray', duration: 1500});
@@ -846,7 +846,7 @@ export class FallenKnight1 extends MonsterModel {
 
     override onRoundBehaviorHook({battleRound, playerStore, gameStateStore, logStore}: MonsterRoundBehaviorParams) {
         // 第2回合必定爆擊, 第4回合會格擋
-        const cycleRound = ((battleRound - 1) % 7) + 1;
+        const cycleRound = getCycleRound(battleRound, 7)
         const monsterElement = getMonsterElement(this.id)
         if (cycleRound === 2) {
             this.addEffect(UsualStatus.Angry);
@@ -903,7 +903,7 @@ export class FallenKnight3 extends FallenKnight2 {
 
     override onRoundBehaviorHook({battleRound}: MonsterRoundBehaviorParams) {
         // 第2回合必定爆擊, 第4回合會格擋, 第6回合集氣
-        const cycleRound = ((battleRound - 1) % 7) + 1;
+        const cycleRound = getCycleRound(battleRound, 7)
         const monsterElement = getMonsterElement(this.id)
         if (cycleRound === 2) {
             this.addEffect(UsualStatus.Angry);

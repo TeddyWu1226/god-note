@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import '../room.css';
-import { useGameStateStore } from "@/store/game-state-store";
-import { usePlayerStore } from "@/store/player-store";
+import {useGameStateStore} from "@/store/game-state-store";
+import {usePlayerStore} from "@/store/player-store";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
-import { GameState, SpecialEventEnum } from "@/enums/enums";
-import { Usable } from "@/constants/items/usalbe-item/usable-info";
-import { ref, computed } from "vue";
+import {GameState, SpecialEventEnum} from "@/enums/enums";
+import {Usable} from "@/constants/items/usalbe-item/usable-info";
+import {ref, computed} from "vue";
 
 const gameStateStore = useGameStateStore();
 const playerStore = usePlayerStore();
@@ -44,37 +44,39 @@ const handleSimpleEnd = () => {
 </script>
 
 <template>
-  <RoomTemplate title="前往前線的補給隊">
+  <RoomTemplate title="前往前線的人們">
     <template #default>
       <div class="general-event">
-        <div class="event-icon">🛡️</div>
+        <div class="event-icon">👥</div>
         <div class="dialog-box">
           <!-- 初始對話 -->
           <template v-if="step === 0">
             <p class="talk-text">
-              「好久不見，勇士！這地方可真險峻。我好幾個弟兄都死在路上，但為了大業，這點犧牲也是光榮的！」
+              「好久不見，勇士，沒想到你還活著!」
             </p>
             <p class="talk-text" style="margin-top: 1rem;">
-              「但... 你願意聽我說點故事嗎？」
+              「這天氣挺不好的，要在在這裡跟我們一起休息一會兒嗎?」
             </p>
           </template>
 
           <!-- 聽故事 -->
           <template v-else-if="step === 1">
-            <p class="talk-text">
-              「謝謝你願意傾聽，這些事憋在我心裡很久了……」
-            </p>
-            <p class="story-text" style="margin-top: 1rem; color: #e6a23c;">
-              <!-- 故事留空 -->
+            <p class="story-text">
+              那座山傳說是以前古代魔物為了囚禁人類而創造的，<br/>
+              兇惡的天氣以及危險深谷岩漿也是讓許多兄弟喪命...<br/>
+              話說當時在暴風雪中聽到龍吼聲的時候，我都以為我要死了!<br/>
+              好在穿越古道的路上沒見到那東西，想必只是我的錯覺吧...<br/>
+              不知道前線的救世主們還好嗎? 擊敗魔王的希望全靠他們了<br/>
+              就算要賠上我們的老命也在所不惜!
             </p>
           </template>
 
           <!-- 結束給水晶 -->
           <template v-else-if="step === 2">
             <p class="talk-text">
-              「多謝你聽完。這個水晶你留著防身吧，願神明保佑你。」
+              「話說你的水晶還有嗎? 我這現在多了幾個，再給你一個留著防身吧，願神保佑你。」
             </p>
-            <p style="margin-top: 1rem; font-weight: bold; color: #67c23a;">
+            <p class="special-item-text">
               獲得 1 個 [轉移水晶]
             </p>
           </template>
@@ -82,7 +84,7 @@ const handleSimpleEnd = () => {
           <!-- 不聽故事結束 -->
           <template v-else-if="step === 3">
             <p class="talk-text">
-              「沒事，只是我一時糊塗，不阻撓勇士討伐魔族了。有緣再見！」
+              「那我就不阻饒你了。勇士，有緣再見！」
             </p>
           </template>
         </div>
@@ -108,11 +110,4 @@ const handleSimpleEnd = () => {
 </template>
 
 <style scoped>
-.talk-text {
-  font-style: italic;
-  font-weight: bold;
-}
-.story-text {
-  white-space: pre-wrap;
-}
 </style>

@@ -2,6 +2,13 @@ import {ItemType, UsableType} from "@/types";
 
 
 export const SpecialItem = {
+    MiasmaBox: {
+        name: '充滿瘴氣的盒子',
+        icon: '📦',
+        description: '一個充滿可怕瘴氣的盒子，千萬不能帶回村莊。',
+        quality: 0,
+        unsellable: true,
+    } as ItemType,
     DragonBlood: {
         name: '龍之血',
         icon: '🩸',

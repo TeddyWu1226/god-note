@@ -11,6 +11,16 @@ export const UsualStatus = {
         },
         isBuff: true
     } as StatusEffect,
+    Dodge: {
+        name: '閃避',
+        icon: '💨',
+        duration: 1,
+        description: `這個單位敏捷提升`,
+        bonus: {
+            dodge: 100
+        },
+        isBuff: true
+    } as StatusEffect,
     Stuck: {
         name: '暈眩',
         icon: '😵‍💫',

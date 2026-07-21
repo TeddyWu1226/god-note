@@ -48,19 +48,8 @@ const handleCrazyChoice = (action: 'approach' | 'leave') => {
 const handleCrazyFight = () => {
   closeAllSupplyEvents();
 
-  const thief = gameStateStore.createMonster('EventThief');
-  thief.name = '瘋癲的補給隊長';
-  thief.ad = 45;
-  thief.critRate = 10;
-  thief.adDefend = 24;
-  thief.dodge = 80;
-  thief.hit = 80;
-  thief.hp = 200;
-  thief.hpLimit = 200;
-  thief.level = 40;
-  thief.dropGold = 200;
-
-  gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [thief]);
+  const leader = gameStateStore.createMonster('SupplyLeader');
+  gameStateStore.switchToFightRoom(RoomEnum.Fight.value, [leader]);
 };
 
 const handleCorpseChoice = (action: 'search' | 'leave') => {
@@ -73,33 +62,32 @@ const handleCorpseChoice = (action: 'search' | 'leave') => {
 };
 
 const handleCorpseEnd = () => {
-  playerStore.gainItem(Usable.TeleportCrystal, 3);
+  playerStore.gainItem(Usable.TeleportCrystal, 1);
   closeAllSupplyEvents();
   gameStateStore.transitionToNextState();
 };
 </script>
 
 <template>
-  <RoomTemplate title="前往前線的補給隊">
+  <RoomTemplate title="前往前線的人們">
     <template #default>
       <div class="general-event">
         <!-- 瘋癲隊長 -->
         <template v-if="scenario === 'CRAZY_CAPTAIN'">
-          <div class="event-icon">🤪</div>
+          <div class="event-icon">👤</div>
           <div class="dialog-box">
             <template v-if="step === 0">
               <p>你看到了之前那位補給隊長，此時他只剩孤身一人，神色瘋癲，嘴裡不停神神叨叨地自言自語...</p>
             </template>
 
             <template v-else-if="step === 1">
-              <p class="talk-text" style="color: #f56c6c;">
-                「啊啊啊... 大家都死了... 為什麼我還活著...！魔族... 還是神明？是誰？！」
+              <p class="story-text">
+                啊啊啊... 大家都死了... <br/>
+                為什麼帝國軍要對我們拔刀相向... <br/>
+                這地方是咋回事...好可怕...神啊...
               </p>
-              <p class="story-text" style="margin-top: 1rem; color: #e6a23c;">
-                <!-- 故事留空 -->
-              </p>
-              <p style="margin-top: 1rem; font-weight: bold; color: #f56c6c;">
-                隊長的情緒突然失控，拔出武器朝你猛撲過來！
+              <p class="special-item-text">
+                「神為何要拋棄我?!」
               </p>
             </template>
           </div>
@@ -110,13 +98,13 @@ const handleCorpseEnd = () => {
           <div class="event-icon">💀</div>
           <div class="dialog-box">
             <template v-if="step === 0">
-              <p>路邊躺著一具剛死不久的補給隊屍體，行囊散落在地。</p>
+              <p>路邊躺著一具剛死不久的屍體，行囊散落在地。</p>
             </template>
 
             <template v-else-if="step === 1">
               <p>你仔細搜尋了屍體與散落的行李，在暗格裡找到了未受損的物資。</p>
-              <p style="margin-top: 1rem; font-weight: bold; color: #67c23a;">
-                獲得 3 個 [轉移水晶]
+              <p class="special-item-text">
+                獲得 1 個 [轉移水晶]
               </p>
             </template>
           </div>
@@ -151,11 +139,4 @@ const handleCorpseEnd = () => {
 </template>
 
 <style scoped>
-.talk-text {
-  font-style: italic;
-  font-weight: bold;
-}
-.story-text {
-  white-space: pre-wrap;
-}
 </style>

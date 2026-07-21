@@ -120,3 +120,13 @@ export const isMultiple = (n: number, x: number): boolean => {
 
     return n % x === 0;
 };
+
+/**
+ * 根據當前戰鬥回合計算輪迴中的第幾回合
+ * @param battleRound 當前戰鬥回合數
+ * @param cycle 輪迴數 (例如 7 回合為一輪迴)
+ */
+export const getCycleRound = (battleRound: number, cycle: number): number => {
+    if (cycle <= 0) return 1; // 避免除以 0 或負數
+    return ((battleRound - 1) % cycle) + 1;
+};
