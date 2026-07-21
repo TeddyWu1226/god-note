@@ -26,7 +26,7 @@ const noShow = (stage: number) => {
       </div>
 
       <div
-          v-for="(stage, key) in StageEnum"
+          v-for="(stage, key) in Object.values(StageEnum).filter(s => s.value !==0)"
           :key="key"
           style="width: 100%; margin-bottom: 8px;"
       >

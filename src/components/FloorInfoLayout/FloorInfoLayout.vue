@@ -15,7 +15,7 @@ const isShowBackpack = ref(false);
   <el-card body-class="flex justify-between items-center">
     <span style="font-size: 16px">
       <template v-if="gameStateStore.days === 0">
-        命運之始
+        {{ StageEnum.BorderTown.label}}
       </template>
       <template v-else>
         第 {{ gameStateStore.stageDays }} 天 -

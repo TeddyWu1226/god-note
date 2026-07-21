@@ -29,13 +29,21 @@ const monsterInfoMapping = {
 const allowInEncyclopediaBoss = computed(() => {
   return Object.values(Boss).filter((boss) => !boss.code.startsWith('FallenKnight'))
 })
-
+const allowStage = computed(() => {
+  return [
+    StageEnum.MistyForest,
+    StageEnum.RedMountain,
+    StageEnum.GiantsWasteland,
+    StageEnum.SplitCanyon,
+    StageEnum.EndAbyss
+  ]
+})
 </script>
 
 <template>
   <el-tabs tab-position="left">
     <el-tab-pane
-        v-for="stage in StageEnum"
+        v-for="stage in allowStage"
         :key="stage.value"
         :label="unlocked(stage.value)?stage.label:'???'"
         :disabled="!unlocked(stage.value)"

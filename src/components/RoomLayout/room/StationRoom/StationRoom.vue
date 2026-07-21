@@ -11,6 +11,13 @@ const gameStateStore = useGameStateStore();
 
 const isRested = ref(false)
 const isEnded = computed(() => gameStateStore.stageDays === 100)
+const isBorderTown = computed(() => gameStateStore.currentStage === 0)
+
+const titleText = computed(() => {
+  if (isBorderTown.value) return '鎮口休息處';
+  return isEnded.value ? '旅途之末' : '深處驛站';
+})
+
 const onRest = () => {
   isRested.value = true
   playerStore.healFull()
@@ -18,21 +25,26 @@ const onRest = () => {
 }
 
 onMounted(() => {
-  if (gameStateStore.stageDays === 100) {
-    gameStateStore.openStageSelectDialog(false)
-  }
+  // // 邊境城鎮或第 100 天都自動開啟區域選擇
+  // if (isBorderTown.value || gameStateStore.stageDays === 100) {
+  //   gameStateStore.openStageSelectDialog(false)
+  // }
 })
 </script>
 
 <template>
-  <RoomTemplate :title="isEnded? '旅途之末' : '深處驛站'">
+  <RoomTemplate :title="titleText">
     <template #default>
       <div class="general-event">
         <div class="event-icon">
-          {{ isEnded ? '🛤️' : '🏘️' }}
+          <template v-if="isBorderTown">🏡</template>
+          <template v-else>{{ isEnded ? '🛤️' : '🏘️' }}</template>
         </div>
         <div class="dialog-box">
-          <template v-if="isEnded">
+          <template v-if="isBorderTown">
+            <p>你回到了人類的邊境基地，在這稍作休息。</p>
+          </template>
+          <template v-else-if="isEnded">
             <p>風景以然變色，已達區域的盡頭。</p>
             <p>「前方是命運的叉路。在這裡，選擇你想前往的區域。」</p>
           </template>
@@ -50,7 +62,13 @@ onMounted(() => {
     </template>
 
     <template #button>
-      <template v-if="isEnded">
+      <template v-if="isBorderTown">
+        <!-- 邊境城鎮：只有前往其他區域的選項 -->
+        <el-button type="warning" @click="gameStateStore.openStageSelectDialog(false)">
+          前往其他區域
+        </el-button>
+      </template>
+      <template v-else-if="isEnded">
         <!-- 第 100 天：只有前往其他區域的選項 -->
         <el-button type="warning" @click="gameStateStore.openStageSelectDialog(false)">
           前往其他區域

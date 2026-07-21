@@ -42,14 +42,14 @@ const stageIntro = computed(() => {
     case 4:
       return {
         title: StageEnum.SplitCanyon.label,
-        desc: "你已來到裂變之谷。曾經這是魔族領地，但在第二次人魔大戰受到神擊，將大地與天空一分為二。在此地，天色每日都在神秘的極光與極暗之間劇烈交替。",
+        desc: "你已來到裂變之谷。曾經這是魔族領地，但在第二次人魔大戰受到神擊，神擊將大地與天空一分為二。在此地，天色每日都在神秘的極光與極暗之間劇烈交替。",
         tips: "光與暗、亢奮與妄想。"
       };
     case 5:
       return {
         title: StageEnum.EndAbyss.label,
-        desc: "你已來到深淵。魔族之城受神擊而陷落在此，魔族可能殘存的最後之地。",
-        tips: "討伐魔王。"
+        desc: "你已來到深淵。魔族之城受神擊而陷落在此，魔族最後殘存之地。",
+        tips: "完成你的使命。"
       };
     case 6:
       return {
@@ -61,7 +61,7 @@ const stageIntro = computed(() => {
       return {
         title: "🗺️",
         desc: "全新的未知區域在前方展開。",
-        tips: "做好準備，開始冒險！"
+        tips: "回頭是岸"
       };
   }
 });

@@ -93,7 +93,11 @@ export const ItemSkill: Record<string, (params: SpecifyMonsterItemSkillParams | 
             gameStateStore.switchEnemy = [];
         }
 
-        gameStateStore.openStageSelectDialog(false);
+        if (gameStateStore) {
+            gameStateStore.currentStage = 0;
+            gameStateStore.stageDays = 0;
+            gameStateStore.setRoom(RoomEnum.Station.value);
+        }
         callback(true);
     },
 
