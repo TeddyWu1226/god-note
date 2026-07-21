@@ -598,14 +598,8 @@ export const usePlayerStore = defineStore('player-info', () => {
             if (effect.type === 'damage' && effect.value) {
                 let actualDamage = effect.value;
                 if (effect.affectedByDefense) {
-                    // 先扣除固定物理防禦力
-                    actualDamage = Math.max(1, actualDamage - (finalStats.value.adDefend || 0));
-                    // 套用 defendIncrease (百分比減傷 %)
-                    if (finalStats.value.defendIncrease) {
-                        const reduction = Math.min(finalStats.value.defendIncrease, 95);
-                        actualDamage *= (1 - reduction / 100);
-                    }
-                    actualDamage = Math.max(1, Math.floor(actualDamage));
+                    // 扣除固定物理防禦力並向下取整
+                    actualDamage = Math.max(1, Math.floor(actualDamage - (finalStats.value.adDefend || 0)));
                 }
                 info.value.hp = Math.max(0, info.value.hp - actualDamage);
                 logMessage = `[${effect.name}] 讓你受到了 ${actualDamage} 點傷害。`;

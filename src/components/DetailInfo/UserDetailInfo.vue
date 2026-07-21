@@ -12,6 +12,7 @@ import {CharEnum} from "@/enums/char-enum";
 import {createDoubleTapHandler} from "@/utils/touch";
 import LearnSkillDialog from "./LearnSkillDialog.vue";
 import {isImageIcon, resolveIconPath} from "@/utils/ui-helper";
+import {calculateResistanceReduction} from "@/constants/fight-func";
 
 
 const playerStore = usePlayerStore();
@@ -23,10 +24,14 @@ const gameStateStore = useGameStateStore();
 const fabRef = ref<HTMLElement | null>(null);
 const isShowStats = computed({
   get: () => gameStateStore.isShowStats,
-  set: (val) => { gameStateStore.isShowStats = val; }
+  set: (val) => {
+    gameStateStore.isShowStats = val;
+  }
 });
 const {position, isDragging, isSnapping, handleStart} = useDraggable(fabRef, {
-  onSelect: () => { gameStateStore.isShowStats = true; }
+  onSelect: () => {
+    gameStateStore.isShowStats = true;
+  }
 });
 
 
@@ -97,6 +102,8 @@ const getRarityName = (rarity: string) => {
   };
   return names[rarity] || '普通';
 };
+
+const reduction = computed(() => calculateResistanceReduction(playerStore.finalStats.defendIncrease))
 </script>
 
 <template>
@@ -150,15 +157,16 @@ const getRarityName = (rarity: string) => {
         <!-- 左側：角色頭像與經驗條 -->
         <div class="avatar-and-exp-container" v-if="playerStore.info.char">
           <div class="char-avatar-showcase">
-            <img :src="resolveIconPath(getEnumColumn(CharEnum, playerStore.info.char, 'avatar')) + '?v=2'" class="char-avatar-img" alt="avatar" />
+            <img :src="resolveIconPath(getEnumColumn(CharEnum, playerStore.info.char, 'avatar')) + '?v=2'"
+                 class="char-avatar-img" alt="avatar"/>
           </div>
           <div class="exp-bar-wrapper">
             <div class="exp-label">EXP: {{ playerStore.info.currentExp }} / {{ playerStore.nextLevelExp }}</div>
-            <el-progress 
-              :percentage="playerStore.currentExpPercentage" 
-              :show-text="false"
-              :stroke-width="8"
-              status="success"
+            <el-progress
+                :percentage="playerStore.currentExpPercentage"
+                :show-text="false"
+                :stroke-width="8"
+                status="success"
             />
           </div>
         </div>
@@ -235,6 +243,19 @@ const getRarityName = (rarity: string) => {
                 }}{{ stat.unit }})
               </span>
             </template>
+          </div>
+        </div>
+        <!--抗性-->
+        <div class="stat-item">
+          <div class="stat-info">
+            <div style="color: #67c23a;" v-if="reduction >=0">
+              減傷率:
+              {{ reduction }}%
+            </div>
+            <div v-else style="color: #f56c6c;">
+              增傷率:
+              {{ reduction }}%
+            </div>
           </div>
         </div>
       </div>
@@ -346,7 +367,7 @@ const getRarityName = (rarity: string) => {
   </el-dialog>
 
   <!-- 學習新技能 Dialog -->
-  <LearnSkillDialog />
+  <LearnSkillDialog/>
 </template>
 
 <style scoped>
@@ -683,7 +704,6 @@ const getRarityName = (rarity: string) => {
   font-size: 0.85rem;
   color: #444;
 }
-
 
 
 /* 技能 Tooltip */

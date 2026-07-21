@@ -14,6 +14,20 @@ import {SkillModel} from "@/models/skill-model";
 
 const MAX_RATE = 100; // 命中率或暴擊率的最大值 (100%)
 
+/**
+ * 計算抗性減傷率 (defendIncrease)
+ * 減傷率 = 抗性 / (抗性 + K) K為100，上限 95%
+ * 負抗性則為線性計算：抗性 / 100
+ */
+export function calculateResistanceReduction(resistance: number): number {
+    if (!resistance) return 0;
+    if (resistance >= 0) {
+        return Math.min(resistance / (resistance + 100), 0.95);
+    } else {
+        return resistance / 100;
+    }
+}
+
 export function calculateDamage(attacker: UnitType, defender: UnitType): DamageResult {
     const result: DamageResult = {
         totalDamage: 0,
@@ -53,11 +67,10 @@ export function calculateDamage(attacker: UnitType, defender: UnitType): DamageR
     // 先扣除固定防禦力
     let finalDamage = Math.max(1, damage - defender.adDefend);
 
-    // 套用 defendIncrease (百分比減傷 %)
+    // 套用 defendIncrease (抗性減傷)
     if (defender.defendIncrease) {
-        // 確保減傷不會超過 100% 導致回血，通常上限設為 90-95%
-        const reduction = Math.min(defender.defendIncrease, 95);
-        finalDamage *= (1 - reduction / 100);
+        const reduction = calculateResistanceReduction(defender.defendIncrease);
+        finalDamage *= (1 - reduction);
     }
 
     // --- 6. 最終傷害取整 ---
@@ -359,8 +372,8 @@ export function applySkillDamage({
 
     // --- 抗性減傷 (defendIncrease) ---
     if (type !== 'true' && targetFinalStats.defendIncrease) {
-        const reduction = Math.min(targetFinalStats.defendIncrease, 95);
-        finalDamage *= (1 - reduction / 100);
+        const reduction = calculateResistanceReduction(targetFinalStats.defendIncrease);
+        finalDamage *= (1 - reduction);
     }
 
     outcome.totalDamage = Math.floor(finalDamage);
