@@ -59,7 +59,10 @@ import {
     CounterShield,
     CounterShieldAdv,
     ShieldBash,
-    ShieldSkillTree
+    ShieldSkillTree,
+    ShieldTechBase,
+    ShieldTechPro,
+    ShieldTechAdv
 } from "./shield_skill";
 import {StickSkillTree} from "./stick_skill";
 import {
@@ -200,6 +203,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     BlockBase: BlockBase,
     ShieldBash: ShieldBash,
     DualWieldBase: DualWieldBase,
+    ShieldTechBase: ShieldTechBase,
     // Level 2
 
     Flurry: Flurry,
@@ -229,6 +233,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     BloodManaLoop: BloodManaLoop,
     PurpleSkin: PurpleSkin,
     DualWieldPro: DualWieldPro,
+    ShieldTechPro: ShieldTechPro,
 
     KnifePro: KnifePro,
     KnifeAdv: KnifeAdv,
@@ -258,6 +263,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     DualWieldAdv: DualWieldAdv,
     WillPro: WillPro,
     FightPro: FightPro,
+    ShieldTechAdv: ShieldTechAdv,
 
     // 火焰系主動技能
     FireArrow: FireArrow,

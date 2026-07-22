@@ -9,6 +9,8 @@ import {UsualStatus} from "@/constants/status/usual-status";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {getMonsterElement, getPlayerElement} from "@/utils/create";
 import {useFloatingMessage} from "@/components/Shared/FloatingMessage/useFloatingMessage";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
+import {useFullScreenEffect} from "@/components/Shared/FullScreenEffect/useFullScreenEffect";
 
 export class BlockBase extends SkillModel {
     constructor() {
@@ -232,6 +234,136 @@ export class CounterShieldAdv extends SkillModel {
     }
 }
 
+/**
+ * 護盾相關
+ */
+
+export class ShieldTechBase extends SkillModel {
+    constructor() {
+        super({
+            id: 'ShieldTechBase',
+            name: "護盾技巧",
+            icon: "skills/physical/shield_tech_base.svg",
+            type: 'active',
+            rarity: 'common',
+            maxCd: 10,
+            costAction: 1,
+        });
+    }
+
+    description(): string {
+        return `復原最大護盾值`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if ((playerStore.info.shieldLimit || 0) <= 0) {
+            showEffect({
+                text: "沒有護盾值...",
+                type: 'debuff'
+            });
+            return false;
+        }
+
+        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
+
+        useFullScreenEffect({
+            message: '護盾修復',
+            color: '#5dade2',
+        });
+        return true;
+    }
+}
+
+export class ShieldTechPro extends SkillModel {
+    constructor() {
+        super({
+            id: 'ShieldTechPro',
+            name: "護盾精通",
+            icon: "skills/physical/shield_tech_pro.svg",
+            type: 'active',
+            rarity: 'rare',
+            maxCd: 10,
+            costAction: 1,
+            maxProficiency: 100,
+            proficiencyGain: 5,
+            uniqueFields: ['ShieldTech']
+        });
+    }
+
+    description(): string {
+        return `被動: 額外獲得 25% 最大護盾量。\n主動: 復原最大護盾值`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if ((playerStore.info.shieldLimit || 0) <= 0) {
+            showEffect({
+                text: "沒有護盾值...",
+                type: 'debuff'
+            });
+            return false;
+        }
+
+        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
+
+        useFullScreenEffect({
+            message: '護盾修復',
+            color: '#5dade2',
+        });
+        return true;
+    }
+
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        return {
+            shieldLimit: (player.shieldLimit ?? 0) * 0.25
+        }
+    }
+}
+
+export class ShieldTechAdv extends SkillModel {
+    constructor() {
+        super({
+            id: 'ShieldTechAdv',
+            name: "護盾進階精通",
+            icon: "skills/physical/shield_tech_adv.svg",
+            type: 'active',
+            rarity: 'perfect',
+            maxCd: 10,
+            costAction: 1,
+            maxProficiency: 100,
+            proficiencyGain: 5,
+            uniqueFields: ['ShieldTech']
+        });
+    }
+
+    description(): string {
+        return `被動: 額外獲得 50% 最大護盾量。\n主動: 復原最大護盾值`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if ((playerStore.info.shieldLimit || 0) <= 0) {
+            showEffect({
+                text: "沒有護盾值...",
+                type: 'debuff'
+            });
+            return false;
+        }
+
+        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
+
+        useFullScreenEffect({
+            message: '護盾修復',
+            color: '#5dade2',
+        });
+        return true;
+    }
+
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        return {
+            shieldLimit: (player.shieldLimit ?? 0) * 0.5
+        }
+    }
+}
+
 export const ShieldSkillTree: Record<string, SkillTreeNode> = {
     BlockBase: {
         id: 'BlockBase',
@@ -248,10 +380,6 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['BlockBase'],
         checkEligible: (playerStore) => {
-            const hasBase = playerStore.hasSkill('BlockBase');
-            if (!hasBase) {
-                return false;
-            }
             const offhand = playerStore.info.equips?.offhand;
             return !!(offhand && offhand.name.includes('盾'));
         }
@@ -262,10 +390,6 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['BlockPro'],
         checkEligible: (playerStore) => {
-            const hasBase = playerStore.hasSkill('BlockPro');
-            if (!hasBase) {
-                return false;
-            }
             const offhand = playerStore.info.equips?.offhand;
             return !!(offhand && offhand.name.includes('盾'));
         }
@@ -306,6 +430,32 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
             if (!hasShield) return false;
 
             return !!playerStore.hasSkill('CounterShield');
+        }
+    },
+    ShieldTechBase: {
+        id: 'ShieldTechBase',
+        pathId: 'shield_tech',
+        tier: 1,
+        checkEligible: (playerStore) => {
+            return playerStore.info.shieldLimit >= 10
+        }
+    },
+    ShieldTechPro: {
+        id: 'ShieldTechPro',
+        pathId: 'shield_tech',
+        tier: 2,
+        evolvesFrom: ['ShieldTechBase'],
+        checkEligible: (playerStore) => {
+            return playerStore.info.shieldLimit >= 10
+        }
+    },
+    ShieldTechAdv: {
+        id: 'ShieldTechAdv',
+        pathId: 'shield_tech',
+        tier: 3,
+        evolvesFrom: ['ShieldTechPro'],
+        checkEligible: (playerStore) => {
+            return playerStore.info.shieldLimit >= 10
         }
     }
 };
