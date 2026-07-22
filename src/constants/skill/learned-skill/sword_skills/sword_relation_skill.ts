@@ -33,7 +33,7 @@ export class ContinuousSwordVertical extends SkillModel {
     }
 
     description(): string {
-        return `增加 ${this.bonus.critRate}% 爆擊率, ${this.bonus.critIncrease}% 爆擊傷害。\n(進階劍技系列只能習得一招)`;
+        return `裝備劍時，增加 ${this.bonus.critRate}% 爆擊率, ${this.bonus.critIncrease}% 爆擊傷害。\n(進階劍技系列只能習得一招)`;
     }
 
     protected execute(): boolean {
@@ -64,7 +64,7 @@ export class ContinuousSwordHorizontal extends SkillModel {
     diffusionRate = 50
 
     description(): string {
-        return `攻擊時有 ${this.happenRate}% 機率，對其餘敵人造成該次傷害 ${this.diffusionRate}% 的擴散傷害。\n(進階劍技系列只能習得一招)`;
+        return `裝備劍攻擊時有 ${this.happenRate}% 機率，對其餘敵人造成該次傷害 ${this.diffusionRate}% 的擴散傷害。\n(進階劍技系列只能習得一招)`;
     }
 
     protected execute(): boolean {
@@ -119,7 +119,7 @@ export class ContinuousSwordPoint extends SkillModel {
     }
 
     description(playerStore: PlayerStoreType): string {
-        return `攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 ${this.getValue(playerStore)} (5+0.2*等級) 點，持續 3 回合）。\n(進階劍技系列只能習得一招)`;
+        return `裝備劍攻擊時有 ${this.chance}% 機率，使目標陷入「破甲」狀態（防禦力降低 ${this.getValue(playerStore)} (5+0.2*等級) 點，持續 3 回合）。\n(進階劍技系列只能習得一招)`;
     }
 
     protected execute(): boolean {
