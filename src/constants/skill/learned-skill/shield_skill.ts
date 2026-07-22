@@ -256,7 +256,7 @@ export class ShieldTechBase extends SkillModel {
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.info.shieldLimit || 0) <= 0) {
+        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
             showEffect({
                 text: "沒有護盾值...",
                 type: 'debuff'
@@ -295,7 +295,7 @@ export class ShieldTechPro extends SkillModel {
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.info.shieldLimit || 0) <= 0) {
+        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
             showEffect({
                 text: "沒有護盾值...",
                 type: 'debuff'
@@ -340,7 +340,7 @@ export class ShieldTechAdv extends SkillModel {
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.info.shieldLimit || 0) <= 0) {
+        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
             showEffect({
                 text: "沒有護盾值...",
                 type: 'debuff'
@@ -437,7 +437,7 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
         pathId: 'shield_tech',
         tier: 1,
         checkEligible: (playerStore) => {
-            return playerStore.info.shieldLimit >= 10
+            return playerStore.finalStats.shieldLimit >= 10
         }
     },
     ShieldTechPro: {
@@ -446,7 +446,7 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
         tier: 2,
         evolvesFrom: ['ShieldTechBase'],
         checkEligible: (playerStore) => {
-            return playerStore.info.shieldLimit >= 10
+            return playerStore.finalStats.shieldLimit >= 10
         }
     },
     ShieldTechAdv: {
@@ -455,7 +455,7 @@ export const ShieldSkillTree: Record<string, SkillTreeNode> = {
         tier: 3,
         evolvesFrom: ['ShieldTechPro'],
         checkEligible: (playerStore) => {
-            return playerStore.info.shieldLimit >= 10
+            return playerStore.finalStats.shieldLimit >= 10
         }
     }
 };

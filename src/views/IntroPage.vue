@@ -10,7 +10,6 @@ import {ElMessageBox} from "element-plus";
 import {Dagger, SpecialWeapon} from "@/constants/items/equipment/weapon-info";
 import {NormalFruits} from "@/constants/items/usalbe-item/bush-info";
 import {CharEnum} from "@/enums/char-enum";
-import {Offhand} from "@/constants/items/equipment/offhand-info";
 import {resolveIconPath} from "@/utils/ui-helper";
 
 const gameStateStore = useGameStateStore()
@@ -40,14 +39,16 @@ const confirmClassSelection = async () => {
 
   // 套用職業初始獎勵
   // 基本是 150元來做計算
+  const startWeapon = Math.random() <= 0.5 ? SpecialWeapon.WoodSword : SpecialWeapon.WoodAxe
   switch (selectedClass.value) {
     case CharEnum.Villager.value:
-      const startWeapon = Math.random() <= 0.5 ? SpecialWeapon.WoodSword : SpecialWeapon.WoodAxe
+
       playerStore.equipItem(startWeapon);
       playerStore.gainItem(NormalFruits.RedApple, 2)
       break;
     case CharEnum.Merchant.value:
-      playerStore.info.gold = 300;
+      playerStore.equipItem(startWeapon);
+      playerStore.info.gold = 200;
       playerStore.info.ad = 8
       playerStore.info.ap = 8
       break;
@@ -55,6 +56,7 @@ const confirmClassSelection = async () => {
       playerStore.equipItem(Dagger.Dagger0);
       break;
     case CharEnum.Stargazer.value:
+      playerStore.equipItem(SpecialWeapon.WoodStick);
       playerStore.info.ap = 12;
       playerStore.info.ad = 5
       playerStore.info.gold = 50;

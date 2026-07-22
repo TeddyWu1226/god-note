@@ -5,6 +5,7 @@ import {ItemStatus} from "@/constants/status/item-status";
 import {useCardImpactEffect} from "@/components/Shared/CardImpactEffect/useCardImpactEffect";
 import {SkillStatus} from "@/constants/status/skill-status";
 import {playerAddSavePower} from "@/constants/status/advanced-status-utils";
+import {showEffect} from "@/components/Shared/FloatingEffect/EffectManager";
 
 export class ShieldBlock extends SkillModel {
     constructor() {
@@ -81,6 +82,45 @@ export class PowerCharge extends SkillModel {
         useFullScreenEffect({
             message: '蓄力',
             color: 'orange'
+        });
+        return true;
+    }
+}
+
+
+export class MagicShieldRecover extends SkillModel {
+    constructor() {
+        super({
+            id: 'MagicShieldRecover',
+            name: "護盾修復",
+            icon: "skills/physical/shield_tech_base.svg",
+            type: 'active',
+            rarity: 'common',
+            costSp: 0,
+            costAction: 1,
+            maxCd: 10,
+            itemDescription: '立即復原護盾值。[冷卻: 10 回合]'
+        });
+    }
+
+
+    description(playerStore: PlayerStoreType): string {
+        return `立即復原 ${playerStore.finalStats.shieldLimit} 點護盾值。`;
+    }
+
+    protected execute({playerStore}: SkillParams): boolean {
+        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
+            showEffect({
+                text: "沒有護盾值...",
+                type: 'debuff'
+            });
+            return false;
+        }
+
+        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
+        useFullScreenEffect({
+            message: '護盾修復',
+            color: '#5dade2',
         });
         return true;
     }

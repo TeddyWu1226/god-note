@@ -1,5 +1,5 @@
 import {SkillModel} from "@/models/skill-model";
-import {PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
+import {MagicShieldRecover, PowerCharge, ShieldBlock} from "@/constants/skill/offhand-skill/offhand-skill";
 import {usePlayerStore} from "@/store/player-store";
 
 import {SkillTreeNode} from "@/types";
@@ -302,6 +302,7 @@ const SKILL_CLASS_MAP: Record<string, any> = {
     // 副手技能
     ShieldBlock: ShieldBlock,
     PowerCharge: PowerCharge,
+    MagicShieldRecover: MagicShieldRecover,
 };
 
 

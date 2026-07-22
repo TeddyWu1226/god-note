@@ -264,21 +264,18 @@ export const SpecialWeapon = {
         icon: '🪓',
         position: EquipmentPosition.WEAPON,
         quality: 0,
-        ad: 1,
+        ad: 2,
+        hit: -20,
         isTwoHanded: true,
         skill: 'PowerCharge',
     } as EquipmentType,
-    SpikeSpear: {
-        name: '尖刺木槍',
-        icon: '🪾',
-        description: '從枯死的魔樹枝幹削製而成的尖刺長槍,但使用時會奪去部分生命。',
+    WoodStick: {
+        name: '木杖',
+        description: '用木頭削成的杖，起始武器。',
+        icon: '🪄',
         position: EquipmentPosition.WEAPON,
-        ad: 10,
-        hpLimit: -50,
-        critRate: 10,
-        hit: 5,
-        quality: 11
-    } as EquipmentType,
+        quality: 0,
+    } as EquipmentType
 }
 
 export const Weapon = {...Dagger, ...Sword, ...MagicStick, ...Axe}

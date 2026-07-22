@@ -212,7 +212,7 @@ export class DemonBody extends SkillModel {
     adDefend = 5
 
     description(): string {
-        return `獲得魔人強化般的肉體。最大生命值與最大法力值皆增加 ${this.hpBonus} 點。在戰鬥中，每回合回復 ${this.hpRegenBonus} 點 HP 與 ${this.spRegenBonus} 點 SP，總增傷提升 ${this.damageIncrease}%, ${this.hit} 點命中值且防禦增加 ${this.adDefend} 點。`;
+        return `獲得魔人強化般的肉體。最大生命值與最大法力值皆增加 ${this.hpBonus} 點。每回合回復 ${this.hpRegenBonus} 點 HP 與 ${this.spRegenBonus} 點 SP，總增傷提升 ${this.damageIncrease}%, ${this.hit} 點命中值且防禦增加 ${this.adDefend} 點。`;
     }
 
     protected execute(): boolean {

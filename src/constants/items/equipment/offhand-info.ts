@@ -63,7 +63,8 @@ export const Offhand = {
         icon: '📝',
         position: EquipmentPosition.OFFHAND,
         quality: 0,
-        shieldLimit: 10
+        shieldLimit: 10,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
 
     Book1: {
@@ -72,7 +73,8 @@ export const Offhand = {
         icon: '📜',
         position: EquipmentPosition.OFFHAND,
         quality: 1,
-        shieldLimit: 20
+        shieldLimit: 20,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
     Book2: {
         name: '下級理解之書',
@@ -80,7 +82,8 @@ export const Offhand = {
         icon: '📗',
         position: EquipmentPosition.OFFHAND,
         quality: 2,
-        shieldLimit: 40
+        shieldLimit: 40,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
     Book3: {
         name: '中級理解之書',
@@ -88,7 +91,8 @@ export const Offhand = {
         icon: '📘',
         position: EquipmentPosition.OFFHAND,
         quality: 3,
-        shieldLimit: 80
+        shieldLimit: 80,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
     Book4: {
         name: '上級理解之書',
@@ -96,7 +100,8 @@ export const Offhand = {
         icon: '📓',
         position: EquipmentPosition.OFFHAND,
         quality: 4,
-        shieldLimit: 160
+        shieldLimit: 160,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
     Book5: {
         name: '終極理解之書',
@@ -104,6 +109,7 @@ export const Offhand = {
         icon: '📕',
         position: EquipmentPosition.OFFHAND,
         quality: 5,
-        shieldLimit: 320
+        shieldLimit: 320,
+        skill: 'MagicShieldRecover'
     } as EquipmentType,
 };
