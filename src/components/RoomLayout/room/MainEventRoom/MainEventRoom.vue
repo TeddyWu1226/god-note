@@ -30,7 +30,7 @@ const stageIntro = computed(() => {
     case 2:
       return {
         title: StageEnum.RedMountain.label,
-        desc: "眼前是赤之山脈。傳說是魔族的同伙-巨人與龍為阻撓人類而形成的巨大山巒，若要討伐魔族必須越過此障礙。",
+        desc: "眼前是赤之山脈。傳說是魔族的同伙-巨人與龍為阻撓人類而形成的巨大山巒，若想穿越必須透過深山中的古代坑道。",
         tips: "在冰與火的雙重考驗中前行，注意寒冷與燃燒。"
       };
     case 3:
@@ -48,7 +48,7 @@ const stageIntro = computed(() => {
     case 5:
       return {
         title: StageEnum.EndAbyss.label,
-        desc: "你已來到深淵。魔族之城受神擊而陷落在此，魔族最後殘存之地。",
+        desc: "你已來到深淵。魔族城堡受神擊而陷落在此，魔族最後殘存之地。",
         tips: "完成你的使命。"
       };
     case 6:
