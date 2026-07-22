@@ -98,8 +98,8 @@ export class MagicShieldRecover extends SkillModel {
             rarity: 'common',
             costSp: 0,
             costAction: 1,
-            maxCd: 10,
-            itemDescription: '立即復原護盾值。[冷卻: 10 回合]'
+            maxCd: 15,
+            itemDescription: '立即復原護盾值。[冷卻: 15 回合]'
         });
     }
 
@@ -115,6 +115,13 @@ export class MagicShieldRecover extends SkillModel {
                 type: 'debuff'
             });
             return false;
+        }
+        if(playerStore.hasSkill('ShieldTechPro')){
+            this.maxCd = 12
+        } else if(playerStore.hasSkill('ShieldTechAdv')){
+            this.maxCd = 9
+        } else {
+            this.maxCd = 15
         }
 
         playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;

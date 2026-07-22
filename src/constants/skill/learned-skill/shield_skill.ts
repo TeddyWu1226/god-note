@@ -242,35 +242,26 @@ export class ShieldTechBase extends SkillModel {
     constructor() {
         super({
             id: 'ShieldTechBase',
-            name: "護盾技巧",
+            name: "閱讀技巧",
             icon: "skills/physical/shield_tech_base.svg",
-            type: 'active',
+            type: 'passive',
             rarity: 'common',
-            maxCd: 10,
-            costAction: 1,
+            uniqueFields: ['ShieldTech']
         });
     }
 
     description(): string {
-        return `復原最大護盾值`;
+        return `獲得副手裝備額外 30% 最大護盾量。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
-            showEffect({
-                text: "沒有護盾值...",
-                type: 'debuff'
-            });
-            return false;
-        }
-
-        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
-
-        useFullScreenEffect({
-            message: '護盾修復',
-            color: '#5dade2',
-        });
         return true;
+    }
+
+    override getPassiveBonus(player?: Omit<UserType, "skills">) {
+        return {
+            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.3
+        }
     }
 }
 
@@ -278,43 +269,25 @@ export class ShieldTechPro extends SkillModel {
     constructor() {
         super({
             id: 'ShieldTechPro',
-            name: "護盾精通",
+            name: "閱讀精通",
             icon: "skills/physical/shield_tech_pro.svg",
-            type: 'active',
+            type: 'passive',
             rarity: 'rare',
-            maxCd: 10,
-            costAction: 1,
-            maxProficiency: 100,
-            proficiencyGain: 5,
             uniqueFields: ['ShieldTech']
         });
     }
 
     description(): string {
-        return `被動: 額外獲得 25% 最大護盾量。\n主動: 復原最大護盾值`;
+        return `獲得副手裝備額外 40% 最大護盾量。「護盾修復」冷卻減少 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
-            showEffect({
-                text: "沒有護盾值...",
-                type: 'debuff'
-            });
-            return false;
-        }
-
-        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
-
-        useFullScreenEffect({
-            message: '護盾修復',
-            color: '#5dade2',
-        });
         return true;
     }
 
     override getPassiveBonus(player?: Omit<UserType, "skills">) {
         return {
-            shieldLimit: (player.shieldLimit ?? 0) * 0.25
+            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.4
         }
     }
 }
@@ -323,43 +296,25 @@ export class ShieldTechAdv extends SkillModel {
     constructor() {
         super({
             id: 'ShieldTechAdv',
-            name: "護盾進階精通",
+            name: "閱讀進階精通",
             icon: "skills/physical/shield_tech_adv.svg",
-            type: 'active',
+            type: 'passive',
             rarity: 'perfect',
-            maxCd: 10,
-            costAction: 1,
-            maxProficiency: 100,
-            proficiencyGain: 5,
             uniqueFields: ['ShieldTech']
         });
     }
 
     description(): string {
-        return `被動: 額外獲得 50% 最大護盾量。\n主動: 復原最大護盾值`;
+        return `獲得副手裝備額外 50% 最大護盾量。「護盾修復」冷卻減少 3 回合。`;
     }
 
     protected execute({playerStore}: SkillParams): boolean {
-        if ((playerStore.finalStats.shieldLimit || 0) <= 0) {
-            showEffect({
-                text: "沒有護盾值...",
-                type: 'debuff'
-            });
-            return false;
-        }
-
-        playerStore.info.shield = playerStore.finalStats.shieldLimit || 0;
-
-        useFullScreenEffect({
-            message: '護盾修復',
-            color: '#5dade2',
-        });
         return true;
     }
 
     override getPassiveBonus(player?: Omit<UserType, "skills">) {
         return {
-            shieldLimit: (player.shieldLimit ?? 0) * 0.5
+            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.5
         }
     }
 }
