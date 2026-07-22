@@ -108,6 +108,10 @@ export const usePlayerStore = defineStore('player-info', () => {
                 }
             });
         }
+        // 如果沒有裝備武器 物理傷害降低 50%
+        if (!info.value.equips?.weapon) {
+            bonus.adIncrease -= 50
+        }
         return bonus;
     });
 

@@ -199,6 +199,9 @@ const reduction = computed(() => calculateResistanceReduction(playerStore.finalS
                     playerStore.totalBonus[stat.value]
                   }}{{ stat.unit }})
                 </span>
+                <span v-if="stat.value==='ad' && !playerStore.info.equips?.weapon" class="stat-bonus is-negative">
+                  (沒有裝備武器)
+                </span>
               </template>
             </div>
             <el-button
@@ -588,9 +591,9 @@ const reduction = computed(() => calculateResistanceReduction(playerStore.finalS
 }
 
 .stat-bonus {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: bold;
-  margin-left: 4px;
+  margin-left: 0;
 }
 
 .stat-bonus.is-positive {
