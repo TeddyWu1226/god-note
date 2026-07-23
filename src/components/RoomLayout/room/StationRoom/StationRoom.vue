@@ -4,6 +4,7 @@ import {computed, onMounted, ref} from "vue";
 import {useGameStateStore} from "@/store/game-state-store";
 import {usePlayerStore} from "@/store/player-store";
 import {GameState} from "@/enums/enums";
+import {RoomEnum} from "@/enums/room-enum";
 import RoomTemplate from "@/components/RoomLayout/comps/RoomTemplate.vue";
 
 const playerStore = usePlayerStore();
@@ -14,7 +15,7 @@ const isEnded = computed(() => gameStateStore.stageDays === 100)
 const isBorderTown = computed(() => gameStateStore.currentStage === 0)
 
 const titleText = computed(() => {
-  if (isBorderTown.value) return '鎮口休息處';
+  if (isBorderTown.value) return '邊境城鎮城口';
   return isEnded.value ? '旅途之末' : '深處驛站';
 })
 
@@ -42,7 +43,7 @@ onMounted(() => {
         </div>
         <div class="dialog-box">
           <template v-if="isBorderTown">
-            <p>你回到了人類的邊境基地，在這稍作休息。</p>
+            <p>你回到了人類的邊境城鎮城口，在這稍作休息。</p>
           </template>
           <template v-else-if="isEnded">
             <p>風景以然變色，已達區域的盡頭。</p>
@@ -63,9 +64,12 @@ onMounted(() => {
 
     <template #button>
       <template v-if="isBorderTown">
-        <!-- 邊境城鎮：只有前往其他區域的選項 -->
+        <!-- 邊境城鎮：可以前往其他區域或晃晃 -->
+        <el-button type="primary" @click="gameStateStore.setRoom(RoomEnum.Story.value)">
+          晃晃
+        </el-button>
         <el-button type="warning" @click="gameStateStore.openStageSelectDialog(false)">
-          前往其他區域
+          繼續旅程
         </el-button>
       </template>
       <template v-else-if="isEnded">

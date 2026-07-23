@@ -241,7 +241,7 @@ defineExpose({
         :disabled="props.disabled"
         @click="continueStage"
     >
-      繼續冒險🏹
+      繼續
     </el-button>
   </template>
 

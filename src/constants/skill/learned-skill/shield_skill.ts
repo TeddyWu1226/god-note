@@ -37,7 +37,7 @@ export class BlockBase extends SkillModel {
             return {}
         }
         return {
-            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.15)
+            adDefend: Math.floor((player.equips?.offhand?.adDefend ?? 0) * 0.15)
         }
     }
 }
@@ -67,7 +67,7 @@ export class BlockPro extends SkillModel {
             return {}
         }
         return {
-            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.25)
+            adDefend: Math.floor((player.equips?.offhand?.adDefend ?? 0) * 0.25)
         }
     }
 }
@@ -97,7 +97,7 @@ export class BlockAdv extends SkillModel {
             return {}
         }
         return {
-            adDefend: Math.floor((player.equips.offhand?.adDefend ?? 0) * 0.35)
+            adDefend: Math.floor((player.equips?.offhand?.adDefend ?? 0) * 0.35)
         }
     }
 }
@@ -260,7 +260,7 @@ export class ShieldTechBase extends SkillModel {
 
     override getPassiveBonus(player?: Omit<UserType, "skills">) {
         return {
-            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.3
+            shieldLimit: (player.equips?.offhand?.shieldLimit ?? 0) * 0.3
         }
     }
 }
@@ -287,7 +287,7 @@ export class ShieldTechPro extends SkillModel {
 
     override getPassiveBonus(player?: Omit<UserType, "skills">) {
         return {
-            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.4
+            shieldLimit: (player.equips?.offhand?.shieldLimit ?? 0) * 0.4
         }
     }
 }
@@ -314,7 +314,7 @@ export class ShieldTechAdv extends SkillModel {
 
     override getPassiveBonus(player?: Omit<UserType, "skills">) {
         return {
-            shieldLimit: (player.equips.offhand?.shieldLimit ?? 0) * 0.5
+            shieldLimit: (player.equips?.offhand?.shieldLimit ?? 0) * 0.5
         }
     }
 }

@@ -59,4 +59,10 @@ export const RoomEnum = {
         icon: '📜',
         color: '#9C27B0',
     },
+    Story: {
+        value: 12,
+        label: '故事房間',
+        icon: '📖',
+        color: '#FF7F50',
+    },
 };

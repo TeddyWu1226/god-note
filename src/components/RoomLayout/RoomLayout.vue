@@ -15,6 +15,8 @@ import {usePlayerStore} from "@/store/player-store";
 import {GodThings, Usable} from "@/constants/items/usalbe-item/usable-info";
 import StationRoom from "@/components/RoomLayout/room/StationRoom/StationRoom.vue";
 import StageEndRoom from "@/components/RoomLayout/room/StageEndRoom/StageEndRoom.vue";
+import StoryRoom from "@/components/RoomLayout/room/StoryRoom/StoryRoom.vue";
+
 
 const emit = defineEmits(['runFailed'])
 const gameStateStore = useGameStateStore()
@@ -109,6 +111,10 @@ watch(() => gameStateStore.roomId,
   />
   <StageEndRoom
       v-else-if="currentRoomValue === RoomEnum.StageEnd.value"
+      :key="gameStateStore.roomId"
+  />
+  <StoryRoom
+      v-else-if="currentRoomValue === RoomEnum.Story.value"
       :key="gameStateStore.roomId"
   />
 </template>
